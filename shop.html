@@ -112,6 +112,38 @@ footer{padding:28px 0;font-size:13px;color:var(--mute);text-align:center}
   .add{font-size:10.5px;padding:8px 2px;border-radius:7px}
   .row-h a{font-size:12.5px}
 }
+
+.top{padding:44px 0 40px;background:linear-gradient(135deg,#0E2A47 0%,#123A5E 60%,#14506A 100%)}
+.top-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:center}
+.top h1{letter-spacing:-.01em}
+.steps{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:20px 22px;backdrop-filter:blur(2px)}
+.steps b{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#F2B134;margin-bottom:12px}
+.steps ol{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.steps li{display:flex;gap:12px;align-items:center;font-size:14.5px;color:#E6EEF6}
+.steps li i{flex:none;width:28px;height:28px;border-radius:50%;background:#1F9D6B;color:#fff;font-style:normal;font-weight:700;font-size:13px;display:grid;place-items:center}
+.steps em{font-style:normal;font-weight:700;color:#fff}
+@media(max-width:860px){.top-grid{grid-template-columns:1fr;gap:22px}.top{padding:30px 0 28px}.steps{padding:16px 16px}}
+.row{padding:40px 0 8px}
+.row-h{padding-bottom:10px;border-bottom:2px solid #E3EAE5;margin-bottom:18px;align-items:center}
+.row-h h2{position:relative;padding-left:14px}
+.row-h h2:before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--green)}
+.row-h a{border:1px solid var(--line);border-radius:99px;padding:7px 14px;background:var(--white);font-size:13px}
+.row-h a:hover{border-color:var(--green);background:#E6F5EE}
+.card{transition:transform .18s,box-shadow .18s,border-color .18s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(14,42,71,.10);border-color:#C9D9CF}
+.pic{background:#fff;border:1px solid #EEF2EF}
+.pic img{object-fit:contain}
+.card h3{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;flex:none}
+.price{color:var(--mute);font-weight:600;font-size:13px}
+.add{background:#fff;color:var(--green-d);border:1.5px solid var(--green);transition:background .15s,color .15s}
+.add:hover{background:var(--green);color:#fff}
+.add.done{background:var(--ink);border-color:var(--ink);color:#fff}
+.chips{backdrop-filter:blur(6px)}
+.chip{transition:background .15s,border-color .15s}
+.chip:hover{background:#E6F5EE}
+.note{max-width:70ch}
+@media(prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+@media(max-width:600px){.price{font-size:10.5px}.card:hover{transform:none}.row-h h2{font-size:20px}.row-h a{padding:5px 10px;font-size:12px}}
 </style>
 <style id="mz-shared">
 .mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
@@ -206,9 +238,9 @@ body.has-list .wa-float{bottom:84px}
 
 <div class="top">
   <div class="wrap">
-    <h1>Shop MOZLYT</h1>
+    <div class="top-grid"><div class="top-l"><h1>Shop MOZLYT</h1>
     <p>Massage tools, fitness gear, nutrition, skincare, kitchen essentials and more. Add what you like to your list, send it on WhatsApp, and we reply with prices.</p>
-    <label class="search"><input id="q" type="search" placeholder="Search products" aria-label="Search products"><span><svg class="i"><use href="#mag"/></svg></span></label>
+    <label class="search"><input id="q" type="search" placeholder="Search products" aria-label="Search products"><span><svg class="i"><use href="#mag"/></svg></span></label></div><aside class="steps" aria-label="How ordering works"><b>How ordering works</b><ol><li><i>1</i><span>Tap <em>Add to list</em> on what you like</span></li><li><i>2</i><span>Send your list to us on WhatsApp</span></li><li><i>3</i><span>We reply with prices and delivery</span></li></ol></aside></div>
   </div>
 </div>
 
@@ -285,7 +317,7 @@ body.has-list .wa-float{bottom:84px}
   </section>
 </div>
   <div class="empty" id="empty">No products match your search. <a href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20looking%20for%20a%20product.%20" target="_blank" rel="noopener" style="color:var(--green-d);font-weight:700">Ask us on WhatsApp</a></div>
-  <p class="note">Prices are given on request. Tap Add to list on the things you like, then send your list to us on WhatsApp and we reply with prices and delivery. Real product photos are coming.</p>
+  <p class="note">Prices are given on request. Tap Add to list on the things you like, then send your list to us on WhatsApp and we reply with prices and delivery. Photos are for illustration; the product you receive may differ slightly in colour or design. Ask us about other colours and designs.</p>
 </main>
 
 <footer class="mz-footer">
