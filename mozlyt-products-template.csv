@@ -1,61 +1,88 @@
-﻿category,name,price,status,photo
-Massage tools and recovery,Handheld Massage Gun,,in stock,
-Massage tools and recovery,Foam Roller,,in stock,
-Massage tools and recovery,Massage Ball Set,,in stock,
-Massage tools and recovery,Neck and Shoulder Massager,,in stock,
-Massage tools and recovery,Acupressure Mat and Pillow,,in stock,
-Massage tools and recovery,Electric Foot Massager,,in stock,
-Massage tools and recovery,Hot and Cold Therapy Pack,,in stock,
-Massage tools and recovery,Massage Oil,,in stock,
-Fitness equipment,Adjustable Dumbbell Set,,in stock,
-Fitness equipment,Resistance Bands Set,,in stock,
-Fitness equipment,Yoga Mat,,in stock,
-Fitness equipment,Fitness Gloves,,in stock,
-Fitness equipment,Skipping Rope,,in stock,
-Fitness equipment,Kettlebell,,in stock,
-Fitness equipment,Ab Roller Wheel,,in stock,
-Fitness equipment,Doorway Pull-up Bar,,in stock,
-Fitness equipment,Push-up Bars,,in stock,
-Fitness equipment,Exercise Ball,,in stock,
-Fitness equipment,Hand Grip Strengthener,,in stock,
-Fitness equipment,Weight Lifting Belt,,in stock,
+category,name,price,status,photo
+Massage tools and recovery,Full-Body Massage Chair,,in stock,img/p/full-body-massage-chair.jpg
+Massage tools and recovery,Acupressure Mat and Pillow Set,,in stock,img/p/acupressure-mat-and-pillow-set.jpg
+Massage tools and recovery,Neck and Shoulder Massager,,in stock,img/p/neck-and-shoulder-massager.jpg
+Massage tools and recovery,Shiatsu Foot and Calf Massager,,in stock,img/p/shiatsu-foot-and-calf-massager.jpg
+Massage tools and recovery,Reusable Hot and Cold Gel Pack,,in stock,img/p/reusable-hot-and-cold-gel-pack.jpg
+Massage tools and recovery,Facial and Body Roller Massager,,in stock,img/p/facial-and-body-roller-massager.jpg
+Massage tools and recovery,Handheld Massage Gun (Pink or Cream),,in stock,img/p/handheld-massage-gun-pink-or-cream.jpg
+Massage tools and recovery,Foam Roller and Massage Ball Set,,in stock,img/p/foam-roller-and-massage-ball-set.jpg
+Massage tools and recovery,Foam Roller Set (Blue and Black),,in stock,img/p/foam-roller-set-blue-and-black.jpg
+Massage tools and recovery,Ginger Essential Oil (100 ml),,in stock,
+Fitness equipment,Elliptical Cross Trainer,,in stock,img/p/elliptical-cross-trainer.jpg
+Fitness equipment,Air Walker Low-Impact Cardio Trainer,,in stock,img/p/air-walker-low-impact-cardio-trainer.jpg
+Fitness equipment,Commercial Treadmill with Touchscreen,,in stock,img/p/commercial-treadmill-with-touchscreen.jpg
+Fitness equipment,Foldable Under-Desk Treadmill,,in stock,img/p/foldable-under-desk-treadmill.jpg
+Fitness equipment,Indoor Spin Bike,,in stock,img/p/indoor-spin-bike.jpg
+Fitness equipment,Smith Machine Home Gym with Bench,,in stock,img/p/smith-machine-home-gym-with-bench.jpg
+Fitness equipment,Power Tower (Pull-up and Dip Station),,in stock,img/p/power-tower-pull-up-and-dip-station.jpg
+Fitness equipment,Ab Trainer Bench,,in stock,img/p/ab-trainer-bench.jpg
+Fitness equipment,Multi-function Ab Bench with Pedals,,in stock,img/p/multi-function-ab-bench-with-pedals.jpg
+Fitness equipment,Foldable Rider Exercise Machine,,in stock,img/p/foldable-rider-exercise-machine.jpg
+Fitness equipment,Whole-Body Vibration Trainer,,in stock,img/p/whole-body-vibration-trainer.jpg
+Fitness equipment,"Boxing Gloves, Blue (6 oz)",,in stock,img/p/boxing-gloves-blue-6-oz.jpg
+Fitness equipment,Adjustable Dumbbell (Dial Type),,in stock,img/p/adjustable-dumbbell-dial-type.jpg
+Fitness equipment,"Kettlebell, 10 kg",,in stock,img/p/kettlebell-10-kg.jpg
+Fitness equipment,Resistance Band Set (5 Bands),,in stock,img/p/resistance-band-set-5-bands.jpg
+Fitness equipment,Yoga and Exercise Mat (Assorted Colours),,in stock,img/p/yoga-and-exercise-mat-assorted-colours.jpg
+Fitness equipment,Skipping Rope,,in stock,img/p/skipping-rope.jpg
+Fitness equipment,Wooden Push-up Stands (Pair),,in stock,img/p/wooden-push-up-stands-pair.jpg
+Fitness equipment,Doorway Pull-up and Dip Bar,,in stock,img/p/doorway-pull-up-and-dip-bar.jpg
+Fitness equipment,"Exercise Ball (Blue, Red, Grey, Purple)",,in stock,img/p/exercise-ball-blue-red-grey-purple.jpg
+Fitness equipment,Adjustable Hand Grip Strengthener,,in stock,img/p/adjustable-hand-grip-strengthener.jpg
+Fitness equipment,Linear Leg Press Machine,,in stock,img/p/linear-leg-press-machine.jpg
+Fitness equipment,Adjustable Weight Bench with Bands,,in stock,img/p/adjustable-weight-bench-with-bands.jpg
+Fitness equipment,Weight Lifting Belt,,in stock,img/p/weight-lifting-belt.jpg
+Fitness equipment,Ab Roller Wheel,,in stock,img/p/ab-roller-wheel.jpg
+Fitness equipment,"Adjustable Dumbbell, Compact Design",,in stock,img/p/adjustable-dumbbell-compact-design.jpg
+Fitness equipment,Fitness Gloves,,in stock,img/p/fitness-gloves.jpg
+Fitness equipment,Pilates Training Set,,in stock,img/p/pilates-training-set.jpg
+Nutrition,"Collapsible Silicone Water Bottle (Pink, Grey, Black, Mint, Blue)",,in stock,img/p/collapsible-silicone-water-bottle-pink-grey-black-mint-blue.jpg
+Nutrition,Height and Weight Scale,,in stock,img/p/height-and-weight-scale.jpg
+Nutrition,"Electrolyte Powder, Lemon and Raspberry",,in stock,img/p/electrolyte-powder-lemon-and-raspberry.jpg
+Nutrition,Men's Multivitamin Gummies (60),,in stock,img/p/men-s-multivitamin-gummies-60.jpg
+Nutrition,Marine Collagen Powder (200 g),,in stock,
+Nutrition,Ginseng Eight-Treasure Tea (30 sachets),,in stock,
+Nutrition,Self-Stirring Shaker Bottle (600 ml),,in stock,
 Nutrition,Protein Powder,,in stock,
-Nutrition,Daily Multivitamins,,in stock,
-Nutrition,Herbal Tea Collection,,in stock,
-Nutrition,Reusable Water Bottle,,in stock,
-Nutrition,Protein Shaker Bottle,,in stock,
-Nutrition,Electrolyte Drink Mix,,in stock,
 Nutrition,Healthy Snack Box,,in stock,
-Nutrition,Digital Body Scale,,in stock,
-Skincare and beauty,Gentle Face Cleanser,,in stock,
-Skincare and beauty,Shea Butter Body Cream,,in stock,
-Skincare and beauty,Facial Roller,,in stock,
-Skincare and beauty,Daily Sunscreen,,in stock,
-Skincare and beauty,Gua Sha Set,,in stock,
+Skincare and beauty,Fruit Face and Body Scrub (350 g),,in stock,img/p/fruit-face-and-body-scrub-350-g.jpg
+Skincare and beauty,"Raw Shea Butter, Ivory (8 oz)",,in stock,img/p/raw-shea-butter-ivory-8-oz.jpg
+Skincare and beauty,Jade Roller and Gua Sha Set,,in stock,img/p/jade-roller-and-gua-sha-set.jpg
+Skincare and beauty,Honey Lip Jar (Assorted Colours),,in stock,img/p/honey-lip-jar-assorted-colours.jpg
+Skincare and beauty,Facial Cleanser Cream (100 g),,in stock,img/p/facial-cleanser-cream-100-g.jpg
+Skincare and beauty,Spa Facial Headband (Assorted Colours),,in stock,img/p/spa-facial-headband-assorted-colours.jpg
+Skincare and beauty,Face Wash (150 ml),,in stock,
+Skincare and beauty,Grape Lip Balm,,in stock,
+Skincare and beauty,Sunscreen Stick SPF 50+ (23 g),,in stock,
 Skincare and beauty,African Black Soap,,in stock,
-Skincare and beauty,Lip Balm,,in stock,
-Skincare and beauty,Body Scrub,,in stock,
+Cooking tools,Digital Air Fryer,,in stock,img/p/digital-air-fryer.jpg
+Cooking tools,8-Piece Kitchen Knife Set,,in stock,img/p/8-piece-kitchen-knife-set.jpg
+Cooking tools,Stackable Food Containers with Lids,,in stock,img/p/stackable-food-containers-with-lids.jpg
+Cooking tools,Airtight Food Canisters (Set),,in stock,img/p/airtight-food-canisters-set.jpg
+Cooking tools,Cast-Iron Grill Pan,,in stock,img/p/cast-iron-grill-pan.jpg
+Cooking tools,3-Tier Bamboo Spice Rack,,in stock,img/p/3-tier-bamboo-spice-rack.jpg
+Cooking tools,Juicer and Blender Set,,in stock,img/p/juicer-and-blender-set.jpg
 Cooking tools,Non-stick Frying Pan,,in stock,
-Cooking tools,Chef Knife Set,,in stock,
-Cooking tools,Electric Blender,,in stock,
-Cooking tools,Food Storage Containers,,in stock,
 Cooking tools,Digital Kitchen Scale,,in stock,
 Cooking tools,Meal Prep Lunch Boxes,,in stock,
-Cooking tools,Air Fryer,,in stock,
-Cooking tools,Spice Rack Set,,in stock,
-Fashion,Workout Leggings,,in stock,
-Fashion,African Print Tote Bag,,in stock,
-Fashion,Sports Cap,,in stock,
-Fashion,Slide Sandals,,in stock,
-Fashion,Gym Duffel Bag,,in stock,
-Fashion,Training T-shirt,,in stock,
-Fashion,Sports Bra,,in stock,
-Fashion,Wristband and Headband Set,,in stock,
-Gift packages,Relaxation Gift Box,,in stock,
+Fashion,Gym Duffel Bag,,in stock,img/p/gym-duffel-bag.jpg
+Fashion,Sweatband Wrist Bands (Assorted Colours),,in stock,img/p/sweatband-wrist-bands-assorted-colours.jpg
+Fashion,Sports Bra with Back Phone Pocket (Green),,in stock,img/p/sports-bra-with-back-phone-pocket-green.jpg
+Fashion,Sports Bra and Leggings Set (Burgundy),,in stock,img/p/sports-bra-and-leggings-set-burgundy.jpg
+Fashion,Quick-Dry Baseball Cap (Assorted Colours),,in stock,img/p/quick-dry-baseball-cap-assorted-colours.jpg
+Fashion,Sports Visor Cap (Assorted Colours),,in stock,img/p/sports-visor-cap-assorted-colours.jpg
+Fashion,Men's Flip-Flop Slides (Green),,in stock,img/p/men-s-flip-flop-slides-green.jpg
+Fashion,Relaxed-Fit Cotton T-shirt (Assorted Colours),,in stock,img/p/relaxed-fit-cotton-t-shirt-assorted-colours.jpg
+Fashion,Floral Print Tote Bag (Black),,in stock,img/p/floral-print-tote-bag-black.jpg
+Fashion,"High-Waist Workout Leggings (Grey, Black, Brown, Blue)",,in stock,img/p/high-waist-workout-leggings-grey-black-brown-blue.jpg
+Gift packages,Executive Corporate Gift Set (Black),,in stock,img/p/executive-corporate-gift-set-black.jpg
+Gift packages,Birthday Bath and Body Gift Set,,in stock,img/p/birthday-bath-and-body-gift-set.jpg
+Gift packages,"Self-care Gift Set, Sunshine Yellow",,in stock,img/p/self-care-gift-set-sunshine-yellow.jpg
+Gift packages,"Self-care Gift Set, Purple Amethyst",,in stock,img/p/self-care-gift-set-purple-amethyst.jpg
+Gift packages,Scented Candle Gift Set (6 Scents),,in stock,img/p/scented-candle-gift-set-6-scents.jpg
+Gift packages,Luxury Snack Gift Basket (Gold),,in stock,img/p/luxury-snack-gift-basket-gold.jpg
+Gift packages,Fruit and Treats Hamper,,in stock,img/p/fruit-and-treats-hamper.jpg
 Gift packages,Fitness Starter Kit,,in stock,
-Gift packages,Self-care Gift Set,,in stock,
-Gift packages,Kitchen Gift Basket,,in stock,
 Gift packages,Couples Spa Night Box,,in stock,
 Gift packages,Office Wellness Hamper,,in stock,
-Gift packages,Birthday Wellness Box,,in stock,
-Gift packages,Corporate Gift Pack,,in stock,
