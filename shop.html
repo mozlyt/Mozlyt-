@@ -347,7 +347,7 @@ var SHEET_CSV_URL="";
       else if(c=='\n'||c=='\r'){if(c=='\r'&&tx[i+1]=='\n')i++;row.push(f);f='';r.push(row);row=[]}
       else f+=c}
     if(f!==''||row.length){row.push(f);r.push(row)}return r}
-  function fromCSV(tx){var r=parseCSV(tx);if(!r.length)return[];var h=r.shift().map(function(x){return x.trim().toLowerCase()}),ix=function(n){return h.indexOf(n)};
+  function fromCSV(tx){var r=parseCSV(tx);if(!r.length)return[];var h=r.shift().map(function(x){return x.toLowerCase().replace(/[^a-z]/g,'')}),ix=function(n){return h.indexOf(n)};
     return r.map(function(x){return{cat:(x[ix('category')]||'').trim(),name:(x[ix('name')]||'').trim(),price:(x[ix('price')]||'').trim(),status:(x[ix('status')]||'').trim().toLowerCase(),photo:(x[ix('photo')]||'').trim()}}).filter(function(p){return p.name&&p.status!=='hidden'})}
   function priceText(p){if(!p)return 'Price on request';return /^[\d.,\s]+$/.test(p)?'GH₵ '+p.trim():p}
   function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'more'}
