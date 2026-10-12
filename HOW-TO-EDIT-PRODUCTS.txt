@@ -1,0 +1,24 @@
+HOW TO MANAGE YOUR SHOP PRODUCTS FROM A GOOGLE SHEET
+
+ONE-TIME SETUP (about 10 minutes)
+1. Open Google Sheets and create a new sheet. Choose File > Import > Upload and pick
+   mozlyt-products-template.csv. Choose "Replace spreadsheet". Name the tab "Products".
+2. Choose File > Share > Publish to web.
+   In the first box choose the "Products" tab, in the second box choose
+   "Comma-separated values (.csv)", then press Publish.
+3. Copy the link it gives you. It looks like https://docs.google.com/spreadsheets/d/e/.../pub?output=csv
+4. Send me that link and I will put it into the shop.
+   (Or open shop.html and paste it between the quotes in: var SHEET_CSV_URL="";)
+
+THE COLUMNS (keep the first row exactly as it is)
+  category  Use one of: Massage tools and recovery, Fitness equipment, Nutrition,
+            Skincare and beauty, Cooking tools, Fashion, Gift packages.
+            A new name creates a new section automatically.
+  name      The product name.
+  price     A number such as 250 shows as GH₵ 250. Leave empty to show "Price on request".
+  status    in stock, sold out, or hidden (hidden removes it from the shop).
+  photo     Optional. A link to a picture of the product. Empty shows an icon.
+
+EVERY DAY AFTER THAT
+  Edit the sheet on your phone. The shop updates by itself, usually within a few minutes.
+  If the sheet cannot be reached, the shop shows its built-in list instead.

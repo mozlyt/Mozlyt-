@@ -1,0 +1,27 @@
+MOZLYT website - how to put it online
+
+WHAT IS IN THIS FOLDER
+  index.html, shop.html, career.html, what-we-do.html, about.html, blog.html
+  img/  (your logo and photo)
+Keep all of them together in the same folder. Do not rename them.
+
+STEPS
+1. Buy a basic web hosting plan (any plan that gives you a File Manager).
+2. Connect your domain mozlyt.com to the new hosting. Your hosting company has a
+   "connect an existing domain" guide. Your domain is currently with Wix, so you
+   will change its name servers (or DNS records) to the ones your new host gives you.
+   Do this last, because your old Wix site goes offline when you switch.
+3. Open the File Manager, go into the folder called public_html, and upload
+   everything in this folder (the six pages and the img folder).
+   index.html must sit directly inside public_html.
+4. Turn on the free SSL certificate (HTTPS) in the hosting panel.
+5. Visit mozlyt.com on your phone and test: menu, Book on WhatsApp, Add to list.
+
+THINGS TO CHECK BEFORE YOU GO LIVE
+- Your Instagram, TikTok and Facebook links (they point to /mozlyt).
+- The email Info@mozlyt.com exists (create it in the hosting panel) or change it to mozlyt0@gmail.com.
+- The story and founder text on the About page.
+- Add Privacy and Terms pages later.
+
+TO CHANGE YOUR WHATSAPP NUMBER LATER
+Search every .html file for 233538729743 and replace it (country code 233, no zero).

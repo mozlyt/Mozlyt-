@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Take a career with MOZLYT — Learn it. Sell it. Own it.</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MOZLYT">
+<meta name="description" content="Take a career with MOZLYT: learn a trade, get supplied at wholesale prices, be coached to your first sales and open your own online store.">
+<link rel="icon" href="img/favicon.png" type="image/png">
+<meta property="og:title" content="MOZLYT">
+<meta property="og:description" content="Take a career with MOZLYT: learn a trade, get supplied at wholesale prices, be coached to your first sales and open your own online store.">
+<meta property="og:image" content="img/logo.png">
+<meta name="theme-color" content="#0E2A47">
+
+<style>
+:root{
+  --ink:#0E2A47; --green:#1F9D6B; --green-d:#157650; --gold:#F2B134;
+  --paper:#F6F8F5; --white:#fff; --line:#DCE4DE; --mute:#5B6B7A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.12;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.btn{display:inline-block;padding:13px 22px;border-radius:10px;font-weight:600;font-size:15px;border:2px solid transparent;cursor:pointer}
+.btn.primary{background:var(--green);color:#fff}
+.btn.primary:hover{background:var(--green-d)}
+.btn.ghost{border-color:var(--ink);color:var(--ink)}
+nav a:hover{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;max-width:90%;text-align:center}
+.toast.show{opacity:1}
+footer a{margin:0 10px;text-decoration:underline}
+header{background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:Georgia,serif;font-weight:700;font-size:22px;letter-spacing:.02em}
+.logo span{color:var(--green)}
+nav{display:flex;gap:26px;font-size:14px;color:var(--mute)}
+@media(max-width:720px){nav{display:none}}
+
+.hero{padding:56px 0 40px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+@media(max-width:860px){.hero .wrap{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(38px,6.4vw,66px);margin-bottom:18px}
+.hero p.lead{font-size:18px;color:var(--mute);max-width:46ch;margin-bottom:26px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+.hero small{display:block;margin-top:14px;color:var(--mute);font-size:13px}
+
+/* phone */
+.phone{width:270px;margin:0 auto;background:var(--ink);border-radius:34px;padding:10px;box-shadow:0 24px 50px rgba(14,42,71,.25)}
+.screen{background:var(--white);border-radius:26px;overflow:hidden;min-height:470px}
+.s-top{background:var(--green);color:#fff;padding:18px 16px 14px}
+.s-top b{font-family:Georgia,serif;font-size:18px;display:block}
+.s-top i{font-style:normal;font-size:12px;opacity:.9}
+.s-tabs{display:flex;gap:8px;padding:12px 14px;overflow:hidden}
+.chip{font-size:11px;padding:5px 11px;border-radius:99px;background:var(--paper);border:1px solid var(--line);white-space:nowrap}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 14px}
+.prod{border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:12px}
+.prod .img{height:78px}
+.prod div.t{padding:8px}
+.prod b{display:block;font-size:12px}
+.prod span{color:var(--green-d);font-weight:700}
+.i1{background:linear-gradient(135deg,#BFE6D4,#7CCBA6)}
+.i2{background:linear-gradient(135deg,#FBE2A6,#F2B134)}
+.i3{background:linear-gradient(135deg,#C9D8EA,#8FA9C8)}
+.i4{background:linear-gradient(135deg,#F3C9C0,#E39A8C)}
+.order{margin:0 14px 14px;background:var(--ink);color:#fff;text-align:center;padding:11px;border-radius:10px;font-size:13px;font-weight:600}
+
+section{padding:64px 0}
+section h2{font-size:clamp(28px,4.4vw,42px);margin-bottom:12px}
+section .sub{color:var(--mute);max-width:58ch;margin-bottom:34px}
+.white{background:var(--white)}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.step{border-top:4px solid var(--green);padding-top:14px}
+.step:nth-child(2){border-color:var(--gold)}
+.step:nth-child(3){border-color:var(--ink)}
+.step em{font-style:normal;font-weight:700;color:var(--mute);font-size:13px}
+.step h3{font-size:22px;margin:6px 0}
+.step p{font-size:14.5px;color:var(--mute)}
+
+/* trades */
+.trades{display:flex;flex-wrap:wrap;gap:12px}
+.trade{padding:14px 22px;border:2px solid var(--ink);border-radius:99px;font-weight:600}
+.trade:nth-child(3n+1){background:var(--green);border-color:var(--green);color:#fff}
+.trade:nth-child(3n+2){background:var(--gold);border-color:var(--gold)}
+
+/* dashboard */
+.split{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:center}
+@media(max-width:860px){.split{grid-template-columns:1fr}}
+.dash{background:var(--white);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 14px 34px rgba(14,42,71,.1)}
+.d-bar{background:var(--ink);color:#fff;padding:12px 16px;font-size:13px;display:flex;justify-content:space-between}
+.d-body{padding:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--paper);border-radius:10px;padding:10px}
+.stat small{color:var(--mute);font-size:11px}
+.stat b{display:block;font-size:19px}
+.bars{display:flex;align-items:flex-end;gap:8px;height:90px;margin-bottom:16px}
+.bars div{flex:1;background:var(--green);border-radius:5px 5px 0 0}
+.bars div:nth-child(odd){background:var(--gold)}
+.row{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-top:1px solid var(--line)}
+.row b{color:var(--green-d)}
+.note{font-size:12px;color:var(--mute);margin-top:10px}
+.list{list-style:none;display:grid;gap:12px;margin-top:6px}
+.list li{padding-left:28px;position:relative}
+.list li:before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;border-radius:50%;background:var(--green)}
+
+/* pricing */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:860px){.plans{grid-template-columns:1fr}}
+.plan{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:24px}
+.plan.best{border:2px solid var(--green)}
+.plan h3{font-size:22px}
+.price{font-size:34px;font-weight:700;margin:10px 0}
+.price small{font-size:14px;color:var(--mute);font-weight:400}
+.plan ul{list-style:none;margin:14px 0 20px;display:grid;gap:8px;font-size:14.5px}
+.plan li:before{content:"✓ ";color:var(--green);font-weight:700}
+.plan .btn{width:100%;text-align:center}
+
+.final{background:var(--ink);color:#fff;text-align:center}
+.final h2{color:#fff}
+.final p{color:#B9C7D6;max-width:50ch;margin:0 auto 26px}
+footer{padding:26px 0;font-size:13px;color:var(--mute);text-align:center}
+</style>
+<style id="mz-shared">
+.mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.mz-header{background:#fff;border-bottom:1px solid #DCE4DE;position:sticky;top:0;z-index:50}
+.mz-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.mz-logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:22px;letter-spacing:.02em;color:#0E2A47;text-decoration:none}
+.mz-logo span{color:#1F9D6B}
+.mz-nav{display:flex;align-items:center;gap:22px;font-size:14.5px}
+.mz-nav a{color:#5B6B7A;text-decoration:none}
+.mz-nav a.mz-cur{color:#0E2A47;font-weight:700;border-bottom:3px solid #1F9D6B;padding-bottom:3px}
+.mz-ctas{display:flex;gap:10px;margin-left:8px}
+.mz-btn{display:inline-block;padding:9px 16px;border-radius:10px;font-weight:600;font-size:14px;text-align:center;border:2px solid transparent;white-space:nowrap}
+.mz-btn.mz-primary{background:#1F9D6B;color:#fff}
+.mz-btn.mz-primary:hover{background:#157650}
+.mz-btn.mz-gold{background:#F2B134;color:#0E2A47}
+.mz-burger{display:none;width:44px;height:44px;border:1px solid #DCE4DE;border-radius:10px;background:#fff;cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0}
+.mz-burger span{display:block;width:20px;height:2px;background:#0E2A47;border-radius:2px;transition:transform .2s,opacity .2s}
+.mz-open .mz-burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.mz-open .mz-burger span:nth-child(2){opacity:0}
+.mz-open .mz-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(prefers-reduced-motion:reduce){.mz-burger span{transition:none}}
+@media(max-width:900px){
+  .mz-burger{display:flex}
+  .mz-nav{display:none;position:absolute;left:0;right:0;top:64px;background:#fff;border-bottom:1px solid #DCE4DE;flex-direction:column;align-items:stretch;gap:0;padding:6px 20px 20px;box-shadow:0 16px 30px rgba(14,42,71,.12);font-size:16px}
+  .mz-open .mz-nav{display:flex}
+  .mz-nav > a{padding:14px 0;border-bottom:1px solid #EEF2F0}
+  .mz-nav a.mz-cur{border-bottom:1px solid #EEF2F0;padding-bottom:14px;color:#1F9D6B}
+  .mz-ctas{flex-direction:column;margin:16px 0 0}
+  .mz-btn{padding:13px 16px;font-size:15px}
+}
+.mz-footer{background:#0E2A47;color:#B9C7D6;padding:0;text-align:left;font-size:14.5px;line-height:1.55}
+.mz-fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px;padding-top:52px;padding-bottom:36px}
+@media(max-width:900px){.mz-fgrid{grid-template-columns:1fr 1fr;gap:28px;padding-top:40px}.mz-fbrand{grid-column:1/-1}}
+.mz-footer .mz-logo{color:#fff;display:inline-block;padding:0}
+.mz-footer .mz-logo span{color:#5FD3A1}
+.mz-footer p{margin:12px 0 0;max-width:38ch;color:#B9C7D6}
+.mz-footer h4{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;color:#fff;margin:0 0 10px;font-weight:700}
+.mz-footer a{color:#B9C7D6;text-decoration:none;margin:0;display:block;padding:5px 0}
+.mz-footer a:hover{color:#fff;text-decoration:underline}
+.mz-contact{margin-top:14px;color:#DCE6F1}
+.mz-social{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.mz-footer .mz-social a{display:inline-block;padding:7px 14px;border:1px solid #38577A;border-radius:99px;font-size:13px;color:#DCE6F1}
+.mz-footer .mz-social a:hover{border-color:#fff;text-decoration:none}
+.mz-fbottom{border-top:1px solid #23415F;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:18px;padding-bottom:24px;font-size:13px;color:#8FA3BA}
+.mz-footer .mz-fbottom a{display:inline-block;margin-left:18px;padding:0;color:#B9C7D6;text-decoration:underline}
+
+:where([id]){scroll-margin-top:76px}
+.mz-logo{display:inline-flex;align-items:center}
+.mz-mark{width:36px;height:36px;border-radius:9px;margin-right:9px;display:block}
+.mz-footer .mz-contact a{display:inline;padding:0;color:#fff;text-decoration:underline}
+.wa-float{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;background:#25D366;color:#073B1F;font-weight:700;font-size:14px;padding:12px 18px 12px 14px;border-radius:99px;box-shadow:0 8px 22px rgba(0,0,0,.28);text-decoration:none;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wa-float svg{width:24px;height:24px;fill:#073B1F;flex:none}
+@media(max-width:600px){.wa-float span{display:none}.wa-float{padding:14px}}
+body.has-list .wa-float{bottom:84px}
+</style>
+</head>
+<body>
+
+<header class="mz-header" id="mzHeader">
+  <div class="mz-wrap mz-bar">
+    <a class="mz-logo" href="index.html"><img class="mz-mark" src="img/logo.png" alt="" width="36" height="36">MOZ<span>LYT</span></a>
+    <nav class="mz-nav" id="mzNav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="what-we-do.html">What we do</a>
+      <a href="shop.html">Shop</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About us</a>
+      <span class="mz-ctas"><a class="mz-btn mz-primary" href="index.html#services">Book a service</a><a class="mz-btn mz-gold" href="career.html">Take a career with us</a></span>
+    </nav>
+    <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Learn it. Sell it. Own it.</h1>
+      <p class="lead">MOZLYT trains you, supplies you with products, coaches you to your first sales, then gives you your own online store. Your business, your customers, your freedom.</p>
+      <div class="cta">
+        <a class="btn primary go" href="#">Start training</a>
+        <a class="btn ghost" href="#how">See how it works</a>
+      </div>
+      <small>Fitness, massage, fashion, food and more. Based in Accra, Ghana. Online seller stores are opening soon: message us to join the first group.</small>
+    </div>
+    <div class="phone" aria-label="Example seller store on a phone">
+      <div class="screen">
+        <div class="s-top"><b>Ama's Wellness Store</b><i>Powered by MOZLYT</i></div>
+        <div class="s-tabs"><span class="chip on">All</span><span class="chip">Fitness</span><span class="chip">Massage</span><span class="chip">Care</span></div>
+        <div class="grid2">
+          <div class="prod"><div class="img i1"></div><div class="t"><b>Product name</b><span>GH₵250</span></div></div>
+          <div class="prod"><div class="img i2"></div><div class="t"><b>Product name</b><span>GH₵180</span></div></div>
+          <div class="prod"><div class="img i3"></div><div class="t"><b>Product name</b><span>GH₵320</span></div></div>
+          <div class="prod"><div class="img i4"></div><div class="t"><b>Product name</b><span>GH₵95</span></div></div>
+        </div>
+        <div class="order">Order on WhatsApp</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="how" class="white">
+  <div class="wrap">
+    <h2>From first lesson to your own store</h2>
+    <p class="sub">You never start alone. Each stage builds on the one before, and you only move forward when you are ready.</p>
+    <div class="steps">
+      <div class="step"><em>Step 1</em><h3>Train</h3><p>Learn your products, how to sell, how to serve customers and how to keep honest accounts.</p></div>
+      <div class="step"><em>Step 2</em><h3>Supply</h3><p>MOZLYT supplies quality products at wholesale prices, so you earn on every sale.</p></div>
+      <div class="step"><em>Step 3</em><h3>Coach</h3><p>Sell in person first, then learn WhatsApp, Facebook and TikTok with a coach beside you.</p></div>
+      <div class="step"><em>Step 4</em><h3>Go online</h3><p>Open your own store on the MOZLYT platform and grow your own customer base.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="trades">
+  <div class="wrap">
+    <h2>One network, many trades</h2>
+    <p class="sub">MOZLYT began with fitness and wellness. The same system works for anyone who has something to sell.</p>
+    <div class="trades">
+      <span class="trade">Fitness</span><span class="trade">Massage and wellness</span><span class="trade">Fashion</span><span class="trade">Restaurants and food</span><span class="trade">Beauty and skincare</span><span class="trade">Your trade</span>
+    </div>
+  </div>
+</section>
+
+<section id="platform" class="white">
+  <div class="wrap split">
+    <div>
+      <h2>Your own store, ready in minutes</h2>
+      <p class="sub">Everything a seller needs to run an independent business, built into one simple dashboard.</p>
+      <ul class="list">
+        <li>Your own store link to share on WhatsApp, Instagram and TikTok</li>
+        <li>Products from MOZLYT already loaded, with prices you control</li>
+        <li>Orders, customers and sales in one place</li>
+        <li>Training lessons inside the same app</li>
+        <li>Mobile first, so you can run it from your phone</li>
+      </ul>
+    </div>
+    <div class="dash">
+      <div class="d-bar"><span>Seller dashboard</span><span>Ama's Wellness Store</span></div>
+      <div class="d-body">
+        <div class="stats">
+          <div class="stat"><small>Sales this week</small><b>GH₵1,800</b></div>
+          <div class="stat"><small>Orders</small><b>9</b></div>
+          <div class="stat"><small>Customers</small><b>24</b></div>
+        </div>
+        <div class="bars" aria-hidden="true"><div style="height:40%"></div><div style="height:65%"></div><div style="height:50%"></div><div style="height:85%"></div><div style="height:60%"></div><div style="height:100%"></div><div style="height:75%"></div></div>
+        <div class="row"><span>Order from Kofi A.</span><b>GH₵250</b></div>
+        <div class="row"><span>Order from Efua M.</span><b>GH₵180</b></div>
+        <div class="row"><span>Restock request sent to MOZLYT</span><b>Pending</b></div>
+        <p class="note">Sample figures to show the idea. Not real business records.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="plans">
+  <div class="wrap">
+    <h2>Simple monthly plans</h2>
+    <p class="sub">Start with training, then add your store when you are ready.</p>
+    <div class="plans">
+      <div class="plan"><h3>Trainee</h3><div class="price">Price on request</div>
+        <ul><li>Training lessons</li><li>Wholesale product supply</li><li>Coach support</li></ul>
+        <a class="btn ghost go" href="#">Start training</a></div>
+      <div class="plan best"><h3>Seller</h3><div class="price">Price on request</div>
+        <ul><li>Everything in Trainee</li><li>Your own online store</li><li>Orders and sales dashboard</li><li>Your own store link</li></ul>
+        <a class="btn primary go" href="#">Open my store</a></div>
+      <div class="plan"><h3>Distributor</h3><div class="price">Price on request</div>
+        <ul><li>Everything in Seller</li><li>Best wholesale prices</li><li>Mentor your own sellers</li></ul>
+        <a class="btn ghost go" href="#">Talk to us</a></div>
+    </div>
+    <p class="note">Plan prices are shared on request. Message us on WhatsApp and we will explain each plan.</p>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Build a business that is truly yours</h2>
+    <p>Join the MOZLYT network and start with training, supply and a coach who wants you to win.</p>
+    <a class="btn primary go" href="#">Join MOZLYT</a>
+  </div>
+</section>
+
+<footer class="mz-footer">
+  <div class="mz-wrap mz-fgrid">
+    <div class="mz-fbrand">
+      <a class="mz-logo" href="index.html"><img class="mz-mark" src="img/logo.png" alt="" width="36" height="36">MOZ<span>LYT</span></a>
+      <p>Trusted wellness, fitness, beauty, fashion and food services and products. Based in Accra, Ghana.</p>
+      <div class="mz-contact">WhatsApp: <a href="https://wa.me/233538729743" target="_blank" rel="noopener">053 872 9743</a><br>Email: <a href="mailto:Info@mozlyt.com">Info@mozlyt.com</a></div>
+      <div class="mz-social"><a href="https://www.instagram.com/mozlyt" target="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@mozlyt" target="_blank" rel="noopener">TikTok</a><a href="https://www.facebook.com/mozlyt" target="_blank" rel="noopener">Facebook</a><a href="https://wa.me/233538729743" target="_blank" rel="noopener">WhatsApp</a></div>
+    </div>
+    <div>
+      <h4>Customers</h4>
+      <a href="index.html#services">Book a service</a>
+      <a href="shop.html">Shop products</a>
+      <a href="index.html#how">How booking works</a>
+      <a href="index.html#delivery">Delivery areas</a>
+    </div>
+    <div>
+      <h4>Sellers</h4>
+      <a href="career.html">Take a career with us</a>
+      <a href="what-we-do.html#sellers">What we do for sellers</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="about.html">About us</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html#contact">Contact</a>
+      <a href="#" id="installApp" style="display:none;font-weight:700;color:#5FD3A1">Install the MOZLYT app</a>
+    </div>
+  </div>
+  <div class="mz-wrap mz-fbottom">
+    <span>&copy; 2026 MOZLYT. Accra, Ghana. Get the app: open this site in your phone browser, then choose Add to Home Screen.</span>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* When the separate seller platform is ready, put its address here.
+   Until then every "Join", "Start", "Open my store" and "Talk to us" button opens WhatsApp. */
+var PLATFORM_URL="";
+(function(){
+  var WA="233538729743";
+  document.querySelectorAll('a.go').forEach(function(a){
+    if(PLATFORM_URL){a.href=PLATFORM_URL;return}
+    var label=a.textContent.trim();
+    var m="Hello MOZLYT, I would like to join the network ("+label+"). Please tell me how it works and what the next step is.";
+    a.href="https://wa.me/"+WA+"?text="+encodeURIComponent(m);
+    a.target="_blank";a.rel="noopener";
+  });
+})();
+</script>
+<script id="mz-shared-js">(function(){var h=document.getElementById('mzHeader');if(!h)return;var b=h.querySelector('.mz-burger');
+function set(o){h.classList.toggle('mz-open',o);b.setAttribute('aria-expanded',o?'true':'false')}
+b.addEventListener('click',function(){set(!h.classList.contains('mz-open'))});
+h.querySelectorAll('.mz-nav a').forEach(function(a){a.addEventListener('click',function(){set(false)})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});})();</script>
+<a class="wa-float" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20would%20like%20to%20know%20more." target="_blank" rel="noopener" aria-label="Chat with MOZLYT on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z"/></svg><span>Chat on WhatsApp</span></a>
+<script>
+(function(){
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+  var deferred=null,btn=document.getElementById('installApp');
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;if(btn)btn.style.display='block'});
+  if(btn)btn.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;btn.style.display='none'})});
+  window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
+})();
+</script>
+</body>
+</html>

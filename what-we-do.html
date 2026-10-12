@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What we do — MOZLYT</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MOZLYT">
+<meta name="description" content="What MOZLYT does for customers and for sellers: trusted services in Accra, and training, supply and coaching for people who want to earn.">
+<link rel="icon" href="img/favicon.png" type="image/png">
+<meta property="og:title" content="MOZLYT">
+<meta property="og:description" content="What MOZLYT does for customers and for sellers: trusted services in Accra, and training, supply and coaching for people who want to earn.">
+<meta property="og:image" content="img/logo.png">
+<meta name="theme-color" content="#0E2A47">
+
+<style>
+:root{--ink:#0E2A47;--green:#1F9D6B;--green-d:#157650;--gold:#F2B134;--paper:#F6F8F5;--white:#fff;--line:#DCE4DE;--mute:#5B6B7A}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.15;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:600;font-size:15px;border:2px solid transparent;cursor:pointer;text-align:center}
+.btn.primary{background:var(--green);color:#fff}
+.btn.primary:hover{background:var(--green-d)}
+.btn.ghost{border-color:var(--ink);color:var(--ink);background:transparent}
+.btn.gold{background:var(--gold);color:var(--ink)}
+.btn.small{padding:8px 16px;font-size:14px}
+svg.i{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+header{background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.logo{font-family:Georgia,serif;font-weight:700;font-size:22px;letter-spacing:.02em}
+.logo span{color:var(--green)}
+nav{display:flex;gap:22px;font-size:14px;color:var(--mute);align-items:center}
+nav a:hover{color:var(--ink)}
+nav a.on{color:var(--ink);font-weight:700;border-bottom:3px solid var(--green);padding-bottom:3px}
+@media(max-width:760px){nav .hide-m{display:none}}
+
+.hero{padding:60px 0 44px}
+.hero h1{font-size:clamp(34px,6vw,58px);max-width:18ch;margin-bottom:16px}
+.hero p{font-size:18px;color:var(--mute);max-width:56ch;margin-bottom:24px}
+.jump{display:flex;gap:10px;flex-wrap:wrap}
+
+section{padding:56px 0}
+section h2{font-size:clamp(26px,4.2vw,40px);margin-bottom:8px}
+section .sub{color:var(--mute);max-width:60ch;margin-bottom:26px}
+.white{background:var(--white)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.item{border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;gap:16px;align-items:flex-start;background:var(--paper)}
+.white .item{background:var(--paper)}
+section:not(.white) .item{background:var(--white)}
+.item .ic{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;flex:none;color:var(--ink)}
+.item h3{font-size:19px;margin-bottom:4px}
+.item p{font-size:14.5px;color:var(--mute)}
+.soon{display:inline-block;margin-left:6px;font-family:system-ui,sans-serif;font-size:11.5px;font-weight:700;background:#FFF1CC;color:#9A6700;border-radius:99px;padding:2px 9px;vertical-align:2px}
+.c1{background:#BFE6D4}.c2{background:#FBE2A6}.c3{background:#C9D8EA}.c4{background:#F3C9C0}.c5{background:#D9D3EE}.c6{background:#E5E2D3}.c7{background:#F7D9A8}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:6px}
+@media(max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.step{border-top:4px solid var(--green);padding-top:14px}
+.step:nth-child(2){border-color:var(--gold)}
+.step:nth-child(3){border-color:var(--ink)}
+.step em{font-style:normal;font-weight:700;color:var(--mute);font-size:13px}
+.step h3{font-size:21px;margin:6px 0}
+.step p{font-size:14.5px;color:var(--mute)}
+
+.final{background:var(--ink);color:#fff;text-align:center}
+.final h2{color:#fff}
+.final p{color:#B9C7D6;max-width:52ch;margin:0 auto 26px}
+.final .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.final .btn.ghost{border-color:#fff;color:#fff}
+footer{padding:24px 0;font-size:13px;color:var(--mute);text-align:center}
+footer a{margin:0 10px;text-decoration:underline}
+</style>
+<style id="mz-shared">
+.mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.mz-header{background:#fff;border-bottom:1px solid #DCE4DE;position:sticky;top:0;z-index:50}
+.mz-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.mz-logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:22px;letter-spacing:.02em;color:#0E2A47;text-decoration:none}
+.mz-logo span{color:#1F9D6B}
+.mz-nav{display:flex;align-items:center;gap:22px;font-size:14.5px}
+.mz-nav a{color:#5B6B7A;text-decoration:none}
+.mz-nav a.mz-cur{color:#0E2A47;font-weight:700;border-bottom:3px solid #1F9D6B;padding-bottom:3px}
+.mz-ctas{display:flex;gap:10px;margin-left:8px}
+.mz-btn{display:inline-block;padding:9px 16px;border-radius:10px;font-weight:600;font-size:14px;text-align:center;border:2px solid transparent;white-space:nowrap}
+.mz-btn.mz-primary{background:#1F9D6B;color:#fff}
+.mz-btn.mz-primary:hover{background:#157650}
+.mz-btn.mz-gold{background:#F2B134;color:#0E2A47}
+.mz-burger{display:none;width:44px;height:44px;border:1px solid #DCE4DE;border-radius:10px;background:#fff;cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0}
+.mz-burger span{display:block;width:20px;height:2px;background:#0E2A47;border-radius:2px;transition:transform .2s,opacity .2s}
+.mz-open .mz-burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.mz-open .mz-burger span:nth-child(2){opacity:0}
+.mz-open .mz-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(prefers-reduced-motion:reduce){.mz-burger span{transition:none}}
+@media(max-width:900px){
+  .mz-burger{display:flex}
+  .mz-nav{display:none;position:absolute;left:0;right:0;top:64px;background:#fff;border-bottom:1px solid #DCE4DE;flex-direction:column;align-items:stretch;gap:0;padding:6px 20px 20px;box-shadow:0 16px 30px rgba(14,42,71,.12);font-size:16px}
+  .mz-open .mz-nav{display:flex}
+  .mz-nav > a{padding:14px 0;border-bottom:1px solid #EEF2F0}
+  .mz-nav a.mz-cur{border-bottom:1px solid #EEF2F0;padding-bottom:14px;color:#1F9D6B}
+  .mz-ctas{flex-direction:column;margin:16px 0 0}
+  .mz-btn{padding:13px 16px;font-size:15px}
+}
+.mz-footer{background:#0E2A47;color:#B9C7D6;padding:0;text-align:left;font-size:14.5px;line-height:1.55}
+.mz-fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px;padding-top:52px;padding-bottom:36px}
+@media(max-width:900px){.mz-fgrid{grid-template-columns:1fr 1fr;gap:28px;padding-top:40px}.mz-fbrand{grid-column:1/-1}}
+.mz-footer .mz-logo{color:#fff;display:inline-block;padding:0}
+.mz-footer .mz-logo span{color:#5FD3A1}
+.mz-footer p{margin:12px 0 0;max-width:38ch;color:#B9C7D6}
+.mz-footer h4{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;color:#fff;margin:0 0 10px;font-weight:700}
+.mz-footer a{color:#B9C7D6;text-decoration:none;margin:0;display:block;padding:5px 0}
+.mz-footer a:hover{color:#fff;text-decoration:underline}
+.mz-contact{margin-top:14px;color:#DCE6F1}
+.mz-social{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.mz-footer .mz-social a{display:inline-block;padding:7px 14px;border:1px solid #38577A;border-radius:99px;font-size:13px;color:#DCE6F1}
+.mz-footer .mz-social a:hover{border-color:#fff;text-decoration:none}
+.mz-fbottom{border-top:1px solid #23415F;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:18px;padding-bottom:24px;font-size:13px;color:#8FA3BA}
+.mz-footer .mz-fbottom a{display:inline-block;margin-left:18px;padding:0;color:#B9C7D6;text-decoration:underline}
+
+:where([id]){scroll-margin-top:76px}
+.mz-logo{display:inline-flex;align-items:center}
+.mz-mark{width:36px;height:36px;border-radius:9px;margin-right:9px;display:block}
+.mz-footer .mz-contact a{display:inline;padding:0;color:#fff;text-decoration:underline}
+.wa-float{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;background:#25D366;color:#073B1F;font-weight:700;font-size:14px;padding:12px 18px 12px 14px;border-radius:99px;box-shadow:0 8px 22px rgba(0,0,0,.28);text-decoration:none;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wa-float svg{width:24px;height:24px;fill:#073B1F;flex:none}
+@media(max-width:600px){.wa-float span{display:none}.wa-float{padding:14px}}
+body.has-list .wa-float{bottom:84px}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="cal" viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></symbol>
+    <symbol id="bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8zM9 8V6a3 3 0 0 1 6 0v2"/></symbol>
+    <symbol id="match" viewBox="0 0 24 24"><path d="M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21c0-4 3.5-6 7-6M15 17l2.5 2.5L22 14"/></symbol>
+    <symbol id="lock" viewBox="0 0 24 24"><path d="M5 11h14v9H5zM8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"/></symbol>
+    <symbol id="truck" viewBox="0 0 24 24"><path d="M2 6h11v10H2zM13 9h4l4 4v3h-8zM6 18.5a1.5 1.5 0 1 0 .01 0M17 18.5a1.5 1.5 0 1 0 .01 0"/></symbol>
+    <symbol id="book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5zM8 7h7"/></symbol>
+    <symbol id="brief" viewBox="0 0 24 24"><path d="M4 8h16v11H4zM9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M4 13h16"/></symbol>
+    <symbol id="tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8L3 12zM7.5 8.5h.01"/></symbol>
+    <symbol id="star" viewBox="0 0 24 24"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2 8 12.7 4 8.8l5.5-.8z"/></symbol>
+    <symbol id="store" viewBox="0 0 24 24"><path d="M4 9l1-5h14l1 5M4 9h16v11H4zM9 20v-6h6v6"/></symbol>
+    <symbol id="chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="mega" viewBox="0 0 24 24"><path d="M3 10v4h4l8 4V6L7 10H3zM18 9a4 4 0 0 1 0 6"/></symbol>
+    <symbol id="wallet" viewBox="0 0 24 24"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7zM3 7l12-3v3M17 14h2"/></symbol>
+    <symbol id="stairs" viewBox="0 0 24 24"><path d="M3 20h5v-4h5v-4h5V8h3"/></symbol>
+    <symbol id="check" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM8.5 12l2.5 2.5 4.5-5"/></symbol>
+  </defs>
+</svg>
+
+<header class="mz-header" id="mzHeader">
+  <div class="mz-wrap mz-bar">
+    <a class="mz-logo" href="index.html"><img class="mz-mark" src="img/logo.png" alt="" width="36" height="36">MOZ<span>LYT</span></a>
+    <nav class="mz-nav" id="mzNav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="what-we-do.html" class="mz-cur" aria-current="page">What we do</a>
+      <a href="shop.html">Shop</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About us</a>
+      <span class="mz-ctas"><a class="mz-btn mz-primary" href="index.html#services">Book a service</a><a class="mz-btn mz-gold" href="career.html">Take a career with us</a></span>
+    </nav>
+    <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>Trusted services for customers. A real business for sellers.</h1>
+    <p>MOZLYT brings wellness, fitness, beauty and everyday services to your door in Accra, and gives people the training, products and tools to build their own income.</p>
+    <div class="jump">
+      <a class="btn primary" href="#customers">What we do for customers</a>
+      <a class="btn ghost" href="#sellers">What we do for sellers</a>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOMERS -->
+<section id="customers">
+  <div class="wrap">
+    <h2>What we do for customers</h2>
+    <p class="sub">You deal with one trusted brand. We take care of the rest.</p>
+    <div class="grid">
+      <div class="item"><span class="ic c1"><svg class="i"><use href="#cal"/></svg></span><div><h3>One place to book services</h3><p>Massage, fitness, nutrition, skincare, fashion, food and gift packages, at your home or office in Accra.</p></div></div>
+      <div class="item"><span class="ic c2"><svg class="i"><use href="#bag"/></svg></span><div><h3>A shop for products</h3><p>Massage tools, cooking tools, fitness gear, skincare, nutrition, fashion and gift sets, delivered across Ghana.</p></div></div>
+      <div class="item"><span class="ic c3"><svg class="i"><use href="#match"/></svg></span><div><h3>We choose the professional</h3><p>Every booking is matched to a professional MOZLYT has trained and approved, so you never have to search.</p></div></div>
+      <div class="item"><span class="ic c4"><svg class="i"><use href="#lock"/></svg></span><div><h3>Clear prices</h3><p>We confirm the price with you on WhatsApp before you pay, so there are no surprises.</p></div></div>
+      <div class="item"><span class="ic c5"><svg class="i"><use href="#chat"/></svg></span><div><h3>Confirmation and follow-up</h3><p>We confirm your details on WhatsApp, and ask you to rate the job afterwards to keep quality high.</p></div></div>
+      <div class="item"><span class="ic c6"><svg class="i"><use href="#truck"/></svg></span><div><h3>Delivery and support</h3><p>We pack and deliver your orders, and you can get help from us on WhatsApp.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SELLERS -->
+<section id="sellers" class="white">
+  <div class="wrap">
+    <h2>What we do for sellers</h2>
+    <p class="sub">We train you, supply you, send you customers and give you the tools to run your own business.</p>
+    <div class="grid">
+      <div class="item"><span class="ic c1"><svg class="i"><use href="#book"/></svg></span><div><h3>Training</h3><p>Product knowledge, selling, customer service and honest accounts. You start with physical selling, then learn to sell online.</p></div></div>
+      <div class="item"><span class="ic c2"><svg class="i"><use href="#brief"/></svg></span><div><h3>A choice of careers</h3><p>Fitness, massage, skincare, fashion, food and more. Pick the field that suits you.</p></div></div>
+      <div class="item"><span class="ic c3"><svg class="i"><use href="#tag"/></svg></span><div><h3>Products at wholesale prices</h3><p>Quality-checked products supplied by MOZLYT. You set your own selling price and keep the difference.</p></div></div>
+      <div class="item"><span class="ic c4"><svg class="i"><use href="#star"/></svg></span><div><h3>Coaching</h3><p>Learn to sell on WhatsApp, Facebook and TikTok with a coach beside you.</p></div></div>
+      <div class="item"><span class="ic c5"><svg class="i"><use href="#cal"/></svg></span><div><h3>Customer jobs sent to you</h3><p>When a customer books a service near you, we send you the job. You earn a commission on each one.</p></div></div>
+      <div class="item"><span class="ic c6"><svg class="i"><use href="#store"/></svg></span><div><h3>Your own online store<span class="soon">Opening soon</span></h3><p>Built for you when you go online. Choose your name, colours, banner, products and prices, and get your own store link.</p></div></div>
+      <div class="item"><span class="ic c7"><svg class="i"><use href="#chart"/></svg></span><div><h3>A seller dashboard<span class="soon">Opening soon</span></h3><p>See what you pay us, your selling price, your margin, your profit after ads, your orders and your payouts.</p></div></div>
+      <div class="item"><span class="ic c1"><svg class="i"><use href="#mega"/></svg></span><div><h3>Room to run your own ads</h3><p>Advertise your store your own way, and connect ad tracking to see what brings customers.</p></div></div>
+      <div class="item"><span class="ic c2"><svg class="i"><use href="#wallet"/></svg></span><div><h3>Payment and delivery handled<span class="soon">Opening soon</span></h3><p>Each payment is split for you automatically, we deliver the order, and you are paid to Mobile Money once delivery is confirmed.</p></div></div>
+      <div class="item"><span class="ic c3"><svg class="i"><use href="#stairs"/></svg></span><div><h3>A path to grow</h3><p>Start as a trainee, become a seller, then grow into a distributor who can mentor others.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT FITS -->
+<section>
+  <div class="wrap">
+    <h2>How it fits together</h2>
+    <p class="sub">Customers get a service they can trust. Sellers get customers and a way to earn.</p>
+    <div class="steps">
+      <div class="step"><em>Step 1</em><h3>A customer books or buys</h3><p>They choose a service or product on MOZLYT and we agree the price with them.</p></div>
+      <div class="step"><em>Step 2</em><h3>MOZLYT matches and manages</h3><p>We send the job to a trained seller, or pack the order for delivery.</p></div>
+      <div class="step"><em>Step 3</em><h3>The seller delivers</h3><p>The service is done, or the order arrives, and the customer rates it.</p></div>
+      <div class="step"><em>Step 4</em><h3>Everyone is paid</h3><p>The seller receives their earnings, and MOZLYT keeps quality high.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2>Ready to get started?</h2>
+    <p>Book a service, shop for products, or start building your own income with MOZLYT.</p>
+    <div class="cta">
+      <a class="btn primary" href="index.html#services">Book a service</a>
+      <a class="btn ghost" href="shop.html">Shop products</a>
+      <a class="btn gold" href="career.html">Take a career with us</a>
+    </div>
+  </div>
+</section>
+
+<footer class="mz-footer">
+  <div class="mz-wrap mz-fgrid">
+    <div class="mz-fbrand">
+      <a class="mz-logo" href="index.html"><img class="mz-mark" src="img/logo.png" alt="" width="36" height="36">MOZ<span>LYT</span></a>
+      <p>Trusted wellness, fitness, beauty, fashion and food services and products. Based in Accra, Ghana.</p>
+      <div class="mz-contact">WhatsApp: <a href="https://wa.me/233538729743" target="_blank" rel="noopener">053 872 9743</a><br>Email: <a href="mailto:Info@mozlyt.com">Info@mozlyt.com</a></div>
+      <div class="mz-social"><a href="https://www.instagram.com/mozlyt" target="_blank" rel="noopener">Instagram</a><a href="https://www.tiktok.com/@mozlyt" target="_blank" rel="noopener">TikTok</a><a href="https://www.facebook.com/mozlyt" target="_blank" rel="noopener">Facebook</a><a href="https://wa.me/233538729743" target="_blank" rel="noopener">WhatsApp</a></div>
+    </div>
+    <div>
+      <h4>Customers</h4>
+      <a href="index.html#services">Book a service</a>
+      <a href="shop.html">Shop products</a>
+      <a href="index.html#how">How booking works</a>
+      <a href="index.html#delivery">Delivery areas</a>
+    </div>
+    <div>
+      <h4>Sellers</h4>
+      <a href="career.html">Take a career with us</a>
+      <a href="what-we-do.html#sellers">What we do for sellers</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="about.html">About us</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html#contact">Contact</a>
+      <a href="#" id="installApp" style="display:none;font-weight:700;color:#5FD3A1">Install the MOZLYT app</a>
+    </div>
+  </div>
+  <div class="mz-wrap mz-fbottom">
+    <span>&copy; 2026 MOZLYT. Accra, Ghana. Get the app: open this site in your phone browser, then choose Add to Home Screen.</span>
+  </div>
+</footer>
+
+<script id="mz-shared-js">(function(){var h=document.getElementById('mzHeader');if(!h)return;var b=h.querySelector('.mz-burger');
+function set(o){h.classList.toggle('mz-open',o);b.setAttribute('aria-expanded',o?'true':'false')}
+b.addEventListener('click',function(){set(!h.classList.contains('mz-open'))});
+h.querySelectorAll('.mz-nav a').forEach(function(a){a.addEventListener('click',function(){set(false)})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});})();</script>
+<a class="wa-float" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20would%20like%20to%20know%20more." target="_blank" rel="noopener" aria-label="Chat with MOZLYT on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z"/></svg><span>Chat on WhatsApp</span></a>
+<script>
+(function(){
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+  var deferred=null,btn=document.getElementById('installApp');
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;if(btn)btn.style.display='block'});
+  if(btn)btn.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;btn.style.display='none'})});
+  window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
+})();
+</script>
+</body>
+</html>
