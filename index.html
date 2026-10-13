@@ -279,6 +279,48 @@ footer{padding:28px 0;font-size:13px;color:var(--mute);text-align:center}
 @media(max-width:600px){.wa-float span{display:none}.wa-float{padding:14px}}
 body.has-list .wa-float{bottom:84px}
 </style>
+<style id="mz-photos">
+.shp{position:relative;margin:0 12px 12px 0;isolation:isolate}
+.shp img{display:block;width:100%;height:100%;object-fit:cover;position:relative;z-index:1;border-radius:inherit}
+.shp::before{content:"";position:absolute;inset:0;border:1.5px solid #D9B25F;border-radius:inherit;transform:translate(12px,12px);z-index:0;pointer-events:none}
+.shp.leaf{border-radius:92px 18px 92px 18px}
+.shp.leaf2{border-radius:18px 92px 18px 92px}
+.shp.arch{border-radius:50% 50% 24px 24px/44% 44% 24px 24px}
+.shp.arch.tall{border-radius:50% 50% 24px 24px/36% 36% 24px 24px}
+.shp.wide{aspect-ratio:16/10}
+.shp.tall{aspect-ratio:4/5}
+.thumb.ph.shp{margin:12px 24px 4px 12px;height:186px;padding:0;display:block;background:none}
+.card:nth-child(even) .thumb.ph.shp{border-radius:18px 92px 18px 92px}
+
+.hero{position:relative;color:#fff;background:#0E2A47 url(img/photos/hero-desk.jpg) no-repeat 78% 16%/cover;isolation:isolate;padding:70px 0 52px;border-radius:0 0 72px 72px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(9,26,46,.93) 0%,rgba(9,26,46,.80) 36%,rgba(9,26,46,.30) 68%,rgba(9,26,46,.10) 100%)}
+.hero .wrap{grid-template-columns:1fr;gap:38px}
+.hero h1{color:#fff;max-width:15ch;font-size:clamp(34px,5vw,56px);text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.hero p.lead{color:#e3ebf3;max-width:46ch}
+.hero small{color:#c8d5e2}
+.hero .btn.ghost{color:#fff;border-color:rgba(255,255,255,.8);background:rgba(255,255,255,.06)}
+.hero .btn.ghost:hover{background:#fff;color:#0E2A47}
+.hero .book{box-shadow:0 22px 50px rgba(0,0,0,.35);color:var(--ink)}
+.hero .book h3{color:var(--ink)}
+.hero .book p{color:var(--mute)}
+@media(min-width:960px){
+ .hero{min-height:600px;display:flex;align-items:center}
+ .hero .wrap{width:100%;max-width:1120px;margin:0 auto}
+ .hero .book>*,.hero .book form>*{min-width:0}
+ .hero .book{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 18px;align-items:baseline;padding:20px 24px 22px}
+ .hero .book h3{margin:0 0 12px}
+ .hero .book p{margin:0 0 12px}
+ .hero .book form{grid-column:1/-1;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,.9fr) minmax(0,1.1fr) minmax(0,1.1fr) auto;align-items:end;gap:12px}
+ .hero .book form .two{display:contents}
+ .hero .book form select,.hero .book form input{width:100%;min-width:0}
+ .hero .book form label{font-size:12.5px}
+ .hero .book form .btn{height:46px;padding:0 20px;white-space:nowrap}
+}
+@media(max-width:959px){
+ .hero{background-position:72% 8%;padding:46px 0 40px;border-radius:0 0 40px 40px}
+ .hero::before{background:linear-gradient(180deg,rgba(9,26,46,.84) 0%,rgba(9,26,46,.72) 55%,rgba(9,26,46,.60) 100%)}
+}
+</style>
 </head>
 <body>
 
@@ -384,7 +426,7 @@ body.has-list .wa-float{bottom:84px}
     <div class="cat">
       <div class="cat-h"><span class="ic c1"><svg class="i"><use href="#leaf"/></svg></span><h3>Massage and therapy</h3><a href="massage-in-accra.html" style="margin-left:auto;font-size:14px;font-weight:700;color:#157650;text-decoration:underline">Massage in Accra &rarr;</a></div>
       <div class="grid">
-        <div class="card"><div class="thumb c1"><svg class="i"><use href="#leaf"/></svg></div><div class="cbody"><h4>Shiatsu massage</h4><p>Pressure-point massage to ease pain, tension and stress.</p><div class="meta">Home visit</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Shiatsu massage">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp leaf"><img src="img/photos/spa.jpg" alt="A calm massage room with candles, where a therapist works on a client's shoulders" width="450" height="338" loading="lazy"></div><div class="cbody"><h4>Shiatsu massage</h4><p>Pressure-point massage to ease pain, tension and stress.</p><div class="meta">Home visit</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Shiatsu massage">Book</button></div></div></div>
         <div class="card"><div class="thumb c1"><svg class="i"><use href="#leaf"/></svg></div><div class="cbody"><h4>Chair massage</h4><p>A seated neck, back and shoulder massage that fits into a busy day.</p><div class="meta">Home or office</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Chair massage">Book</button></div></div></div>
         <div class="card"><div class="thumb c1"><svg class="i"><use href="#leaf"/></svg></div><div class="cbody"><h4>Office wellness session</h4><p>Chair massage for your whole team, on site at your workplace.</p><div class="meta">Per session · Office</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Office wellness session">Book</button></div></div></div>
       </div>
@@ -393,7 +435,7 @@ body.has-list .wa-float{bottom:84px}
     <div class="cat">
       <div class="cat-h"><span class="ic c2"><svg class="i"><use href="#dumb"/></svg></span><h3>Fitness</h3></div>
       <div class="grid">
-        <div class="card"><div class="thumb c2"><svg class="i"><use href="#dumb"/></svg></div><div class="cbody"><h4>Personal fitness coaching</h4><p>One-to-one sessions built around your goals.</p><div class="meta">Home or outdoors</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Personal fitness coaching">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp leaf"><img src="img/photos/coach.jpg" alt="A coach guiding a client through a workout live on a tablet" width="450" height="338" loading="lazy"></div><div class="cbody"><h4>Personal fitness coaching</h4><p>One-to-one sessions built around your goals.</p><div class="meta">Home or outdoors</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Personal fitness coaching">Book</button></div></div></div>
         <div class="card"><div class="thumb c2"><svg class="i"><use href="#dumb"/></svg></div><div class="cbody"><h4>Body sculpting programme</h4><p>A structured multi-week plan with a coach to shape and tone.</p><div class="meta">Programme · Weekly sessions</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Body sculpting programme">Book</button></div></div></div>
         <div class="card"><div class="thumb c2"><svg class="i"><use href="#dumb"/></svg></div><div class="cbody"><h4>Group fitness session</h4><p>Train with friends or colleagues, led by a coach.</p><div class="meta">Small groups</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Group fitness session">Book</button></div></div></div>
       </div>
@@ -402,15 +444,15 @@ body.has-list .wa-float{bottom:84px}
     <div class="cat">
       <div class="cat-h"><span class="ic c3"><svg class="i"><use href="#apple"/></svg></span><h3>Nutrition</h3></div>
       <div class="grid">
-        <div class="card"><div class="thumb c3"><svg class="i"><use href="#apple"/></svg></div><div class="cbody"><h4>Nutrition consultation</h4><p>Talk through your eating, goals and habits with a nutrition adviser.</p><div class="meta">In person or call</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Nutrition consultation">Book</button></div></div></div>
-        <div class="card"><div class="thumb c3"><svg class="i"><use href="#apple"/></svg></div><div class="cbody"><h4>Personalised meal plan</h4><p>A weekly eating plan made for you, using food you can find locally.</p><div class="meta">Delivered by WhatsApp or PDF</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Personalised meal plan">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp leaf"><img src="img/photos/nutri.jpg" alt="A nutrition adviser going through a meal schedule on a tablet with a client" width="450" height="338" loading="lazy"></div><div class="cbody"><h4>Nutrition consultation</h4><p>Talk through your eating, goals and habits with a nutrition adviser.</p><div class="meta">In person or call</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Nutrition consultation">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp leaf"><img src="img/photos/mealplan.jpg" alt="Two women looking at a personalised meal plan on a tablet beside a fresh salad" width="450" height="338" loading="lazy"></div><div class="cbody"><h4>Personalised meal plan</h4><p>A weekly eating plan made for you, using food you can find locally.</p><div class="meta">Delivered by WhatsApp or PDF</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Personalised meal plan">Book</button></div></div></div>
       </div>
     </div>
 
     <div class="cat">
       <div class="cat-h"><span class="ic c4"><svg class="i"><use href="#drop"/></svg></span><h3>Skincare and beauty</h3></div>
       <div class="grid">
-        <div class="card"><div class="thumb c4"><svg class="i"><use href="#drop"/></svg></div><div class="cbody"><h4>Facial treatment</h4><p>Deep cleansing and care for glowing, healthy skin.</p><div class="meta">Home visit</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Facial treatment">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp leaf"><img src="img/photos/facial.jpg" alt="A therapist applying a facial mask to a client" width="450" height="338" loading="lazy"></div><div class="cbody"><h4>Facial treatment</h4><p>Deep cleansing and care for glowing, healthy skin.</p><div class="meta">Home visit</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Facial treatment">Book</button></div></div></div>
         <div class="card"><div class="thumb c4"><svg class="i"><use href="#drop"/></svg></div><div class="cbody"><h4>Skin consultation</h4><p>Learn your skin type and get a simple routine to follow.</p><div class="meta">Home visit</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Skin consultation">Book</button></div></div></div>
       </div>
     </div>
@@ -435,7 +477,7 @@ body.has-list .wa-float{bottom:84px}
       <div class="cat-h"><span class="ic c7"><svg class="i"><use href="#gift"/></svg></span><h3>Gift packages</h3></div>
       <div class="grid">
         <div class="card"><div class="thumb c7"><svg class="i"><use href="#gift"/></svg></div><div class="cbody"><h4>Wellness gift package</h4><p>A bundle of services and products, ready to give to someone special.</p><div class="meta">Delivered with a message</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Wellness gift package">Book</button></div></div></div>
-        <div class="card"><div class="thumb c7"><svg class="i"><use href="#gift"/></svg></div><div class="cbody"><h4>Gift a massage</h4><p>Give a massage session. They choose the day that suits them.</p><div class="meta">Gift voucher</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Gift a massage">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp leaf"><img src="img/photos/oil.jpg" alt="A relaxing oil massage with rose petals and candles" width="450" height="338" loading="lazy"></div><div class="cbody"><h4>Gift a massage</h4><p>Give a massage session. They choose the day that suits them.</p><div class="meta">Gift voucher</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Gift a massage">Book</button></div></div></div>
       </div>
     </div>
 

@@ -274,6 +274,20 @@ body.has-list .wa-float{bottom:84px}
 .steps2 li{list-style:none;position:relative;padding-left:52px;font-size:16.5px}
 .steps2 li:before{counter-increment:s;content:counter(s);position:absolute;left:0;top:-2px;width:36px;height:36px;border-radius:50%;background:var(--green);color:#fff;font-weight:700;display:grid;place-items:center}
 .steps2 b{display:block}
+.gal{display:grid;grid-template-columns:1fr 1.3fr;gap:34px;align-items:center}
+@media(max-width:700px){.gal{grid-template-columns:1fr}}
+.shp{position:relative;margin:0 12px 12px 0;isolation:isolate}
+.shp img{display:block;width:100%;height:100%;object-fit:cover;position:relative;z-index:1;border-radius:inherit}
+.shp::before{content:"";position:absolute;inset:0;border:1.5px solid #D9B25F;border-radius:inherit;transform:translate(12px,12px);z-index:0;pointer-events:none}
+.shp.leaf{border-radius:92px 18px 92px 18px}
+.shp.leaf2{border-radius:18px 92px 18px 92px}
+.shp.arch{border-radius:50% 50% 24px 24px/44% 44% 24px 24px}
+.shp.arch.tall{border-radius:50% 50% 24px 24px/36% 36% 24px 24px}
+.shp.wide{aspect-ratio:16/10}
+.shp.tall{aspect-ratio:4/5}
+.thumb.ph.shp{margin:12px 24px 4px 12px;height:186px;padding:0;display:block;background:none}
+.card:nth-child(even) .thumb.ph.shp{border-radius:18px 92px 18px 92px}
+
 .faq{max-width:78ch;margin-top:20px}
 .faq details{border-bottom:1px solid var(--line);padding:14px 0}
 .faq summary{cursor:pointer;font-weight:700;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:12px}
@@ -298,6 +312,15 @@ body.has-list .wa-float{bottom:84px}
       <div><h3>Shiatsu massage</h3><p>Pressure-point massage to ease pain, tension and stress.</p><span class="m">Home visit</span></div>
       <div><h3>Chair massage</h3><p>A seated neck, back and shoulder massage that fits into a busy day.</p><span class="m">Home or office</span></div>
       <div><h3>Office wellness session</h3><p>Chair massage for your whole team, on site at your workplace.</p><span class="m">Per session &middot; Office</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="gal">
+      <figure class="shp arch tall"><img src="img/photos/spa.jpg" alt="A calm massage room with candles, where a therapist works on a client's shoulders" width="900" height="900" loading="lazy"></figure>
+      <figure class="shp leaf2 wide"><img src="img/photos/massage-home.jpg" alt="A therapist giving a leg massage to a man on a sofa at home" width="900" height="900" loading="lazy"></figure>
     </div>
   </div>
 </section>

@@ -284,6 +284,22 @@ body.has-list .wa-float{bottom:84px}
 .post .cta{background:var(--ink);color:#fff;border-radius:18px;padding:26px;margin:34px 0}
 .post .cta h2{color:#fff;margin:0 0 6px;font-size:22px}
 .post .cta p{color:#dbe4ec;font-size:16px}
+.post .shp{margin:6px 12px 30px 0}
+.post .shp.sm{max-width:340px;margin-left:auto;margin-right:auto}
+.post .shp.wide.sm{max-width:100%}
+.post .shp.tall.sm{width:min(340px,86%)}
+.shp{position:relative;margin:0 12px 12px 0;isolation:isolate}
+.shp img{display:block;width:100%;height:100%;object-fit:cover;position:relative;z-index:1;border-radius:inherit}
+.shp::before{content:"";position:absolute;inset:0;border:1.5px solid #D9B25F;border-radius:inherit;transform:translate(12px,12px);z-index:0;pointer-events:none}
+.shp.leaf{border-radius:92px 18px 92px 18px}
+.shp.leaf2{border-radius:18px 92px 18px 92px}
+.shp.arch{border-radius:50% 50% 24px 24px/44% 44% 24px 24px}
+.shp.arch.tall{border-radius:50% 50% 24px 24px/36% 36% 24px 24px}
+.shp.wide{aspect-ratio:16/10}
+.shp.tall{aspect-ratio:4/5}
+.thumb.ph.shp{margin:12px 24px 4px 12px;height:186px;padding:0;display:block;background:none}
+.card:nth-child(even) .thumb.ph.shp{border-radius:18px 92px 18px 92px}
+
 .post .more li{font-size:16px}
 .post .more a{color:var(--green-d);text-decoration:underline}
 </style>
@@ -291,6 +307,7 @@ body.has-list .wa-float{bottom:84px}
 <nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Home</a> &rsaquo; <a href="blog.html">Blog</a> &rsaquo; Fashion</nav>
 <h1>Personal Styling and Custom Outfits: Dress Well for Work and Events</h1>
 <div class="meta">By MOZLYT &middot; Fashion &middot; <time datetime="2026-10-13">13 October 2026</time></div>
+
 <p>Looking put together does not require a big wardrobe. It needs clothes that fit properly and a few pieces that work together.</p><h2>Personal styling</h2><p>A styling session gives you outfit advice and wardrobe help for work, events and everyday life. You can start with what you already own and decide what to keep, what to change and what is missing.</p><h2>Custom outfits</h2><p>A custom outfit is clothing made to your measurements and style, made to order. It suits occasions where fit matters, such as weddings, naming ceremonies, office wear and special celebrations.</p><h2>Tips before an event</h2><ul><li>Start early: made-to-order clothing needs time.</li><li>Bring a reference picture or describe the style you want.</li><li>Choose fabric for the weather and for how long you will wear it.</li><li>Plan shoes and accessories at the same time as the outfit.</li></ul><h2>Build a simple everyday wardrobe</h2><p>A few well-fitting basics in colours that suit you can be mixed in many ways. Quality and fit matter more than quantity.</p><h2>How to start</h2><p>Message us on WhatsApp with the occasion, your timeline and any pictures that inspire you. We will tell you what is possible and the price before you agree to anything.</p>
 <div class="cta"><h2>Ready to book?</h2><p>Message MOZLYT on WhatsApp. We reply with the price and availability, and nothing is paid until you agree.</p>
 <p style="display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 0"><a class="btn gold" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20would%20like%20to%20ask%20about%20personal%20styling%20/%20a%20custom%20outfit.%20Occasion%3A%20" target="_blank" rel="noopener">Message us on WhatsApp</a><a class="btn ghost" style="color:#fff;border-color:#fff" href="shop.html#fash">Fashion on our shop</a></p></div>
