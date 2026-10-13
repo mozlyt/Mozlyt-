@@ -232,6 +232,9 @@ footer{padding:28px 0;font-size:13px;color:var(--mute);text-align:center}
 .add{background:#fff;color:var(--green-d);border:1.5px solid var(--green);transition:background .15s,color .15s}
 .add:hover{background:var(--green);color:#fff}
 .add.done{background:var(--ink);border-color:var(--ink);color:#fff}
+.paynow{display:block;margin-top:8px;padding:11px;border-radius:9px;background:var(--green);color:#fff;font-weight:700;font-size:14px;text-align:center;text-decoration:none}
+.paynow:hover{background:var(--green-d)}
+@media(max-width:600px){.paynow{font-size:10.5px;padding:8px 2px;border-radius:7px;margin-top:6px}}
 .chips{backdrop-filter:blur(6px)}
 .chip{transition:background .15s,border-color .15s}
 .chip:hover{background:#E6F5EE}
@@ -501,7 +504,10 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
         if(p.photo){var im=el('img');im.src=p.photo;im.alt=p.name;im.loading='lazy';im.onerror=function(){pic.removeChild(im);pic.appendChild(icon(c.icon))};pic.appendChild(im)}else pic.appendChild(icon(c.icon));
         b.type='button';
         if(p.status.indexOf('sold')===0||p.status==='out'){b.textContent='Sold out';b.disabled=true;card.className='card soldout'}else setBtn(b,list.indexOf(p.name)>-1);
-        card.appendChild(pic);card.appendChild(el('h3',null,p.name));card.appendChild(el('div','price',priceText(p.price)));card.appendChild(b);g.appendChild(card)});
+        card.appendChild(pic);card.appendChild(el('h3',null,p.name));card.appendChild(el('div','price',priceText(p.price)));card.appendChild(b);
+        var amt=/^[\d.,\s]+$/.test(p.price||'')?parseFloat(p.price.replace(/[,\s]/g,'')):0;
+        if(amt>0&&!card.classList.contains('soldout')){var pn=el('a','paynow','Pay now');pn.href='pay.html?amount='+encodeURIComponent(amt)+'&item='+encodeURIComponent(p.name);card.appendChild(pn)}
+        g.appendChild(card)});
       sec.appendChild(h);sec.appendChild(g);shelves.appendChild(sec);
       var ch=el('a','chip',c.title.replace('Massage tools and recovery','Massage and recovery'));ch.href='#'+c.id;chips.appendChild(ch)});
     if(q.value)q.dispatchEvent(new Event('input'));

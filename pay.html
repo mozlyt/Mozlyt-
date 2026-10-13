@@ -27,7 +27,7 @@
 <body>
 <div class="card">
   <h1>MOZLYT</h1>
-  <p class="sub">Pay for your agreed service or order</p>
+  <p class="sub" id="sub">Pay for your agreed service or order</p>
 
   <label for="name">Full name</label>
   <input id="name" type="text" autocomplete="name" placeholder="Your name">
@@ -55,6 +55,9 @@
   if (q.get("name"))   document.getElementById("name").value = q.get("name");
   if (q.get("email"))  document.getElementById("email").value = q.get("email");
 
+  var item = (q.get("item") || "").slice(0, 120);
+  if (item) document.getElementById("sub").textContent = "Paying for: " + item + " (delivery is agreed separately on WhatsApp)";
+
   var msg = document.getElementById("msg");
   function show(text, cls) { msg.textContent = text; msg.className = cls || ""; }
 
@@ -74,7 +77,7 @@
       amount: Math.round(amount * 100), // pesewas
       currency: CURRENCY,
       ref: "MZL-" + Date.now(),
-      metadata: { custom_fields: [{ display_name: "Customer name", variable_name: "customer_name", value: name }] },
+      metadata: { custom_fields: [{ display_name: "Customer name", variable_name: "customer_name", value: name }, { display_name: "Item", variable_name: "item", value: item || "Agreed service/order" }] },
       callback: function (response) {
         show("Payment received. Reference: " + response.reference + ". Thank you!", "ok");
       },
