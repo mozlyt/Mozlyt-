@@ -324,6 +324,9 @@ body.has-list .wa-float{bottom:84px}
 
 var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
 function esc(s){return MZ.esc(s)}
+var MZC="GH Ghana|NG Nigeria|BJ Benin|BF Burkina Faso|CM Cameroon|CV Cabo Verde|TD Chad|CI Cote d'Ivoire|GM Gambia|GN Guinea|GW Guinea-Bissau|LR Liberia|ML Mali|NE Niger|SN Senegal|SL Sierra Leone|TG Togo|AO Angola|BW Botswana|CD DR Congo|CG Congo|EG Egypt|ET Ethiopia|GA Gabon|KE Kenya|MW Malawi|MZ Mozambique|NA Namibia|RW Rwanda|ZA South Africa|TZ Tanzania|UG Uganda|ZM Zambia|ZW Zimbabwe|MA Morocco|DZ Algeria|TN Tunisia|GB United Kingdom|US United States|CA Canada|DE Germany|FR France|NL Netherlands|IT Italy|ES Spain|AE United Arab Emirates|IN India|BR Brazil|JM Jamaica|TT Trinidad and Tobago".split('|').map(function(x){return{c:x.slice(0,2),n:x.slice(3)}});
+function mzCountry(c){c=String(c||'').toUpperCase();return MZC.filter(function(x){return x.c===c})[0]||null}
+function mzFlag(c,h){var k=mzCountry(c);return k?'<img alt="" src="https://flagcdn.com/w40/'+k.c.toLowerCase()+'.png" style="height:'+(h||22)+'px;width:auto;vertical-align:-4px;border-radius:3px;margin-right:8px;box-shadow:0 0 0 1px rgba(0,0,0,.12)">':''}
 function show(id,on){var e=$('#'+id);if(e)e.hidden=!on}
 function flash(t,ms){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},ms||2600)}
 function note(box,type,text){box.innerHTML=text?'<div class="msg '+type+'">'+esc(text)+'</div>':''}
@@ -346,7 +349,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function boot(){show('authView',false);
     return MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(p){
       ME=p&&p[0];if(!ME||!ME.franchise){show('dashView',false);show('authView',true);note(aNote,'err','This account is not a franchise yet. Sign up as a franchise, and MOZLYT will activate it once the terms are agreed.');return}
-      $('#brName').textContent=(ME.store_name||'MOZLYT')+' franchise';$('#who').textContent=(ME.full_name||'')+(ME.email?' · '+ME.email:'');show('dashView',true);
+      var kc=mzCountry(ME.franchise_country);$('#brName').innerHTML=mzFlag(ME.franchise_country,28)+esc((ME.store_name||'MOZLYT')+' franchise')+(kc?'<span class="sub" style="display:block;font-size:15px;font-weight:500;margin-top:4px">'+esc(kc.n)+'</span>':'');$('#who').textContent=(ME.full_name||'')+(ME.email?' · '+ME.email:'');show('dashView',true);
       return Promise.all([MZ.q('profiles','select=id,full_name,store_name,store_slug,phone,email,sub_expires_at,plan,tier,training_paid,status,created_at&franchise_id=eq.'+ME.id+'&order=created_at.desc'),MZ.q('subscription_payments','select=*&franchise_id=eq.'+ME.id+'&order=created_at.desc&limit=200'),MZ.q('franchise_product_prices','select=product_id,price&franchise_id=eq.'+ME.id),MZ.q('products','select=id,name,category,suggested_price,wholesale_price,status&order=sort,name'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.rpc('get_my_prices')]).then(function(r){
         return(r[0]&&r[0].length?MZ.q('orders','select=*&seller_id=in.('+r[0].map(function(x){return x.id}).join(',')+')&order=created_at.desc&limit=200'):Promise.resolve([])).then(function(o){
           FR={rec:r[0]||[],pays:r[1]||[],ord:o||[]};FRP={};(r[2]||[]).forEach(function(x){FRP[x.product_id]=Number(x.price)});PRODUCTS=r[3]||[];BILL=(r[4]&&r[4][0])||{};draw()})})
