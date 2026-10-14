@@ -309,7 +309,7 @@ body.has-list .wa-float{bottom:84px}
       <label>Password<input type="password" id="sPass" autocomplete="new-password" minlength="8" required><small>At least 8 characters.</small></label>
       <div id="franBox" class="f" hidden>
         <div class="card2" style="margin:0"><b style="font-size:18px">MOZLYT Franchise</b>
-          <p class="sub" style="margin:6px 0 10px">A franchise is your own MOZLYT branch, like a partner location. We agree the terms together, based on your capital and our agreement.</p>
+          <p class="sub" style="margin:6px 0 10px">A franchise is your own MOZLYT branch, like a partner location. <b>Your first 7 days are free</b> so you can see how it runs. After that it is GH&#8373;1,000 a month.</p>
           <ul class="sub" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Your own dashboard, under MOZLYT</li><li>Recruit sellers and trainees with your own link</li><li>Their payments come to you, not to MOZLYT</li><li>Set the prices your recruits pay and sell at</li><li>Pause or activate your recruits if payment is late</li><li>The full shop, every lesson and every skill</li><li>Best wholesale prices from MOZLYT</li><li>You pay MOZLYT only the agreed amount, monthly or yearly</li></ul></div>
         <label>City and country where you want to open<input id="fnLoc" placeholder="e.g. Lagos, Nigeria" maxlength="120"></label>
         <label>Tell us about your capital and when you want to start (optional)<textarea id="fnMsg" rows="3" maxlength="800" placeholder="Your experience, the capital you have, when you want to start."></textarea></label>
@@ -480,6 +480,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     if(KIND==='franchise'&&!$('#fnLoc').value.trim()){note(authNote,'err','Please tell us the city and country where you want to open.');return}
     busy(b,true,'Creating...');note(authNote,'','');
     MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:KIND!=='shop'?'':$('#sStore').value.trim(),store_slug:KIND!=='shop'?'':$('#sSlug').value,ref:REF,kind:KIND}).then(function(r){
+      if(KIND==='franchise'){try{localStorage.setItem('mz-fran','1')}catch(e){}}
       if(KIND==='franchise'){MZ.rpc('apply_franchise',{p_name:$('#sName').value.trim(),p_phone:ph,p_email:$('#sEmail').value.trim(),p_location:$('#fnLoc').value.trim(),p_message:$('#fnMsg').value.trim()}).catch(function(){})}
       if(r.confirmed){boot()}else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(authNote,'ok','Account created. We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in here. Check your spam folder if you do not see it.')}
     },function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
@@ -523,7 +524,9 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     show('authView',false);
     return MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(p){
       if(!p||!p[0]){throw new Error('We could not find your seller profile. Please log out and sign up again.')}
-      ME=p[0];show('dashView',true);if(ME.franchise&&location.search.indexOf('own=1')<0){location.replace('franchise.html');return}
+      ME=p[0];var wf='';try{wf=localStorage.getItem('mz-fran')}catch(e){}
+      if(wf&&!ME.franchise&&!ME.franchise_expires_at){return MZ.rpc('start_franchise_trial').then(function(){try{localStorage.removeItem('mz-fran')}catch(e){}location.replace('franchise.html')},function(er){try{localStorage.removeItem('mz-fran')}catch(e){}throw er})}
+      show('dashView',true);if(ME.franchise&&location.search.indexOf('own=1')<0){location.replace('franchise.html');return}
       paint();if(isTrainee())go('learn');applyPick();
       if(ME.status==='suspended')note(dashNote,'err','Your store is paused. Please contact MOZLYT on WhatsApp.');
       return Promise.all([MZ.q('products','select=id,category,name,photo,wholesale_price,suggested_price,status&order=sort,name'),MZ.q('seller_products','select=product_id,price,active&seller_id=eq.'+ME.id),MZ.q('orders','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=200'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.q('subscription_payments','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=50'),MZ.rpc('get_my_prices').catch(function(){return null}),MZ.q('franchise_product_prices','select=product_id,price').catch(function(){return []})]);
