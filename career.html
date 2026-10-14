@@ -398,9 +398,9 @@ body.has-list .wa-float{bottom:84px}
         <a class="btn primary go" href="#">Take a shop</a></div>
       <div class="plan"><h3>Franchise</h3>
         <ul><li>Open a MOZLYT location in your city or country, for example in Nigeria</li><li>Everything in Take a shop</li><li>Every lesson and every skill</li><li>Your own dashboard, like a MOZLYT branch</li><li>Recruit and train your own sellers</li><li>Set the prices your recruits sell and charge at</li><li>Their payments go to you</li><li>Best wholesale prices from MOZLYT</li><li>Your partner price is agreed with us</li></ul>
-        <a class="btn ghost go" href="#" data-msg="Hello MOZLYT, I would like to open a MOZLYT franchise in my location. Please tell me how it works and what the next step is.">Talk to us</a></div>
+        <a class="btn ghost go" href="#" data-msg="Hello MOZLYT, I would like to open a MOZLYT franchise in my location. Please tell me how it works and what the next step is.">Request a franchise</a></div>
     </div>
-    <p class="note">Message us on WhatsApp and we will explain each option. For a franchise, message us on WhatsApp and we will agree the terms together, based on your capital and our agreement.</p>
+    <p class="note">Message us on WhatsApp and we will explain each option. For a franchise, send us a request and we will agree the terms together, based on your capital and our agreement.</p>
   </div>
 </section>
 
@@ -456,6 +456,7 @@ var PLATFORM_URL="";
   var WA="233538729743";
   document.querySelectorAll('a.go').forEach(function(a){
     var label=a.textContent.trim();
+    if(label==="Request a franchise"){a.href="seller.html?kind=franchise";return}
     if(label!=="Talk to us"){a.href=label==="Start training"?"seller.html?kind=trainee":"seller.html";return}
     var m=a.getAttribute("data-msg")||"Hello MOZLYT, I would like to join the network ("+label+"). Please tell me how it works and what the next step is.";
     a.href="https://wa.me/"+WA+"?text="+encodeURIComponent(m);
