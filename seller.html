@@ -307,22 +307,17 @@ body.has-list .wa-float{bottom:84px}
       </div>
       <label>Email<input type="email" id="sEmail" autocomplete="email" required></label>
       <label>Password<input type="password" id="sPass" autocomplete="new-password" minlength="8" required><small>At least 8 characters.</small></label>
-      <p class="sub" style="margin:0;font-size:14px"><span id="kindNote">Start with a free trial. After that, keep your store open with a monthly or yearly plan.</span></p><button class="btn primary" type="submit">Create my account</button>
-      <small>By signing up you agree to sell honestly and deliver what customers order.</small>
-          </div>
       <div id="franBox" class="f" hidden>
         <div class="card2" style="margin:0"><b style="font-size:18px">MOZLYT Franchise</b>
           <p class="sub" style="margin:6px 0 10px">A franchise is your own MOZLYT branch, like a partner location. We agree the terms together, based on your capital and our agreement.</p>
           <ul class="sub" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Your own dashboard, under MOZLYT</li><li>Recruit sellers and trainees with your own link</li><li>Their payments come to you, not to MOZLYT</li><li>Set the prices your recruits pay and sell at</li><li>Pause or activate your recruits if payment is late</li><li>The full shop, every lesson and every skill</li><li>Best wholesale prices from MOZLYT</li><li>You pay MOZLYT only the agreed amount, monthly or yearly</li></ul></div>
-        <label>Your full name<input id="fnName" autocomplete="name" maxlength="80"></label>
-        <label>WhatsApp number<input id="fnPhone" type="tel" inputmode="tel" placeholder="e.g. +234 801 234 5678" maxlength="20"></label>
-        <label>Email<input id="fnEmail" type="email" autocomplete="email" maxlength="120"></label>
         <label>City and country where you want to open<input id="fnLoc" placeholder="e.g. Lagos, Nigeria" maxlength="120"></label>
-        <label>Tell us about yourself and your capital (optional)<textarea id="fnMsg" rows="3" maxlength="800" placeholder="Your experience, the capital you have, when you want to start."></textarea></label>
-        <button class="btn primary" type="button" id="fnSend">Send my request</button>
-        <small>We will contact you on WhatsApp or email to talk it through. Nothing is charged now.</small>
-        <div id="fnDone" hidden></div>
+        <label>Tell us about your capital and when you want to start (optional)<textarea id="fnMsg" rows="3" maxlength="800" placeholder="Your experience, the capital you have, when you want to start."></textarea></label>
+        <small>Create your account now. We will contact you to agree the terms. Your franchise dashboard opens once we have agreed. Nothing is charged now.</small>
       </div>
+      <p class="sub" style="margin:0;font-size:14px"><span id="kindNote">Start with a free trial. After that, keep your store open with a monthly or yearly plan.</span></p><button class="btn primary" type="submit" id="subBtn">Create my account</button>
+      <small>By signing up you agree to sell honestly and deliver what customers order.</small>
+          </div>
     </form>
 
     <form id="fForgot" class="f" hidden>
@@ -482,8 +477,10 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.signIn($('#lEmail').value.trim(),$('#lPass').value).then(boot,function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fSign').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);var ph=$('#sPhone').value.replace(/[^\d+]/g,'');
     if(ph.replace(/\D/g,'').length<9){note(authNote,'err','Please enter a valid WhatsApp number.');return}
+    if(KIND==='franchise'&&!$('#fnLoc').value.trim()){note(authNote,'err','Please tell us the city and country where you want to open.');return}
     busy(b,true,'Creating...');note(authNote,'','');
-    MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:KIND==='trainee'?'':$('#sStore').value.trim(),store_slug:KIND==='trainee'?'':$('#sSlug').value,ref:REF,kind:KIND}).then(function(r){
+    MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:KIND!=='shop'?'':$('#sStore').value.trim(),store_slug:KIND!=='shop'?'':$('#sSlug').value,ref:REF,kind:KIND}).then(function(r){
+      if(KIND==='franchise'){MZ.rpc('apply_franchise',{p_name:$('#sName').value.trim(),p_phone:ph,p_email:$('#sEmail').value.trim(),p_location:$('#fnLoc').value.trim(),p_message:$('#fnMsg').value.trim()}).catch(function(){})}
       if(r.confirmed){boot()}else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(authNote,'ok','Account created. We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in here. Check your spam folder if you do not see it.')}
     },function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Sending...');
@@ -495,17 +492,11 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   var REF='';try{var q=new URLSearchParams(location.search).get('ref');if(q){REF=q.trim().slice(0,12);localStorage.setItem('mz-ref',REF)}else REF=localStorage.getItem('mz-ref')||''}catch(e){}
   var KIND='shop',WANT=false;
   function setKind(k){KIND=k;$$('input[name=kind]').forEach(function(i){i.checked=i.value===k});$('#kShop').classList.toggle('on',k==='shop');$('#kTrain').classList.toggle('on',k==='trainee');$('#kFran').classList.toggle('on',k==='franchise');
-    var fr=k==='franchise';$('#acctFields').hidden=fr;$('#franBox').hidden=!fr;
+    var fr=k==='franchise';$('#franBox').hidden=!fr;$('#subBtn').textContent=fr?'Sign up as a franchise':k==='trainee'?'Sign up for training':'Create my account';
     $('#shopFields').hidden=k!=='shop';$('#sStore').required=k==='shop';$('#sSlug').required=k==='shop';
-    $('#kindNote').textContent=k==='trainee'?'You will get your own training dashboard. Choose your lessons and pay once. You can add a shop later.':'Start with a free trial. After that, keep your store open with a monthly or yearly plan.'}
+    $('#kindNote').textContent=fr?'You get a training account now. Once we agree your terms, your franchise dashboard opens.':k==='trainee'?'You will get your own training dashboard. Choose your lessons and pay once. You can add a shop later.':'Start with a free trial. After that, keep your store open with a monthly or yearly plan.'}
   $$('input[name=kind]').forEach(function(i){i.onchange=function(){setKind(i.value)}});
   try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='franchise'){setKind(qk);WANT=true}}catch(e){}
-  $('#fnSend').onclick=function(){var b=this,v=function(id){return $(id).value.trim()};
-    if(!v('#fnName')||!v('#fnLoc')||!v('#fnPhone')||!v('#fnEmail')){note(authNote,'err','Please fill in your name, WhatsApp number, email and location.');return}
-    busy(b,true,'Sending...');note(authNote,'','');
-    MZ.rpc('apply_franchise',{p_name:v('#fnName'),p_phone:v('#fnPhone'),p_email:v('#fnEmail'),p_location:v('#fnLoc'),p_message:v('#fnMsg')}).then(function(){
-      $$('#franBox label,#fnSend,#franBox>small').forEach(function(e){e.hidden=true});
-      var d=$('#fnDone');d.hidden=false;d.innerHTML='<div class="msg ok">Thank you, '+esc(v('#fnName'))+'. We received your request and will contact you soon.</div><p class="sub" style="margin-top:10px"><a class="btn ghost" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block" href="https://wa.me/233538729743?text='+encodeURIComponent('Hello MOZLYT, I just sent a franchise request. Name: '+v('#fnName')+', location: '+v('#fnLoc')+'.')+'">Message us on WhatsApp too</a></p>'},function(er){note(authNote,'err',er.message);busy(b,false)})};
   /* ----- tabs ----- */
   var PANES=['over','prod','ord','learn','sub','set','acc','fr','more'];
   function flag(k,set){var key='mz-f-'+(ME?ME.id:'x')+'-'+k;try{if(set){localStorage.setItem(key,'1');return true}return localStorage.getItem(key)==='1'}catch(e){return false}}
