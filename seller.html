@@ -347,7 +347,6 @@ body.has-list .wa-float{bottom:84px}
     <label>Your ID card (Ghana Card, passport or driver's licence) - photo or PDF<input id="faId" type="file" accept="image/*,application/pdf"></label>
     <label>Certificate type<select id="faCertType"><option value="">Choose the type of certificate</option><option value="management">Management or business administration</option><option value="marketing">Marketing or communications</option><option value="other">Other (we will check it)</option></select></label>
     <label>Your certificate to run as a manager (a genuine business registration, or a certificate showing you can manage a branch) - photo or PDF<input id="faCert" type="file" accept="image/*,application/pdf"></label>
-    <div id="faOcr" class="sub" style="margin:-4px 0 0"></div>
     <div class="card2" style="margin:0"><b>MOZLYT franchise terms</b>
       <ol class="sub" style="margin:8px 0 0;padding-left:18px;display:grid;gap:6px">
         <li>I will follow the rules, policies and prices of MOZLYT, and I will not do anything that stands against them.</li>
@@ -355,7 +354,7 @@ body.has-list .wa-float{bottom:84px}
         <li>Everything I submit is true. The ID and certificate are mine.</li>
         <li>MOZLYT may check my documents, and may pause or end my franchise if I break these terms.</li>
         <li>My first 7 days are free after approval. After that I pay the franchise fee (<span id="faFee">GH&#8373;1,000 a month</span>) on time, or my branch is paused.</li>
-        <li>MOZLYT keeps my documents private and uses them only to verify me.</li></ol>
+        <li>MOZLYT keeps my documents private and uses them only to verify me. I understand they are read by an automated AI checker, and a person at MOZLYT may also review them.</li></ol>
     </div>
     <label style="display:flex;gap:10px;align-items:flex-start"><input id="faAgree" type="checkbox" style="margin-top:4px"><span>I have read and I agree to the MOZLYT franchise terms.</span></label>
     <button class="btn primary" type="submit" id="faBtn" disabled>Send my application</button>
@@ -533,14 +532,6 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
         var f=$('#fFp');if(f)f.onsubmit=function(e){e.preventDefault();var b=$('button',f);busy(b,true,'Sending...');MZ.rpc('request_franchise_payment',{p_reference:$('#fpRef').value.trim()}).then(function(){showFran()},function(er){note($('#fpNote'),'err',er.message)}).then(function(){busy(b,false)})}}
       else{if(a&&a.status==='rejected'){dn.hidden=false;dn.innerHTML='<b style="color:#9b2c20">Your last application was not approved.</b>'+(a.review_note?'<br>'+esc(a.review_note):'')+'<br>You can fix the documents and send it again.'}
         $('#fFa').hidden=false;if(a){$('#faLoc').value=a.location||'';$('#faCountry').value=a.country||''}faCheck()}})}
-  var FAO={file:null,type:'',ok:false,note:'',p:null};
-  function loadOcr(){return new Promise(function(res,rej){if(window.Tesseract)return res();var sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js';sc.onload=res;sc.onerror=function(){rej(new Error('ocr'))};document.head.appendChild(sc)})}
-  function readCert(){var f=$('#faCert').files[0],t=$('#faCertType').value,box=$('#faOcr');FAO.file=f||null;FAO.type=t;FAO.ok=false;FAO.note='';FAO.p=null;
-    if(!f||!t||t==='other'){box.textContent=f&&t==='other'?'MOZLYT will check this certificate within about 2 working days.':'';faCheck();return}
-    if(f.type.indexOf('image/')!==0){box.textContent='A PDF cannot be read automatically. MOZLYT will check it within about 2 working days. For an instant check, upload a photo (JPG or PNG) of the certificate.';faCheck();return}
-    box.textContent='Reading your certificate...';var mine=f;
-    FAO.p=loadOcr().then(function(){return window.Tesseract.recognize(f,'eng')}).then(function(r){if(FAO.file!==mine)return;var tx=(r&&r.data&&r.data.text||''),m=tx.match(/management|marketing/i);FAO.ok=!!m;FAO.note=m?('Found: '+m[0].toLowerCase()):'';
-      box.innerHTML=m?'<b style="color:#14663f">Certificate read: it says "'+esc(m[0])+'". Your franchise dashboard opens as soon as you send.</b>':'<span style="color:#9b2c20">We could not read "management" or "marketing" on this photo. Try a clearer, straight photo. Or send it as it is and MOZLYT will check it within about 2 working days.</span>'},function(){if(FAO.file!==mine)return;box.textContent='We could not read the certificate automatically. MOZLYT will check it within about 2 working days.'}).then(faCheck)}
   function sendFran(e){e.preventDefault();var b=$('button[type=submit]',this),n=$('#faNote'),id=$('#faId').files[0],ce=$('#faCert').files[0];note(n,'','');
     if(!$('#faCountry').value){note(n,'err','Please select your country.');return}
     if($('#faPhone').value.replace(/\D/g,'').length<9){note(n,'err','Please enter a valid WhatsApp number.');return}
@@ -548,13 +539,15 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     if(!$('#faCertType').value){note(n,'err','Please choose your certificate type.');return}
     if(id.size>8388608||ce.size>8388608){note(n,'err','Each file must be under 8 MB.');return}
     if(!$('#faAgree').checked){note(n,'err','Please tick the box to agree to the terms.');return}
-    busy(b,true,'Sending...');var u=MZ.user().id,t=Date.now();
+    busy(b,true,'Sending your documents...');var u=MZ.user().id,t=Date.now();
     var ext=function(f){var m=(f.name.match(/\.([a-z0-9]{2,5})$/i)||[])[1];return m?m.toLowerCase():'jpg'};
-    (FAO.p||Promise.resolve()).then(function(){return Promise.all([MZ.upload('franchise-docs',u+'/id-'+t+'.'+ext(id),id),MZ.upload('franchise-docs',u+'/cert-'+t+'.'+ext(ce),ce)])}).then(function(p){
-      return MZ.rpc('submit_franchise_application_v2',{p_name:ME.full_name||'',p_phone:$('#faPhone').value.replace(/[^\d+]/g,''),p_location:$('#faLoc').value.trim(),p_country:$('#faCountry').value,p_message:$('#faMsg').value.trim(),p_id_path:p[0],p_cert_path:p[1],p_terms:true,p_cert_type:$('#faCertType').value,p_ocr_ok:FAO.ok,p_ocr_note:FAO.note})}).then(function(r){if(r&&r.auto){try{localStorage.removeItem('mz-fran')}catch(x){}location.replace('franchise.html');return}showFran()},function(er){note(n,'err',er.message)}).then(function(){busy(b,false)})}
+    Promise.resolve().then(function(){return Promise.all([MZ.upload('franchise-docs',u+'/id-'+t+'.'+ext(id),id),MZ.upload('franchise-docs',u+'/cert-'+t+'.'+ext(ce),ce)])}).then(function(p){
+      return MZ.rpc('submit_franchise_application_v3',{p_name:ME.full_name||'',p_phone:$('#faPhone').value.replace(/[^\d+]/g,''),p_location:$('#faLoc').value.trim(),p_country:$('#faCountry').value,p_message:$('#faMsg').value.trim(),p_id_path:p[0],p_cert_path:p[1],p_terms:true,p_cert_type:$('#faCertType').value})}).then(function(id){
+      b.textContent='Checking your documents...';
+      return MZ.fn('review-franchise',{application_id:id}).catch(function(){return {auto:false}})}).then(function(r){if(r&&r.auto){try{localStorage.removeItem('mz-fran')}catch(x){}location.replace('franchise.html');return}showFran()},function(er){note(n,'err',er.message)}).then(function(){busy(b,false)})}
   function faCheck(){var miss=[];if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)miss.push('your WhatsApp number');if(!$('#faCountry').value)miss.push('your country');if(!$('#faId').files[0])miss.push('your ID card');if(!$('#faCertType').value)miss.push('the certificate type');if(!$('#faCert').files[0])miss.push('your certificate');if(!$('#faAgree').checked)miss.push('agreeing to the terms');
     $('#faBtn').disabled=miss.length>0;$('#faNeed').textContent=miss.length?'Still needed: '+miss.join(', ')+'.':'Everything is ready.'}
-  ['faPhone','faCountry','faId','faCert','faAgree','faCertType'].forEach(function(i){var e=$('#'+i);e.addEventListener('input',faCheck);e.addEventListener('change',faCheck)});['faCert','faCertType'].forEach(function(i){$('#'+i).addEventListener('change',readCert)});
+  ['faPhone','faCountry','faId','faCert','faAgree','faCertType'].forEach(function(i){var e=$('#'+i);e.addEventListener('input',faCheck);e.addEventListener('change',faCheck)});
   $('#faCountry').innerHTML='<option value="">Select your country</option>'+MZC.map(function(k){return'<option value="'+k.c+'">'+esc(k.n)+'</option>'}).join('');
   $('#fFa').onsubmit=sendFran;
   $('#faSkip').onclick=function(e){e.preventDefault();try{localStorage.removeItem('mz-fran')}catch(x){}show('franView',false);boot()};

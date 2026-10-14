@@ -111,6 +111,12 @@
           .then(function (r) { return r.json() }).then(function (j) { if (!j.signedURL) throw new Error('Could not open the file'); return URL_ + '/storage/v1' + j.signedURL; });
       });
     },
+    fn: function (name, body) {
+      return freshToken().then(function (t) {
+        return fetch(URL_ + '/functions/v1/' + name, { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + (t || KEY), 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) })
+          .then(function (r) { return r.json().catch(function () { return {}; }); });
+      });
+    },
     rpc: function (name, args) { return freshToken().then(function (t) { return call('/rest/v1/rpc/' + name, { method: 'POST', body: args || {} }, t); }); },
     /* ---------- helpers ---------- */
     esc: function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); },
