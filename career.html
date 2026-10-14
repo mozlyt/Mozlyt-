@@ -190,6 +190,10 @@ section .sub{color:var(--mute);max-width:58ch;margin-bottom:34px}
 /* dashboard */
 .split{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:center}
 @media(max-width:860px){.split{grid-template-columns:1fr}}
+.dcar{min-width:0}.dtrack{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.dtrack::-webkit-scrollbar{display:none}.dtrack .slide{flex:0 0 100%;scroll-snap-align:start}
+.ddots{display:flex;justify-content:center;gap:8px;margin-top:12px}.ddots i{width:8px;height:8px;border-radius:99px;background:#cdd6cf}.ddots i.on{background:var(--green);width:22px}
+.prog{height:12px;background:#e8eee9;border-radius:99px;margin-bottom:16px;overflow:hidden}.prog div{height:100%;background:var(--green);border-radius:99px}
 .dash{background:var(--white);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 14px 34px rgba(14,42,71,.1)}
 .d-bar{background:var(--ink);color:#fff;padding:12px 16px;font-size:13px;display:flex;justify-content:space-between}
 .d-body{padding:16px}
@@ -398,7 +402,22 @@ body.has-list .wa-float{bottom:84px}
         <li>Mobile first, so you can run it from your phone</li>
       </ul>
     </div>
-    <div class="dash">
+    <div class="dcar"><div class="dtrack" id="dtrack">
+    <div class="dash slide">
+      <div class="d-bar"><span>Take a skill dashboard</span><span>Training</span></div>
+      <div class="d-body">
+        <div class="stats">
+          <div class="stat"><small>Lessons done</small><b>4 of 6</b></div>
+          <div class="stat"><small>Skills</small><b>1</b></div>
+          <div class="stat"><small>Progress</small><b>67%</b></div>
+        </div>
+        <div class="prog"><div style="width:67%"></div></div>
+        <div class="row"><span>Welcome to the MOZLYT network</span><b>Done</b></div>
+        <div class="row"><span>Set up your store</span><b>Done</b></div>
+        <div class="row"><span>Set a fair price</span><b>Next</b></div>
+      </div>
+    </div>
+    <div class="dash slide">
       <div class="d-bar"><span>Seller dashboard</span><span>Ama's Wellness Store</span></div>
       <div class="d-body">
         <div class="stats">
@@ -410,9 +429,23 @@ body.has-list .wa-float{bottom:84px}
         <div class="row"><span>Order from Kofi A.</span><b>GH₵250</b></div>
         <div class="row"><span>Order from Efua M.</span><b>GH₵180</b></div>
         <div class="row"><span>Restock request sent to MOZLYT</span><b>Pending</b></div>
-        <p class="note">Sample figures to show the idea. Not real business records.</p>
       </div>
     </div>
+    <div class="dash slide">
+      <div class="d-bar"><span>Franchise dashboard</span><span>MOZLYT Lagos</span></div>
+      <div class="d-body">
+        <div class="stats">
+          <div class="stat"><small>Recruits</small><b>18</b></div>
+          <div class="stat"><small>Active stores</small><b>14</b></div>
+          <div class="stat"><small>This month</small><b>GH₵3,200</b></div>
+        </div>
+        <div class="bars" aria-hidden="true"><div style="height:30%"></div><div style="height:45%"></div><div style="height:55%"></div><div style="height:50%"></div><div style="height:70%"></div><div style="height:80%"></div><div style="height:95%"></div></div>
+        <div class="row"><span>Kofi A. paid Plus monthly</span><b>Confirm</b></div>
+        <div class="row"><span>Grace E. joined with your link</span><b>New</b></div>
+        <div class="row"><span>Recruit orders this week</span><b>31</b></div>
+      </div>
+    </div>
+    </div><div class="ddots" id="ddots"><i class="on"></i><i></i><i></i></div></div>
   </div>
 </section>
 
@@ -561,6 +594,13 @@ homecare:["Basics of caring for someone at home","Hygiene, safe lifting and movi
     set('prFr',m(p.franchise_price)+' a month');set('prFr2',m(p.franchise_price)+' a month');set('prS0',m(p.monthly_price));
     set('prS',m(p.monthly_price)+' a month or '+m(p.yearly_price)+' a year');set('prP',m(p.plus_monthly)+' a month or '+m(p.plus_yearly)+' a year');set('prR',m(p.premium_monthly)+' a month or '+m(p.premium_yearly)+' a year');
     set('prT',p.trial_days);set('prB',Number(p.training_price)===0?'Free':m(p.training_price));set('prO',m(p.training_pro_price))},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
+})();
+
+(function(){var tr=document.getElementById('dtrack');if(!tr)return;var dots=document.querySelectorAll('#ddots i'),n=dots.length,paused=false;
+  function idx(){return Math.round(tr.scrollLeft/(tr.clientWidth+14))}
+  tr.addEventListener('scroll',function(){var i=idx();dots.forEach(function(d,k){d.classList.toggle('on',k===i)})});
+  ['touchstart','mousedown'].forEach(function(e){tr.addEventListener(e,function(){paused=true})});
+  setInterval(function(){if(paused||document.hidden)return;var i=(idx()+1)%n;tr.scrollTo({left:i*(tr.clientWidth+14),behavior:'smooth'})},4500);
 })();
 </script>
 </body>
