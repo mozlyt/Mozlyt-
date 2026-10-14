@@ -410,6 +410,8 @@ body.has-list .wa-float{bottom:84px}
     <div class="plans" id="trainPlans"></div>
     <div class="card2" id="fPayBox" style="margin-top:16px"><h3 style="margin:0 0 6px">Pay and activate</h3>
       <p class="sub" id="payHow" style="margin-bottom:12px"></p>
+      <button class="btn primary" type="button" id="payNow" style="width:100%;margin-bottom:6px">Pay now with Mobile Money or card</button><div id="payNowNote" class="sub" style="margin-bottom:10px"></div>
+      <p class="sub" style="margin:10px 0 6px">Or pay by hand and send us the reference:</p>
       <form id="fPay" class="f"><label>Payment reference or Mobile Money transaction ID<input id="payRef" maxlength="60" minlength="4" required placeholder="e.g. 4821937465"></label>
       <button class="btn primary" type="submit">I have paid</button></form></div>
     <h3 style="margin:22px 0 10px">Payment history</h3><div class="lst" id="payList"></div>
@@ -479,6 +481,7 @@ body.has-list .wa-float{bottom:84px}
 </div></main>
 
 <script src="js/mz-api.js"></script>
+<script src="js/mz-pay.js"></script>
 <script>
 
 var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
@@ -536,7 +539,8 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       var dn=$('#faDone');
       if(a&&a.status==='new'){dn.hidden=false;dn.innerHTML='<b>Application received.</b><br>MOZLYT is checking your documents. You will hear from us by about <b>'+addWD(a.created_at,2).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+'</b> (2 working days), on WhatsApp '+esc(a.phone)+' and by email.'}
       else if(a&&a.status==='approved'){var pend=pays.filter(function(x){return x.status==='pending'})[0];dn.hidden=false;
-        dn.innerHTML='<b style="color:#14663f">Your documents are confirmed genuine.</b><br>'+(pend?'We received your payment reference <b>'+esc(pend.reference)+'</b>. MOZLYT will confirm it and open your franchise login.':'To open your franchise, pay <b>'+fee+'</b> as agreed:<div style="margin:10px 0;white-space:pre-line">'+esc(P.pay_instructions||'Message MOZLYT on WhatsApp for how to pay.')+'</div><form id="fFp" class="form"><label>Payment reference<input id="fpRef" maxlength="60" placeholder="Mobile money transaction ID"></label><button class="btn primary" type="submit">I have paid</button></form><div id="fpNote"></div>')
+        dn.innerHTML='<b style="color:#14663f">Your documents are confirmed genuine.</b><br>'+(pend?'We received your payment reference <b>'+esc(pend.reference)+'</b>. MOZLYT will confirm it and open your franchise login.':'To open your franchise, pay <b>'+fee+'</b> as agreed:<div style="margin:10px 0;white-space:pre-line">'+esc(P.pay_instructions||'Message MOZLYT on WhatsApp for how to pay.')+'</div><button class="btn primary" type="button" id="fpNow" style="width:100%;margin-bottom:8px">Pay now with Mobile Money or card</button><p class="sub" style="margin:6px 0">Or pay by hand and send us the reference:</p><form id="fFp" class="form"><label>Payment reference<input id="fpRef" maxlength="60" placeholder="Mobile money transaction ID"></label><button class="btn primary" type="submit">I have paid</button></form><div id="fpNote"></div>')
+        var fn2=$('#fpNow');if(fn2)fn2.onclick=function(){var b=this;busy(b,true,'Opening payment...');MZ.pay({amount:P.franchise_price!=null?P.franchise_price:1000,email:MZ.user().email,kind:'franchise'}).then(function(){showFran()},function(er){if(er.message!=='cancelled')note($('#fpNote'),'err',er.message)}).then(function(){busy(b,false)})};
         var f=$('#fFp');if(f)f.onsubmit=function(e){e.preventDefault();var b=$('button',f);busy(b,true,'Sending...');MZ.rpc('request_franchise_payment',{p_reference:$('#fpRef').value.trim()}).then(function(){showFran()},function(er){note($('#fpNote'),'err',er.message)}).then(function(){busy(b,false)})}}
       else{if(a&&a.status==='rejected'){dn.hidden=false;dn.innerHTML='<b style="color:#9b2c20">Your last application was not approved.</b>'+(a.review_note?'<br>'+esc(a.review_note):'')+'<br>You can fix the documents and send it again.'}
         $('#fFa').hidden=false;if(a){$('#faLoc').value=a.location||'';$('#faCountry').value=a.country||''}faCheck()}})}
@@ -684,6 +688,14 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     lockUI();
     $('#payList').innerHTML=payRows()}
   function payRows(){return PAYS.map(function(x){var cls=x.status==='confirmed'?'':(x.status==='rejected'?'bad':'warn');return'<div class="it"><div class="h"><b>'+(x.kind==='training'?'Training: '+esc(itemName(x.item)):cap(x.tier||'standard')+' &middot; '+(x.plan==='yearly'?'Yearly':'Monthly'))+' &middot; '+MZ.money(x.amount)+'</b><span class="tag '+cls+'">'+(x.status==='pending'?'Waiting for confirmation':x.status==='confirmed'?'Confirmed':'Not confirmed')+'</span></div><div class="m">Ref '+esc(x.reference)+' &middot; '+MZ.when(x.created_at)+'</div></div>'}).join('')||'<div class="empty">No payments yet.</div>'}
+  $('#payNow').onclick=function(){var b=this,n=$('#payNowNote');note(n,'','');
+    var kk=({standard:['monthly_price','yearly_price'],plus:['plus_monthly','plus_yearly'],premium:['premium_monthly','premium_yearly']})[TIER]||['monthly_price','yearly_price'],amt=isTr()?trAmt():Number(BILL[kk[PLAN==='yearly'?1:0]]);
+    busy(b,true,'Opening payment...');
+    MZ.pay({amount:amt,email:(ME&&ME.email)||MZ.user().email,kind:isTr()?'training':'subscription',tier:TIER,plan:PLAN,item:isTr()?trItem():''}).then(function(r){
+      return MZ.q('subscription_payments','select=*&order=created_at.desc&limit=50').then(function(rr){PAYS=rr;drawSub();
+        if(r.status==='confirmed'){flash('Payment received. Your plan is active.');return MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(pp){if(pp&&pp[0]){ME=pp[0];}drawSub()},function(){})}
+        else note(n,'ok',r.note||'Payment received. MOZLYT will confirm it shortly.')})
+    },function(er){if(er.message!=='cancelled')note(n,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fPay').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this),ref=$('#payRef').value.trim();busy(b,true,'Sending...');
     (isTr()?MZ.rpc('request_training',{p_item:trItem(),p_reference:ref}):MZ.rpc('request_subscription',{p_tier:TIER,p_plan:PLAN,p_reference:ref})).then(function(){return MZ.q('subscription_payments','select=*&order=created_at.desc&limit=50')}).then(function(r){PAYS=r;$('#payRef').value='';drawSub();flash('Payment sent. We will confirm it shortly.');
       window.open('https://wa.me/233538729743?text='+encodeURIComponent('Hello MOZLYT, I paid for '+(isTr()?'the training: '+itemName(trItem()):'the '+TIER+' '+PLAN+' store plan')+'. Store: '+ME.store_slug+'. Reference: '+ref),'_blank','noopener')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
