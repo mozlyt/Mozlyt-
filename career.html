@@ -309,7 +309,7 @@ body.has-list .wa-float{bottom:84px}
       <h1>Learn it. Sell it. Own it.</h1>
       <p class="lead">MOZLYT trains you, supplies you with products, coaches you to your first sales, then gives you your own online store. Your business, your customers, your freedom.</p>
       <div class="cta">
-        <a class="btn primary go" href="#">Start training</a>
+        <a class="btn primary go" href="#">Sign up for training</a>
         <a class="btn ghost" href="#how">See how it works</a>
       </div>
       <small>Fitness, massage, fashion, food and more. Based in Accra, Ghana. Online seller stores are opening soon: message us to join the first group.</small>
@@ -392,7 +392,7 @@ body.has-list .wa-float{bottom:84px}
       <div class="plan"><h3>Trainee</h3>
         <p style="margin:6px 0 0;font-weight:700;font-size:18px">Pay once <span style="font-weight:400;font-size:14px;color:var(--muted,#667)">for what you want to learn</span></p>
         <ul><li>Basic: business lessons, GH&#8373;100</li><li>Standard: one skill of your choice, priced per skill</li><li>Pro: every lesson and skill, GH&#8373;150</li><li>Your own training dashboard, yours to keep</li><li>No shop included</li></ul>
-        <a class="btn ghost go" href="#">Start training</a></div>
+        <a class="btn ghost go" href="#">Sign up for training</a></div>
       <div class="plan best"><h3>Take a shop</h3>
         <ul><li>Business training lessons included</li><li>Premium also includes one free skill of your choice</li><li>Your own online store and store link</li><li>Pick products and set your own prices</li><li>Orders and sales dashboard</li><li>Monthly or yearly plan, with a free trial to start</li><li>Optional: Facebook, Instagram and TikTok ad tracking</li><li>Optional: your own custom address, like www.yourbrand.com</li></ul>
         <a class="btn primary go" href="#">Take a shop</a></div>
@@ -457,7 +457,7 @@ var PLATFORM_URL="";
   document.querySelectorAll('a.go').forEach(function(a){
     var label=a.textContent.trim();
     if(label==="Request a franchise"){a.href="seller.html?kind=franchise";return}
-    if(label!=="Talk to us"){a.href=label==="Start training"?"seller.html?kind=trainee":"seller.html";return}
+    if(label!=="Talk to us"){a.href=label==="Sign up for training"?"seller.html?kind=trainee":"seller.html";return}
     var m=a.getAttribute("data-msg")||"Hello MOZLYT, I would like to join the network ("+label+"). Please tell me how it works and what the next step is.";
     a.href="https://wa.me/"+WA+"?text="+encodeURIComponent(m);
     a.target="_blank";a.rel="noopener";
