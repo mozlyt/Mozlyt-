@@ -157,6 +157,9 @@ body.has-list .wa-float{bottom:84px}
 </style>
 
 <style id="mz-dash">
+.btn[disabled],button.btn:disabled{background:#c9d1cc!important;border-color:#c9d1cc!important;color:#fff!important;cursor:not-allowed;opacity:1;box-shadow:none}
+.need{color:#b3261e;font-weight:700;font-size:14.5px}
+.miss{outline:2px solid #b3261e;outline-offset:2px;border-radius:10px}
 .dash{padding:26px 0 60px;min-height:70vh}
 .dash h1{font-size:clamp(26px,4.6vw,38px);margin:0 0 6px}
 .dash .sub{color:var(--mute);margin:0 0 20px;font-size:16px}
@@ -302,7 +305,7 @@ body.has-list .wa-float{bottom:84px}
     <label>Country<select id="faCountry"><option value="">Select your country</option></select></label>
     <label>City or town (optional)<input id="faLoc" maxlength="120" placeholder="e.g. Accra"></label>
     <div><b>Which services will you be responsible for?</b><div class="sub" style="margin:2px 0 8px">Tick only the services you are qualified for.</div><div id="faSvc" class="chk"></div></div>
-    <label>What does your certificate say? (for example: Diploma in Massage Therapy)<input id="faCertTitle" maxlength="160"></label>
+    <label>What does your certificate say? (required, for example: Diploma in Massage Therapy)<input id="faCertTitle" maxlength="160"></label>
     <label>Your ID card (Ghana Card, passport or driver's licence) - photo or PDF<input id="faId" type="file" accept="image/*,application/pdf"></label>
     <label>Your certificate for these services - photo or PDF<input id="faCert" type="file" accept="image/*,application/pdf"></label>
     <label>Anything else we should know (optional)<textarea id="faMsg" rows="3" maxlength="800"></textarea></label>
@@ -316,7 +319,7 @@ body.has-list .wa-float{bottom:84px}
         <li>MOZLYT keeps my documents private and uses them only to verify me. The arrangement for each booking is agreed with MOZLYT before I start.</li></ol>
     </div>
     <label style="display:flex;gap:10px;align-items:flex-start"><input id="faAgree" type="checkbox" style="margin-top:4px"><span>I have read and I agree to the MOZLYT service provider terms.</span></label>
-    <button class="btn primary" type="submit" id="faBtn" disabled>Send my application</button><small id="faNeed" class="sub"></small>
+    <div id="faWrap"><button class="btn primary" type="submit" id="faBtn" disabled style="width:100%">Send my application</button></div><div id="faNeed" class="need"></div>
   </form></div>
 </section>
 
@@ -339,6 +342,7 @@ body.has-list .wa-float{bottom:84px}
 .f .chk label{display:flex;flex-direction:row;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;cursor:pointer;font-size:14.5px;font-weight:500}
 .f .chk label input{width:auto;flex:none;margin:0;padding:0}
 .f .chk label.on{border-color:#14663f;background:#eef8f2}
+#faBtn:disabled{pointer-events:none}
 .bdg{display:inline-block;min-width:18px;padding:2px 6px;border-radius:99px;background:#c0392b;color:#fff;font-size:12px;margin-left:4px;text-align:center}
 .it.unread{border-left:4px solid #14663f;background:#f4fbf7}
 </style>
@@ -379,8 +383,13 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function svcDraw(){$('#faSvc').innerHTML=SERVICES.map(function(s,i){return'<label><input type="checkbox" value="'+esc(s)+'"> <span>'+esc(s)+'</span></label>'}).join('');
     $$('#faSvc input').forEach(function(c){c.onchange=function(){c.parentNode.classList.toggle('on',c.checked);faCheck()}})}
   function chosen(){return $$('#faSvc input').filter(function(c){return c.checked}).map(function(c){return c.value})}
-  function faCheck(){var miss=[];if(JOIN){if(($('#jName').value||'').trim().length<2)miss.push('your full name');if(!/^\S+@\S+\.\S+$/.test($('#jEmail').value.trim()))miss.push('your email');if(($('#jPass').value||'').length<8)miss.push('a password of 8 or more characters')}if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)miss.push('your WhatsApp number');if(!$('#faCountry').value)miss.push('your country');if(!chosen().length)miss.push('at least one service');if(!$('#faCertTitle').value.trim())miss.push('what your certificate says');if(!$('#faId').files[0])miss.push('your ID card');if(!$('#faCert').files[0])miss.push('your certificate');if(!$('#faAgree').checked)miss.push('agreeing to the terms');
-    $('#faBtn').disabled=miss.length>0;$('#faNeed').textContent=miss.length?'Still needed: '+miss.join(', ')+'.':'Everything is ready.'}
+  function faCheck(){var miss=[],first=null;function m(t,id){miss.push(t);if(!first)first=id}
+    $$('.miss').forEach(function(e){e.classList.remove('miss')});
+    if(JOIN){if(($('#jName').value||'').trim().length<2)m('your full name','jName');if(!/^\S+@\S+\.\S+$/.test($('#jEmail').value.trim()))m('your email','jEmail');if(($('#jPass').value||'').length<8)m('a password of 8 or more characters','jPass')}
+    if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)m('your WhatsApp number','faPhone');if(!$('#faCountry').value)m('your country','faCountry');if(!chosen().length)m('at least one service','faSvc');if(!$('#faCertTitle').value.trim())m('what your certificate says','faCertTitle');if(!$('#faId').files[0])m('your ID card','faId');if(!$('#faCert').files[0])m('your certificate','faCert');if(!$('#faAgree').checked)m('agreeing to the terms','faAgree');
+    $('#faBtn').disabled=miss.length>0;$('#faBtn').dataset.first=first||'';$('#faNeed').textContent=miss.length?'To send, please still add: '+miss.join(', ')+'. (Tap here to go to it.)':'Everything is ready. You can send now.';$('#faNeed').style.color=miss.length?'':'#14663f'}
+  function goMiss(){var id=$('#faBtn').dataset.first;if(!id)return;var e=$('#'+id);if(!e)return;var box=e.closest('label')||e;box.classList.add('miss');box.scrollIntoView({behavior:'smooth',block:'center'});try{e.focus({preventScroll:true})}catch(x){}}
+  $('#faNeed').onclick=$('#faWrap').onclick=function(){if($('#faBtn').disabled)goMiss()};
   var JOIN=false;
   function showApply(join){JOIN=!!join;views('applyView');show('joinFields',JOIN);show('faEmailRow',!JOIN);$('#apTitle').textContent=JOIN?'Create your account and apply':'Apply to work with MOZLYT';$('#btnOut2').textContent=JOIN?'I already have an account':'Log out';$('#faEmail').value=ME.email||'';$('#faPhone').value=ME.phone||'';$('#faCountry').innerHTML='<option value="">Select your country</option>'+MZC.map(function(k){return'<option value="'+k.c+'">'+esc(k.n)+'</option>'}).join('');$('#faCountry').value='GH';svcDraw();faCheck();
     if(APP&&APP.status==='rejected')note($('#faNote'),'err','Your last application was not accepted'+(APP.review_note?': '+APP.review_note:'')+'. You can apply again with the right documents.')}
@@ -413,7 +422,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#btnAll').onclick=function(){if(!NOTES.some(function(n){return!n.read}))return;MZ.update('provider_notifications','read=eq.false',{read:true}).then(function(){NOTES.forEach(function(n){n.read=true});drawNotes()})};
 
   if(MZ.loggedIn()){boot()}else{views('authView')}
-  try{var q=new URLSearchParams(location.search).get('join');if(q&&!MZ.loggedIn()){showApply(true)}}catch(e){}
+  try{var q=new URLSearchParams(location.search).get('join');if(q&&!MZ.loggedIn()){ME={};showApply(true)}}catch(e){}
 })();
 </script>
 <footer class="mz-footer">
