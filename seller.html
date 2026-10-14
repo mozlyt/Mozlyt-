@@ -309,11 +309,9 @@ body.has-list .wa-float{bottom:84px}
       <label>Password<input type="password" id="sPass" autocomplete="new-password" minlength="8" required><small>At least 8 characters.</small></label>
       <div id="franBox" class="f" hidden>
         <div class="card2" style="margin:0"><b style="font-size:18px">MOZLYT Franchise</b>
-          <p class="sub" style="margin:6px 0 10px">A franchise is your own MOZLYT branch, like a partner location. <b>Your first 7 days are free</b> so you can see how it runs. After that it is GH&#8373;1,000 a month.</p>
+          <p class="sub" style="margin:6px 0 10px">A franchise is your own MOZLYT branch, like a partner location. It is not as easy as opening a shop: you must agree to the MOZLYT franchise terms and send your ID card and manager certificate for checking. <b>Once approved, your first 7 days are free.</b> After that it is GH&#8373;1,000 a month.</p>
           <ul class="sub" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Your own dashboard, under MOZLYT</li><li>Recruit sellers and trainees with your own link</li><li>Their payments come to you, not to MOZLYT</li><li>Set the prices your recruits pay and sell at</li><li>Pause or activate your recruits if payment is late</li><li>The full shop, every lesson and every skill</li><li>Best wholesale prices from MOZLYT</li><li>You pay MOZLYT only the agreed amount, monthly or yearly</li></ul></div>
-        <label>City and country where you want to open<input id="fnLoc" placeholder="e.g. Lagos, Nigeria" maxlength="120"></label>
-        <label>Tell us about your capital and when you want to start (optional)<textarea id="fnMsg" rows="3" maxlength="800" placeholder="Your experience, the capital you have, when you want to start."></textarea></label>
-        <small>Create your account now. We will contact you to agree the terms. Your franchise dashboard opens once we have agreed. Nothing is charged now.</small>
+        <small>Step 1: create your account. Step 2: log in, agree to the terms and upload your documents. Step 3: MOZLYT checks them and opens your franchise login. Nothing is charged now.</small>
       </div>
       <p class="sub" style="margin:0;font-size:14px"><span id="kindNote">Start with a free trial. After that, keep your store open with a monthly or yearly plan.</span></p><button class="btn primary" type="submit" id="subBtn">Create my account</button>
       <small>By signing up you agree to sell honestly and deliver what customers order.</small>
@@ -334,6 +332,30 @@ body.has-list .wa-float{bottom:84px}
 </section>
 
 <!-- ========== DASHBOARD ========== -->
+<section id="franView" class="authcard" hidden>
+  <h1>Franchise application</h1>
+  <p class="sub" id="faSub">A franchise is not like opening a shop. Before you get franchise access, MOZLYT must check who you are and that you are qualified to run a branch.</p>
+  <div id="faDone" class="card2" hidden></div>
+  <form id="fFa" class="form" novalidate>
+    <label>City and country where you want to open<input id="faLoc" maxlength="120" placeholder="e.g. Lagos, Nigeria"></label>
+    <label>Tell us about yourself and your plan (optional)<textarea id="faMsg" rows="3" maxlength="800"></textarea></label>
+    <label>Your ID card (Ghana Card, passport or driver's licence) - photo or PDF<input id="faId" type="file" accept="image/*,application/pdf"></label>
+    <label>Your certificate to run as a manager (business registration, professional or manager certificate) - photo or PDF<input id="faCert" type="file" accept="image/*,application/pdf"></label>
+    <div class="card2" style="margin:0"><b>MOZLYT franchise terms</b>
+      <ol class="sub" style="margin:8px 0 0;padding-left:18px;display:grid;gap:6px">
+        <li>I will follow the rules, policies and prices of MOZLYT, and I will not do anything that stands against them.</li>
+        <li>I will promote the beliefs and mission of MOZLYT, and I will not harm its name.</li>
+        <li>Everything I submit is true. The ID and certificate are mine.</li>
+        <li>MOZLYT may check my documents, and may pause or end my franchise if I break these terms.</li>
+        <li>My first 7 days are free after approval. After that I pay the franchise fee (<span id="faFee">GH&#8373;1,000 a month</span>) on time, or my branch is paused.</li>
+        <li>MOZLYT keeps my documents private and uses them only to verify me.</li></ol>
+    </div>
+    <label style="display:flex;gap:10px;align-items:flex-start"><input id="faAgree" type="checkbox" style="margin-top:4px"><span>I have read and I agree to the MOZLYT franchise terms.</span></label>
+    <button class="btn primary" type="submit">Send my application</button>
+  </form>
+  <p class="note" id="faNote"></p>
+  <p class="sub"><a href="#" id="faSkip">Continue to my training dashboard instead</a> &middot; <a href="#" id="faOut">Log out</a></p>
+</section>
 <section id="dashView" hidden>
   <div class="top2"><div><h1 id="hello">Your store</h1><p class="sub" id="subline"></p></div><button class="b2 ghost" id="btnOut" type="button">Log out</button></div>
   <div id="dashNote"></div><div id="subNote"></div>
@@ -477,11 +499,9 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.signIn($('#lEmail').value.trim(),$('#lPass').value).then(boot,function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fSign').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);var ph=$('#sPhone').value.replace(/[^\d+]/g,'');
     if(ph.replace(/\D/g,'').length<9){note(authNote,'err','Please enter a valid WhatsApp number.');return}
-    if(KIND==='franchise'&&!$('#fnLoc').value.trim()){note(authNote,'err','Please tell us the city and country where you want to open.');return}
     busy(b,true,'Creating...');note(authNote,'','');
     MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:KIND!=='shop'?'':$('#sStore').value.trim(),store_slug:KIND!=='shop'?'':$('#sSlug').value,ref:REF,kind:KIND}).then(function(r){
       if(KIND==='franchise'){try{localStorage.setItem('mz-fran','1')}catch(e){}}
-      if(KIND==='franchise'){MZ.rpc('apply_franchise',{p_name:$('#sName').value.trim(),p_phone:ph,p_email:$('#sEmail').value.trim(),p_location:$('#fnLoc').value.trim(),p_message:$('#fnMsg').value.trim()}).catch(function(){})}
       if(r.confirmed){boot()}else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(authNote,'ok','Account created. We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in here. Check your spam folder if you do not see it.')}
     },function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Sending...');
@@ -490,6 +510,25 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.updatePassword($('#rPass').value).then(function(){flash('Password saved');boot()},function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){ME=null;show('dashView',false);show('authView',true);view('fLogin')})};
 
+  function showFran(){show('dashView',false);show('authView',false);show('franView',true);
+    $('#fFa').hidden=true;$('#faDone').hidden=true;
+    MZ.q('franchise_applications','select=*&user_id=eq.'+MZ.user().id).catch(function(){return[]}).then(function(r){var a=r&&r[0];
+      MZ.rpc('public_prices').then(function(p){if(p&&p.franchise_price!=null)$('#faFee').textContent=MZ.money(p.franchise_price)+' a month'}).catch(function(){});
+      if(a&&a.status==='new'){$('#faDone').hidden=false;$('#faDone').innerHTML='<b>Application received.</b><br>MOZLYT is checking your documents. We will contact you on WhatsApp. Your franchise login opens once you are approved.'}
+      else{if(a&&a.status==='rejected'){$('#faDone').hidden=false;$('#faDone').innerHTML='<b style="color:#9b2c20">Your last application was not approved.</b>'+(a.review_note?'<br>'+esc(a.review_note):'')+'<br>You can fix the documents and send it again.'}
+        $('#fFa').hidden=false;if(!$('#faLoc').value&&a)$('#faLoc').value=a.location||''}})}
+  function sendFran(e){e.preventDefault();var b=$('button[type=submit]',this),n=$('#faNote'),id=$('#faId').files[0],ce=$('#faCert').files[0];note(n,'','');
+    if($('#faLoc').value.trim().length<2){note(n,'err','Please tell us where you want to open.');return}
+    if(!id||!ce){note(n,'err','Please upload your ID card and your certificate.');return}
+    if(id.size>8388608||ce.size>8388608){note(n,'err','Each file must be under 8 MB.');return}
+    if(!$('#faAgree').checked){note(n,'err','Please tick the box to agree to the terms.');return}
+    busy(b,true,'Sending...');var u=MZ.user().id,t=Date.now();
+    var ext=function(f){var m=(f.name.match(/\.([a-z0-9]{2,5})$/i)||[])[1];return m?m.toLowerCase():'jpg'};
+    Promise.all([MZ.upload('franchise-docs',u+'/id-'+t+'.'+ext(id),id),MZ.upload('franchise-docs',u+'/cert-'+t+'.'+ext(ce),ce)]).then(function(p){
+      return MZ.rpc('submit_franchise_application',{p_name:ME.full_name||'',p_phone:ME.phone||'',p_location:$('#faLoc').value.trim(),p_message:$('#faMsg').value.trim(),p_id_path:p[0],p_cert_path:p[1],p_terms:true})}).then(function(){showFran()},function(er){note(n,'err',er.message)}).then(function(){busy(b,false)})}
+  $('#fFa').onsubmit=sendFran;
+  $('#faSkip').onclick=function(e){e.preventDefault();try{localStorage.removeItem('mz-fran')}catch(x){}show('franView',false);boot()};
+  $('#faOut').onclick=function(e){e.preventDefault();$('#btnOut').click();show('franView',false)};
   var REF='';try{var q=new URLSearchParams(location.search).get('ref');if(q){REF=q.trim().slice(0,12);localStorage.setItem('mz-ref',REF)}else REF=localStorage.getItem('mz-ref')||''}catch(e){}
   var SKILLS=[['massage','Massage'],['beauty','Beauty and skincare'],['hair','Hair and scalp care'],['fashion','Fashion and styling'],['fitness','Fitness and sculpting'],['nutrition','Nutrition and meal prep'],['catering','Catering'],['homecare','Home health care']];
   var PICK='';try{var qi=new URLSearchParams(location.search).get('item');if(qi&&/^(basic|pro|skill:[a-z]{2,20}|tier:(standard|plus|premium))$/.test(qi)){PICK=qi;localStorage.setItem('mz-item',qi)}else PICK=localStorage.getItem('mz-item')||''}catch(e){}
@@ -506,7 +545,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#kindNote').textContent=fr?'You get a training account now. Once we agree your terms, your franchise dashboard opens.':k==='trainee'?'You will get your own training dashboard. Choose your lessons and pay once. You can add a shop later.':'Start with a free trial. After that, keep your store open with a monthly or yearly plan.'}
   $$('input[name=kind]').forEach(function(i){i.onchange=function(){setKind(i.value)}});
   function pickName(){return PICK.indexOf('tier:')===0?cap(PICK.slice(5))+' shop plan':PICK==='basic'?'Business lessons (Basic)':PICK==='pro'?'Pro: everything':PICK.indexOf('skill:')===0?skName(PICK.slice(6)):''}
-  try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='franchise'||qk==='shop'){setKind(qk);WANT=true;$('#kindPick').hidden=true;
+  try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='franchise'||qk==='shop'){if(qk==='franchise'){try{localStorage.setItem('mz-fran','1')}catch(e){}}setKind(qk);WANT=true;$('#kindPick').hidden=true;
     var T={trainee:['Sign up for training','Create your account to start learning. The business lessons are free.'],franchise:['Sign up as a franchise','Create your account and tell us where you want to open your MOZLYT branch.'],shop:['Take a shop','Create your account to open your online store. Start with a free trial.']}[qk];$('#authTitle').textContent=T[0];$('#authSub').textContent=T[1];if((qk==='trainee'||qk==='shop')&&PICK){$('#kindNote').textContent='You chose: '+pickName()+'. Create your account and your dashboard opens with it.'+(PICK==='basic'?' The business lessons are free.':PICK.indexOf('tier:')===0?' Your free trial starts now. Pay when you are ready to keep the store open.':' You pay once there.')}}}catch(e){}
   /* ----- tabs ----- */
   var PANES=['over','prod','ord','learn','sub','set','acc','fr','more'];
@@ -525,12 +564,12 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     return MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(p){
       if(!p||!p[0]){throw new Error('We could not find your seller profile. Please log out and sign up again.')}
       ME=p[0];var wf='';try{wf=localStorage.getItem('mz-fran')}catch(e){}
-      if(wf&&!ME.franchise&&!ME.franchise_expires_at){return MZ.rpc('start_franchise_trial').then(function(){try{localStorage.removeItem('mz-fran')}catch(e){}location.replace('franchise.html')},function(er){try{localStorage.removeItem('mz-fran')}catch(e){}throw er})}
+      if(wf&&!ME.franchise){return showFran()}
       show('dashView',true);if(ME.franchise&&location.search.indexOf('own=1')<0){location.replace('franchise.html');return}
       paint();if(isTrainee())go('learn');applyPick();
       if(ME.status==='suspended')note(dashNote,'err','Your store is paused. Please contact MOZLYT on WhatsApp.');
       return Promise.all([MZ.q('products','select=id,category,name,photo,wholesale_price,suggested_price,status&order=sort,name'),MZ.q('seller_products','select=product_id,price,active&seller_id=eq.'+ME.id),MZ.q('orders','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=200'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.q('subscription_payments','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=50'),MZ.rpc('get_my_prices').catch(function(){return null}),MZ.q('franchise_product_prices','select=product_id,price').catch(function(){return []})]);
-    }).then(function(r){PAYINFO=r[5]||'';PRODUCTS=r[0];MINE={};r[1].forEach(function(x){MINE[x.product_id]=x});ORDERS=r[2];BILL=(r[3]&&r[3][0])||{monthly_price:0,yearly_price:0,pay_instructions:''};PAYS=r[4]||[];FPP={};if(r[5]&&r[5].franchise_live&&!ME.franchise)(r[6]||[]).forEach(function(x){FPP[x.product_id]=Number(x.price)});if(r[5]&&typeof r[5]==='object')BILL=Object.assign({},BILL,r[5]);drawAll()},function(er){
+    }).then(function(r){if(!r)return;PAYINFO=r[5]||'';PRODUCTS=r[0];MINE={};r[1].forEach(function(x){MINE[x.product_id]=x});ORDERS=r[2];BILL=(r[3]&&r[3][0])||{monthly_price:0,yearly_price:0,pay_instructions:''};PAYS=r[4]||[];FPP={};if(r[5]&&r[5].franchise_live&&!ME.franchise)(r[6]||[]).forEach(function(x){FPP[x.product_id]=Number(x.price)});if(r[5]&&typeof r[5]==='object')BILL=Object.assign({},BILL,r[5]);drawAll()},function(er){
       if(er.status===401||/JWT|expired/i.test(er.message)){MZ.signOut();show('dashView',false);show('authView',true);view('fLogin');note(authNote,'info','Please log in again.')}else{show('authView',true);view('fLogin');note(authNote,'err',er.message)}});
   }
   function storeUrl(){return(ME.custom_domain&&false?('https://'+ME.custom_domain+'/'):MZ.siteUrl+'store.html?s='+ME.store_slug)}

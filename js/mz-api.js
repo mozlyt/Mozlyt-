@@ -98,6 +98,19 @@
     update: function (table, match, patch) { return MZ.q(table, match, { method: 'PATCH', body: patch, prefer: 'return=representation' }); },
     upsert: function (table, rows, conflict) { return MZ.q(table, 'on_conflict=' + conflict, { method: 'POST', body: rows, prefer: 'resolution=merge-duplicates,return=minimal' }); },
     remove: function (table, match) { return MZ.q(table, match, { method: 'DELETE', prefer: 'return=minimal' }); },
+    upload: function (bucket, path, file) {
+      return freshToken().then(function (t) {
+        if (!t) throw new Error('Please log in again.');
+        return fetch(URL_ + '/storage/v1/object/' + bucket + '/' + path, { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + t, 'Content-Type': file.type || 'application/octet-stream', 'x-upsert': 'true' }, body: file })
+          .then(function (r) { if (!r.ok) return r.text().then(function (x) { var m = ''; try { m = JSON.parse(x).message } catch (e) { } throw new Error(m || 'Upload failed. Use a photo or PDF under 8 MB.'); }); return path; }, function () { throw new Error('No internet connection. Please check your network and try again.'); });
+      });
+    },
+    signUrl: function (bucket, path) {
+      return freshToken().then(function (t) {
+        return fetch(URL_ + '/storage/v1/object/sign/' + bucket + '/' + path, { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + t, 'Content-Type': 'application/json' }, body: JSON.stringify({ expiresIn: 300 }) })
+          .then(function (r) { return r.json() }).then(function (j) { if (!j.signedURL) throw new Error('Could not open the file'); return URL_ + '/storage/v1' + j.signedURL; });
+      });
+    },
     rpc: function (name, args) { return freshToken().then(function (t) { return call('/rest/v1/rpc/' + name, { method: 'POST', body: args || {} }, t); }); },
     /* ---------- helpers ---------- */
     esc: function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); },
