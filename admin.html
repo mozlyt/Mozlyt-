@@ -197,13 +197,13 @@ body.has-list .wa-float{bottom:84px}
 .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.tools input,.tools select{padding:10px 12px;border:1px solid #cfd8d2;border-radius:10px;font:15px inherit;font-family:inherit;background:#fff}
 .tools input{flex:1 1 200px}
 .lst{display:grid;gap:10px}
-.plans{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.per{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin-bottom:14px;background:#fff}.per label{padding:9px 20px;font-weight:700;cursor:pointer}.per label.on{background:var(--ink);color:#fff}.per input{display:none}.plan ul{margin:10px 0 0;padding-left:18px;font-size:14px;color:var(--mute)}.plan li{margin:3px 0}.lockbox{background:#FFF8E6;border:1px solid #f1dfae;border-radius:12px;padding:12px 14px;margin:0 0 12px;font-size:14.5px}.lockbox .b2{margin-top:8px}
 .plan{position:relative;display:flex;flex-direction:column;gap:2px;padding:16px;border:2px solid var(--line);border-radius:14px;background:#fff;cursor:pointer}
 .plan.on{border-color:var(--green);box-shadow:0 0 0 3px rgba(47,107,79,.12)}
 .plan input{position:absolute;opacity:0;pointer-events:none}
 .plan .pr{font-size:1.5rem;font-weight:800}
 .plan em{font-style:normal;color:#14663f;font-weight:700;font-size:.85rem;margin-top:4px}
-@media(max-width:480px){.plans{grid-template-columns:1fr}}
+@media(max-width:700px){.tiers{grid-template-columns:1fr}}
 
 .it{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:6px}
 .it .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
@@ -272,7 +272,11 @@ body.has-list .wa-float{bottom:84px}
   <div id="pane-subs" hidden>
     <div class="card2"><h3 style="margin:0 0 6px">Plan prices</h3>
       <p class="sub" style="margin-bottom:12px">Sellers pay these amounts to keep their store open. New sellers get a free trial first (set 0 to turn it off).</p>
-      <form id="fBill" class="f"><label>Monthly price (GH&#8373;)<input id="bM" type="number" min="0" step="1" required></label><label>Yearly price (GH&#8373;)<input id="bY" type="number" min="0" step="1" required></label><label>Free trial days for new sellers<input id="bT" type="number" min="0" max="90" step="1" required></label><label>Payment instructions shown to sellers<textarea id="bI" rows="3" maxlength="600"></textarea></label><button class="btn primary" type="submit">Save prices</button></form></div>
+      <form id="fBill" class="f"><p class="sub" style="margin:0"><b>Standard</b> (store link) &middot; <b>Plus</b> (adds ad tracking) &middot; <b>Premium</b> (adds custom address)</p>
+      <label>Standard, monthly (GH&#8373;)<input id="bM" type="number" min="0" step="1" required></label><label>Standard, yearly (GH&#8373;)<input id="bY" type="number" min="0" step="1" required></label>
+      <label>Plus, monthly (GH&#8373;)<input id="bPM" type="number" min="0" step="1" required></label><label>Plus, yearly (GH&#8373;)<input id="bPY" type="number" min="0" step="1" required></label>
+      <label>Premium, monthly (GH&#8373;)<input id="bRM" type="number" min="0" step="1" required></label><label>Premium, yearly (GH&#8373;)<input id="bRY" type="number" min="0" step="1" required></label>
+      <label>Free trial days for new sellers<input id="bT" type="number" min="0" max="90" step="1" required></label><label>Payment instructions shown to sellers<textarea id="bI" rows="3" maxlength="600"></textarea></label><button class="btn primary" type="submit">Save prices</button></form></div>
     <h3 style="margin:22px 0 10px">Payments waiting for you</h3><div class="lst" id="payPend"></div>
     <h3 style="margin:22px 0 10px">Recent payments</h3><div class="lst" id="payDone"></div>
   </div>
@@ -351,18 +355,19 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   /* ----- subscriptions ----- */
   var BILL={},PAYS=[];
-  function subCell(s){var live=s.sub_expires_at&&new Date(s.sub_expires_at)>new Date();return'<span class="tag '+(live?'':'bad')+'">'+(live?(s.plan||'trial'):'expired')+'</span><br><small>'+(s.sub_expires_at?MZ.when(s.sub_expires_at):'no date')+'</small><br><button class="b2 ghost" type="button" data-exp="'+s.id+'">Set date</button>'}
+  function subCell(s){var live=s.sub_expires_at&&new Date(s.sub_expires_at)>new Date();return'<span class="tag '+(live?'':'bad')+'">'+(live?((s.plan?(s.tier||'standard')+' '+s.plan:'trial')):'expired')+'</span><br><small>'+(s.sub_expires_at?MZ.when(s.sub_expires_at):'no date')+'</small><br><button class="b2 ghost" type="button" data-exp="'+s.id+'">Set date</button>'}
   function setExp(id){var s=SELL.filter(function(x){return x.id===id})[0];var v=prompt('Subscription end date for '+s.store_name+' (YYYY-MM-DD). Leave empty to expire it now.',s.sub_expires_at?s.sub_expires_at.slice(0,10):'');if(v===null)return;v=v.trim();var d=v?new Date(v+'T23:59:59'):new Date(Date.now()-1000);if(isNaN(d)){flash('Use the format YYYY-MM-DD');return}
-    MZ.rpc('admin_set_expiry',{p_id:id,p_plan:s.plan||null,p_expires:d.toISOString()}).then(function(){s.sub_expires_at=d.toISOString();flash('Updated');sellers()},function(er){flash(er.message)})}
-  function payRow(x,act){var s=SELL.filter(function(y){return y.id===x.seller_id})[0]||{};return'<div class="it"><div class="h"><b>'+esc(s.store_name||'Seller')+' &middot; '+(x.plan==='yearly'?'Yearly':'Monthly')+' &middot; '+MZ.money(x.amount)+'</b>'+(act?'':'<span class="tag '+(x.status==='confirmed'?'':'bad')+'">'+x.status+'</span>')+'</div><div class="m">Ref <b>'+esc(x.reference)+'</b> &middot; '+esc(s.phone||'')+' &middot; '+MZ.when(x.created_at)+'</div>'+(act?'<div style="display:flex;gap:8px"><button class="b2" data-ok="'+x.id+'" type="button">Confirm and activate</button><button class="b2 red" data-no="'+x.id+'" type="button">Reject</button></div>':'')+'</div>'}
+    var tv=prompt('Level for this seller: standard, plus or premium',s.tier||'standard');if(tv===null)return;tv=tv.trim().toLowerCase();if(['standard','plus','premium'].indexOf(tv)<0){flash('Level must be standard, plus or premium');return}
+    MZ.rpc('admin_set_expiry',{p_id:id,p_plan:s.plan||null,p_expires:d.toISOString(),p_tier:tv}).then(function(){s.sub_expires_at=d.toISOString();s.tier=tv;flash('Updated');sellers()},function(er){flash(er.message)})}
+  function payRow(x,act){var s=SELL.filter(function(y){return y.id===x.seller_id})[0]||{};return'<div class="it"><div class="h"><b>'+esc(s.store_name||'Seller')+' &middot; '+(x.tier||'standard')+' '+(x.plan==='yearly'?'yearly':'monthly')+' &middot; '+MZ.money(x.amount)+'</b>'+(act?'':'<span class="tag '+(x.status==='confirmed'?'':'bad')+'">'+x.status+'</span>')+'</div><div class="m">Ref <b>'+esc(x.reference)+'</b> &middot; '+esc(s.phone||'')+' &middot; '+MZ.when(x.created_at)+'</div>'+(act?'<div style="display:flex;gap:8px"><button class="b2" data-ok="'+x.id+'" type="button">Confirm and activate</button><button class="b2 red" data-no="'+x.id+'" type="button">Reject</button></div>':'')+'</div>'}
   function subs(){
-    $('#bM').value=BILL.monthly_price!=null?BILL.monthly_price:'';$('#bY').value=BILL.yearly_price!=null?BILL.yearly_price:'';$('#bT').value=BILL.trial_days!=null?BILL.trial_days:'';$('#bI').value=BILL.pay_instructions||'';
+    [['bM','monthly_price'],['bY','yearly_price'],['bPM','plus_monthly'],['bPY','plus_yearly'],['bRM','premium_monthly'],['bRY','premium_yearly']].forEach(function(x){$('#'+x[0]).value=BILL[x[1]]!=null?BILL[x[1]]:''});$('#bT').value=BILL.trial_days!=null?BILL.trial_days:'';$('#bI').value=BILL.pay_instructions||'';
     $('#payPend').innerHTML=PAYS.filter(function(x){return x.status==='pending'}).map(function(x){return payRow(x,true)}).join('')||'<div class="empty">Nothing waiting.</div>';
     $('#payDone').innerHTML=PAYS.filter(function(x){return x.status!=='pending'}).slice(0,30).map(function(x){return payRow(x,false)}).join('')||'<div class="empty">No payments yet.</div>';
     $$('#payPend [data-ok]').forEach(function(b){b.onclick=function(){b.disabled=true;MZ.rpc('admin_confirm_payment',{p_id:Number(b.dataset.ok)}).then(function(){return Promise.all([MZ.q('subscription_payments','select=*&order=created_at.desc&limit=200'),MZ.q('profiles','select=*&order=created_at.desc')])}).then(function(r){PAYS=r[0];SELL=r[1];flash('Store activated');subs();sellers()},function(er){flash(er.message);b.disabled=false})}});
     $$('#payPend [data-no]').forEach(function(b){b.onclick=function(){if(!confirm('Reject this payment?'))return;MZ.rpc('admin_reject_payment',{p_id:Number(b.dataset.no)}).then(function(){PAYS.forEach(function(x){if(String(x.id)===b.dataset.no)x.status='rejected'});subs()},function(er){flash(er.message)})}})}
   $('#fBill').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Saving...');
-    MZ.update('billing_settings','id=eq.1',{monthly_price:Number($('#bM').value),yearly_price:Number($('#bY').value),trial_days:Math.round(Number($('#bT').value)),pay_instructions:$('#bI').value.trim(),updated_at:new Date().toISOString()}).then(function(r){BILL=r[0]||BILL;flash('Prices saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+    MZ.update('billing_settings','id=eq.1',{monthly_price:Number($('#bM').value),yearly_price:Number($('#bY').value),plus_monthly:Number($('#bPM').value),plus_yearly:Number($('#bPY').value),premium_monthly:Number($('#bRM').value),premium_yearly:Number($('#bRY').value),trial_days:Math.round(Number($('#bT').value)),pay_instructions:$('#bI').value.trim(),updated_at:new Date().toISOString()}).then(function(r){BILL=r[0]||BILL;flash('Prices saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
 
   function prods(){var cats=['All categories'].concat(PROD.map(function(p){return p.category}).filter(function(c,i,a){return a.indexOf(c)===i}));var sel=$('#pcat'),cur=sel.value||'All categories';sel.innerHTML=cats.map(function(c){return'<option'+(c===cur?' selected':'')+'>'+esc(c)+'</option>'}).join('');
     var q=$('#pq').value.toLowerCase().trim();

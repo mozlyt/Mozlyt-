@@ -197,13 +197,13 @@ body.has-list .wa-float{bottom:84px}
 .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.tools input,.tools select{padding:10px 12px;border:1px solid #cfd8d2;border-radius:10px;font:15px inherit;font-family:inherit;background:#fff}
 .tools input{flex:1 1 200px}
 .lst{display:grid;gap:10px}
-.plans{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.per{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin-bottom:14px;background:#fff}.per label{padding:9px 20px;font-weight:700;cursor:pointer}.per label.on{background:var(--ink);color:#fff}.per input{display:none}.plan ul{margin:10px 0 0;padding-left:18px;font-size:14px;color:var(--mute)}.plan li{margin:3px 0}.lockbox{background:#FFF8E6;border:1px solid #f1dfae;border-radius:12px;padding:12px 14px;margin:0 0 12px;font-size:14.5px}.lockbox .b2{margin-top:8px}
 .plan{position:relative;display:flex;flex-direction:column;gap:2px;padding:16px;border:2px solid var(--line);border-radius:14px;background:#fff;cursor:pointer}
 .plan.on{border-color:var(--green);box-shadow:0 0 0 3px rgba(47,107,79,.12)}
 .plan input{position:absolute;opacity:0;pointer-events:none}
 .plan .pr{font-size:1.5rem;font-weight:800}
 .plan em{font-style:normal;color:#14663f;font-weight:700;font-size:.85rem;margin-top:4px}
-@media(max-width:480px){.plans{grid-template-columns:1fr}}
+@media(max-width:700px){.tiers{grid-template-columns:1fr}}
 
 .it{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:6px}
 .it .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
@@ -325,12 +325,12 @@ body.has-list .wa-float{bottom:84px}
       <label>Store name<input id="eStore" maxlength="60" required></label>
       <label>WhatsApp number for orders<input id="ePhone" type="tel" maxlength="20" required></label>
       <button class="btn primary" type="submit">Save</button></form></div>
-    <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Your own domain (optional)</h3>
+    <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Your own domain (optional)</h3><div id="lockDom"></div>
       <p class="sub" style="margin-bottom:12px">Buy a domain from any seller, for example Namecheap, GoDaddy, Wix, Hostinger or a Ghana registrar. Then add it here and follow the three steps below.</p>
       <form id="fDom" class="f"><label>Your domain<input id="eDom" placeholder="www.amawellness.com" autocapitalize="none"><small>Leave empty if you do not have one.</small></label>
       <button class="btn primary" type="submit">Save domain</button></form>
       <div id="domInfo" style="margin-top:14px"></div></div>
-    <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Ad tracking (optional)</h3>
+    <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Ad tracking (optional)</h3><div id="lockPix"></div>
       <p class="sub" style="margin-bottom:12px">Running Facebook, Instagram or TikTok ads? Paste your Pixel ID and your store will report visits, add-to-cart and orders to your ad account. Get the ID from Meta Events Manager or TikTok Ads Manager (Events, Web Events).</p>
       <form id="fPix" class="f"><label>Facebook / Instagram Pixel ID<input id="ePx1" inputmode="numeric" placeholder="e.g. 123456789012345" autocapitalize="none"></label>
       <label>TikTok Pixel ID<input id="ePx2" placeholder="e.g. C9ABCDEF1234567890" autocapitalize="none"></label>
@@ -357,7 +357,7 @@ function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.
 function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){flash('Copied')},function(){var i=document.createElement('input');i.value=t;document.body.appendChild(i);i.select();try{document.execCommand('copy');flash('Copied')}catch(e){prompt('Copy this:',t)}i.remove()})}
 
 (function(){
-  var BILL={},PAYS=[],PLAN='yearly',ME=null, PRODUCTS=[], MINE={}, ORDERS=[], CAT_ALL='All categories';
+  var BILL={},PAYS=[],PLAN='monthly',TIER='standard',ME=null, PRODUCTS=[], MINE={}, ORDERS=[], CAT_ALL='All categories';
   var authNote=$('#authNote'), dashNote=$('#dashNote');
 
   function view(name){['fLogin','fSign','fForgot','fReset'].forEach(function(i){show(i,i===name)});$('#tLogin').classList.toggle('on',name==='fLogin');$('#tSign').classList.toggle('on',name==='fSign');$('#authNote').innerHTML=''}
@@ -411,24 +411,34 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function drawAll(){drawOver();drawProducts();drawOrders();drawSub()}
 
   /* ----- subscription ----- */
+  function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+  function lockUI(){var t=(daysLeft()>0&&ME.tier)||'standard';if(!ME.plan)t='standard';
+    var pixOk=t==='plus'||t==='premium',domOk=t==='premium';
+    function lk(id,form,ok,need){var el=$(id);el.innerHTML=ok?'':'<div class="lockbox"><b>Included in '+need+'</b><br>Upgrade to use this. <button type="button" class="b2" data-go="sub">See plans</button></div>';$$(form+' input,'+form+' button').forEach(function(x){x.disabled=!ok})}
+    lk('#lockPix','#fPix',pixOk,'Plus and Premium');lk('#lockDom','#fDom',domOk,'Premium');
+    $$('[data-go=sub]').forEach(function(b){b.onclick=function(){$('[data-t=sub]').click()}})}
   function daysLeft(){return ME&&ME.sub_expires_at?Math.ceil((new Date(ME.sub_expires_at)-new Date())/86400000):0}
   function drawSub(){
     var d=daysLeft(),live=d>0,box=$('#subStatus'),nt=$('#subNote');
     var until=ME.sub_expires_at?new Date(ME.sub_expires_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'';
-    var planTxt=ME.plan?(ME.plan==='yearly'?'Yearly plan':'Monthly plan'):'Free trial';
+    var planTxt=ME.plan?(cap(ME.tier||'standard')+' &middot; '+(ME.plan==='yearly'?'Yearly':'Monthly')):'Free trial';
     box.innerHTML=live?'<b style="color:#14663f">Your store is live</b><br>'+planTxt+' &middot; active until <b>'+until+'</b> ('+d+' day'+(d===1?'':'s')+' left)':'<b style="color:#9b2c20">Your store is closed</b><br>Your subscription ended'+(until?' on '+until:'')+'. Customers see a closed page until you renew. Your products and orders are safe.';
     nt.innerHTML='';
     if(!live)note(nt,'err','Your store is closed. Open the Subscription tab to renew and go live again.');
     else if(d<=7)note(nt,'info','Your subscription ends in '+d+' day'+(d===1?'':'s')+'. Renew in the Subscription tab to keep your store open.');
-    var m=Number(BILL.monthly_price||0),y=Number(BILL.yearly_price||0),save=Math.max(0,m*12-y);
-    $('#plans').innerHTML=[['monthly','Monthly',m,'per month',''],['yearly','Yearly',y,'per year',save>0?'Save '+MZ.money(save)+' a year':'']].map(function(x){
-      return'<label class="plan'+(PLAN===x[0]?' on':'')+'"><input type="radio" name="plan" value="'+x[0]+'"'+(PLAN===x[0]?' checked':'')+'><b>'+x[1]+'</b><span class="pr">'+MZ.money(x[2])+'</span><small>'+x[3]+'</small>'+(x[4]?'<em>'+x[4]+'</em>':'')+'</label>'}).join('');
-    $$('#plans input').forEach(function(i){i.onchange=function(){PLAN=i.value;drawSub()}});
-    $('#payHow').innerHTML='Plan: <b>'+(PLAN==='yearly'?'Yearly':'Monthly')+'</b> &middot; Amount: <b>'+MZ.money(PLAN==='yearly'?y:m)+'</b><br>'+esc(BILL.pay_instructions||'');
-    $('#payList').innerHTML=PAYS.map(function(x){var cls=x.status==='confirmed'?'':(x.status==='rejected'?'bad':'warn');return'<div class="it"><div class="h"><b>'+(x.plan==='yearly'?'Yearly':'Monthly')+' &middot; '+MZ.money(x.amount)+'</b><span class="tag '+cls+'">'+(x.status==='pending'?'Waiting for confirmation':x.status==='confirmed'?'Confirmed':'Not confirmed')+'</span></div><div class="m">Ref '+esc(x.reference)+' &middot; '+MZ.when(x.created_at)+'</div></div>'}).join('')||'<div class="empty">No payments yet.</div>'}
+    var T=[['standard','Standard',BILL.monthly_price,BILL.yearly_price,['Your store link','Unlimited products and orders','Training']],['plus','Plus',BILL.plus_monthly,BILL.plus_yearly,['Everything in Standard','Ad tracking: Facebook, Instagram and TikTok']],['premium','Premium',BILL.premium_monthly,BILL.premium_yearly,['Everything in Plus','Your own custom address, like www.yourbrand.com']]];
+    var cur=ME.tier||'standard',live2=daysLeft()>0;
+    $('#plans').innerHTML='<div class="per"><label class="'+(PLAN==='monthly'?'on':'')+'"><input type="radio" name="per" value="monthly"'+(PLAN==='monthly'?' checked':'')+'>Monthly</label><label class="'+(PLAN==='yearly'?'on':'')+'"><input type="radio" name="per" value="yearly"'+(PLAN==='yearly'?' checked':'')+'>Yearly</label></div><div class="tiers">'+T.map(function(t){var m=Number(t[2]||0),y=Number(t[3]||0),save=Math.max(0,m*12-y);
+      return'<label class="plan'+(TIER===t[0]?' on':'')+'"><input type="radio" name="tier" value="'+t[0]+'"'+(TIER===t[0]?' checked':'')+'><b>'+t[1]+(live2&&cur===t[0]?' <span class="tag">Your level</span>':'')+'</b><span class="pr">'+MZ.money(PLAN==='yearly'?y:m)+'</span><small>'+(PLAN==='yearly'?'per year':'per month')+'</small>'+(PLAN==='yearly'&&save>0?'<em>Save '+MZ.money(save)+' a year</em>':'')+'<ul>'+t[4].map(function(f){return'<li>'+esc(f)+'</li>'}).join('')+'</ul></label>'}).join('')+'</div>';
+    $$('#plans input[name=tier]').forEach(function(i){i.onchange=function(){TIER=i.value;drawSub()}});
+    $$('#plans input[name=per]').forEach(function(i){i.onchange=function(){PLAN=i.value;drawSub()}});
+    var sel=T.filter(function(t){return t[0]===TIER})[0],amtSel=Number(PLAN==='yearly'?sel[3]:sel[2])||0;
+    $('#payHow').innerHTML='Level: <b>'+sel[1]+'</b> &middot; '+(PLAN==='yearly'?'Yearly':'Monthly')+' &middot; Amount: <b>'+MZ.money(amtSel)+'</b><br>'+esc(BILL.pay_instructions||'');
+    lockUI();
+    $('#payList').innerHTML=PAYS.map(function(x){var cls=x.status==='confirmed'?'':(x.status==='rejected'?'bad':'warn');return'<div class="it"><div class="h"><b>'+cap(x.tier||'standard')+' &middot; '+(x.plan==='yearly'?'Yearly':'Monthly')+' &middot; '+MZ.money(x.amount)+'</b><span class="tag '+cls+'">'+(x.status==='pending'?'Waiting for confirmation':x.status==='confirmed'?'Confirmed':'Not confirmed')+'</span></div><div class="m">Ref '+esc(x.reference)+' &middot; '+MZ.when(x.created_at)+'</div></div>'}).join('')||'<div class="empty">No payments yet.</div>'}
   $('#fPay').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this),ref=$('#payRef').value.trim();busy(b,true,'Sending...');
-    MZ.rpc('request_subscription',{p_plan:PLAN,p_reference:ref}).then(function(){return MZ.q('subscription_payments','select=*&order=created_at.desc&limit=50')}).then(function(r){PAYS=r;$('#payRef').value='';drawSub();flash('Payment sent. We will confirm it shortly.');
-      window.open('https://wa.me/233538729743?text='+encodeURIComponent('Hello MOZLYT, I paid for the '+PLAN+' store plan. Store: '+ME.store_slug+'. Reference: '+ref),'_blank','noopener')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+    MZ.rpc('request_subscription',{p_tier:TIER,p_plan:PLAN,p_reference:ref}).then(function(){return MZ.q('subscription_payments','select=*&order=created_at.desc&limit=50')}).then(function(r){PAYS=r;$('#payRef').value='';drawSub();flash('Payment sent. We will confirm it shortly.');
+      window.open('https://wa.me/233538729743?text='+encodeURIComponent('Hello MOZLYT, I paid for the '+TIER+' '+PLAN+' store plan. Store: '+ME.store_slug+'. Reference: '+ref),'_blank','noopener')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
 
   /* ----- overview ----- */
   function sumLines(o){return(o.items||[]).map(function(i){return(i.qty||1)+' x '+i.name}).join(', ')}
