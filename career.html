@@ -454,8 +454,8 @@ var PLATFORM_URL="";
 (function(){
   var WA="233538729743";
   document.querySelectorAll('a.go').forEach(function(a){
-    if(PLATFORM_URL){a.href=PLATFORM_URL;return}
     var label=a.textContent.trim();
+    if(label!=="Talk to us"){a.href="seller.html";return}
     var m="Hello MOZLYT, I would like to join the network ("+label+"). Please tell me how it works and what the next step is.";
     a.href="https://wa.me/"+WA+"?text="+encodeURIComponent(m);
     a.target="_blank";a.rel="noopener";
