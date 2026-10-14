@@ -299,11 +299,14 @@ body.has-list .wa-float{bottom:84px}
     <form id="fSign" class="f" hidden>
       <label>Your full name<input id="sName" autocomplete="name" required maxlength="80"></label>
       <label>WhatsApp number<input id="sPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 024 123 4567" required maxlength="20"><small>Customers from your store will message this number.</small></label>
+      <div class="paths" id="kindPick" style="margin-bottom:4px"><label class="pathc on" id="kShop"><input type="radio" name="kind" value="shop" checked style="display:none"><b>Take a shop</b><span>Sell online with a free trial. Training is included.</span></label><label class="pathc" id="kTrain"><input type="radio" name="kind" value="trainee" style="display:none"><b>Training only</b><span>Learn the lessons. No shop. GH&#8373;100, paid once.</span></label></div>
+      <div id="shopFields" class="f">
       <label>Store name<input id="sStore" placeholder="e.g. Ama's Wellness" required maxlength="60"></label>
       <label>Store link<input id="sSlug" placeholder="ama-wellness" required maxlength="30" autocapitalize="none" autocomplete="off"><small id="slugHint">Your link will be mozlyt.com/store.html?s=<b>your-name</b></small></label>
+      </div>
       <label>Email<input type="email" id="sEmail" autocomplete="email" required></label>
       <label>Password<input type="password" id="sPass" autocomplete="new-password" minlength="8" required><small>At least 8 characters.</small></label>
-      <p class="sub" style="margin:0;font-size:14px">Start with a free trial. After that, keep your store open with a monthly or yearly plan.</p><button class="btn primary" type="submit">Create my account</button>
+      <p class="sub" style="margin:0;font-size:14px"><span id="kindNote">Start with a free trial. After that, keep your store open with a monthly or yearly plan.</span></p><button class="btn primary" type="submit">Create my account</button>
       <small>By signing up you agree to sell honestly and deliver what customers order.</small>
     </form>
 
@@ -451,7 +454,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#fSign').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);var ph=$('#sPhone').value.replace(/[^\d+]/g,'');
     if(ph.replace(/\D/g,'').length<9){note(authNote,'err','Please enter a valid WhatsApp number.');return}
     busy(b,true,'Creating...');note(authNote,'','');
-    MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:$('#sStore').value.trim(),store_slug:$('#sSlug').value,ref:REF}).then(function(r){
+    MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:KIND==='trainee'?'':$('#sStore').value.trim(),store_slug:KIND==='trainee'?'':$('#sSlug').value,ref:REF,kind:KIND}).then(function(r){
       if(r.confirmed){boot()}else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(authNote,'ok','Account created. We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in here. Check your spam folder if you do not see it.')}
     },function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Sending...');
@@ -461,6 +464,12 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){ME=null;show('dashView',false);show('authView',true);view('fLogin')})};
 
   var REF='';try{var q=new URLSearchParams(location.search).get('ref');if(q){REF=q.trim().slice(0,12);localStorage.setItem('mz-ref',REF)}else REF=localStorage.getItem('mz-ref')||''}catch(e){}
+  var KIND='shop';
+  function setKind(k){KIND=k;$$('input[name=kind]').forEach(function(i){i.checked=i.value===k});$('#kShop').classList.toggle('on',k==='shop');$('#kTrain').classList.toggle('on',k==='trainee');
+    $('#shopFields').hidden=k==='trainee';$('#sStore').required=k!=='trainee';$('#sSlug').required=k!=='trainee';
+    $('#kindNote').textContent=k==='trainee'?'You will get your own training dashboard. Pay GH\u20b5100 once to open all lessons. You can add a shop later.':'Start with a free trial. After that, keep your store open with a monthly or yearly plan.'}
+  $$('input[name=kind]').forEach(function(i){i.onchange=function(){setKind(i.value)}});
+  try{if(new URLSearchParams(location.search).get('kind')==='trainee')setKind('trainee')}catch(e){}
   /* ----- tabs ----- */
   var PANES=['over','prod','ord','learn','sub','set','acc','fr','more'];
   function flag(k,set){var key='mz-f-'+(ME?ME.id:'x')+'-'+k;try{if(set){localStorage.setItem(key,'1');return true}return localStorage.getItem(key)==='1'}catch(e){return false}}
@@ -477,16 +486,20 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     show('authView',false);
     return MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(p){
       if(!p||!p[0]){throw new Error('We could not find your seller profile. Please log out and sign up again.')}
-      ME=p[0];show('dashView',true);paint();
+      ME=p[0];show('dashView',true);paint();if(isTrainee())go('learn');
       if(ME.status==='suspended')note(dashNote,'err','Your store is paused. Please contact MOZLYT on WhatsApp.');
       return Promise.all([MZ.q('products','select=id,category,name,photo,wholesale_price,suggested_price,status&order=sort,name'),MZ.q('seller_products','select=product_id,price,active&seller_id=eq.'+ME.id),MZ.q('orders','select=*&order=created_at.desc&limit=200'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.q('subscription_payments','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=50'),MZ.rpc('get_my_prices').catch(function(){return null}),MZ.q('franchise_product_prices','select=product_id,price').catch(function(){return []})]);
     }).then(function(r){PAYINFO=r[5]||'';PRODUCTS=r[0];MINE={};r[1].forEach(function(x){MINE[x.product_id]=x});ORDERS=r[2];BILL=(r[3]&&r[3][0])||{monthly_price:0,yearly_price:0,pay_instructions:''};PAYS=r[4]||[];FPP={};if(r[5]&&r[5].franchise_live&&!ME.franchise)(r[6]||[]).forEach(function(x){FPP[x.product_id]=Number(x.price)});if(r[5]&&typeof r[5]==='object')BILL=Object.assign({},BILL,r[5]);drawAll()},function(er){
       if(er.status===401||/JWT|expired/i.test(er.message)){MZ.signOut();show('dashView',false);show('authView',true);view('fLogin');note(authNote,'info','Please log in again.')}else{show('authView',true);view('fLogin');note(authNote,'err',er.message)}});
   }
   function storeUrl(){return(ME.custom_domain&&false?('https://'+ME.custom_domain+'/'):MZ.siteUrl+'store.html?s='+ME.store_slug)}
+  function isTrainee(){return !!(ME&&ME.account_type==='trainee'&&!ME.franchise)}
+  function applyMode(){var t=isTrainee();
+    $$('#dtabs [data-t=over],#dtabs [data-t=prod],#dtabs [data-t=ord],#dtabs [data-t=set],#bnav [data-t=over],#bnav [data-t=prod],#bnav [data-t=ord],#pane-more [data-go=set]').forEach(function(b){b.style.display=t?'none':''})}
   function paint(){
+    applyMode();
     $('#tabFr').style.display=ME.franchise?'':'none';$('#moreFr').style.display=ME.franchise?'':'none';
-    $('#hello').textContent=ME.store_name||'Your store';$('#subline').textContent='Welcome, '+(ME.full_name||'seller')+'.';
+    $('#hello').textContent=isTrainee()?'Your training':(ME.store_name||'Your store');$('#subline').textContent='Welcome, '+(ME.full_name||(isTrainee()?'trainee':'seller'))+'.';
     var u=storeUrl();$('#storeUrl').textContent=u;$('#openUrl').href=u;$('#cpUrl').onclick=function(){copy(u);flag('shared',true);drawOver()};$('#shareUrl').onclick=function(){flag('shared',true)};
     $('#shareUrl').href='https://wa.me/?text='+encodeURIComponent('Shop with me on my MOZLYT store: '+u);
     $('#eStore').value=ME.store_name||'';$('#ePhone').value=ME.phone||'';$('#eDom').value=ME.custom_domain||'';$('#ePx1').value=ME.meta_pixel_id||'';$('#ePx2').value=ME.tiktok_pixel_id||'';$('#accEmail').textContent=ME.email||'';domInfo()}
@@ -505,9 +518,9 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var d=daysLeft(),live=d>0,box=$('#subStatus'),nt=$('#subNote');
     var until=ME.sub_expires_at?new Date(ME.sub_expires_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'';
     var planTxt=ME.plan?(cap(ME.tier||'standard')+' &middot; '+(ME.plan==='yearly'?'Yearly':'Monthly')):'Free trial';
-    box.innerHTML=ME.franchise?'<b style="color:#14663f">MOZLYT franchise partner</b><br>Your shop (with ad tracking and your own address) and all training are included. Open the Franchise tab to manage your recruits.':live?'<b style="color:#14663f">Your store is live</b><br>'+planTxt+' &middot; active until <b>'+until+'</b> ('+d+' day'+(d===1?'':'s')+' left)':'<b style="color:#9b2c20">Your store is closed</b><br>Your subscription ended'+(until?' on '+until:'')+'. Customers see a closed page until you renew. Your products and orders are safe.'+(ME.training_paid?'<br>Your training stays open.':'');
+    box.innerHTML=isTrainee()?'<b>Training account</b><br>'+(hasTraining()?'Your training is open.':'Pay once to open all lessons.')+' You do not have a shop yet. Choose a shop plan below to open one.':ME.franchise?'<b style="color:#14663f">MOZLYT franchise partner</b><br>Your shop (with ad tracking and your own address) and all training are included. Open the Franchise tab to manage your recruits.':live?'<b style="color:#14663f">Your store is live</b><br>'+planTxt+' &middot; active until <b>'+until+'</b> ('+d+' day'+(d===1?'':'s')+' left)':'<b style="color:#9b2c20">Your store is closed</b><br>Your subscription ended'+(until?' on '+until:'')+'. Customers see a closed page until you renew. Your products and orders are safe.'+(ME.training_paid?'<br>Your training stays open.':'');
     nt.innerHTML='';
-    if(ME.franchise){}else if(!live)note(nt,'err','Your store is closed. Open the Subscription tab to renew and go live again.');
+    if(ME.franchise||isTrainee()){}else if(!live)note(nt,'err','Your store is closed. Open the Subscription tab to renew and go live again.');
     else if(d<=7)note(nt,'info','Your subscription ends in '+d+' day'+(d===1?'':'s')+'. Renew in the Subscription tab to keep your store open.');
     var T=[['standard','Standard',BILL.monthly_price,BILL.yearly_price,['Your store link','Unlimited products and orders','Training']],['plus','Plus',BILL.plus_monthly,BILL.plus_yearly,['Everything in Standard','Ad tracking: Facebook, Instagram and TikTok']],['premium','Premium',BILL.premium_monthly,BILL.premium_yearly,['Everything in Plus','Your own custom address, like www.yourbrand.com']]];
     var cur=ME.tier||'standard',live2=daysLeft()>0,needTr=!hasTraining();
