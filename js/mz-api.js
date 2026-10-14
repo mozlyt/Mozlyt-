@@ -101,7 +101,7 @@
     upload: function (bucket, path, file) {
       return freshToken().then(function (t) {
         if (!t) throw new Error('Please log in again.');
-        return fetch(URL_ + '/storage/v1/object/' + bucket + '/' + path, { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + t, 'Content-Type': file.type || 'application/octet-stream', 'x-upsert': 'true' }, body: file })
+        return fetch(URL_ + '/storage/v1/object/' + bucket + '/' + path, { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + t, 'Content-Type': file.type || 'application/octet-stream' }, body: file })
           .then(function (r) { if (!r.ok) return r.text().then(function (x) { var m = ''; try { m = JSON.parse(x).message } catch (e) { } throw new Error(m || 'Upload failed. Use a photo or PDF under 8 MB.'); }); return path; }, function () { throw new Error('No internet connection. Please check your network and try again.'); });
       });
     },
