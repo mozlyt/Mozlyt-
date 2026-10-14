@@ -1,6 +1,6 @@
-/* Paystack checkout. TEST key for now. For live: swap PK here and PAYSTACK_SECRET_KEY on the server. */
+/* Paystack checkout (LIVE). The server verifies with PAYSTACK_SECRET_KEY_LIVE. To test again, swap in the pk_test key and the server key. */
 (function () {
-  var PK = 'pk_test_acfc968d02e5d0788805bb753e72ad3e10b5e68d';
+  var PK = 'pk_live_6d866e0acebda3502aa51b51f1ed24ad7b46763c';
   function load() {
     return new Promise(function (ok, no) {
       if (window.PaystackPop) return ok();
