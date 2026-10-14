@@ -340,7 +340,7 @@ body.has-list .wa-float{bottom:84px}
   <div class="card2 mystore"><div class="ms-h"><b>My store</b><code id="storeUrl" hidden></code></div>
     <div class="pills"><a class="pill2" id="openUrl" target="_blank" rel="noopener">Visit store</a><button class="pill2" type="button" id="cpUrl">Copy link</button><a class="pill2" id="shareUrl" target="_blank" rel="noopener">Share on WhatsApp</a></div></div>
   <div class="tabs" id="dtabs">
-    <button type="button" data-t="fr" id="tabFr" style="display:none">Franchise</button><button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
+    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
   </div>
 
   <div id="pane-over">
@@ -510,7 +510,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   /* ----- tabs ----- */
   var PANES=['over','prod','ord','learn','sub','set','acc','fr','more'];
   function flag(k,set){var key='mz-f-'+(ME?ME.id:'x')+'-'+k;try{if(set){localStorage.setItem(key,'1');return true}return localStorage.getItem(key)==='1'}catch(e){return false}}
-  function go(t){PANES.forEach(function(x){show('pane-'+x,x===t)});$$('#dtabs button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});
+  function go(t){if(t==='fr'){location.href='franchise.html';return}PANES.forEach(function(x){show('pane-'+x,x===t)});$$('#dtabs button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});
     var bt=['over','prod','ord','learn'].indexOf(t)>-1?t:'more';$$('#bnav button').forEach(function(b){b.classList.toggle('on',b.dataset.t===bt)});
     if(t==='learn'){flag('learn',true);loadTrain()}if(t==='fr')loadFr();try{window.scrollTo(0,0)}catch(e){}}
   $$('#dtabs button,#bnav button').forEach(function(b){b.onclick=function(){go(b.dataset.t)}});
@@ -523,7 +523,8 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     show('authView',false);
     return MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(p){
       if(!p||!p[0]){throw new Error('We could not find your seller profile. Please log out and sign up again.')}
-      ME=p[0];show('dashView',true);paint();if(isTrainee())go('learn');else if(ME.franchise&&frLive())go('fr');applyPick();
+      ME=p[0];show('dashView',true);if(ME.franchise&&location.search.indexOf('own=1')<0){location.replace('franchise.html');return}
+      paint();if(isTrainee())go('learn');applyPick();
       if(ME.status==='suspended')note(dashNote,'err','Your store is paused. Please contact MOZLYT on WhatsApp.');
       return Promise.all([MZ.q('products','select=id,category,name,photo,wholesale_price,suggested_price,status&order=sort,name'),MZ.q('seller_products','select=product_id,price,active&seller_id=eq.'+ME.id),MZ.q('orders','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=200'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.q('subscription_payments','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=50'),MZ.rpc('get_my_prices').catch(function(){return null}),MZ.q('franchise_product_prices','select=product_id,price').catch(function(){return []})]);
     }).then(function(r){PAYINFO=r[5]||'';PRODUCTS=r[0];MINE={};r[1].forEach(function(x){MINE[x.product_id]=x});ORDERS=r[2];BILL=(r[3]&&r[3][0])||{monthly_price:0,yearly_price:0,pay_instructions:''};PAYS=r[4]||[];FPP={};if(r[5]&&r[5].franchise_live&&!ME.franchise)(r[6]||[]).forEach(function(x){FPP[x.product_id]=Number(x.price)});if(r[5]&&typeof r[5]==='object')BILL=Object.assign({},BILL,r[5]);drawAll()},function(er){

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOZLYT franchise</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="author" content="MOZLYT">
+<meta name="geo.region" content="GH-AA">
+<meta name="geo.placename" content="Accra">
+
+<link rel="manifest" href="manifest.webmanifest">
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MOZLYT">
+
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="img/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#0E2A47">
+
+<style>
+:root{--ink:#0E2A47;--green:#1F9D6B;--green-d:#157650;--gold:#F2B134;--paper:#F6F8F5;--white:#fff;--line:#DCE4DE;--mute:#5B6B7A}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.15;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:600;font-size:15px;border:2px solid transparent;cursor:pointer;text-align:center;font-family:inherit}
+.btn.primary{background:var(--green);color:#fff}
+.btn.primary:hover{background:var(--green-d)}
+.btn.ghost{border-color:var(--ink);color:var(--ink);background:transparent}
+.btn.gold{background:var(--gold);color:var(--ink)}
+
+.hero{padding:64px 0 48px}
+.hero h1{font-size:clamp(34px,6vw,58px);max-width:20ch;margin-bottom:16px}
+.hero p{font-size:19px;color:var(--mute);max-width:58ch}
+
+section{padding:56px 0}
+section h2{font-size:clamp(26px,4.2vw,40px);margin-bottom:10px}
+.white{background:var(--white)}
+.story{display:grid;grid-template-columns:1fr 1.3fr;gap:44px;align-items:start}
+@media(max-width:860px){.story{grid-template-columns:1fr;gap:18px}}
+.story p{margin-bottom:14px;font-size:17px;max-width:62ch}
+.mv{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.mv{grid-template-columns:1fr}}
+.mv div{border-radius:18px;padding:28px 26px}
+.mv h3{font-size:24px;margin-bottom:8px}
+.mv .m{background:var(--ink);color:#fff}
+.mv .m p{color:#C9D6E4}
+.mv .v{background:#E6F5EE}
+.mv .v p{color:var(--mute)}
+.mv p{font-size:17px}
+
+.vals{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:22px}
+.val{border-top:4px solid var(--green);padding-top:14px}
+.val:nth-child(2){border-color:var(--gold)}
+.val:nth-child(3){border-color:var(--ink)}
+.val:nth-child(4){border-color:#8FA9C8}
+.val h3{font-size:21px;margin-bottom:6px}
+.val p{font-size:15px;color:var(--mute)}
+
+.founder{display:grid;grid-template-columns:240px 1fr;gap:34px;align-items:center}
+@media(max-width:700px){.founder{grid-template-columns:1fr}}
+.ph{aspect-ratio:1/1;border-radius:20px;background:linear-gradient(135deg,#BFE6D4,#7CCBA6);display:grid;place-items:center;font-family:Georgia,serif;font-size:64px;color:var(--ink);max-width:240px;position:relative}
+.ph small{position:absolute;bottom:10px;font-family:system-ui;font-size:11.5px;color:var(--mute)}
+img.ph{display:block;width:100%;height:auto;object-fit:cover;background:#0E2A47}
+.founder h3{font-size:26px}
+.founder .role{color:var(--green-d);font-weight:700;margin:2px 0 10px}
+.founder p{font-size:16.5px;max-width:58ch}
+
+.where{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.where span{padding:10px 18px;border:2px solid var(--ink);border-radius:99px;font-weight:600;font-size:14px}
+.where span.g{background:var(--green);border-color:var(--green);color:#fff}
+.where span.y{background:var(--gold);border-color:var(--gold)}
+
+.contact{display:grid;grid-template-columns:1fr 1.1fr;gap:34px;align-items:start}
+@media(max-width:860px){.contact{grid-template-columns:1fr}}
+.cl{list-style:none;display:grid;gap:14px;margin-top:14px}
+.cl li b{display:block;font-size:13.5px;color:var(--mute);font-weight:700}
+.cl li span{font-size:17px}
+form{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:14px}
+label{font-weight:700;font-size:13.5px;display:grid;gap:6px}
+input,textarea{padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:var(--white);color:var(--ink)}
+textarea{min-height:110px;resize:vertical}
+
+.final{background:var(--ink);color:#fff;text-align:center}
+.final h2{color:#fff}
+.final p{color:#B9C7D6;max-width:52ch;margin:0 auto 24px}
+.final .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.final .btn.ghost{border-color:#fff;color:#fff}
+.note{font-size:12.5px;color:var(--mute);padding:18px 0 4px}
+</style>
+<style id="mz-shared">
+.mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.mz-header{background:#fff;border-bottom:1px solid #DCE4DE;position:sticky;top:0;z-index:50}
+.mz-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.mz-logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:22px;letter-spacing:.02em;color:#0E2A47;text-decoration:none}
+.mz-logo span{color:#1F9D6B}
+.mz-nav{display:flex;align-items:center;gap:22px;font-size:14.5px}
+.mz-nav a{color:#5B6B7A;text-decoration:none}
+.mz-nav a.mz-cur{color:#0E2A47;font-weight:700;border-bottom:3px solid #1F9D6B;padding-bottom:3px}
+.mz-ctas{display:flex;gap:10px;margin-left:8px}
+.mz-btn{display:inline-block;padding:9px 16px;border-radius:10px;font-weight:600;font-size:14px;text-align:center;border:2px solid transparent;white-space:nowrap}
+.mz-btn.mz-primary{background:#1F9D6B;color:#fff}
+.mz-btn.mz-primary:hover{background:#157650}
+.mz-btn.mz-gold{background:#F2B134;color:#0E2A47}
+.mz-burger{display:none;width:44px;height:44px;border:1px solid #DCE4DE;border-radius:10px;background:#fff;cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0}
+.mz-burger span{display:block;width:20px;height:2px;background:#0E2A47;border-radius:2px;transition:transform .2s,opacity .2s}
+.mz-open .mz-burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.mz-open .mz-burger span:nth-child(2){opacity:0}
+.mz-open .mz-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(prefers-reduced-motion:reduce){.mz-burger span{transition:none}}
+@media(max-width:900px){
+  .mz-burger{display:flex}
+  .mz-nav{display:none;position:absolute;left:0;right:0;top:64px;background:#fff;border-bottom:1px solid #DCE4DE;flex-direction:column;align-items:stretch;gap:0;padding:6px 20px 20px;box-shadow:0 16px 30px rgba(14,42,71,.12);font-size:16px}
+  .mz-open .mz-nav{display:flex}
+  .mz-nav > a{padding:14px 0;border-bottom:1px solid #EEF2F0}
+  .mz-nav a.mz-cur{border-bottom:1px solid #EEF2F0;padding-bottom:14px;color:#1F9D6B}
+  .mz-ctas{flex-direction:column;margin:16px 0 0}
+  .mz-btn{padding:13px 16px;font-size:15px}
+}
+.mz-footer{background:#0E2A47;color:#B9C7D6;padding:0;text-align:left;font-size:14.5px;line-height:1.55}
+.mz-fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px;padding-top:52px;padding-bottom:36px}
+@media(max-width:900px){.mz-fgrid{grid-template-columns:1fr 1fr;gap:28px;padding-top:40px}.mz-fbrand{grid-column:1/-1}}
+.mz-footer .mz-logo{color:#fff;display:inline-block;padding:0}
+.mz-footer .mz-logo span{color:#5FD3A1}
+.mz-footer p{margin:12px 0 0;max-width:38ch;color:#B9C7D6}
+.mz-footer h4{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;color:#fff;margin:0 0 10px;font-weight:700}
+.mz-footer a{color:#B9C7D6;text-decoration:none;margin:0;display:block;padding:5px 0}
+.mz-footer a:hover{color:#fff;text-decoration:underline}
+.mz-contact{margin-top:14px;color:#DCE6F1}
+.mz-social{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.mz-footer .mz-social a{display:inline-block;padding:7px 14px;border:1px solid #38577A;border-radius:99px;font-size:13px;color:#DCE6F1}
+.mz-footer .mz-social a:hover{border-color:#fff;text-decoration:none}
+.mz-fbottom{border-top:1px solid #23415F;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:18px;padding-bottom:24px;font-size:13px;color:#8FA3BA}
+.mz-footer .mz-fbottom a{display:inline-block;margin-left:18px;padding:0;color:#B9C7D6;text-decoration:underline}
+
+.mz-footer .mz-logo{display:inline-flex}
+.mz-footer .mz-social{gap:10px}
+.mz-footer .mz-social a{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:#fff;color:#000;transition:transform .15s,background .15s}
+.mz-footer .mz-social a svg{width:22px;height:22px;display:block}
+.mz-footer .mz-social a:hover{background:#5FD3A1;color:#000;transform:translateY(-2px);text-decoration:none}
+@media(prefers-reduced-motion:reduce){.mz-footer .mz-social a{transition:none}.mz-footer .mz-social a:hover{transform:none}}
+:where([id]){scroll-margin-top:76px}
+.mz-logo{display:inline-flex;align-items:center}
+.mz-mark{width:36px;height:36px;border-radius:9px;margin-right:9px;display:block}
+.mz-footer .mz-contact a{display:inline;padding:0;color:#fff;text-decoration:underline}
+.wa-float{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;background:#25D366;color:#073B1F;font-weight:700;font-size:14px;padding:12px 18px 12px 14px;border-radius:99px;box-shadow:0 8px 22px rgba(0,0,0,.28);text-decoration:none;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wa-float svg{width:24px;height:24px;fill:#073B1F;flex:none}
+@media(max-width:600px){.wa-float span{display:none}.wa-float{padding:14px}}
+body.has-list .wa-float{bottom:84px}
+</style>
+
+<style id="mz-dash">
+.dash{padding:26px 0 60px;min-height:70vh}
+.dash h1{font-size:clamp(26px,4.6vw,38px);margin:0 0 6px}
+.dash .sub{color:var(--mute);margin:0 0 20px;font-size:16px}
+.card2{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 6px 22px rgba(14,42,71,.05)}
+.authcard{max-width:460px;margin:10px auto}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:0 0 18px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.tabs button{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 16px;border-radius:99px;font:600 14.5px/1 inherit;font-family:inherit;cursor:pointer}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.f{display:grid;gap:12px}
+.f label{display:grid;gap:5px;font-size:13.5px;font-weight:600;color:var(--ink)}
+.f input,.f select,.f textarea{width:100%;padding:12px 13px;border:1px solid #cfd8d2;border-radius:10px;font:16px inherit;font-family:inherit;background:#fff;color:var(--ink)}
+.f small{font-weight:400;color:var(--mute);font-size:12.5px}
+.f .btn{justify-content:center;width:100%;border:0;cursor:pointer}
+.msg{padding:11px 13px;border-radius:10px;font-size:14.5px;margin:0 0 14px}
+.msg.err{background:#FDECEA;color:#9b2c20}.msg.ok{background:#E6F5EE;color:#14663f}.msg.info{background:#FFF6DE;color:#6b4e00}
+.linkbtn{background:none;border:0;color:var(--green-d);text-decoration:underline;font:inherit;cursor:pointer;padding:0}
+.top2{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+.stat b{display:block;font-size:26px;color:var(--ink);font-family:Georgia,serif}.stat span{font-size:13px;color:var(--mute)}
+.linkcard{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px}
+.linkcard code{background:rgba(255,255,255,.12);padding:7px 11px;border-radius:8px;font-size:14px;word-break:break-all;flex:1 1 220px}
+.linkcard .b{background:#fff;color:var(--ink);border:0;border-radius:9px;padding:9px 14px;font:700 14px inherit;font-family:inherit;cursor:pointer;text-decoration:none}
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.pc{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.pc .ph{width:100%;max-width:none;border-radius:0;aspect-ratio:1/1;background:#eef3ef;display:grid;place-items:center;overflow:hidden;color:var(--mute);font-size:13px}
+.pc .ph img{display:block;width:100%;height:100%;object-fit:cover}
+.pc .b{padding:12px 13px;display:grid;grid-template-columns:minmax(0,1fr);gap:8px;flex:1}
+.pc h4{margin:0;font-size:15px;line-height:1.3}
+.pc .w{font-size:13px;color:var(--mute)}
+.pc .row{display:flex;gap:8px}
+.pc input{flex:1;min-width:0;padding:10px;border:1px solid #cfd8d2;border-radius:9px;font:15px inherit;font-family:inherit}
+.pc .on{border-color:var(--green)}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:3px 9px;background:#E6F5EE;color:#14663f}
+.tag.warn{background:#FFF1D6;color:#7a5200}.tag.bad{background:#FDECEA;color:#9b2c20}
+.b2{border:0;border-radius:9px;padding:10px 14px;font:700 14px inherit;font-family:inherit;cursor:pointer;background:var(--green);color:#fff}
+.b2.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}.b2.red{background:#fff;color:#9b2c20;border:1px solid #f0c7c2}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.tools input,.tools select{padding:10px 12px;border:1px solid #cfd8d2;border-radius:10px;font:15px inherit;font-family:inherit;background:#fff}
+.tools input{flex:1 1 200px}
+.lst{display:grid;gap:10px}
+.paths{display:grid;gap:12px}.pathc{display:grid;gap:4px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;font-family:inherit;color:var(--ink);cursor:pointer}.pathc b{font-size:18px}.pathc span{color:var(--mute);font-size:14.5px}.pathc:hover{border-color:var(--green)}
+.skillg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.skt{display:grid;gap:4px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;font-family:inherit;color:var(--ink);cursor:pointer}.skt b{font-size:16px}.skt span{color:var(--mute);font-size:13px}
+@media(min-width:821px){.paths{grid-template-columns:repeat(3,1fr)}.skillg{grid-template-columns:repeat(4,1fr)}}
+
+.mystore{margin-bottom:16px}.ms-h{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.ms-h code{background:#eef4f0;padding:8px 11px;border-radius:9px;font-size:13.5px;word-break:break-all}
+.pills{display:flex;gap:8px;flex-wrap:wrap}.pill2{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:10px 16px;font:600 14px inherit;font-family:inherit;cursor:pointer;text-decoration:none}
+.pill2:first-child{background:var(--ink);color:#fff;border-color:var(--ink)}
+.prog{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;align-items:center;margin-bottom:16px}
+.ring{--p:0;width:72px;height:72px;border-radius:50%;background:conic-gradient(var(--green) calc(var(--p)*1%),#e6eee8 0);display:grid;place-items:center;position:relative}
+.ring:before{content:"";position:absolute;inset:8px;background:#fff;border-radius:50%}.ring b{position:relative;font-size:16px}
+.prog h3{margin:0}.prog .sub{margin:2px 0 0;font-size:14px}
+.chk{grid-column:1/-1;list-style:none;margin:10px 0 0;padding:0}
+.chk li{display:flex;align-items:center;gap:12px;padding:11px 2px;border-top:1px solid var(--line);font-weight:600}
+.chk i{width:22px;height:22px;border-radius:50%;border:2px solid #c5d0c8;flex:none;display:grid;place-items:center;font-style:normal;font-size:12px;color:#fff}
+.chk li.done i{background:var(--green);border-color:var(--green)}.chk li.done span{color:var(--mute);text-decoration:line-through}.chk .b2{margin-left:auto;padding:7px 12px;white-space:nowrap;flex:none}.chk span{flex:1;min-width:0}.prog:not(.open) .chk li:not(.next){display:none}
+.sec{margin:20px 0 10px}
+.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.qa button{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 6px 13px;display:grid;gap:9px;justify-items:center;font:600 13.5px inherit;font-family:inherit;color:var(--ink);cursor:pointer}
+.qa svg{width:26px;height:26px;stroke:var(--mute);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tips{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px;margin:0 0 18px;-webkit-overflow-scrolling:touch}
+.tip{flex:0 0 min(300px,82%);scroll-snap-align:start;border-radius:16px;padding:16px 18px;background:var(--ink);color:#fff;display:grid;gap:5px;text-align:left;border:0;cursor:pointer;font-family:inherit}
+.tip b{font-size:17px}.tip span{font-size:13.5px;opacity:.92}.tip.g{background:var(--green-d)}.tip.y{background:var(--gold);color:var(--ink)}
+.seg{display:flex;gap:8px;margin:0 0 12px}.seg button{border:0;background:#eaefeb;border-radius:99px;padding:10px 16px;font:600 14.5px inherit;font-family:inherit;color:var(--mute);cursor:pointer}.seg button.on{background:#dcefe5;color:var(--ink)}
+.oc{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;width:100%;font-family:inherit;text-align:left;color:var(--ink);cursor:default}button.oc{cursor:pointer}
+.oc img,.oc .no{width:56px;height:56px;border-radius:10px;object-fit:cover;background:#eaefeb;flex:none;display:block}
+.oc .t{flex:1;min-width:0;display:grid;gap:3px}.oc .t b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.oc .t span{font-size:13px;color:var(--mute)}
+.mgroup{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:14px}.mhead{padding:12px 16px 4px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.mrow{display:flex;align-items:center;justify-content:space-between;width:100%;background:#fff;border:0;border-top:1px solid var(--line);padding:16px;font:600 16px inherit;font-family:inherit;color:var(--ink);text-align:left;cursor:pointer;text-decoration:none}.mhead+.mrow{border-top:0}
+.mrow:after{content:"\203A";color:var(--mute);font-size:22px;line-height:1}
+.bnav{display:none}
+@media(max-width:820px){#dtabs{display:none}
+ .bnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:70;background:#fff;border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+ .bnav button{border:0;background:none;display:grid;gap:3px;justify-items:center;padding:6px 0;font:600 11.5px inherit;font-family:inherit;color:var(--mute);cursor:pointer}
+ .bnav svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.bnav button.on{color:var(--green-d)}
+ .dash{padding-bottom:100px}body.has-bnav .wa-float{display:none}}
+@media(max-width:520px){#pgrid .ph{aspect-ratio:4/3}}
+@media(min-width:821px){.qa{grid-template-columns:repeat(6,1fr)}}
+
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.per{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin-bottom:14px;background:#fff}.per label{padding:9px 20px;font-weight:700;cursor:pointer}.per label.on{background:var(--ink);color:#fff}.per input{display:none}.plan ul{margin:10px 0 0;padding-left:18px;font-size:14px;color:var(--mute)}.plan li{margin:3px 0}.lockbox{background:#FFF8E6;border:1px solid #f1dfae;border-radius:12px;padding:12px 14px;margin:0 0 12px;font-size:14.5px}.lockbox .b2{margin-top:8px}
+.plan{position:relative;display:flex;flex-direction:column;gap:2px;padding:16px;border:2px solid var(--line);border-radius:14px;background:#fff;cursor:pointer}
+.plan.on{border-color:var(--green);box-shadow:0 0 0 3px rgba(47,107,79,.12)}
+.plan input{position:absolute;opacity:0;pointer-events:none}
+.plan .pr{font-size:1.5rem;font-weight:800}
+.plan em{font-style:normal;color:#14663f;font-weight:700;font-size:.85rem;margin-top:4px}
+@media(max-width:700px){.tiers{grid-template-columns:1fr}}
+
+.it{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:6px}
+.it .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.it .m{color:var(--mute);font-size:13.5px}
+.it select,.it input,.it textarea{padding:8px 10px;border:1px solid #cfd8d2;border-radius:8px;font:14px inherit;font-family:inherit}
+.tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
+.tbl th,.tbl td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}.tbl th{background:#f3f7f4;font-size:12.5px;color:var(--mute)}
+.tbl input{width:96px;padding:7px;border:1px solid #cfd8d2;border-radius:7px;font:14px inherit;font-family:inherit}
+.scroll{overflow-x:auto}
+.empty{text-align:center;color:var(--mute);padding:30px 10px}
+.steps3{display:grid;gap:10px;margin:0;padding:0;list-style:none}.steps3 li{padding-left:34px;position:relative}
+.steps3 li:before{content:attr(data-n);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-weight:700;font-size:13px;display:grid;place-items:center}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:99px;font-size:14.5px;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.bar{height:8px;border-radius:99px;background:#e3ebe6;overflow:hidden}.bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+.lsn{display:flex;gap:10px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;text-align:left;width:100%;font:inherit;color:var(--ink)}
+.lsn .ck{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #cfd8d2;display:grid;place-items:center;font-size:13px;color:#fff}.lsn.done .ck{background:var(--green);border-color:var(--green)}
+.lbody{white-space:pre-wrap;line-height:1.65;font-size:16px}.vid{position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#000;margin:0 0 14px}.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.f textarea{min-height:110px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="mz-header" id="mzHeader">
+  <div class="mz-wrap mz-bar">
+    <a class="mz-logo" href="index.html"><img class="mz-mark" src="img/logo.png" alt="" width="36" height="36">MOZ<span>LYT</span></a>
+    <nav class="mz-nav" id="mzNav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="what-we-do.html">What we do</a>
+      <a href="shop.html">Shop</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About us</a>
+      <span class="mz-ctas"><a class="mz-btn mz-primary" href="index.html#services">Book a service</a><a class="mz-btn mz-gold" href="career.html">Take a career with us</a></span>
+    </nav>
+    <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<main class="dash"><div class="wrap">
+
+<section id="authView" class="authcard" hidden>
+  <h1>MOZLYT franchise</h1><p class="sub">For MOZLYT franchise partners. Log in with the account you signed up with.</p>
+  <div class="card2"><div id="aNote"></div>
+    <form id="fLogin" class="f"><label>Email<input type="email" id="lEmail" autocomplete="email" required></label><label>Password<input type="password" id="lPass" autocomplete="current-password" required></label>
+      <button class="btn primary" type="submit">Log in</button>
+      <a class="linkbtn" href="seller.html?kind=franchise" style="display:block">No account yet? Sign up as a franchise</a></form>
+  </div>
+</section>
+
+<section id="dashView" hidden>
+  <div class="top2"><div><h1 id="brName">MOZLYT franchise</h1><p class="sub" id="who"></p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><a class="b2 ghost" href="seller.html?own=1" style="text-decoration:none">My shop and training</a><button class="b2 ghost" id="btnOut" type="button">Log out</button></div></div>
+  <div class="card2" id="frStatus"></div>
+  <div id="frBody">
+  <div class="tabs" id="dtabs" style="margin-top:16px"><button data-t="over" class="on" type="button">Overview</button><button data-t="ord" type="button">Orders</button><button data-t="rec" type="button">Recruits</button><button data-t="pay" type="button">Payments</button><button data-t="price" type="button">Prices</button><button data-t="link" type="button">Recruit link</button></div>
+
+  <div id="pane-over"><div class="stats"><div class="stat"><b id="frN">0</b><span>Recruits</span></div><div class="stat"><b id="frA">0</b><span>Active stores</span></div><div class="stat"><b id="frP">0</b><span>Payments waiting</span></div><div class="stat"><b id="frO">0</b><span>Recruit orders</span></div><div class="stat"><b id="frM">0</b><span>Earned this month</span></div><div class="stat"><b id="frT">0</b><span>Earned in total</span></div></div>
+    <h3 style="margin:22px 0 10px">Payments waiting for you</h3><div class="lst" id="frPendO"></div>
+    <h3 style="margin:22px 0 10px">Newest recruit orders</h3><div class="lst" id="frOrdO"></div></div>
+  <div id="pane-ord" hidden><div class="tools"><select id="of"><option value="">All statuses</option></select></div><div class="lst" id="frOrd"></div></div>
+  <div id="pane-rec" hidden><div class="scroll"><table class="tbl" id="recTbl"></table></div></div>
+  <div id="pane-pay" hidden>
+    <h3 style="margin:0 0 10px">Waiting for you</h3><div class="lst" id="frPend"></div>
+    <h3 style="margin:22px 0 10px">Recent payments</h3><div class="lst" id="frDone"></div></div>
+  <div id="pane-price" hidden>
+    <div class="card2"><h3 style="margin:0 0 6px">How your recruits pay you</h3><p class="sub" style="margin-bottom:10px">Shown to your recruits when they pay. Add your MoMo number and name.</p>
+      <form id="fFrPay" class="f"><label>Payment instructions<textarea id="frPay" rows="3" maxlength="600" placeholder="Send to MoMo 024 000 0000 (Your Name), then enter the transaction ID."></textarea></label><button class="btn primary" type="submit">Save</button></form></div>
+    <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Your prices for recruits</h3><p class="sub" style="margin-bottom:10px">Set what your recruits pay you. Leave a box empty to use the MOZLYT price shown inside it.</p>
+      <form id="fFrPrices" class="f"><div id="frPrices" class="f"></div><button class="btn primary" type="submit">Save prices</button></form></div>
+    <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Selling prices in your recruits' stores</h3><p class="sub" style="margin-bottom:10px">Set what customers pay for each product in your recruits' stores. Leave empty to let each recruit choose.</p>
+      <form id="fFrSell" class="f"><div id="frSell" class="f" style="max-height:420px;overflow:auto"></div><button class="btn primary" type="submit">Save selling prices</button></form></div></div>
+  <div id="pane-link" hidden><div class="card2"><h3 style="margin:0 0 6px">Your recruit link</h3><p class="sub" style="margin-bottom:12px">Sellers and trainees who sign up with your link pay you, not MOZLYT. They still use the same MOZLYT system.</p>
+    <div class="pills"><button class="b2" id="frCopy" type="button">Copy link</button><a class="b2 ghost" id="frShare" target="_blank" rel="noopener" style="text-decoration:none">Share on WhatsApp</a></div></div></div>
+  </div>
+</section>
+
+</div></main>
+<script src="js/mz-api.js"></script>
+<script>
+
+var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
+function esc(s){return MZ.esc(s)}
+function show(id,on){var e=$('#'+id);if(e)e.hidden=!on}
+function flash(t,ms){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},ms||2600)}
+function note(box,type,text){box.innerHTML=text?'<div class="msg '+type+'">'+esc(text)+'</div>':''}
+function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.dataset.l=btn.textContent;btn.textContent=label}}else if(btn.dataset.l){btn.textContent=btn.dataset.l;delete btn.dataset.l}}
+function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){flash('Copied')},function(){var i=document.createElement('input');i.value=t;document.body.appendChild(i);i.select();try{document.execCommand('copy');flash('Copied')}catch(e){prompt('Copy this:',t)}i.remove()})}
+
+(function(){
+  var ME=null,FR={rec:[],pays:[],ord:[]},FRP={},PRODUCTS=[],BILL={},aNote=$('#aNote');
+  var SKILLS=[['massage','Massage'],['beauty','Beauty and skincare'],['hair','Hair and scalp care'],['fashion','Fashion and styling'],['fitness','Fitness and sculpting'],['nutrition','Nutrition and meal prep'],['catering','Catering'],['homecare','Home health care']];
+  var FRK=[['monthly_price','Standard, monthly'],['yearly_price','Standard, yearly'],['plus_monthly','Plus, monthly'],['plus_yearly','Plus, yearly'],['premium_monthly','Premium, monthly'],['premium_yearly','Premium, yearly'],['training_price','Training Basic, one time'],['training_pro_price','Training Pro (everything), one time']].concat(SKILLS.map(function(k){return['skill_'+k[0],'Training skill: '+k[1]]}));
+  function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+  function itemName(it){if(it==='pro')return'Pro (everything)';if(it==='basic')return'Basic business lessons';if(String(it).indexOf('skill:')===0){var r=SKILLS.filter(function(x){return x[0]===it.slice(6)})[0];return r?r[1]:it}return it||''}
+  function frLive(){return !!(ME&&ME.franchise&&!ME.franchise_paused)}
+  function frLink(){return MZ.siteUrl+'seller.html?ref='+encodeURIComponent(ME.franchise_code||'')}
+  function view(){show('authView',true);show('dashView',false)}
+  $('#fLogin').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Logging in...');MZ.signIn($('#lEmail').value.trim(),$('#lPass').value).then(boot,function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
+  $('#btnOut').onclick=function(){MZ.signOut().then(function(){ME=null;view()})};
+  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','ord','rec','pay','price','link'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});try{window.scrollTo(0,0)}catch(e){}}});
+
+  function boot(){show('authView',false);
+    return MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(p){
+      ME=p&&p[0];if(!ME||!ME.franchise){show('dashView',false);show('authView',true);note(aNote,'err','This account is not a franchise yet. Sign up as a franchise, and MOZLYT will activate it once the terms are agreed.');return}
+      $('#brName').textContent=(ME.store_name||'MOZLYT')+' franchise';$('#who').textContent=(ME.full_name||'')+(ME.email?' · '+ME.email:'');show('dashView',true);
+      return Promise.all([MZ.q('profiles','select=id,full_name,store_name,store_slug,phone,email,sub_expires_at,plan,tier,training_paid,status,created_at&franchise_id=eq.'+ME.id+'&order=created_at.desc'),MZ.q('subscription_payments','select=*&franchise_id=eq.'+ME.id+'&order=created_at.desc&limit=200'),MZ.q('franchise_product_prices','select=product_id,price&franchise_id=eq.'+ME.id),MZ.q('products','select=id,name,suggested_price,wholesale_price,status&order=sort,name'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.rpc('get_my_prices')]).then(function(r){
+        return(r[0]&&r[0].length?MZ.q('orders','select=*&seller_id=in.('+r[0].map(function(x){return x.id}).join(',')+')&order=created_at.desc&limit=200'):Promise.resolve([])).then(function(o){
+          FR={rec:r[0]||[],pays:r[1]||[],ord:o||[]};FRP={};(r[2]||[]).forEach(function(x){FRP[x.product_id]=Number(x.price)});PRODUCTS=r[3]||[];BILL=(r[4]&&r[4][0])||{};draw()})})
+    }).catch(function(er){view();note(aNote,er.status===401?'info':'err',er.status===401?'Please log in again.':er.message)})}
+
+  function frRow(x,act){var u=FR.rec.filter(function(y){return y.id===x.seller_id})[0]||{};
+    return'<div class="it"><div class="h"><b>'+esc(u.full_name||u.store_name||'Recruit')+' &middot; '+(x.kind==='training'?'Training: '+esc(itemName(x.item)):cap(x.tier||'standard')+' '+(x.plan==='yearly'?'yearly':'monthly'))+' &middot; '+MZ.money(x.amount)+'</b>'+(act?'':'<span class="tag '+(x.status==='confirmed'?'':'bad')+'">'+x.status+'</span>')+'</div><div class="m">Ref <b>'+esc(x.reference)+'</b> &middot; '+esc(u.phone||'')+' &middot; '+MZ.when(x.created_at)+'</div>'+(act?'<div style="display:flex;gap:8px;margin-top:8px"><button class="b2" data-fok="'+x.id+'" type="button">Confirm</button><button class="b2 red" data-fno="'+x.id+'" type="button">Reject</button></div>':'')+'</div>'}
+  function ordRow(o){var u=FR.rec.filter(function(y){return y.id===o.seller_id})[0]||{};return'<div class="it"><div class="h"><b>Order #'+o.id+' &middot; '+esc(o.customer_name||'Customer')+'</b><span class="tag">'+esc(o.status||'')+'</span></div><div class="m">'+esc(u.store_name||u.full_name||'Recruit')+' &middot; '+MZ.when(o.created_at)+(o.total!=null?' &middot; <b>'+MZ.money(o.total)+'</b>':'')+'</div></div>'}
+  function orders(){var f=$('#of').value;$('#frOrd').innerHTML=FR.ord.filter(function(o){return!f||o.status===f}).map(ordRow).join('')||'<div class="empty">No recruit orders yet.</div>'}
+  $('#of').onchange=orders;
+
+  function draw(){
+    var until=ME.franchise_expires_at?new Date(ME.franchise_expires_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'';
+    var terms=ME.franchise_fee!=null?MZ.money(ME.franchise_fee)+' '+(ME.franchise_plan==='yearly'?'a year':'a month'):'the agreed amount';
+    var due=ME.franchise_expires_at&&new Date(ME.franchise_expires_at)<=new Date(),live=frLive();
+    var wa=function(t){return'<br><a class="b2" style="display:inline-block;margin-top:10px;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/233538729743?text='+encodeURIComponent(t+' Code: '+(ME.franchise_code||''))+'">Message MOZLYT</a>'};
+    $('#frStatus').innerHTML=live?'<b style="color:#14663f">Franchise active</b><br>'+(due?'<span style="color:#9b2c20">Payment of '+terms+' was due on '+until+'.</span> Please pay MOZLYT so your branch is not paused.'+wa('Hello MOZLYT, I want to pay my franchise.'):(until?'Paid up until <b>'+until+'</b>. ':'')+'Your agreed payment to MOZLYT: <b>'+terms+'</b>.'):'<b style="color:#9b2c20">Franchise paused by MOZLYT</b><br>Your dashboard is paused. Message MOZLYT to settle '+terms+' and reopen it. Your recruits keep their stores and training.'+wa('Hello MOZLYT, I want to reopen my franchise.');
+    $('#frBody').hidden=!live;if(!live)return;
+    var u=frLink();$('#frCopy').onclick=function(){copy(u)};$('#frShare').href='https://wa.me/?text='+encodeURIComponent('Join MOZLYT with me, start your shop or training here: '+u);
+    var ok=FR.pays.filter(function(x){return x.status==='confirmed'}),now=new Date(),tot=ok.reduce(function(a,x){return a+Number(x.amount||0)},0),mo=ok.filter(function(x){var d=new Date(x.confirmed_at||x.created_at);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()}).reduce(function(a,x){return a+Number(x.amount||0)},0);
+    var act=FR.rec.filter(function(x){return x.sub_expires_at&&new Date(x.sub_expires_at)>now}).length,pend=FR.pays.filter(function(x){return x.status==='pending'}).length;
+    $('#frA').textContent=act;$('#frP').textContent=pend;$('#frO').textContent=FR.ord.length;$('#frN').textContent=FR.rec.length;$('#frM').textContent=MZ.money(mo);$('#frT').textContent=MZ.money(tot);
+    var sts=[];FR.ord.forEach(function(o){if(sts.indexOf(o.status)<0)sts.push(o.status)});$('#of').innerHTML='<option value="">All statuses</option>'+sts.map(function(s){return'<option>'+esc(s)+'</option>'}).join('');
+    orders();$('#frOrdO').innerHTML=FR.ord.slice(0,5).map(ordRow).join('')||'<div class="empty">No recruit orders yet.</div>';
+    var pl=FR.pays.filter(function(x){return x.status==='pending'});
+    $('#frPend').innerHTML=pl.map(function(x){return frRow(x,true)}).join('')||'<div class="empty">Nothing waiting.</div>';
+    $('#frPendO').innerHTML=pl.slice(0,5).map(function(x){return frRow(x,true)}).join('')||'<div class="empty">Nothing waiting.</div>';
+    $('#frDone').innerHTML=FR.pays.filter(function(x){return x.status!=='pending'}).slice(0,30).map(function(x){return frRow(x,false)}).join('')||'<div class="empty">No payments yet.</div>';
+    $('#recTbl').innerHTML='<tr><th>Store</th><th>Name</th><th>Phone</th><th>Store link</th><th>Joined</th><th>Subscription</th><th>Actions</th></tr>'+(FR.rec.map(function(x){var lv=x.sub_expires_at&&new Date(x.sub_expires_at)>now;
+      return'<tr><td><b>'+esc(x.store_name||'')+'</b></td><td>'+esc(x.full_name||'')+'<br><small>'+esc(x.email||'')+'</small></td><td>'+esc(x.phone||'')+'</td><td>'+(x.store_slug?'<a target="_blank" rel="noopener" href="store.html?s='+esc(x.store_slug)+'">'+esc(x.store_slug)+'</a>':'')+'</td><td>'+MZ.when(x.created_at)+'</td><td><span class="tag '+(lv?'':'bad')+'">'+(lv?(x.plan?cap(x.tier||'standard')+' '+x.plan:'Trial'):'Expired')+'</span>'+(x.training_paid?' <span class="tag">training</span>':'')+(x.sub_expires_at?'<br><small>'+(lv?'until ':'ended ')+MZ.when(x.sub_expires_at)+'</small>':'')+'</td><td style="white-space:nowrap">'+(lv?'<button class="b2 red" data-rc="'+x.id+'" data-m="pause" type="button">Pause</button> ':'')+'<button class="b2" data-rc="'+x.id+'" data-m="month" type="button">'+(lv?'+1 month':'Activate 1 month')+'</button> <button class="b2 ghost" data-rc="'+x.id+'" data-m="year" type="button">'+(lv?'+1 year':'Activate 1 year')+'</button></td></tr>'}).join('')||'<tr><td colspan="7"><div class="empty">No recruits yet. Share your recruit link to get started.</div></td></tr>');
+    $('#frPay').value=ME.franchise_pay_info||'';
+    $('#frSell').innerHTML=PRODUCTS.map(function(p){return'<label>'+esc(p.name)+(p.suggested_price?' <small>(suggested '+MZ.money(p.suggested_price)+')</small>':'')+'<input type="number" min="0" step="0.01" data-pid="'+p.id+'" placeholder="Recruit chooses" value="'+(FRP[p.id]!=null?FRP[p.id]:'')+'"></label>'}).join('');
+    var fp=ME.franchise_prices||{};$('#frPrices').innerHTML=FRK.map(function(k){return'<label>'+k[1]+' (GH&#8373;)<input type="number" min="0" step="1" data-k="'+k[0]+'" placeholder="'+(BILL[k[0]]!=null?BILL[k[0]]:'')+'" value="'+(fp[k[0]]!=null?fp[k[0]]:'')+'"></label>'}).join('');
+    $$('#recTbl [data-rc]').forEach(function(b){b.onclick=function(){var m=b.dataset.m;if(m==='pause'&&!confirm('Pause this recruit\'s store? Customers will see it as closed until you activate it again.'))return;b.disabled=true;MZ.rpc('franchise_set_recruit',{p_id:b.dataset.rc,p_mode:m}).then(function(){flash(m==='pause'?'Store paused':'Store activated');boot()},function(er){flash(er.message);b.disabled=false})}});
+    $$('#frPend [data-fok],#frPendO [data-fok]').forEach(function(b){b.onclick=function(){b.disabled=true;MZ.rpc('admin_confirm_payment',{p_id:Number(b.dataset.fok)}).then(function(){flash('Confirmed');boot()},function(er){flash(er.message);b.disabled=false})}});
+    $$('#frPend [data-fno],#frPendO [data-fno]').forEach(function(b){b.onclick=function(){b.disabled=true;MZ.rpc('admin_reject_payment',{p_id:Number(b.dataset.fno)}).then(function(){flash('Rejected');boot()},function(er){flash(er.message);b.disabled=false})}})}
+  $('#fFrPay').onsubmit=function(e){e.preventDefault();var b=$('button',this);busy(b,true,'Saving...');MZ.update('profiles','id=eq.'+ME.id,{franchise_pay_info:$('#frPay').value.trim()}).then(function(r){ME=r[0]||ME;flash('Saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+  $('#fFrSell').onsubmit=function(e){e.preventDefault();var b=$('button',this),up=[],del=[];$$('#frSell input').forEach(function(i){var id=Number(i.dataset.pid);if(i.value!==''&&Number(i.value)>=0)up.push({franchise_id:ME.id,product_id:id,price:Number(i.value)});else if(FRP[id]!=null)del.push(id)});
+    busy(b,true,'Saving...');(up.length?MZ.upsert('franchise_product_prices',up,'franchise_id,product_id'):Promise.resolve()).then(function(){return del.length?MZ.remove('franchise_product_prices','franchise_id=eq.'+ME.id+'&product_id=in.('+del.join(',')+')'):0}).then(function(){FRP={};up.forEach(function(x){FRP[x.product_id]=x.price});flash('Selling prices saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+  $('#fFrPrices').onsubmit=function(e){e.preventDefault();var b=$('button',this),o={};$$('#frPrices input').forEach(function(i){if(i.value!==''&&Number(i.value)>=0)o[i.dataset.k]=Number(i.value)});busy(b,true,'Saving...');MZ.update('profiles','id=eq.'+ME.id,{franchise_prices:o}).then(function(r){ME=r[0]||ME;flash('Prices saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+
+  var h=MZ.takeHash();view();if(h&&h.error)note(aNote,'err',h.error);
+  if(MZ.loggedIn())boot();
+})();
+</script>
+<footer class="mz-footer">
+  <div class="mz-wrap mz-fgrid">
+    <div class="mz-fbrand">
+      <a class="mz-logo" href="index.html"><img class="mz-mark" src="img/logo.png" alt="" width="36" height="36">MOZ<span>LYT</span></a>
+      <p>Trusted wellness, fitness, beauty, fashion and food services and products. Based in Accra, Ghana.</p>
+      <div class="mz-contact">WhatsApp: <a href="https://wa.me/233538729743" target="_blank" rel="noopener">053 872 9743</a><br>Email: <a href="mailto:Info@mozlyt.com">Info@mozlyt.com</a></div>
+      <div class="mz-social"><a href="https://www.instagram.com/mozlyt" target="_blank" rel="noopener" aria-label="Instagram: mozlyt" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg></a><a href="https://www.tiktok.com/@mozlyt" target="_blank" rel="noopener" aria-label="TikTok: @mozlyt" title="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 2h-3.2v13.3a2.7 2.7 0 1 1-2.7-2.7c.3 0 .5 0 .8.1V9.4a5.9 5.9 0 1 0 5.1 5.8V8.6a7.4 7.4 0 0 0 4.3 1.4V6.8a4.3 4.3 0 0 1-4.3-4.8z"/></svg></a><a href="https://www.facebook.com/mozlythealth" target="_blank" rel="noopener" aria-label="Facebook: mozlythealth" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.5 22v-8.2h2.8l.5-3.4h-3.3V8.3c0-1 .4-1.7 1.8-1.7h1.6V3.6A21 21 0 0 0 14.6 3.5c-2.5 0-4.2 1.5-4.2 4.3v2.6H7.6v3.4h2.8V22z"/></svg></a><a href="https://wa.me/233538729743" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4z"/></svg></a><a href="mailto:Info@mozlyt.com" aria-label="Email" title="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 7.5l8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a></div>
+    </div>
+    <div>
+      <h4>Customers</h4>
+      <a href="index.html#services">Book a service</a>
+      <a href="shop.html">Shop products</a>
+      <a href="massage-in-accra.html">Massage in Accra</a>
+      <a href="index.html#how">How booking works</a>
+      <a href="index.html#delivery">Delivery areas</a>
+      <a href="pay.html">Pay for an agreed order</a>
+    </div>
+    <div>
+      <h4>Sellers</h4>
+      <a href="career.html">Take a career with us</a>
+      <a href="what-we-do.html#sellers">What we do for sellers</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="about.html">About us</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html#contact">Contact</a>
+      <a href="#" id="installApp" style="display:none;font-weight:700;color:#5FD3A1">Install the MOZLYT app</a>
+    </div>
+  </div>
+  <div class="mz-wrap mz-fbottom">
+    <span>&copy; 2026 MOZLYT. Accra, Ghana. Get the app: open this site in your phone browser, then choose Add to Home Screen.</span>
+  </div>
+</footer>
+<script>
+(document.getElementById('cform')||document.createElement('i')).addEventListener('submit',function(e){
+  e.preventDefault();
+  var m="Hello MOZLYT, my name is "+document.getElementById('cname').value.trim()+". "+document.getElementById('cmsg').value.trim()+(document.getElementById('cphone').value.trim()?"\nMy number: "+document.getElementById('cphone').value.trim():"");
+  var u='https://wa.me/233538729743?text='+encodeURIComponent(m);var w=window.open(u,'_blank');if(!w){location.href=u}
+});
+</script>
+<script id="mz-shared-js">(function(){var h=document.getElementById('mzHeader');if(!h)return;var b=h.querySelector('.mz-burger');
+function set(o){h.classList.toggle('mz-open',o);b.setAttribute('aria-expanded',o?'true':'false')}
+b.addEventListener('click',function(){set(!h.classList.contains('mz-open'))});
+h.querySelectorAll('.mz-nav a').forEach(function(a){a.addEventListener('click',function(){set(false)})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});})();</script>
+<a class="wa-float" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20would%20like%20to%20know%20more." target="_blank" rel="noopener" aria-label="Chat with MOZLYT on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z"/></svg><span>Chat on WhatsApp</span></a>
+<script>
+(function(){
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+  var deferred=null,btn=document.getElementById('installApp');
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;if(btn)btn.style.display='block'});
+  if(btn)btn.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;btn.style.display='none'})});
+  window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
+})();
+</script>
+</body>
+</html>
