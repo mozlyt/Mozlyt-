@@ -359,7 +359,7 @@ body.has-list .wa-float{bottom:84px}
     <div class="card2" id="subStatus"></div>
     <h3 style="margin:22px 0 10px">Choose a plan</h3>
     <div class="plans" id="plans"></div>
-    <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Pay and activate</h3>
+    <div class="card2" id="fPayBox" style="margin-top:16px"><h3 style="margin:0 0 6px">Pay and activate</h3>
       <p class="sub" id="payHow" style="margin-bottom:12px"></p>
       <form id="fPay" class="f"><label>Payment reference or Mobile Money transaction ID<input id="payRef" maxlength="60" minlength="4" required placeholder="e.g. 4821937465"></label>
       <button class="btn primary" type="submit">I have paid</button></form></div>
@@ -474,33 +474,41 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   /* ----- subscription ----- */
   function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
-  function lockUI(){var t=(daysLeft()>0&&ME.tier)||'standard';if(!ME.plan)t='standard';
+  function lockUI(){var t=(daysLeft()>0&&ME.tier)||'standard';if(!ME.plan)t='standard';if(ME.franchise)t='premium';
     var pixOk=t==='plus'||t==='premium',domOk=t==='premium';
     function lk(id,form,ok,need){var el=$(id);el.innerHTML=ok?'':'<div class="lockbox"><b>Included in '+need+'</b><br>Upgrade to use this. <button type="button" class="b2" data-go="sub">See plans</button></div>';$$(form+' input,'+form+' button').forEach(function(x){x.disabled=!ok})}
     lk('#lockPix','#fPix',pixOk,'Plus and Premium');lk('#lockDom','#fDom',domOk,'Premium');
     $$('[data-go=sub]').forEach(function(b){b.onclick=function(){$('[data-t=sub]').click()}})}
+  function hasTraining(){return !!(ME&&(ME.training_paid||ME.franchise||daysLeft()>0))}
   function daysLeft(){return ME&&ME.sub_expires_at?Math.ceil((new Date(ME.sub_expires_at)-new Date())/86400000):0}
   function drawSub(){
     var d=daysLeft(),live=d>0,box=$('#subStatus'),nt=$('#subNote');
     var until=ME.sub_expires_at?new Date(ME.sub_expires_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'';
     var planTxt=ME.plan?(cap(ME.tier||'standard')+' &middot; '+(ME.plan==='yearly'?'Yearly':'Monthly')):'Free trial';
-    box.innerHTML=live?'<b style="color:#14663f">Your store is live</b><br>'+planTxt+' &middot; active until <b>'+until+'</b> ('+d+' day'+(d===1?'':'s')+' left)':'<b style="color:#9b2c20">Your store is closed</b><br>Your subscription ended'+(until?' on '+until:'')+'. Customers see a closed page until you renew. Your products and orders are safe.';
+    box.innerHTML=ME.franchise?'<b style="color:#14663f">MOZLYT franchise partner</b><br>Your shop (with ad tracking and your own address) and all training are included.':live?'<b style="color:#14663f">Your store is live</b><br>'+planTxt+' &middot; active until <b>'+until+'</b> ('+d+' day'+(d===1?'':'s')+' left)':'<b style="color:#9b2c20">Your store is closed</b><br>Your subscription ended'+(until?' on '+until:'')+'. Customers see a closed page until you renew. Your products and orders are safe.'+(ME.training_paid?'<br>Your training stays open.':'');
     nt.innerHTML='';
-    if(!live)note(nt,'err','Your store is closed. Open the Subscription tab to renew and go live again.');
+    if(ME.franchise){}else if(!live)note(nt,'err','Your store is closed. Open the Subscription tab to renew and go live again.');
     else if(d<=7)note(nt,'info','Your subscription ends in '+d+' day'+(d===1?'':'s')+'. Renew in the Subscription tab to keep your store open.');
     var T=[['standard','Standard',BILL.monthly_price,BILL.yearly_price,['Your store link','Unlimited products and orders','Training']],['plus','Plus',BILL.plus_monthly,BILL.plus_yearly,['Everything in Standard','Ad tracking: Facebook, Instagram and TikTok']],['premium','Premium',BILL.premium_monthly,BILL.premium_yearly,['Everything in Plus','Your own custom address, like www.yourbrand.com']]];
-    var cur=ME.tier||'standard',live2=daysLeft()>0;
-    $('#plans').innerHTML='<div class="per"><label class="'+(PLAN==='monthly'?'on':'')+'"><input type="radio" name="per" value="monthly"'+(PLAN==='monthly'?' checked':'')+'>Monthly</label><label class="'+(PLAN==='yearly'?'on':'')+'"><input type="radio" name="per" value="yearly"'+(PLAN==='yearly'?' checked':'')+'>Yearly</label></div><div class="tiers">'+T.map(function(t){var m=Number(t[2]||0),y=Number(t[3]||0),save=Math.max(0,m*12-y);
-      return'<label class="plan'+(TIER===t[0]?' on':'')+'"><input type="radio" name="tier" value="'+t[0]+'"'+(TIER===t[0]?' checked':'')+'><b>'+t[1]+(live2&&cur===t[0]?' <span class="tag">Your level</span>':'')+'</b><span class="pr">'+MZ.money(PLAN==='yearly'?y:m)+'</span><small>'+(PLAN==='yearly'?'per year':'per month')+'</small>'+(PLAN==='yearly'&&save>0?'<em>Save '+MZ.money(save)+' a year</em>':'')+'<ul>'+t[4].map(function(f){return'<li>'+esc(f)+'</li>'}).join('')+'</ul></label>'}).join('')+'</div>';
+    var cur=ME.tier||'standard',live2=daysLeft()>0,needTr=!hasTraining();
+    if(ME.franchise){$('#plans').innerHTML='';$('#fPayBox').hidden=true;$('#payList').innerHTML=payRows();return}
+    $('#fPayBox').hidden=false;
+    if(TIER==='training'&&!needTr)TIER='standard';
+    var trCard=needTr?'<label class="plan'+(TIER==='training'?' on':'')+'"><input type="radio" name="tier" value="training"'+(TIER==='training'?' checked':'')+'><b>Training only</b><span class="pr">'+MZ.money(BILL.training_price||100)+'</span><small>one time, no store</small><ul><li>All training lessons</li><li>Keep access for good</li></ul></label>':'';
+    var frCard='<a class="plan" target="_blank" rel="noopener" style="text-decoration:none;color:inherit" href="https://wa.me/233538729743?text='+encodeURIComponent('Hello MOZLYT, I would like to talk about a franchise.')+'"><b>Franchise</b><span class="pr" style="font-size:20px">Talk to us</span><small>for partners</small><ul><li>Shop, ad tracking, own address and training</li><li>Price agreed with us</li></ul></a>';
+    $('#plans').innerHTML=(TIER==='training'?'':'<div class="per"><label class="'+(PLAN==='monthly'?'on':'')+'"><input type="radio" name="per" value="monthly"'+(PLAN==='monthly'?' checked':'')+'>Monthly</label><label class="'+(PLAN==='yearly'?'on':'')+'"><input type="radio" name="per" value="yearly"'+(PLAN==='yearly'?' checked':'')+'>Yearly</label></div>')+'<div class="tiers">'+trCard+T.map(function(t){var m=Number(t[2]||0),y=Number(t[3]||0),save=Math.max(0,m*12-y);
+      return'<label class="plan'+(TIER===t[0]?' on':'')+'"><input type="radio" name="tier" value="'+t[0]+'"'+(TIER===t[0]?' checked':'')+'><b>'+t[1]+(live2&&cur===t[0]?' <span class="tag">Your level</span>':'')+'</b><span class="pr">'+MZ.money(PLAN==='yearly'?y:m)+'</span><small>'+(PLAN==='yearly'?'per year':'per month')+'</small>'+(PLAN==='yearly'&&save>0?'<em>Save '+MZ.money(save)+' a year</em>':'')+'<ul>'+t[4].map(function(f){return'<li>'+esc(f)+'</li>'}).join('')+'</ul></label>'}).join('')+frCard+'</div>';
     $$('#plans input[name=tier]').forEach(function(i){i.onchange=function(){TIER=i.value;drawSub()}});
     $$('#plans input[name=per]').forEach(function(i){i.onchange=function(){PLAN=i.value;drawSub()}});
-    var sel=T.filter(function(t){return t[0]===TIER})[0],amtSel=Number(PLAN==='yearly'?sel[3]:sel[2])||0;
+    var sel=T.filter(function(t){return t[0]===TIER})[0]||T[0],amtSel=Number(PLAN==='yearly'?sel[3]:sel[2])||0;
+    if(TIER==='training')$('#payHow').innerHTML='Training only &middot; one-time &middot; Amount: <b>'+MZ.money(BILL.training_price||100)+'</b><br>'+esc(BILL.pay_instructions||'');else
     $('#payHow').innerHTML='Level: <b>'+sel[1]+'</b> &middot; '+(PLAN==='yearly'?'Yearly':'Monthly')+' &middot; Amount: <b>'+MZ.money(amtSel)+'</b><br>'+esc(BILL.pay_instructions||'');
     lockUI();
-    $('#payList').innerHTML=PAYS.map(function(x){var cls=x.status==='confirmed'?'':(x.status==='rejected'?'bad':'warn');return'<div class="it"><div class="h"><b>'+cap(x.tier||'standard')+' &middot; '+(x.plan==='yearly'?'Yearly':'Monthly')+' &middot; '+MZ.money(x.amount)+'</b><span class="tag '+cls+'">'+(x.status==='pending'?'Waiting for confirmation':x.status==='confirmed'?'Confirmed':'Not confirmed')+'</span></div><div class="m">Ref '+esc(x.reference)+' &middot; '+MZ.when(x.created_at)+'</div></div>'}).join('')||'<div class="empty">No payments yet.</div>'}
+    $('#payList').innerHTML=payRows()}
+  function payRows(){return PAYS.map(function(x){var cls=x.status==='confirmed'?'':(x.status==='rejected'?'bad':'warn');return'<div class="it"><div class="h"><b>'+(x.kind==='training'?'Training':cap(x.tier||'standard')+' &middot; '+(x.plan==='yearly'?'Yearly':'Monthly'))+' &middot; '+MZ.money(x.amount)+'</b><span class="tag '+cls+'">'+(x.status==='pending'?'Waiting for confirmation':x.status==='confirmed'?'Confirmed':'Not confirmed')+'</span></div><div class="m">Ref '+esc(x.reference)+' &middot; '+MZ.when(x.created_at)+'</div></div>'}).join('')||'<div class="empty">No payments yet.</div>'}
   $('#fPay').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this),ref=$('#payRef').value.trim();busy(b,true,'Sending...');
-    MZ.rpc('request_subscription',{p_tier:TIER,p_plan:PLAN,p_reference:ref}).then(function(){return MZ.q('subscription_payments','select=*&order=created_at.desc&limit=50')}).then(function(r){PAYS=r;$('#payRef').value='';drawSub();flash('Payment sent. We will confirm it shortly.');
-      window.open('https://wa.me/233538729743?text='+encodeURIComponent('Hello MOZLYT, I paid for the '+TIER+' '+PLAN+' store plan. Store: '+ME.store_slug+'. Reference: '+ref),'_blank','noopener')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+    (TIER==='training'?MZ.rpc('request_training',{p_reference:ref}):MZ.rpc('request_subscription',{p_tier:TIER,p_plan:PLAN,p_reference:ref})).then(function(){return MZ.q('subscription_payments','select=*&order=created_at.desc&limit=50')}).then(function(r){PAYS=r;$('#payRef').value='';drawSub();flash('Payment sent. We will confirm it shortly.');
+      window.open('https://wa.me/233538729743?text='+encodeURIComponent('Hello MOZLYT, I paid for '+(TIER==='training'?'the training (one-time)':'the '+TIER+' '+PLAN+' store plan')+'. Store: '+ME.store_slug+'. Reference: '+ref),'_blank','noopener')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
 
   /* ----- overview ----- */
   function sumLines(o){return(o.items||[]).map(function(i){return(i.qty||1)+' x '+i.name}).join(', ')}
@@ -573,7 +581,11 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   var TR=null;
   var SKILLS=[['massage','Massage'],['beauty','Beauty and skincare'],['hair','Hair and scalp care'],['fashion','Fashion and styling'],['fitness','Fitness and sculpting'],['nutrition','Nutrition and meal prep'],['catering','Catering'],['homecare','Home health care']];
   var PATHS=[['sell','Sell products','Take a shop and learn how to sell with confidence.'],['service','Offer a service','Get clients, book them and keep them coming back.'],['skill','Learn a skill','Massage, beauty, fashion and more.']];
-  function loadTrain(){var box=$('#learnBox');if(TR){drawTrain();return}
+  function loadTrain(){var box=$('#learnBox');
+    if(!hasTraining()){TR=null;box.innerHTML='<h2 style="margin:0 0 4px;font-size:24px">Training</h2><p class="sub">Unlock all MOZLYT training lessons.</p><div class="card2"><b style="font-size:20px">'+MZ.money(BILL.training_price||100)+' <span class="m" style="font-weight:400">one time</span></b><ul class="sub" style="margin:10px 0 14px;padding-left:18px"><li>All training lessons, yours to keep</li><li>Already taking a shop? Training is included with your shop.</li><li>Franchise partners get everything.</li></ul><button class="btn primary" id="trPay" type="button">Get training</button> <button class="btn ghost" id="trShop" type="button">Take a shop instead</button> <button class="linkbtn" id="trRef" type="button">I have paid, refresh</button></div>';
+      $('#trPay').onclick=function(){TIER='training';drawSub();go('sub')};$('#trShop').onclick=function(){TIER='standard';drawSub();go('sub')};
+      $('#trRef').onclick=function(){var b=this;busy(b,true,'Checking...');MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(p){ME=p[0]||ME;drawSub();if(hasTraining())loadTrain();else{flash('Not confirmed yet. We will confirm your payment shortly.')}}).then(function(){busy(b,false)},function(){busy(b,false)})};return}
+    if(TR){drawTrain();return}
     box.innerHTML='<div class="empty">Loading lessons...</div>';
     Promise.all([MZ.q('courses','select=*&order=sort,id'),MZ.q('lessons','select=*&order=course_id,sort,id'),MZ.q('lesson_progress','select=lesson_id')]).then(function(r){TR={c:r[0],l:r[1],p:{},course:null,lesson:null,path:null,skill:null};r[2].forEach(function(x){TR.p[x.lesson_id]=1});drawTrain()},function(er){box.innerHTML='<div class="msg err">'+esc(er.message)+'</div>'})}
   function lessonsOf(cid){return TR.l.filter(function(l){return l.course_id===cid})}
