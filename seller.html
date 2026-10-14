@@ -156,7 +156,6 @@ textarea{min-height:110px;resize:vertical}
 body.has-list .wa-float{bottom:84px}
 </style>
 <script src="js/mz-cc.js" defer></script>
-<script src="js/mz-cur.js" defer></script>
 
 <style id="mz-dash">
 .btn[disabled],button.btn:disabled{background:#c9d1cc!important;border-color:#c9d1cc!important;color:#fff!important;cursor:not-allowed;opacity:1;box-shadow:none}
@@ -752,7 +751,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#pgrid').innerHTML=list.map(function(p){var m=MINE[p.id],lk=FPP[p.id]!=null,price=lk?FPP[p.id]:(m?m.price:(p.suggested_price||''));
       return'<div class="pc'+(m&&m.active?' on':'')+'" data-id="'+p.id+'"><div class="ph">'+(p.photo?'<img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(p.photo)+'">':'Photo coming soon')+'</div><div class="b"><h4>'+esc(p.name)+'</h4>'+
         '<div class="w">'+(ME.franchise&&Number(ME.franchise_discount)>0?'Franchise price: <b>'+(p.wholesale_price==null?'ask MOZLYT':MZ.money(Math.round(p.wholesale_price*(1-Number(ME.franchise_discount)/100)*100)/100))+'</b>':'Wholesale: <b>'+(p.wholesale_price==null?'ask MOZLYT':MZ.money(p.wholesale_price))+'</b>')+(p.status!=='available'?' <span class="tag bad">Sold out</span>':'')+(m&&m.active?' <span class="tag">In your store</span>':'')+'</div>'+
-        (lk?'<div class="m" style="margin-bottom:6px">Price set by your franchise</div>':'')+'<div class="row"><input type="number" inputmode="decimal" min="1" step="0.01" placeholder="Your price GH₵" value="'+esc(price)+'"'+(lk?' disabled':'')+'><button class="b2" data-a="save">'+(m?'Update':'Add')+'</button></div>'+(m?'<button class="b2 red" data-a="del">Remove from my store</button>':'')+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">No products match.</div>';
+        (lk?'<div class="m" style="margin-bottom:6px">Price set by your franchise</div>':'')+'<div class="row"><input type="number" inputmode="decimal" min="1" step="0.01" placeholder="Your price ('+MZ.sym()+')" value="'+esc(price)+'"'+(lk?' disabled':'')+'><button class="b2" data-a="save">'+(m?'Update':'Add')+'</button></div>'+(m?'<button class="b2 red" data-a="del">Remove from my store</button>':'')+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">No products match.</div>';
     $$('#pgrid .pc').forEach(function(c){var id=Number(c.dataset.id);
       $('[data-a=save]',c).onclick=function(){var v=FPP[id]!=null?FPP[id]:parseFloat($('input',c).value);if(!(v>0)){flash('Enter your selling price first');return}
         var b=this;busy(b,true);MZ.upsert('seller_products',[{seller_id:ME.id,product_id:id,price:v,active:true}],'seller_id,product_id').then(function(){MINE[id]={product_id:id,price:v,active:true};flash('Saved to your store');drawProducts();drawOver()},function(er){flash(er.message)}).then(function(){busy(b,false)})};
@@ -836,7 +835,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#frPay').value=ME.franchise_pay_info||'';
     $('#frSell').innerHTML=PRODUCTS.map(function(p){return'<label>'+esc(p.name)+(p.suggested_price?' <small>(suggested '+MZ.money(p.suggested_price)+')</small>':'')+'<input type="number" min="0" step="0.01" data-pid="'+p.id+'" placeholder="Recruit chooses" value="'+(FRP[p.id]!=null?FRP[p.id]:'')+'"></label>'}).join('');
     var fp=ME.franchise_prices||{};
-    $('#frPrices').innerHTML=FRK.map(function(k){return'<label>'+k[1]+' (GH&#8373;)<input type="number" min="0" step="1" data-k="'+k[0]+'" placeholder="'+(BILL[k[0]]!=null?BILL[k[0]]:'')+'" value="'+(fp[k[0]]!=null?fp[k[0]]:'')+'"></label>'}).join('');
+    $('#frPrices').innerHTML=FRK.map(function(k){return'<label>'+k[1]+' ('+MZ.sym()+')<input type="number" min="0" step="1" data-k="'+k[0]+'" placeholder="'+(BILL[k[0]]!=null?BILL[k[0]]:'')+'" value="'+(fp[k[0]]!=null?fp[k[0]]:'')+'"></label>'}).join('');
     $('#frPend').innerHTML=FR.pays.filter(function(x){return x.status==='pending'}).map(function(x){return frRow(x,true)}).join('')||'<div class="empty">Nothing waiting.</div>';
     var ordRow=function(o){var u=FR.rec.filter(function(y){return y.id===o.seller_id})[0]||{};return'<div class="it"><div class="h"><b>Order #'+o.id+' &middot; '+esc(o.customer_name||'Customer')+'</b><span class="tag">'+esc(o.status||'')+'</span></div><div class="m">'+esc(u.store_name||u.full_name||'Recruit')+' &middot; '+MZ.when(o.created_at)+(o.total!=null?' &middot; <b>'+MZ.money(o.total)+'</b>':'')+'</div></div>'};
     $('#frOrd').innerHTML=FR.ord.map(ordRow).join('')||'<div class="empty">No recruit orders yet.</div>';

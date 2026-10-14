@@ -126,7 +126,22 @@
     rpc: function (name, args) { return freshToken().then(function (t) { return call('/rest/v1/rpc/' + name, { method: 'POST', body: args || {} }, t); }); },
     /* ---------- helpers ---------- */
     esc: function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); },
-    money: function (n) { return n == null || n === '' ? 'Price on request' : 'GH₵' + Number(n).toLocaleString('en-GH', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); },
+    money: function (n) { return n == null || n === '' ? 'Price on request' : MZ.fmt(n); },
+    /* prices are set by each franchise in its own country's currency, with no conversion */
+    CUR: {gh:'GHS',dz:'DZD',ao:'AOA',bj:'XOF',bw:'BWP',bf:'XOF',bi:'BIF',cv:'CVE',cm:'XAF',cf:'XAF',td:'XAF',km:'KMF',cg:'XAF',cd:'CDF',ci:'XOF',dj:'DJF',eg:'EGP',gq:'XAF',er:'ERN',sz:'SZL',et:'ETB',ga:'XAF',gm:'GMD',gn:'GNF',gw:'XOF',ke:'KES',ls:'LSL',lr:'LRD',ly:'LYD',mg:'MGA',mw:'MWK',ml:'XOF',mr:'MRU',mu:'MUR',ma:'MAD',mz:'MZN',na:'NAD',ne:'XOF',ng:'NGN',rw:'RWF',st:'STN',sn:'XOF',sc:'SCR',sl:'SLE',so:'SOS',za:'ZAR',ss:'SSP',sd:'SDG',tz:'TZS',tg:'XOF',tn:'TND',ug:'UGX',zm:'ZMW',zw:'ZWG'},
+    cc: (function () { try { var m = /^\/([a-z]{2})(\/|$)/.exec(location.pathname); return m ? m[1] : (localStorage.getItem('mz-cc') || 'gh'); } catch (e) { return 'gh'; } })(),
+    setCountry: function (c) { c = String(c || '').toLowerCase(); if (MZ.CUR[c]) MZ.cc = c; },
+    code: function () { return MZ.CUR[MZ.cc] || 'GHS'; },
+    sym: function () {
+      if (MZ.cc === 'gh') return 'GH\u20b5';
+      try { var parts = new Intl.NumberFormat('en-' + MZ.cc.toUpperCase(), { style: 'currency', currency: MZ.code() }).formatToParts(1); for (var i = 0; i < parts.length; i++) if (parts[i].type === 'currency') return parts[i].value; } catch (e) { }
+      return MZ.code();
+    },
+    fmt: function (n) {
+      var v = Number(n), sym = MZ.sym();
+      var num = v.toLocaleString('en', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+      return sym + (/^[A-Z]{3}$/.test(sym) ? '\u00a0' : '') + num;
+    },
     phoneIntl: function (p) { p = String(p || '').replace(/[^\d]/g, ''); if (p.indexOf('233') === 0) return p; if (p.charAt(0) === '0') return '233' + p.slice(1); return p; },
     when: function (iso) { try { return new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } }
   };
