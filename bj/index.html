@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="preload" as="image" href="/img/photos/hero-desk.webp" type="image/webp" fetchpriority="high">
+<link rel="preconnect" href="https://ziaoopnwhmmrtnmeotia.supabase.co" crossorigin>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MOZLYT Benin | Wellness, fitness and beauty, coming to Benin</title>
-<meta name="description" content="MOZLYT Benin: the planned home of MOZLYT wellness, fitness and beauty products and services in Benin. Order products, or apply to run MOZLYT Benin as a franchise partner.">
+<title>MOZLYT Benin | Wellness, fitness, beauty and shop</title>
+<meta name="description" content="MOZLYT Benin: wellness, fitness, beauty and fashion products from MOZLYT, with delivery options to Benin. Run MOZLYT Benin as a franchise partner.">
 <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://mozlyt.com/bj/">
 <meta name="author" content="MOZLYT">
@@ -12,17 +14,17 @@
 <meta name="geo.placename" content="Accra">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MOZLYT">
-<meta property="og:locale" content="en_GH">
-<meta property="og:title" content="MOZLYT Benin | Wellness, fitness and beauty, coming to Benin">
-<meta property="og:description" content="MOZLYT Benin: the planned home of MOZLYT wellness, fitness and beauty products and services in Benin. Order products, or apply to run MOZLYT Benin as a franchise partner.">
+<meta property="og:locale" content="en">
+<meta property="og:title" content="MOZLYT Benin">
+<meta property="og:description" content="MOZLYT Benin: wellness, fitness, beauty and fashion products from MOZLYT, with delivery options to Benin. Run MOZLYT Benin as a franchise partner.">
 <meta property="og:url" content="https://mozlyt.com/bj/">
 <meta property="og:image" content="https://mozlyt.com/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="MOZLYT: wellness, fitness and beauty in Accra, Ghana">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="MOZLYT Benin | Wellness, fitness and beauty, coming to Benin">
-<meta name="twitter:description" content="MOZLYT Benin: the planned home of MOZLYT wellness, fitness and beauty products and services in Benin. Order products, or apply to run MOZLYT Benin as a franchise partner.">
+<meta name="twitter:title" content="MOZLYT Benin">
+<meta name="twitter:description" content="MOZLYT Benin: wellness, fitness, beauty and fashion products from MOZLYT, with delivery options to Benin. Run MOZLYT Benin as a franchise partner.">
 <meta name="twitter:image" content="https://mozlyt.com/img/og.png">
 
 <link rel="manifest" href="/manifest.webmanifest">
@@ -111,75 +113,111 @@ html.mz-ready .mz-header{animation:mzIn .8s both}
 :root{--ink:#0E2A47;--green:#1F9D6B;--green-d:#157650;--gold:#F2B134;--paper:#F6F8F5;--white:#fff;--line:#DCE4DE;--mute:#5B6B7A}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
-h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.15;letter-spacing:-.01em}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--paper);line-height:1.55}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.12;letter-spacing:-.01em}
 a{color:inherit;text-decoration:none}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
-.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:600;font-size:15px;border:2px solid transparent;cursor:pointer;text-align:center;font-family:inherit}
+.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:600;font-size:15px;border:2px solid transparent;cursor:pointer;font-family:inherit;text-align:center}
 .btn.primary{background:var(--green);color:#fff}
 .btn.primary:hover{background:var(--green-d)}
 .btn.ghost{border-color:var(--ink);color:var(--ink);background:transparent}
 .btn.gold{background:var(--gold);color:var(--ink)}
+.btn.small{padding:8px 16px;font-size:14px}
+svg.i{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
-.hero{padding:64px 0 48px}
-.hero h1{font-size:clamp(34px,6vw,58px);max-width:20ch;margin-bottom:16px}
-.hero p{font-size:19px;color:var(--mute);max-width:58ch}
+/* header */
+header{background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.logo{font-family:Georgia,serif;font-weight:700;font-size:22px;letter-spacing:.02em}
+.logo span{color:var(--green)}
+nav{display:flex;gap:24px;font-size:14px;color:var(--mute);align-items:center}
+nav a:hover{color:var(--ink)}
+@media(max-width:760px){nav .hide-m{display:none}}
 
-section{padding:56px 0}
+/* hero */
+.hero{padding:54px 0 40px}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+@media(max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(36px,6.2vw,62px);margin-bottom:16px}
+.hero p.lead{font-size:18px;color:var(--mute);max-width:48ch;margin-bottom:24px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+.hero small{display:block;margin-top:14px;color:var(--mute);font-size:13px}
+
+/* booking card */
+.book{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 18px 40px rgba(14,42,71,.12)}
+.book h3{font-size:22px;margin-bottom:4px}
+.book p{font-size:14px;color:var(--mute);margin-bottom:14px}
+.book form{display:grid;gap:12px}
+label{font-weight:600;font-size:13px;display:grid;gap:5px}
+select,input{padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:var(--paper);color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* trust strip */
+.trust{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.trust .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding-top:22px;padding-bottom:22px}
+@media(max-width:860px){.trust .wrap{grid-template-columns:1fr 1fr}}
+.tr{display:flex;gap:12px;align-items:center}
+.tr .ic{width:46px;height:46px;border-radius:50%;background:#E6F5EE;color:var(--green-d);display:grid;place-items:center;flex:none}
+.tr b{display:block;font-size:14px}
+.tr span{font-size:12.5px;color:var(--mute)}
+
+section{padding:60px 0}
 section h2{font-size:clamp(26px,4.2vw,40px);margin-bottom:10px}
+section .sub{color:var(--mute);max-width:60ch;margin-bottom:12px}
 .white{background:var(--white)}
-.story{display:grid;grid-template-columns:1fr 1.3fr;gap:44px;align-items:start}
-@media(max-width:860px){.story{grid-template-columns:1fr;gap:18px}}
-.story p{margin-bottom:14px;font-size:17px;max-width:62ch}
-.mv{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:760px){.mv{grid-template-columns:1fr}}
-.mv div{border-radius:18px;padding:28px 26px}
-.mv h3{font-size:24px;margin-bottom:8px}
-.mv .m{background:var(--ink);color:#fff}
-.mv .m p{color:#C9D6E4}
-.mv .v{background:#E6F5EE}
-.mv .v p{color:var(--mute)}
-.mv p{font-size:17px}
 
-.vals{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:22px}
-.val{border-top:4px solid var(--green);padding-top:14px}
-.val:nth-child(2){border-color:var(--gold)}
-.val:nth-child(3){border-color:var(--ink)}
-.val:nth-child(4){border-color:#8FA9C8}
-.val h3{font-size:21px;margin-bottom:6px}
-.val p{font-size:15px;color:var(--mute)}
+/* services */
+.cat{margin-top:34px}
+.cat-h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.cat-h .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--ink)}
+.cat-h h3{font-size:22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.thumb{height:92px;display:grid;place-items:center;color:var(--ink)}
+.thumb svg{width:38px;height:38px;stroke-width:1.5}
+.cbody{padding:14px;display:flex;flex-direction:column;gap:3px;flex:1}
+.cbody h4{font-family:Georgia,serif;font-size:18px;line-height:1.2}
+.cbody p{font-size:14px;color:var(--mute);flex:1}
+.meta{font-size:12.5px;color:var(--mute);margin-top:6px}
+.crow{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:8px}
+.price{font-weight:700;color:var(--green-d);font-size:15px}
+.c1{background:#BFE6D4}.c2{background:#FBE2A6}.c3{background:#C9D8EA}.c4{background:#F3C9C0}.c5{background:#D9D3EE}.c6{background:#E5E2D3}.c7{background:#F7D9A8}
 
-.founder{display:grid;grid-template-columns:240px 1fr;gap:34px;align-items:center}
-@media(max-width:700px){.founder{grid-template-columns:1fr}}
-.ph{aspect-ratio:1/1;border-radius:20px;background:linear-gradient(135deg,#BFE6D4,#7CCBA6);display:grid;place-items:center;font-family:Georgia,serif;font-size:64px;color:var(--ink);max-width:240px;position:relative}
-.ph small{position:absolute;bottom:10px;font-family:system-ui;font-size:11.5px;color:var(--mute)}
-img.ph{display:block;width:100%;height:auto;object-fit:cover;background:#0E2A47}
-.founder h3{font-size:26px}
-.founder .role{color:var(--green-d);font-weight:700;margin:2px 0 10px}
-.founder p{font-size:16.5px;max-width:58ch}
-
-.where{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+/* how */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:26px}
+@media(max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.step{border-top:4px solid var(--green);padding-top:14px}
+.step:nth-child(2){border-color:var(--gold)}
+.step:nth-child(3){border-color:var(--ink)}
+.step em{font-style:normal;font-weight:700;color:var(--mute);font-size:13px}
+.step h3{font-size:21px;margin:6px 0}
+.step p{font-size:14.5px;color:var(--mute)}
+.where{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
 .where span{padding:10px 18px;border:2px solid var(--ink);border-radius:99px;font-weight:600;font-size:14px}
 .where span.g{background:var(--green);border-color:var(--green);color:#fff}
 .where span.y{background:var(--gold);border-color:var(--gold)}
 
-.contact{display:grid;grid-template-columns:1fr 1.1fr;gap:34px;align-items:start}
-@media(max-width:860px){.contact{grid-template-columns:1fr}}
-.cl{list-style:none;display:grid;gap:14px;margin-top:14px}
-.cl li b{display:block;font-size:13.5px;color:var(--mute);font-weight:700}
-.cl li span{font-size:17px}
-form{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:14px}
-label{font-weight:700;font-size:13.5px;display:grid;gap:6px}
-input,textarea{padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:var(--white);color:var(--ink)}
-textarea{min-height:110px;resize:vertical}
+/* shop + career nudges */
+.nudges{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.nudges{grid-template-columns:1fr}}
+.nudge{border-radius:18px;padding:28px 24px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.nudge h3{font-size:24px}
+.nudge p{font-size:15px}
+.nudge.shop{background:#E6F5EE}
+.nudge.shop p{color:var(--mute)}
+.nudge.car{background:var(--ink);color:#fff}
+.nudge.car p{color:#B9C7D6}
 
-.final{background:var(--ink);color:#fff;text-align:center}
-.final h2{color:#fff}
-.final p{color:#B9C7D6;max-width:52ch;margin:0 auto 24px}
-.final .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.final .btn.ghost{border-color:#fff;color:#fff}
-.note{font-size:12.5px;color:var(--mute);padding:18px 0 4px}
+footer{padding:28px 0;font-size:13px;color:var(--mute);text-align:center}
+.note{font-size:12.5px;color:var(--mute);margin-top:18px}
+.zones{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0 26px}
+@media(max-width:900px){.zones{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.zones{grid-template-columns:1fr}}
+.zone{background:var(--white);border:1px solid var(--line);border-top:4px solid var(--green);border-radius:14px;padding:18px}
+.zone:nth-child(2){border-top-color:var(--gold)}.zone:nth-child(3){border-top-color:var(--ink)}.zone:nth-child(4){border-top-color:#8FA9C8}
+.zone h3{font-size:21px;margin-bottom:6px}.zone p{font-size:14.5px;color:var(--mute);margin-bottom:10px}.zone span{font-size:12.5px;font-weight:700;color:var(--green-d)}
 </style>
 <style id="mz-shared">
 .mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
@@ -241,46 +279,304 @@ textarea{min-height:110px;resize:vertical}
 @media(max-width:600px){.wa-float span{display:none}.wa-float{padding:14px}}
 body.has-list .wa-float{bottom:84px}
 </style>
-<style>.mz-cc{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:99px;background:#F2B134;color:#0E2A47;font:700 12px system-ui,sans-serif;vertical-align:middle}@media(min-width:861px) and (max-width:1400px){.mz-nav{gap:12px}.mz-nav a{font-size:14px}}@media(min-width:1241px){.mz-nav a{white-space:nowrap}}.mz-part{text-align:center;color:#6b7c8d;font-size:13px;padding:10px 16px 22px}</style><style>.af{padding:8px 0 56px}.af h2{font-size:clamp(24px,3.6vw,32px);margin:44px 0 12px}.af p{font-size:17px;color:#26384a;margin:0 0 12px;max-width:760px}
-.afcta{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0 4px}.afg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:16px}
-.afc{background:#fff;border:1px solid var(--line,#e3e9e5);border-radius:16px;padding:20px;display:grid;gap:6px;align-content:start}.afc h3{margin:0;font-size:19px}.afc p{font-size:15.5px;margin:0}.afc a{font-weight:700;text-decoration:none}
-.aff{border-top:1px solid var(--line,#e3e9e5);padding:14px 0}.aff h3{margin:0 0 4px;font-size:18px}.aff p{margin:0}
-.afn{background:#0E2A47;color:#fff;border-radius:18px;padding:26px;margin-top:40px}.afn h2{margin:0 0 8px;color:#fff}.afn p{color:#dbe6f2}
-.afl{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:18px}.afl a{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line,#e3e9e5);border-radius:12px;padding:12px 14px;text-decoration:none;font-weight:600;min-height:44px}.afl a small{margin-left:auto;color:#14663f;font-weight:700}
-.afl img{height:18px;width:auto;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}</style>
+<style id="mz-photos">
+.shp{position:relative;margin:0 12px 12px 0;isolation:isolate}
+.shp img{display:block;width:100%;height:100%;object-fit:cover;position:relative;z-index:1;border-radius:inherit}
+.shp::before{content:"";position:absolute;inset:0;border:1.5px solid #D9B25F;border-radius:inherit;transform:translate(12px,12px);z-index:0;pointer-events:none}
+.shp.leaf{border-radius:92px 18px 92px 18px}
+.shp.leaf2{border-radius:18px 92px 18px 92px}
+.shp.arch{border-radius:50% 50% 24px 24px/44% 44% 24px 24px}
+.shp.arch.tall{border-radius:50% 50% 24px 24px/36% 36% 24px 24px}
+.shp.wide{aspect-ratio:16.000/10}
+.shp.tall{aspect-ratio:4.000/5}
+.thumb.ph.shp{margin:12px 24px 4px 12px;height:186px;padding:0;display:block;background:none}
+
+
+.hero{position:relative;color:#fff;background:#0E2A47 url(/img/photos/hero-desk.jpg) no-repeat 78% 16%/cover;isolation:isolate;padding:70px 0 52px;border-radius:0 0 72px 72px;overflow:hidden}
+.hero{background-image:image-set(url(/img/photos/hero-desk.webp) type("image/webp"),url(/img/photos/hero-desk.jpg) type("image/jpeg"))}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(9,26,46,.93) 0%,rgba(9,26,46,.80) 36%,rgba(9,26,46,.30) 68%,rgba(9,26,46,.10) 100%)}
+.hero .wrap{grid-template-columns:1fr;gap:38px}
+.hero h1{color:#fff;max-width:15ch;font-size:clamp(34px,5vw,56px);text-shadow:0 2px 24px rgba(0,0,0,.25)}
+.hero p.lead{color:#e3ebf3;max-width:46ch}
+.hero small{color:#c8d5e2}
+.hero .btn.ghost{color:#fff;border-color:rgba(255,255,255,.8);background:rgba(255,255,255,.06)}
+.hero .btn.ghost:hover{background:#fff;color:#0E2A47}
+.hero .book{box-shadow:0 22px 50px rgba(0,0,0,.35);color:var(--ink)}
+.hero .book h3{color:var(--ink)}
+.hero .book p{color:var(--mute)}
+@media(min-width:960px){
+ .hero{min-height:600px;display:flex;align-items:center}
+ .hero .wrap{width:100%;max-width:1120px;margin:0 auto}
+ .hero .book>*,.hero .book form>*{min-width:0}
+ .hero .book{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 18px;align-items:baseline;padding:20px 24px 22px}
+ .hero .book h3{margin:0 0 12px}
+ .hero .book p{margin:0 0 12px}
+ .hero .book form{grid-column:1/-1;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,.9fr) minmax(0,1.1fr) minmax(0,1.1fr) auto;align-items:end;gap:12px}
+ .hero .book form .two{display:contents}
+ .hero .book form select,.hero .book form input{width:100%;min-width:0}
+ .hero .book form label{font-size:12.5px}
+ .hero .book form .btn{height:46px;padding:0 20px;white-space:nowrap}
+}
+@media(max-width:959px){
+ .hero{background-position:72% 8%;padding:46px 0 40px;border-radius:0 0 40px 40px}
+ .hero::before{background:linear-gradient(180deg,rgba(9,26,46,.84) 0%,rgba(9,26,46,.72) 55%,rgba(9,26,46,.60) 100%)}
+}
+</style>
+<style id="mz-shapes">
+#services .grid,.cat .grid{align-items:start}
+.card:nth-child(even) .thumb.ph.shp.leaf{border-radius:18px 92px 18px 92px}
+.thumb.ph.shp{height:auto}
+.shp.pill{border-radius:999px}
+.shp.oval{border-radius:50%}
+.shp.petal{border-radius:120px 14px 120px 14px}
+.shp.blob{border-radius:62% 38% 56% 44%/52% 46% 54% 48%}
+.shp.tab{border-radius:20px 20px 110px 20px}
+.shp.arch{border-radius:50% 50% 26px 26px/30% 30% 26px 26px}
+</style>
+<style id="mz-anim">
+.shp img{transition:transform 1.1s cubic-bezier(.2,.7,.2,1),filter .6s}
+.shp::before{transition:transform .6s cubic-bezier(.2,.7,.2,1),border-color .6s;animation:mzOutline 5s ease-in-out infinite}
+@keyframes mzOutline{0%,100%{transform:translate(12px,12px)}50%{transform:translate(16px,16px)}}
+.card:hover .shp img{transform:scale(1.07);filter:saturate(1.08)}
+.card:hover .shp::before{animation:none;transform:translate(6px,6px);border-color:#C9962F}
+.shp.rv{opacity:0;transform:translateY(34px) scale(.94);transition:opacity .9s ease,transform 1s cubic-bezier(.2,.7,.2,1)}
+.shp.rv img{transform:scale(1.18)}
+.shp.rv.in{opacity:1;transform:none}
+.shp.rv.in img{transform:scale(1);animation:mzDrift 14s ease-in-out 1.2s infinite alternate}
+.card:hover .shp.rv.in img{animation:none;transform:scale(1.07)}
+@keyframes mzDrift{from{transform:scale(1) translate(0,0)}to{transform:scale(1.06) translate(-1.5%,-1%)}}
+@media(prefers-reduced-motion:reduce){.shp.rv{opacity:1;transform:none;transition:none}.shp.rv img,.shp.rv.in img,.shp::before{animation:none!important;transform:none}}
+</style>
+<style>picture{display:contents;border-radius:inherit}</style><style>.mz-note{background:#0E2A47;color:#fff;text-align:center;font-size:14px;padding:9px 16px}.mz-cc{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:99px;background:#F2B134;color:#0E2A47;font:700 12px system-ui,sans-serif;vertical-align:middle}@media(min-width:861px) and (max-width:1400px){.mz-nav{gap:12px}.mz-nav a{font-size:14px}}@media(min-width:1241px){.mz-nav a{white-space:nowrap}}.mz-part{text-align:center;color:#6b7c8d;font-size:13px;padding:10px 16px 22px}</style>
 </head>
 <body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14zM5 19l8-8"/></symbol>
+    <symbol id="dumb" viewBox="0 0 24 24"><path d="M6 8v8M3 10v4M18 8v8M21 10v4M6 12h12"/></symbol>
+    <symbol id="apple" viewBox="0 0 24 24"><path d="M12 8c-4-2-7 1-6 5s3 7 6 7 5-3 6-7-2-7-6-5zM12 8c0-2 1-3 3-4"/></symbol>
+    <symbol id="drop" viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></symbol>
+    <symbol id="hang" viewBox="0 0 24 24"><path d="M12 8V6.5a2 2 0 1 0-2-2M12 8L3 16h18L12 8z"/></symbol>
+    <symbol id="bowl" viewBox="0 0 24 24"><path d="M3 11h18a9 9 0 0 1-18 0zM8 7c0-1.5 1-2 1-3M13 7c0-1.5 1-2 1-3"/></symbol>
+    <symbol id="gift" viewBox="0 0 24 24"><path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7c-2-4-6-3-5 0M12 7c2-4 6-3 5 0"/></symbol>
+    <symbol id="truck" viewBox="0 0 24 24"><path d="M2 6h11v10H2zM13 9h4l4 4v3h-8zM6 18.5a1.5 1.5 0 1 0 .01 0M17 18.5a1.5 1.5 0 1 0 .01 0"/></symbol>
+    <symbol id="lock" viewBox="0 0 24 24"><path d="M5 11h14v9H5zM8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="check" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM8.5 12l2.5 2.5 4.5-5"/></symbol>
+    <symbol id="chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"/></symbol>
+  </defs>
+</svg>
+
 <header class="mz-header" id="mzHeader">
   <div class="mz-wrap mz-bar">
     <a class="mz-logo" href="/bj/"><img class="mz-mark" src="/img/logo.png" alt="" width="36" height="36">MOZ<span>LYT</span><span class="mz-cc">BJ</span></a>
     <nav class="mz-nav" id="mzNav" aria-label="Main">
-      <a href="/bj/">Home</a>
+      <a href="/bj/" class="mz-cur" aria-current="page">Home</a>
       <a href="/bj/#services">Services</a>
-      <a href="/what-we-do.html">What we do</a>
-      <a href="/shop.html">Shop</a>
-      <a href="/blog.html">Blog</a>
-      <a href="/about.html">About us</a>
-      <span class="mz-ctas"><a class="mz-btn mz-primary" href="/bj/#services">Book a service</a><a class="mz-btn mz-gold" href="/career.html">Take a career with us</a><a class="mz-btn mz-primary" href="/provider.html">Work with us</a></span>
+      <a href="/bj/what-we-do.html">What we do</a>
+      <a href="/bj/shop.html">Shop</a>
+      <a href="/bj/blog.html">Blog</a>
+      <a href="/bj/about.html">About us</a>
+      <span class="mz-ctas"><a class="mz-btn mz-primary" href="/bj/#services">Book a service</a><a class="mz-btn mz-gold" href="/bj/career.html">Take a career with us</a><a class="mz-btn mz-primary" href="/provider.html">Work with us</a></span>
     </nav>
     <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
   </div>
 </header>
-<div class="hero"><div class="wrap"><h1>MOZLYT Benin</h1><p>Wellness, fitness and beauty from MOZLYT, coming to Benin.</p>
-<div class="afcta"><a class="mz-btn mz-primary" href="/seller.html?kind=franchise">Run MOZLYT Benin</a><a class="mz-btn mz-gold" href="https://wa.me/233538729743?text=Hello%20MOZLYT,%20I%20am%20in%20Benin%20and%20I%20want%20to%20know%20more.">Ask about products</a><a class="mz-btn mz-primary" href="/seller.html?kind=shop">Open a shop</a></div></div></div>
-<div class="af"><div class="wrap">
-<h2>MOZLYT in Benin</h2>
-<p>MOZLYT is a wellness, fitness, beauty, fashion and food brand from Accra, Ghana. MOZLYT Benin is the planned home of the brand in Benin, run by a local franchise partner and powered by the MOZLYT platform. This page will show the MOZLYT Benin partner once one is approved.</p>
-<div class="afg">
-<div class="afc"><h3>Products</h3><p>Products can be delivered to other African countries through our logistics partners. Time and fee are confirmed before you pay.</p><a href="https://wa.me/233538729743?text=Hello%20MOZLYT,%20I%20am%20in%20Benin%20and%20I%20want%20to%20know%20more.">Message MOZLYT</a></div>
-<div class="afc"><h3>Run MOZLYT Benin</h3><p>Your own full shop, your own sellers and trainees from Benin, and MOZLYT looks after the technical side. Terms are agreed in writing.</p><a href="/seller.html?kind=franchise">Apply as a franchise partner</a></div>
-<div class="afc"><h3>Open a shop or learn a skill</h3><p>Sell MOZLYT products from your own online shop, or learn a skill with MOZLYT training.</p><a href="/career.html">See careers and training</a></div>
+<div class="mz-note">MOZLYT Benin is opening soon. Services are currently in Accra and Tema, Ghana. Products can be delivered to Benin through our logistics partners; time and fee are confirmed on WhatsApp before you pay.</div>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <h1>Wellness, fitness and beauty, brought to your door.</h1>
+      <p class="lead">One place in Accra to book trusted professionals for massage, fitness, nutrition, skincare and more. Pick a service, message us on WhatsApp, and we send someone to you.</p>
+      <div class="cta">
+        <a class="btn primary" href="#services">Book a service</a>
+        <a class="btn ghost" href="/bj/shop.html">Shop products</a>
+      </div>
+      <small>Services in Accra and Tema. Products delivered across Ghana. Prices on request.</small>
+    </div>
+
+    <div class="book" id="book">
+      <h3>Book in a minute</h3>
+      <p>Choose what you need and when. This opens WhatsApp with your booking ready to send.</p>
+      <form id="bookForm">
+        <label>Service
+          <select id="svc">
+            <option>Shiatsu massage</option>
+            <option>Chair massage</option>
+            <option>Office wellness session</option>
+            <option>Personal fitness coaching</option>
+            <option>Body sculpting programme</option>
+            <option>Group fitness session</option>
+            <option>Nutrition consultation</option>
+            <option>Personalised meal plan</option>
+            <option>Supplement packs</option>
+            <option>Facial treatment</option>
+            <option>Skin consultation</option>
+            <option>Hair and scalp care</option>
+            <option>Personal styling</option>
+            <option>Custom outfit</option>
+            <option>Meal prep</option>
+            <option>Event catering</option>
+            <option>Wellness gift package</option>
+            <option>Gift a massage</option>
+            <option>Home health care</option>
+          </select>
+        </label>
+        <div class="two">
+          <label>Date<input type="date" id="bdate"></label>
+          <label>Time<select id="btime"><option>Morning</option><option>Afternoon</option><option>Evening</option></select></label>
+        </div>
+        <label>Where
+          <select id="bwhere"><option>At my home</option><option>At my office</option></select>
+        </label>
+        <label>Area<input type="text" id="barea" placeholder="e.g. East Legon"></label>
+        <button class="btn primary" type="submit">Book on WhatsApp</button>
+      </form>
+    </div>
+  </div>
 </div>
-<h2>Questions</h2>
-<div class="aff"><h3>Are services available in Benin?</h3><p>MOZLYT services are currently offered in Accra and Tema, Ghana. They start in Benin when a franchise partner and approved providers are in place.</p></div>
-<div class="aff"><h3>Can I order products in Benin?</h3><p>Message MOZLYT on WhatsApp. Delivery time and fee are confirmed before you pay.</p></div>
-<div class="aff"><h3>Where does MOZLYT work today?</h3><p>See <a href="/gh/">MOZLYT Ghana</a>, or <a href="/countries/">choose your country</a>.</p></div>
-<div class="afn"><h2>Talk to MOZLYT</h2><p>WhatsApp 053 872 9743, or email <a style="color:#fff;text-decoration:underline" href="mailto:info@mozlyt.com">info@mozlyt.com</a>.</p><a class="mz-btn mz-gold" href="https://wa.me/233538729743?text=Hello%20MOZLYT,%20I%20am%20in%20Benin%20and%20I%20want%20to%20know%20more.">Message us on WhatsApp</a></div>
-</div></div>
+
+<!-- TRUST STRIP -->
+<div class="trust">
+  <div class="wrap">
+    <div class="tr"><span class="ic"><svg class="i"><use href="#truck"/></svg></span><div><b>We come to you</b><span>Home or office in Accra and Tema</span></div></div>
+    <div class="tr"><span class="ic"><svg class="i"><use href="#lock"/></svg></span><div><b>Clear prices</b><span>We quote before you pay</span></div></div>
+    <div class="tr"><span class="ic"><svg class="i"><use href="#check"/></svg></span><div><b>Verified professionals</b><span>Every booking is managed by MOZLYT</span></div></div>
+    <div class="tr"><span class="ic"><svg class="i"><use href="#chat"/></svg></span><div><b>Help when you need it</b><span>Chat with us on WhatsApp</span></div></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="wrap">
+    <h2>Everything you can book</h2>
+    <p class="sub">All services are booked and paid for through MOZLYT. Choose one and we handle the rest.</p>
+
+    <div class="cat">
+      <div class="cat-h"><span class="ic c1"><svg class="i"><use href="#leaf"/></svg></span><h3>Massage and therapy</h3><a href="/bj/massage-in-accra.html" style="margin-left:auto;font-size:14px;font-weight:700;color:#157650;text-decoration:underline">Massage in Accra &rarr;</a></div>
+      <div class="grid">
+        <div class="card"><div class="thumb ph shp leaf"><picture><source srcset="/img/photos/spa.webp" type="image/webp"><img src="/img/photos/spa.jpg" alt="A calm massage room with candles, where a therapist works on a client's shoulders" width="450" height="338" loading="lazy"></picture></div><div class="cbody"><h4>Shiatsu massage</h4><p>Pressure-point massage to ease pain, tension and stress.</p><div class="meta">Home visit</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Shiatsu massage">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp arch" style="aspect-ratio:1.700"><picture><source srcset="/img/photos/chair.webp" type="image/webp"><img src="/img/photos/chair.jpg" alt="A therapist giving a chair massage to a client leaning on a massage chair" width="900" height="530" loading="lazy"></picture></div><div class="cbody"><h4>Chair massage</h4><p>A seated neck, back and shoulder massage that fits into a busy day.</p><div class="meta">Home or office</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Chair massage">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp leaf2" style="aspect-ratio:1.000"><picture><source srcset="/img/photos/office.webp" type="image/webp"><img src="/img/photos/office.jpg" alt="A therapist using a massage gun on a client's neck while he sits at his office desk" width="900" height="900" loading="lazy"></picture></div><div class="cbody"><h4>Office wellness session</h4><p>Chair massage for your whole team, on site at your workplace.</p><div class="meta">Per session · Office</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Office wellness session">Book</button></div></div></div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-h"><span class="ic c2"><svg class="i"><use href="#dumb"/></svg></span><h3>Fitness</h3></div>
+      <div class="grid">
+        <div class="card"><div class="thumb ph shp leaf"><picture><source srcset="/img/photos/coach.webp" type="image/webp"><img src="/img/photos/coach.jpg" alt="A coach guiding a client through a workout live on a tablet" width="450" height="338" loading="lazy"></picture></div><div class="cbody"><h4>Personal fitness coaching</h4><p>One-to-one sessions built around your goals.</p><div class="meta">Home or outdoors</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Personal fitness coaching">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp blob" style="aspect-ratio:0.800"><picture><source srcset="/img/photos/sculpt.webp" type="image/webp"><img src="/img/photos/sculpt.jpg" alt="Wooden body sculpting and massage tools held in the light" width="640" height="1064" loading="lazy"></picture></div><div class="cbody"><h4>Body sculpting programme</h4><p>A structured multi-week plan with a coach to shape and tone.</p><div class="meta">Programme · Weekly sessions</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Body sculpting programme">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp pill" style="aspect-ratio:1.000"><picture><source srcset="/img/photos/cityfit.webp" type="image/webp"><img src="/img/photos/cityfit.jpg" alt="A group workout on an outdoor field with people running and doing push-ups" width="720" height="720" loading="lazy"></picture></div><div class="cbody"><h4>Group fitness session</h4><p>Train with friends or colleagues, led by a coach.</p><div class="meta">Small groups</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Group fitness session">Book</button></div></div></div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-h"><span class="ic c3"><svg class="i"><use href="#apple"/></svg></span><h3>Nutrition</h3></div>
+      <div class="grid">
+        <div class="card"><div class="thumb ph shp leaf"><picture><source srcset="/img/photos/nutri.webp" type="image/webp"><img src="/img/photos/nutri.jpg" alt="A nutrition adviser going through a meal schedule on a tablet with a client" width="450" height="338" loading="lazy"></picture></div><div class="cbody"><h4>Nutrition consultation</h4><p>Talk through your eating, goals and habits with a nutrition adviser.</p><div class="meta">In person or call</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Nutrition consultation">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp leaf"><picture><source srcset="/img/photos/mealplan.webp" type="image/webp"><img src="/img/photos/mealplan.jpg" alt="Two women looking at a personalised meal plan on a tablet beside a fresh salad" width="450" height="338" loading="lazy"></picture></div><div class="cbody"><h4>Personalised meal plan</h4><p>A weekly eating plan made for you, using food you can find locally.</p><div class="meta">Delivered by WhatsApp or PDF</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Personalised meal plan">Book</button></div></div></div>
+              <div class="card"><div class="thumb ph shp oval" style="aspect-ratio:1.000"><picture><source srcset="/img/photos/supp.webp" type="image/webp"><img src="/img/photos/supp.jpg" alt="A woman holding her morning supplement pack in the kitchen and her evening pack in bed" width="900" height="900" loading="lazy"></picture></div><div class="cbody"><h4>Supplement packs</h4><p>Morning and evening supplement packs chosen for your goals.</p><div class="meta">Delivered</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Supplement packs">Book</button></div></div></div>
+        </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-h"><span class="ic c4"><svg class="i"><use href="#drop"/></svg></span><h3>Skincare and beauty</h3></div>
+      <div class="grid">
+        <div class="card"><div class="thumb ph shp leaf"><picture><source srcset="/img/photos/facial.webp" type="image/webp"><img src="/img/photos/facial.jpg" alt="A therapist applying a facial mask to a client" width="450" height="338" loading="lazy"></picture></div><div class="cbody"><h4>Facial treatment</h4><p>Deep cleansing and care for glowing, healthy skin.</p><div class="meta">Home visit</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Facial treatment">Book</button></div></div></div>
+                <div class="card"><div class="thumb ph shp arch" style="aspect-ratio:0.809"><picture><source srcset="/img/photos/hair.webp" type="image/webp"><img src="/img/photos/hair.jpg" alt="Three scenes of a hair and scalp treatment: a scalp massage, a steam treatment and a client with healthy shiny hair" width="683" height="844" loading="lazy"></picture></div><div class="cbody"><h4>Hair and scalp care</h4><p>Scalp massage, steam and nourishing treatment for stronger, healthier hair.</p><div class="meta">Home visit</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Hair and scalp care">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp oval" style="aspect-ratio:0.800"><picture><source srcset="/img/photos/skin.webp" type="image/webp"><img src="/img/photos/skin.jpg" alt="A skincare specialist examining a client's skin with a light during a consultation" width="720" height="1080" loading="lazy"></picture></div><div class="cbody"><h4>Skin consultation</h4><p>Learn your skin type and get a simple routine to follow.</p><div class="meta">Home visit</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Skin consultation">Book</button></div></div></div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-h"><span class="ic c5"><svg class="i"><use href="#hang"/></svg></span><h3>Fashion</h3></div>
+      <div class="grid">
+        <div class="card"><div class="thumb ph shp petal" style="aspect-ratio:0.800"><picture><source srcset="/img/photos/fashion.webp" type="image/webp"><img src="/img/photos/fashion.jpg" alt="A man and a woman in tailored brown and cream outfits" width="720" height="1080" loading="lazy"></picture></div><div class="cbody"><h4>Personal styling</h4><p>Outfit advice and wardrobe help for work, events and everyday.</p><div class="meta">Per session</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Personal styling">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp tab" style="aspect-ratio:0.800"><picture><source srcset="/img/photos/outfit.webp" type="image/webp"><img src="/img/photos/outfit.jpg" alt="A custom-made tunic and wide trousers in tan with dark brown trim on a mannequin" width="536" height="981" loading="lazy"></picture></div><div class="cbody"><h4>Custom outfit</h4><p>Clothing made to your measurements and style.</p><div class="meta">Made to order</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Custom outfit">Book</button></div></div></div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-h"><span class="ic c6"><svg class="i"><use href="#bowl"/></svg></span><h3>Food</h3></div>
+      <div class="grid">
+        <div class="card"><div class="thumb ph shp tab" style="aspect-ratio:0.800"><picture><source srcset="/img/photos/mealprep.webp" type="image/webp"><img src="/img/photos/mealprep.jpg" alt="A seven-day healthy meal prep chart with breakfast, lunch and dinner boxes" width="720" height="1027" loading="lazy"></picture></div><div class="cbody"><h4>Meal prep</h4><p>Fresh, healthy meals prepared for your week and delivered.</p><div class="meta">Weekly · Delivered</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Meal prep">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp pill" style="aspect-ratio:0.800"><picture><source srcset="/img/photos/catering.webp" type="image/webp"><img src="/img/photos/catering.jpg" alt="A hot buffet of pasta and salads in silver serving trays" width="720" height="975" loading="lazy"></picture></div><div class="cbody"><h4>Event catering</h4><p>Food for birthdays, offices and gatherings of any size.</p><div class="meta">Per event</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Event catering">Book</button></div></div></div>
+      </div>
+    </div>
+
+        <div class="cat">
+      <div class="cat-h"><span class="ic c1"><svg class="i"><use href="#leaf"/></svg></span><h3>Care at home</h3></div>
+      <div class="grid">
+        <div class="card"><div class="thumb ph shp blob" style="aspect-ratio:1.078"><picture><source srcset="/img/photos/homecare.webp" type="image/webp"><img src="/img/photos/homecare.jpg" alt="A caregiver gently holding the hand of an older woman in her living room" width="900" height="835" loading="lazy"></picture></div><div class="cbody"><h4>Home health care</h4><p>Kind, trained care for older family members, right at home.</p><div class="meta">Home visit</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Home health care">Book</button></div></div></div>
+      </div>
+    </div>
+
+    <div class="cat">
+      <div class="cat-h"><span class="ic c7"><svg class="i"><use href="#gift"/></svg></span><h3>Gift packages</h3></div>
+      <div class="grid">
+        <div class="card"><div class="thumb ph shp petal" style="aspect-ratio:1.000"><picture><source srcset="/img/photos/gift.webp" type="image/webp"><img src="/img/photos/gift.jpg" alt="A gift basket with towels, scrub, candle and bath treats" width="720" height="720" loading="lazy"></picture></div><div class="cbody"><h4>Wellness gift package</h4><p>A bundle of services and products, ready to give to someone special.</p><div class="meta">Delivered with a message</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Wellness gift package">Book</button></div></div></div>
+        <div class="card"><div class="thumb ph shp leaf"><picture><source srcset="/img/photos/oil.webp" type="image/webp"><img src="/img/photos/oil.jpg" alt="A relaxing oil massage with rose petals and candles" width="450" height="338" loading="lazy"></picture></div><div class="cbody"><h4>Gift a massage</h4><p>Give a massage session. They choose the day that suits them.</p><div class="meta">Gift voucher</div><div class="crow"><span class="price">Price on request</span><button class="btn primary small" data-svc="Gift a massage">Book</button></div></div></div>
+      </div>
+    </div>
+
+    <p class="note">Prices are given on request. Tap Book on any service and we will send you the price on WhatsApp.</p>
+  </div>
+</section>
+
+<!-- HOW SERVICES WORK -->
+<section id="how" class="white">
+  <div class="wrap">
+    <h2>How a booking works</h2>
+    <p class="sub">You only deal with MOZLYT. We choose the right professional and make sure the job is done well.</p>
+    <div class="steps">
+      <div class="step"><em>Step 1</em><h3>Choose and book</h3><p>Pick a service, a date and a time, and tell us where you are.</p></div>
+      <div class="step"><em>Step 2</em><h3>Get your price</h3><p>We reply on WhatsApp with the price, availability and details. Nothing is paid until you agree.</p></div>
+      <div class="step"><em>Step 3</em><h3>We send a professional</h3><p>MOZLYT assigns a verified professional and confirms the details with you on WhatsApp.</p></div>
+      <div class="step"><em>Step 4</em><h3>Enjoy and rate</h3><p>Your session takes place. Tell us how it went so quality stays high.</p></div>
+    </div>
+    <div class="where" aria-label="Where services happen">
+      <span class="g">At your home</span><span class="y">At your office</span><span>Delivered to you</span>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY -->
+<section id="delivery">
+  <div class="wrap">
+    <h2>Where we serve and deliver</h2>
+    <p class="sub">The delivery fee depends on where you are and what you order. We confirm it with you on WhatsApp before you pay.</p>
+    <div class="zones">
+      <div class="zone"><h3>Accra</h3><p>Home and office services. Product delivery.</p><span>Fee confirmed on WhatsApp</span></div>
+      <div class="zone"><h3>Tema</h3><p>Home and office services. Product delivery.</p><span>Fee confirmed on WhatsApp</span></div>
+      <div class="zone"><h3>Other areas</h3><p>Towns and areas around Accra. Ask us and we will confirm if we can reach you.</p><span>Fee confirmed on WhatsApp</span></div>
+      <div class="zone"><h3>Other regions in Ghana</h3><p>Products can be sent to other regions. Services depend on a professional being near you.</p><span>Fee confirmed on WhatsApp</span></div>
+      <div class="zone"><h3>Across Africa</h3><p>Products can be delivered to other African countries through our logistics partners. In Ghana, see <a href="/gh/">MOZLYT Ghana</a>, or <a href="/countries/">choose your country</a>.</p><span>Time and fee confirmed before you pay</span></div>
+    </div>
+    <a class="btn primary" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20please%20can%20you%20tell%20me%20if%20you%20serve%20or%20deliver%20to%20my%20area%3F%20My%20area%20is%3A%20" target="_blank" rel="noopener">Ask about my area</a>
+  </div>
+</section>
+
+<!-- SHOP + CAREER -->
+<section>
+  <div class="wrap">
+    <div class="nudges">
+      <div class="nudge shop">
+        <h3>Shop wellness products</h3>
+        <p>Fitness gear, skincare and wellness products, delivered to your door.</p>
+        <a class="btn primary" href="/bj/shop.html">Visit the shop</a>
+      </div>
+      <div class="nudge car">
+        <h3>Want to earn with MOZLYT?</h3>
+        <p>Learn a skill (the business basics are free), open your own online shop with a 7-day free trial, or run a MOZLYT franchise in your own city or country.</p>
+        <a class="btn gold" href="/bj/career.html">Take a career with us</a>
+        <a class="btn" href="/provider.html">Work with us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer class="mz-footer">
   <div class="mz-wrap mz-fgrid">
     <div class="mz-fbrand">
@@ -292,29 +588,29 @@ body.has-list .wa-float{bottom:84px}
     <div>
       <h4>Customers</h4>
       <a href="/bj/#services">Book a service</a>
-      <a href="/shop.html">Shop products</a>
-      <a href="/massage-in-accra.html">Massage in Accra</a>
+      <a href="/bj/shop.html">Shop products</a>
+      <a href="/bj/massage-in-accra.html">Massage in Accra</a>
       <a href="/bj/#how">How booking works</a>
       <a href="/bj/#delivery">Delivery areas</a>
       <a href="/pay.html">Pay for an agreed order</a>
     </div>
     <div>
       <h4>Careers</h4>
-      <a href="/career.html">Take a career with us</a>
+      <a href="/bj/career.html">Take a career with us</a>
       <a href="/provider.html">Work with us</a>
-      <a href="/what-we-do.html#skill">Take a skill</a>
-      <a href="/what-we-do.html#sellers">Take a shop</a>
-      <a href="/what-we-do.html#franchise">Franchise</a>
-      <a href="/what-we-do.html">What we do</a>
+      <a href="/bj/what-we-do.html#skill">Take a skill</a>
+      <a href="/bj/what-we-do.html#sellers">Take a shop</a>
+      <a href="/bj/what-we-do.html#franchise">Franchise</a>
+      <a href="/bj/what-we-do.html">What we do</a>
     </div>
     <div>
       <h4>Company</h4>
-      <a href="/about.html">About us</a>
-      <a href="/blog.html">Blog</a>
-      <a href="/about.html#contact">Contact</a>
-      <a href="/privacy.html">Privacy policy</a>
-      <a href="/terms.html">Terms of service</a>
-      <a href="/delivery-returns.html">Delivery &amp; returns</a>
+      <a href="/bj/about.html">About us</a>
+      <a href="/bj/blog.html">Blog</a>
+      <a href="/bj/about.html#contact">Contact</a>
+      <a href="/bj/privacy.html">Privacy policy</a>
+      <a href="/bj/terms.html">Terms of service</a>
+      <a href="/bj/delivery-returns.html">Delivery &amp; returns</a>
       <a href="#" id="installApp" style="display:none;font-weight:700;color:#5FD3A1">Install the MOZLYT app</a>
     </div>
   </div>
@@ -323,13 +619,32 @@ body.has-list .wa-float{bottom:84px}
   </div>
 </footer>
 <p class="mz-part">MOZLYT Benin is part of <a href="/">MOZLYT</a>.</p>
+
 <script>
-(document.getElementById('cform')||document.createElement('i')).addEventListener('submit',function(e){
-  e.preventDefault();
-  var m="Hello MOZLYT, my name is "+document.getElementById('cname').value.trim()+". "+document.getElementById('cmsg').value.trim()+(document.getElementById('cphone').value.trim()?"\nMy number: "+document.getElementById('cphone').value.trim():"");
-  var u='https://wa.me/233538729743?text='+encodeURIComponent(m);var w=window.open(u,'_blank');if(!w){location.href=u}
-});
+(function(){
+  var sel=document.getElementById('svc');
+  document.querySelectorAll('button[data-svc]').forEach(function(b){
+    b.addEventListener('click',function(){
+      sel.value=b.getAttribute('data-svc');
+      document.getElementById('book').scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  });
+  document.getElementById('bookForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var d=document.getElementById('bdate').value,t=document.getElementById('btime').value,w=document.getElementById('bwhere').value,a=document.getElementById('barea').value.trim();
+    var m="Hello MOZLYT, I would like to book: "+sel.value+".\nDate: "+(d||"flexible")+"\nTime: "+t+"\nWhere: "+w+"\nArea: "+(a||"-")+"\n\nPlease send me the price and availability.";
+    var u='https://wa.me/233538729743?text='+encodeURIComponent(m);
+    try{if(window.MZ){MZ.track('Lead',{})}}catch(x){}
+    try{if(window.MZ)MZ.insert('bookings',{service:sel.value,preferred_date:d||null,time_slot:t,place:w,area:a||null,status:'new'}).catch(function(){})}catch(x){}
+    var win=window.open(u,'_blank');if(!win){location.href=u}
+  });
+})();
 </script>
+<script id="mz-anim-js">(function(){var els=[].slice.call(document.querySelectorAll('.shp'));if(!('IntersectionObserver' in window)||!els.length)return;
+els.forEach(function(e){e.classList.add('rv')});
+var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var e=x.target,i=[].indexOf.call(e.closest('.grid')?e.closest('.grid').children:[e],e.closest('.card')||e);e.style.transitionDelay=(Math.max(i,0)*0.12)+'s';e.classList.add('in');io.unobserve(e)}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
+els.forEach(function(e){io.observe(e)});})();</script>
+<script src="/js/mz-api.js" defer></script>
 <script id="mz-shared-js">(function(){var h=document.getElementById('mzHeader');if(!h)return;var b=h.querySelector('.mz-burger');
 function set(o){h.classList.toggle('mz-open',o);b.setAttribute('aria-expanded',o?'true':'false')}
 b.addEventListener('click',function(){set(!h.classList.contains('mz-open'))});
@@ -344,6 +659,16 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
   if(btn)btn.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;btn.style.display='none'})});
   window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
 })();
+</script>
+<script>
+/* Offer visitors the version of MOZLYT for their country. A choice, never an automatic redirect. */
+(function(){try{var p=location.pathname;if(p!=='/'&&p!=='/index.html')return;if(localStorage.getItem('mz-cc-no'))return;
+var tz=(Intl.DateTimeFormat().resolvedOptions().timeZone||'');var map={'Africa/Accra':['gh','Ghana']};var m=map[tz];if(!m)return;
+var b=document.createElement('div');b.setAttribute('role','region');b.setAttribute('aria-label','Choose your country');
+b.style.cssText='background:#0E2A47;color:#fff;font:600 14px system-ui,sans-serif;padding:10px 16px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap';
+b.innerHTML='Visiting from '+m[1]+'? <a href="/'+m[0]+'/" style="background:#F2B134;color:#0E2A47;padding:8px 16px;border-radius:99px;text-decoration:none;font-weight:700">Go to MOZLYT '+m[1]+'</a><button type="button" style="background:none;border:1px solid #5b7490;color:#fff;border-radius:99px;padding:7px 14px;cursor:pointer;font:inherit">Stay here</button>';
+b.querySelector('button').onclick=function(){try{localStorage.setItem('mz-cc-no','1')}catch(e){}b.remove()};
+document.body.insertBefore(b,document.body.firstChild)}catch(e){}})();
 </script>
 <script>try{localStorage.setItem('mz-cc','bj')}catch(e){}</script>
 </body>
