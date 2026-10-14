@@ -332,6 +332,20 @@ body.has-list .wa-float{bottom:84px}
 .shp.tab{border-radius:20px 20px 110px 20px}
 .shp.arch{border-radius:50% 50% 26px 26px/30% 30% 26px 26px}
 </style>
+<style id="mz-anim">
+.shp img{transition:transform 1.1s cubic-bezier(.2,.7,.2,1),filter .6s}
+.shp::before{transition:transform .6s cubic-bezier(.2,.7,.2,1),border-color .6s;animation:mzOutline 5s ease-in-out infinite}
+@keyframes mzOutline{0%,100%{transform:translate(12px,12px)}50%{transform:translate(16px,16px)}}
+.card:hover .shp img{transform:scale(1.07);filter:saturate(1.08)}
+.card:hover .shp::before{animation:none;transform:translate(6px,6px);border-color:#C9962F}
+.shp.rv{opacity:0;transform:translateY(34px) scale(.94);transition:opacity .9s ease,transform 1s cubic-bezier(.2,.7,.2,1)}
+.shp.rv img{transform:scale(1.18)}
+.shp.rv.in{opacity:1;transform:none}
+.shp.rv.in img{transform:scale(1);animation:mzDrift 14s ease-in-out 1.2s infinite alternate}
+.card:hover .shp.rv.in img{animation:none;transform:scale(1.07)}
+@keyframes mzDrift{from{transform:scale(1) translate(0,0)}to{transform:scale(1.06) translate(-1.5%,-1%)}}
+@media(prefers-reduced-motion:reduce){.shp.rv{opacity:1;transform:none;transition:none}.shp.rv img,.shp.rv.in img,.shp::before{animation:none!important;transform:none}}
+</style>
 </head>
 <body>
 
@@ -613,6 +627,10 @@ body.has-list .wa-float{bottom:84px}
   });
 })();
 </script>
+<script id="mz-anim-js">(function(){var els=[].slice.call(document.querySelectorAll('.shp'));if(!('IntersectionObserver' in window)||!els.length)return;
+els.forEach(function(e){e.classList.add('rv')});
+var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var e=x.target,i=[].indexOf.call(e.closest('.grid')?e.closest('.grid').children:[e],e.closest('.card')||e);e.style.transitionDelay=(Math.max(i,0)*0.12)+'s';e.classList.add('in');io.unobserve(e)}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
+els.forEach(function(e){io.observe(e)});})();</script>
 <script src="js/mz-api.js" defer></script>
 <script id="mz-shared-js">(function(){var h=document.getElementById('mzHeader');if(!h)return;var b=h.querySelector('.mz-burger');
 function set(o){h.classList.toggle('mz-open',o);b.setAttribute('aria-expanded',o?'true':'false')}
