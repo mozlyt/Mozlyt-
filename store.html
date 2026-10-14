@@ -154,7 +154,7 @@ textarea{min-height:110px;resize:vertical}
 @media(max-width:600px){.wa-float span{display:none}.wa-float{padding:14px}}
 body.has-list .wa-float{bottom:84px}
 </style>
-
+<link rel="preconnect" href="https://ziaoopnwhmmrtnmeotia.supabase.co" crossorigin>
 <style id="mz-dash">
 .btn[disabled],button.btn:disabled{background:#c9d1cc!important;border-color:#c9d1cc!important;color:#fff!important;cursor:not-allowed;opacity:1;box-shadow:none}
 .need{color:#b3261e;font-weight:700;font-size:14.5px}
@@ -356,12 +356,13 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function cats(){var c=['All categories'].concat(STORE.products.map(function(p){return p.category}).filter(function(x,i,a){return a.indexOf(x)===i}));$('#cat').innerHTML=c.map(function(x){return'<option>'+esc(x)+'</option>'}).join('')}
   function draw(){var q=$('#q').value.toLowerCase().trim(),c=$('#cat').value;
     var list=STORE.products.filter(function(p){return(c==='All categories'||p.category===c)&&(!q||p.name.toLowerCase().indexOf(q)>-1)});
-    $('#grid').innerHTML=list.map(function(p){return'<div class="pc"><div class="ph" data-v="'+p.id+'">'+(p.photo?'<img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(p.photo)+'">':'Photo coming soon')+'</div><div class="b"><h4 data-v="'+p.id+'">'+esc(p.name)+'</h4><div class="price">'+MZ.money(p.price)+'</div>'+(p.sold_out?'<span class="tag bad">Sold out</span>':'<button class="b2" data-id="'+p.id+'">Add to cart</button>')+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">'+(STORE.products.length?'No products match.':'This store is getting ready. Please check back soon.')+'</div>';
+    $('#grid').innerHTML=list.map(function(p){return'<div class="pc"><div class="ph" data-v="'+p.id+'">'+(p.photo?'<img loading="lazy" decoding="async" alt="'+esc(p.name)+'" src="'+esc(WP(p.photo))+'" data-o="'+esc(p.photo)+'" onerror="if(this.dataset.o&&this.src.indexOf(this.dataset.o)<0){this.src=this.dataset.o}">':'Photo coming soon')+'</div><div class="b"><h4 data-v="'+p.id+'">'+esc(p.name)+'</h4><div class="price">'+MZ.money(p.price)+'</div>'+(p.sold_out?'<span class="tag bad">Sold out</span>':'<button class="b2" data-id="'+p.id+'">Add to cart</button>')+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">'+(STORE.products.length?'No products match.':'This store is getting ready. Please check back soon.')+'</div>';
     $$('#grid [data-id]').forEach(function(b){b.onclick=function(){addCart(b.dataset.id)}});
     $$('#grid [data-v]').forEach(function(b){b.onclick=function(){openProd(b.dataset.v)}});
   }
   function addCart(id){CART[id]=(CART[id]||0)+1;save();flash('Added to cart');var pp=prod(id);MZ.track('AddToCart',{value:pp?pp.price:0,name:pp?pp.name:''})}
-  function openProd(id){var p=prod(id);if(!p)return;$('#pimg').innerHTML=p.photo?'<img alt="'+esc(p.name)+'" src="'+esc(p.photo)+'">':'<span style="color:#5b6b62;padding:40px">Photo coming soon</span>';$('#pname').textContent=p.name;$('#pprice').textContent=MZ.money(p.price);$('#pdesc').textContent=p.description||'No description yet.';
+  function WP(u){return /^img\/p\/[^?]+\.jpg$/.test(u||'')?u.slice(0,-4)+'.webp':u}
+  function openProd(id){var p=prod(id);if(!p)return;$('#pimg').innerHTML=p.photo?'<img alt="'+esc(p.name)+'" src="'+esc(WP(p.photo))+'" data-o="'+esc(p.photo)+'" onerror="if(this.dataset.o&&this.src.indexOf(this.dataset.o)<0){this.src=this.dataset.o}">':'<span style="color:#5b6b62;padding:40px">Photo coming soon</span>';$('#pname').textContent=p.name;$('#pprice').textContent=MZ.money(p.price);$('#pdesc').textContent=p.description||'No description yet.';
     $('#pact').innerHTML=p.sold_out?'<span class="tag bad">Sold out</span>':'<button class="btn primary" type="button" id="pAdd" style="width:100%">Add to cart</button>';var a=$('#pAdd');if(a)a.onclick=function(){addCart(id);$('#pmod').hidden=true};$('#pmod').hidden=false}
   $('#px').onclick=$('#pbg').onclick=function(){$('#pmod').hidden=true};document.addEventListener('keydown',function(e){if(e.key==='Escape')$('#pmod').hidden=true});
   $('#q').addEventListener('input',draw);$('#cat').addEventListener('change',draw);
