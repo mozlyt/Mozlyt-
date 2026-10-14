@@ -209,6 +209,11 @@ body.has-list .wa-float{bottom:84px}
 .steps3{display:grid;gap:10px;margin:0;padding:0;list-style:none}.steps3 li{padding-left:34px;position:relative}
 .steps3 li:before{content:attr(data-n);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-weight:700;font-size:13px;display:grid;place-items:center}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:99px;font-size:14.5px;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.bar{height:8px;border-radius:99px;background:#e3ebe6;overflow:hidden}.bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+.lsn{display:flex;gap:10px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;text-align:left;width:100%;font:inherit;color:var(--ink)}
+.lsn .ck{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #cfd8d2;display:grid;place-items:center;font-size:13px;color:#fff}.lsn.done .ck{background:var(--green);border-color:var(--green)}
+.lbody{white-space:pre-wrap;line-height:1.65;font-size:16px}.vid{position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#000;margin:0 0 14px}.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.f textarea{min-height:110px}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -276,7 +281,7 @@ body.has-list .wa-float{bottom:84px}
   <div class="linkcard"><span>Your store link</span><code id="storeUrl"></code>
     <button class="b" type="button" id="cpUrl">Copy</button><a class="b" id="openUrl" target="_blank" rel="noopener">Open</a><a class="b" id="shareUrl" target="_blank" rel="noopener">Share on WhatsApp</a></div>
   <div class="tabs" id="dtabs">
-    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
+    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="learn">Training</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
   </div>
 
   <div id="pane-over">
@@ -291,6 +296,8 @@ body.has-list .wa-float{bottom:84px}
     <div class="tools"><input id="pq" type="search" placeholder="Search products"><select id="pcat"></select><select id="pview"><option value="all">All products</option><option value="mine">Only my store</option></select></div>
     <div class="grid3" id="pgrid"></div>
   </div>
+
+  <div id="pane-learn" hidden><div id="learnBox"></div></div>
 
   <div id="pane-ord" hidden><div class="lst" id="ordList"></div></div>
 
@@ -363,7 +370,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){ME=null;show('dashView',false);show('authView',true);view('fLogin')})};
 
   /* ----- tabs ----- */
-  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','prod','ord','set','acc'].forEach(function(t){show('pane-'+t,t===b.dataset.t)})}});
+  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','prod','ord','learn','set','acc'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='learn')loadTrain()}});
 
   /* ----- load everything ----- */
   function boot(){
@@ -417,6 +424,31 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       (wa?'<div><a class="b2 ghost" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="'+wa+'">WhatsApp '+esc(o.customer_phone)+'</a></div>':'')+'</div>'}
   function bindOrders(root){$$('.it select',root).forEach(function(s){s.onchange=function(){var id=Number(s.closest('.it').dataset.id),v=s.value;MZ.update('orders','id=eq.'+id,{status:v}).then(function(){ORDERS.forEach(function(o){if(o.id===id)o.status=v});flash('Order updated');drawOver()},function(er){flash(er.message)})}})}
   function drawOrders(){$('#ordList').innerHTML=ORDERS.map(orderRow).join('')||'<div class="empty">No orders yet.</div>';bindOrders($('#ordList'))}
+
+
+  /* ----- training ----- */
+  var TR=null;
+  function loadTrain(){var box=$('#learnBox');if(TR){drawTrain();return}
+    box.innerHTML='<div class="empty">Loading lessons...</div>';
+    Promise.all([MZ.q('courses','select=*&order=sort,id'),MZ.q('lessons','select=*&order=course_id,sort,id'),MZ.q('lesson_progress','select=lesson_id')]).then(function(r){TR={c:r[0],l:r[1],p:{},course:null,lesson:null};r[2].forEach(function(x){TR.p[x.lesson_id]=1});drawTrain()},function(er){box.innerHTML='<div class="msg err">'+esc(er.message)+'</div>'})}
+  function lessonsOf(cid){return TR.l.filter(function(l){return l.course_id===cid})}
+  function doneOf(cid){return lessonsOf(cid).filter(function(l){return TR.p[l.id]}).length}
+  function embed(u){var m=/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{6,15})/.exec(u||'');return m?'https://www.youtube.com/embed/'+m[1]:''}
+  function drawTrain(){var box=$('#learnBox');
+    if(TR.lesson){var L=TR.l.filter(function(x){return x.id===TR.lesson})[0],all=lessonsOf(L.course_id),i=all.indexOf(L),nx=all[i+1],done=!!TR.p[L.id],em=embed(L.video_url);
+      box.innerHTML='<button class="linkbtn" id="bk" type="button">&larr; Back to lessons</button><div class="card2" style="margin-top:12px"><p class="sub" style="margin:0 0 6px">Lesson '+(i+1)+' of '+all.length+'</p><h2 style="margin:0 0 14px;font-size:24px">'+esc(L.title)+'</h2>'+
+        (em?'<div class="vid"><iframe src="'+em+'" allowfullscreen loading="lazy" title="Lesson video"></iframe></div>':(L.video_url?'<p><a class="btn ghost" target="_blank" rel="noopener" href="'+esc(L.video_url)+'">Watch the video</a></p>':''))+
+        '<div class="lbody">'+esc(L.body||'')+'</div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><button class="btn primary" id="mk" type="button">'+(done?'Completed (tap to undo)':'Mark as complete')+'</button>'+(nx?'<button class="btn ghost" id="nx" type="button">Next lesson</button>':'')+'</div></div>';
+      $('#bk').onclick=function(){TR.lesson=null;drawTrain()};
+      $('#mk').onclick=function(){var b=this;busy(b,true,'Saving...');(done?MZ.remove('lesson_progress','lesson_id=eq.'+L.id+'&user_id=eq.'+ME.id):MZ.insert('lesson_progress',{user_id:ME.id,lesson_id:L.id})).then(function(){if(done)delete TR.p[L.id];else TR.p[L.id]=1;if(!done&&nx){TR.lesson=nx.id}drawTrain();flash(done?'Marked as not done':'Well done!')},function(er){busy(b,false);flash(er.message)})};
+      if(nx)$('#nx').onclick=function(){TR.lesson=nx.id;drawTrain();window.scrollTo(0,0)};return}
+    if(TR.course){var C=TR.c.filter(function(x){return x.id===TR.course})[0],ls=lessonsOf(C.id);
+      box.innerHTML='<button class="linkbtn" id="bk" type="button">&larr; All courses</button><h2 style="margin:12px 0 4px;font-size:24px">'+esc(C.title)+'</h2><p class="sub">'+esc(C.summary||'')+'</p><div class="bar" style="margin-bottom:14px"><i style="width:'+(ls.length?Math.round(doneOf(C.id)/ls.length*100):0)+'%"></i></div><div class="lst">'+
+        (ls.map(function(l,i){return'<button class="lsn'+(TR.p[l.id]?' done':'')+'" data-id="'+l.id+'" type="button"><span class="ck">'+(TR.p[l.id]?'&#10003;':'')+'</span><span><b>'+(i+1)+'. '+esc(l.title)+'</b></span></button>'}).join('')||'<div class="empty">Lessons are coming soon.</div>')+'</div>';
+      $('#bk').onclick=function(){TR.course=null;drawTrain()};$$('.lsn',box).forEach(function(b){b.onclick=function(){TR.lesson=Number(b.dataset.id);drawTrain();window.scrollTo(0,0)}});return}
+    box.innerHTML='<h2 style="margin:0 0 4px;font-size:24px">Training</h2><p class="sub">Short lessons to help you sell with confidence. Finish them at your own pace.</p><div class="lst">'+
+      (TR.c.map(function(c){var n=lessonsOf(c.id).length,d=doneOf(c.id);return'<div class="it"><b style="font-size:17px">'+esc(c.title)+'</b><div class="m">'+esc(c.summary||'')+'</div><div class="bar"><i style="width:'+(n?Math.round(d/n*100):0)+'%"></i></div><div class="h"><span class="m">'+d+' of '+n+' lessons done</span><button class="b2" data-id="'+c.id+'" type="button">'+(d?(d>=n&&n?'Review':'Continue'):'Start')+'</button></div></div>'}).join('')||'<div class="empty">New courses are coming soon.</div>')+'</div>';
+    $$('#learnBox [data-id]').forEach(function(b){b.onclick=function(){TR.course=Number(b.dataset.id);drawTrain()}})}
 
   /* ----- settings ----- */
   $('#fSet').onsubmit=function(e){e.preventDefault();var b=$('button',this);busy(b,true,'Saving...');
