@@ -665,7 +665,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var T=[['standard','Standard',BILL.monthly_price,BILL.yearly_price,['Your store link','Unlimited products and orders','Business training lessons']],['plus','Plus',BILL.plus_monthly,BILL.plus_yearly,['Everything in Standard','Ad tracking: Facebook, Instagram and TikTok']],['premium','Premium',BILL.premium_monthly,BILL.premium_yearly,['Everything in Plus','Your own custom address, like www.yourbrand.com','One skill of your choice, free']]];
     var cur=ME.tier||'standard',live2=daysLeft()>0;
     if(ME.franchise){$('#plans').innerHTML='';$('#trainPlans').innerHTML='';$('#trHead').hidden=true;$('#trSub').hidden=true;$('#fPayBox').hidden=true;$('#payList').innerHTML=payRows();return}
-    $('#fPayBox').hidden=false;
+    $('#fPayBox').hidden=false;try{var pn=$('#payNow');if(pn)pn.hidden=!!ME.franchise_id}catch(e){}
     var lockedSk=SKILLS.filter(function(k){return !hasSk(k[0])});
     if(!SKSEL||hasSk(SKSEL))SKSEL=lockedSk.length?lockedSk[0][0]:'';
     if(TIER==='tr-basic'&&hasBiz())TIER='standard';if(TIER==='tr-pro'&&allSk())TIER='standard';if(TIER==='tr-skill'&&!lockedSk.length)TIER='standard';
