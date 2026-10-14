@@ -159,7 +159,9 @@ body.has-list .wa-float{bottom:84px}
 <style id="mz-dash">
 .btn[disabled],button.btn:disabled{background:#c9d1cc!important;border-color:#c9d1cc!important;color:#fff!important;cursor:not-allowed;opacity:1;box-shadow:none}
 .need{color:#b3261e;font-weight:700;font-size:14.5px}
-.miss{outline:2px solid #b3261e;outline-offset:2px;border-radius:10px}
+.miss{outline:2px solid #b3261e;outline-offset:3px;border-radius:10px}
+.miss::after{content:"Please fill this in";display:block;width:100%;color:#b3261e;font-size:13px;font-weight:700;margin-top:5px}
+.miss>input,.miss>select,.miss>textarea{border-color:#b3261e!important;background:#fff6f5}
 .dash{padding:26px 0 60px;min-height:70vh}
 .dash h1{font-size:clamp(26px,4.6vw,38px);margin:0 0 6px}
 .dash .sub{color:var(--mute);margin:0 0 20px;font-size:16px}
@@ -359,7 +361,7 @@ body.has-list .wa-float{bottom:84px}
         <li>My first 7 days are free after approval. After that I pay the franchise fee (<span id="faFee">GH&#8373;1,000 a month</span>) on time, or my branch is paused.</li>
         <li>MOZLYT keeps my documents private and uses them only to verify me. I understand they are read by an automated AI checker, and a person at MOZLYT may also review them.</li></ol>
     </div>
-    <label style="display:flex;gap:10px;align-items:flex-start"><input id="faAgree" type="checkbox" style="margin-top:4px"><span>I have read and I agree to the MOZLYT franchise terms.</span></label>
+    <label style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start"><input id="faAgree" type="checkbox" style="margin-top:4px"><span>I have read and I agree to the MOZLYT franchise terms.</span></label>
     <button class="btn primary" type="submit" id="faBtn" disabled>Send my application</button>
     <small id="faNeed"></small>
   </form>
@@ -484,6 +486,7 @@ function esc(s){return MZ.esc(s)}
 var MZC="GH Ghana|NG Nigeria|BJ Benin|BF Burkina Faso|CM Cameroon|CV Cabo Verde|TD Chad|CI Cote d'Ivoire|GM Gambia|GN Guinea|GW Guinea-Bissau|LR Liberia|ML Mali|NE Niger|SN Senegal|SL Sierra Leone|TG Togo|AO Angola|BW Botswana|CD DR Congo|CG Congo|EG Egypt|ET Ethiopia|GA Gabon|KE Kenya|MW Malawi|MZ Mozambique|NA Namibia|RW Rwanda|ZA South Africa|TZ Tanzania|UG Uganda|ZM Zambia|ZW Zimbabwe|MA Morocco|DZ Algeria|TN Tunisia|GB United Kingdom|US United States|CA Canada|DE Germany|FR France|NL Netherlands|IT Italy|ES Spain|AE United Arab Emirates|IN India|BR Brazil|JM Jamaica|TT Trinidad and Tobago".split('|').map(function(x){return{c:x.slice(0,2),n:x.slice(3)}});
 function mzCountry(c){c=String(c||'').toUpperCase();return MZC.filter(function(x){return x.c===c})[0]||null}
 function mzFlag(c,h){var k=mzCountry(c);return k?'<img alt="" src="https://flagcdn.com/w40/'+k.c.toLowerCase()+'.png" style="height:'+(h||22)+'px;width:auto;vertical-align:-4px;border-radius:3px;margin-right:8px;box-shadow:0 0 0 1px rgba(0,0,0,.12)">':''}
+function markMiss(ids){$$('.miss').forEach(function(e){e.classList.remove('miss')});ids.forEach(function(id){var e=document.getElementById(id);if(!e)return;(e.closest('label')||e).classList.add('miss')})}
 function pwEye(){document.querySelectorAll('input[type=password]').forEach(function(i){if(i.dataset.eye)return;i.dataset.eye='1';var w=document.createElement('span');w.style.cssText='position:relative;display:block';i.parentNode.insertBefore(w,i);w.appendChild(i);i.style.paddingRight='64px';var b=document.createElement('button');b.type='button';b.textContent='Show';b.setAttribute('aria-label','Show password');b.style.cssText='position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:#14663f;font-weight:700;font-size:13px;padding:8px;cursor:pointer';b.onclick=function(){var h=i.type==='password';i.type=h?'text':'password';b.textContent=h?'Hide':'Show';b.setAttribute('aria-label',h?'Hide password':'Show password')};w.appendChild(b)})}
 pwEye();
 function show(id,on){var e=$('#'+id);if(e)e.hidden=!on}
@@ -550,8 +553,8 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       return MZ.rpc('submit_franchise_application_v3',{p_name:ME.full_name||'',p_phone:$('#faPhone').value.replace(/[^\d+]/g,''),p_location:$('#faLoc').value.trim(),p_country:$('#faCountry').value,p_message:$('#faMsg').value.trim(),p_id_path:p[0],p_cert_path:p[1],p_terms:true,p_cert_type:$('#faCertType').value})}).then(function(id){
       b.textContent='Checking your documents...';
       return MZ.fn('review-franchise',{application_id:id}).catch(function(){return {auto:false}})}).then(function(r){if(r&&r.auto){try{localStorage.removeItem('mz-fran')}catch(x){}location.replace('franchise.html');return}showFran()},function(er){note(n,'err',er.message)}).then(function(){busy(b,false)})}
-  function faCheck(){var miss=[];if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)miss.push('your WhatsApp number');if(!$('#faCountry').value)miss.push('your country');if(!$('#faId').files[0])miss.push('your ID card');if(!$('#faCertType').value)miss.push('the certificate type');if(!$('#faCert').files[0])miss.push('your certificate');if(!$('#faAgree').checked)miss.push('agreeing to the terms');
-    $('#faBtn').disabled=miss.length>0;$('#faNeed').textContent=miss.length?'Still needed: '+miss.join(', ')+'.':'Everything is ready.'}
+  function faCheck(){var miss=[],ids=[];function m(t,id){miss.push(t);ids.push(id)}if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)m('your WhatsApp number','faPhone');if(!$('#faCountry').value)m('your country','faCountry');if(!$('#faId').files[0])m('your ID card','faId');if(!$('#faCertType').value)m('the certificate type','faCertType');if(!$('#faCert').files[0])m('your certificate','faCert');if(!$('#faAgree').checked)m('agreeing to the terms','faAgree');
+    markMiss(ids);$('#faBtn').disabled=miss.length>0;$('#faNeed').textContent=miss.length?'Still needed: '+miss.join(', ')+'.':'Everything is ready.';$('#faNeed').style.color=miss.length?'#b3261e':'#14663f'}
   ['faPhone','faCountry','faId','faCert','faAgree','faCertType'].forEach(function(i){var e=$('#'+i);e.addEventListener('input',faCheck);e.addEventListener('change',faCheck)});
   $('#faCountry').innerHTML='<option value="">Select your country</option>'+MZC.map(function(k){return'<option value="'+k.c+'">'+esc(k.n)+'</option>'}).join('');
   $('#fFa').onsubmit=sendFran;
