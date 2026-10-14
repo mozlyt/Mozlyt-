@@ -277,6 +277,7 @@ body.has-list .wa-float{bottom:84px}
 </section>
 </div></main>
 
+<div class="pmod" id="pmod" hidden role="dialog" aria-modal="true"><div class="pbg" id="pbg"></div><div class="pbox"><button type="button" class="px" id="px" aria-label="Close">&times;</button><div class="pimg" id="pimg"></div><div class="pbody"><h3 id="pname"></h3><div class="price" id="pprice"></div><p id="pdesc"></p><div id="pact"></div></div></div></div>
 <div class="drawer" id="drawer" hidden><div class="dbg" id="dbg"></div><div class="dpanel">
   <div class="top2" style="margin:0 0 10px"><h3 style="margin:0">Your cart</h3><button class="b2 ghost" id="dclose" type="button">Close</button></div>
   <div id="clines"></div><div id="ctotal" style="font-weight:700;margin:10px 0"></div>
@@ -292,6 +293,13 @@ body.has-list .wa-float{bottom:84px}
 </div></div>
 
 <style>
+.pc .ph,.pc h4{cursor:pointer}
+.pmod{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:14px}.pmod[hidden]{display:none}.pbg{position:absolute;inset:0;background:rgba(10,20,15,.6)}
+.pbox{position:relative;background:#fff;border-radius:16px;max-width:520px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.pimg{background:#eef3ef;display:grid;place-items:center;min-height:200px}.pimg img{width:100%;max-height:60vh;object-fit:contain;display:block}
+.pbody{padding:16px;display:grid;gap:8px}.pbody h3{margin:0;font-size:20px}.pbody p{margin:0;color:var(--mute,#5b6b62);white-space:pre-wrap;line-height:1.5}
+.px{position:absolute;top:8px;right:8px;z-index:2;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.92);font-size:24px;line-height:1;cursor:pointer}
+
 .sh{background:#0E2A47;color:#fff;position:sticky;top:0;z-index:20}.sbar{display:flex;justify-content:space-between;align-items:center;padding-top:12px;padding-bottom:12px}
 .sname{color:#fff;font:700 20px Georgia,serif;text-decoration:none}.cartbtn{background:#F2B134;color:#0E2A47;border:0;border-radius:99px;padding:9px 16px;font:700 14.5px inherit;font-family:inherit;cursor:pointer}
 .cartbtn b{background:#0E2A47;color:#fff;border-radius:99px;padding:1px 8px;margin-left:4px}
@@ -342,8 +350,14 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function cats(){var c=['All categories'].concat(STORE.products.map(function(p){return p.category}).filter(function(x,i,a){return a.indexOf(x)===i}));$('#cat').innerHTML=c.map(function(x){return'<option>'+esc(x)+'</option>'}).join('')}
   function draw(){var q=$('#q').value.toLowerCase().trim(),c=$('#cat').value;
     var list=STORE.products.filter(function(p){return(c==='All categories'||p.category===c)&&(!q||p.name.toLowerCase().indexOf(q)>-1)});
-    $('#grid').innerHTML=list.map(function(p){return'<div class="pc"><div class="ph">'+(p.photo?'<img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(p.photo)+'">':'Photo coming soon')+'</div><div class="b"><h4>'+esc(p.name)+'</h4><div class="price">'+MZ.money(p.price)+'</div>'+(p.sold_out?'<span class="tag bad">Sold out</span>':'<button class="b2" data-id="'+p.id+'">Add to cart</button>')+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">'+(STORE.products.length?'No products match.':'This store is getting ready. Please check back soon.')+'</div>';
-    $$('#grid [data-id]').forEach(function(b){b.onclick=function(){var id=b.dataset.id;CART[id]=(CART[id]||0)+1;save();flash('Added to cart');var pp=prod(id);MZ.track('AddToCart',{value:pp?pp.price:0,name:pp?pp.name:''})}})}
+    $('#grid').innerHTML=list.map(function(p){return'<div class="pc"><div class="ph" data-v="'+p.id+'">'+(p.photo?'<img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(p.photo)+'">':'Photo coming soon')+'</div><div class="b"><h4 data-v="'+p.id+'">'+esc(p.name)+'</h4><div class="price">'+MZ.money(p.price)+'</div>'+(p.sold_out?'<span class="tag bad">Sold out</span>':'<button class="b2" data-id="'+p.id+'">Add to cart</button>')+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">'+(STORE.products.length?'No products match.':'This store is getting ready. Please check back soon.')+'</div>';
+    $$('#grid [data-id]').forEach(function(b){b.onclick=function(){addCart(b.dataset.id)}});
+    $$('#grid [data-v]').forEach(function(b){b.onclick=function(){openProd(b.dataset.v)}});
+  }
+  function addCart(id){CART[id]=(CART[id]||0)+1;save();flash('Added to cart');var pp=prod(id);MZ.track('AddToCart',{value:pp?pp.price:0,name:pp?pp.name:''})}
+  function openProd(id){var p=prod(id);if(!p)return;$('#pimg').innerHTML=p.photo?'<img alt="'+esc(p.name)+'" src="'+esc(p.photo)+'">':'<span style="color:#5b6b62;padding:40px">Photo coming soon</span>';$('#pname').textContent=p.name;$('#pprice').textContent=MZ.money(p.price);$('#pdesc').textContent=p.description||'No description yet.';
+    $('#pact').innerHTML=p.sold_out?'<span class="tag bad">Sold out</span>':'<button class="btn primary" type="button" id="pAdd" style="width:100%">Add to cart</button>';var a=$('#pAdd');if(a)a.onclick=function(){addCart(id);$('#pmod').hidden=true};$('#pmod').hidden=false}
+  $('#px').onclick=$('#pbg').onclick=function(){$('#pmod').hidden=true};document.addEventListener('keydown',function(e){if(e.key==='Escape')$('#pmod').hidden=true});
   $('#q').addEventListener('input',draw);$('#cat').addEventListener('change',draw);
 
   function save(){try{localStorage.setItem(KEY+slug,JSON.stringify(CART))}catch(e){}cartDraw()}
