@@ -326,8 +326,20 @@ body.has-list .wa-float{bottom:84px}
     <p class="sub" style="margin-bottom:12px">Paste MOZLYT's own Pixel IDs. They load on the main site (home, shop, career) and report visits and bookings to your ad accounts.</p>
     <form id="fPx" class="f"><label>Facebook / Instagram Pixel ID<input id="px1" inputmode="numeric" placeholder="e.g. 123456789012345"></label><label>TikTok Pixel ID<input id="px2" placeholder="e.g. C9ABCDEF1234567890"></label><button class="btn primary" type="submit">Save</button></form></div></div>
   <div id="pane-prod" hidden>
-    <p class="sub">Set wholesale prices (what sellers pay you) and suggested retail prices. Sellers see wholesale prices.</p>
-    <div class="tools"><input id="pq" type="search" placeholder="Search products"><select id="pcat"></select></div>
+    <p class="sub">Add new products, edit them or delete them here. Only admins can add products. Sellers can only pick from this list and set their own selling price.</p>
+    <div class="tools"><input id="pq" type="search" placeholder="Search products"><select id="pcat"></select><button class="btn primary" id="pAdd" type="button">+ Add product</button></div>
+    <div class="card2" id="pForm" hidden><h3 id="pfTitle" style="margin:0 0 8px">Add product</h3>
+      <form id="fProd" class="f">
+        <label>Product name<input id="pfName" maxlength="140" required></label>
+        <label>Category<input id="pfCat" maxlength="80" list="pfCats" required placeholder="Choose or type a new one"><datalist id="pfCats"></datalist></label>
+        <label>Description (optional)<textarea id="pfDesc" rows="3" maxlength="1000"></textarea></label>
+        <label>Wholesale price GH₵ (what sellers pay MOZLYT)<input id="pfW" type="number" min="0" step="0.01" required></label>
+        <label>Suggested retail price GH₵<input id="pfS" type="number" min="0" step="0.01"></label>
+        <label>Status<select id="pfSt"><option>available</option><option>sold out</option></select></label>
+        <label>Photo (JPG, PNG or WebP, under 5 MB)<input id="pfPhoto" type="file" accept="image/jpeg,image/png,image/webp"></label>
+        <div id="pfPrev" class="sub"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit" id="pfSave">Save product</button><button class="btn" type="button" id="pfCancel">Cancel</button></div>
+      </form></div>
     <div class="scroll"><table class="tbl" id="prodTbl"></table></div>
   </div>
 </section>
@@ -444,9 +456,23 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function prods(){var cats=['All categories'].concat(PROD.map(function(p){return p.category}).filter(function(c,i,a){return a.indexOf(c)===i}));var sel=$('#pcat'),cur=sel.value||'All categories';sel.innerHTML=cats.map(function(c){return'<option'+(c===cur?' selected':'')+'>'+esc(c)+'</option>'}).join('');
     var q=$('#pq').value.toLowerCase().trim();
     $('#prodTbl').innerHTML='<tr><th>Product</th><th>Category</th><th>Wholesale GH₵</th><th>Suggested retail GH₵</th><th>Status</th><th></th></tr>'+PROD.filter(function(p){return(sel.value==='All categories'||p.category===sel.value)&&(!q||p.name.toLowerCase().indexOf(q)>-1)}).map(function(p){
-      return'<tr data-id="'+p.id+'"><td>'+esc(p.name)+'</td><td>'+esc(p.category)+'</td><td><input data-k="w" type="number" min="0" step="0.01" value="'+esc(p.wholesale_price==null?'':p.wholesale_price)+'"></td><td><input data-k="s" type="number" min="0" step="0.01" value="'+esc(p.suggested_price==null?'':p.suggested_price)+'"></td><td><select data-k="st"><option'+(p.status==='available'?' selected':'')+'>available</option><option'+(p.status==='sold out'?' selected':'')+'>sold out</option></select></td><td><button class="b2">Save</button></td></tr>'}).join('');
-    $$('#prodTbl tr[data-id]').forEach(function(tr){$('button',tr).onclick=function(){var id=Number(tr.dataset.id),w=$('[data-k=w]',tr).value,s=$('[data-k=s]',tr).value;
+      return'<tr data-id="'+p.id+'"><td>'+(p.photo?'<img alt="" src="'+esc(p.photo)+'" style="width:36px;height:36px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px">':'')+esc(p.name)+'</td><td>'+esc(p.category)+'</td><td><input data-k="w" type="number" min="0" step="0.01" value="'+esc(p.wholesale_price==null?'':p.wholesale_price)+'"></td><td><input data-k="s" type="number" min="0" step="0.01" value="'+esc(p.suggested_price==null?'':p.suggested_price)+'"></td><td><select data-k="st"><option'+(p.status==='available'?' selected':'')+'>available</option><option'+(p.status==='sold out'?' selected':'')+'>sold out</option></select></td><td><button class="b2" data-a="save">Save</button> <button class="b2 ghost" data-a="edit">Edit</button> <button class="b2 ghost" data-a="del">Delete</button></td></tr>'}).join('');
+    $$('#prodTbl tr[data-id]').forEach(function(tr){$('[data-a=edit]',tr).onclick=function(){pfOpen(Number(tr.dataset.id))};$('[data-a=del]',tr).onclick=function(){var id=Number(tr.dataset.id),p=PROD.filter(function(x){return x.id===id})[0];if(!confirm('Delete "'+p.name+'"? Sellers will no longer see it. If you only want to hide it, set it to sold out instead.'))return;MZ.remove('products','id=eq.'+id).then(function(){PROD=PROD.filter(function(x){return x.id!==id});prods();flash('Deleted')},function(er){flash('Could not delete. It may be in a seller store. Set it to sold out instead.')})};$('[data-a=save]',tr).onclick=function(){var id=Number(tr.dataset.id),w=$('[data-k=w]',tr).value,s=$('[data-k=s]',tr).value;
       MZ.update('products','id=eq.'+id,{wholesale_price:w===''?null:Number(w),suggested_price:s===''?null:Number(s),status:$('[data-k=st]',tr).value}).then(function(r){PROD=PROD.map(function(p){return p.id===id?r[0]:p});flash('Saved')},function(er){flash(er.message)})}})}
+
+  var pfId=null,pfPhoto='';
+  function pfOpen(id){pfId=id||null;var p=id?PROD.filter(function(x){return x.id===id})[0]:null;$('#pfTitle').textContent=p?'Edit product':'Add product';
+    $('#pfCats').innerHTML=PROD.map(function(x){return x.category}).filter(function(c,i,a){return a.indexOf(c)===i}).map(function(c){return'<option value="'+esc(c)+'">'}).join('');
+    $('#pfName').value=p?p.name:'';$('#pfCat').value=p?p.category:'';$('#pfDesc').value=p&&p.description||'';$('#pfW').value=p&&p.wholesale_price!=null?p.wholesale_price:'';$('#pfS').value=p&&p.suggested_price!=null?p.suggested_price:'';$('#pfSt').value=p?p.status:'available';$('#pfPhoto').value='';pfPhoto=p&&p.photo||'';
+    $('#pfPrev').innerHTML=pfPhoto?'Current photo:<br><img alt="" src="'+esc(pfPhoto)+'" style="max-width:140px;border-radius:8px;margin-top:4px">':'No photo yet.';
+    $('#pForm').hidden=false;$('#pForm').scrollIntoView({behavior:'smooth',block:'start'})}
+  $('#pAdd').onclick=function(){pfOpen(null)};$('#pfCancel').onclick=function(){$('#pForm').hidden=true};
+  $('#fProd').onsubmit=function(e){e.preventDefault();var b=$('#pfSave'),f=$('#pfPhoto').files[0];
+    if(f&&f.size>5242880){flash('Photo must be under 5 MB');return}
+    busy(b,true,'Saving...');
+    var up=f?MZ.upload('product-photos','p'+Date.now()+'.'+(f.type==='image/png'?'png':f.type==='image/webp'?'webp':'jpg'),f).then(function(path){return MZ.publicUrl('product-photos',path)}):Promise.resolve(pfPhoto||null);
+    up.then(function(url){var row={name:$('#pfName').value.trim(),category:$('#pfCat').value.trim(),description:$('#pfDesc').value.trim()||null,wholesale_price:Number($('#pfW').value),suggested_price:$('#pfS').value===''?null:Number($('#pfS').value),status:$('#pfSt').value,photo:url};
+      return pfId?MZ.update('products','id=eq.'+pfId,row).then(function(r){PROD=PROD.map(function(p){return p.id===pfId?r[0]:p})}):MZ.insert('products',row,true).then(function(r){PROD.push(r[0])})}).then(function(){$('#pForm').hidden=true;prods();flash('Product saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
 
   /* ----- training editor ----- */
   var TC=null,TL=[],tcCur=null;

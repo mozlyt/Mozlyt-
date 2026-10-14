@@ -105,6 +105,7 @@
           .then(function (r) { if (!r.ok) return r.text().then(function (x) { var m = ''; try { m = JSON.parse(x).message } catch (e) { } throw new Error(m || 'Upload failed. Use a photo or PDF under 8 MB.'); }); return path; }, function () { throw new Error('No internet connection. Please check your network and try again.'); });
       });
     },
+    publicUrl: function (bucket, path) { return URL_ + '/storage/v1/object/public/' + bucket + '/' + path; },
     signUrl: function (bucket, path) {
       return freshToken().then(function (t) {
         return fetch(URL_ + '/storage/v1/object/sign/' + bucket + '/' + path, { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + t, 'Content-Type': 'application/json' }, body: JSON.stringify({ expiresIn: 300 }) })
