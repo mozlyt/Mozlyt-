@@ -325,7 +325,7 @@ body.has-list .wa-float{bottom:84px}
   </div>
 </footer>
 <script>
-document.getElementById('cform').addEventListener('submit',function(e){
+(document.getElementById('cform')||document.createElement('i')).addEventListener('submit',function(e){
   e.preventDefault();
   var m="Hello MOZLYT, my name is "+document.getElementById('cname').value.trim()+". "+document.getElementById('cmsg').value.trim()+(document.getElementById('cphone').value.trim()?"\nMy number: "+document.getElementById('cphone').value.trim():"");
   var u='https://wa.me/233538729743?text='+encodeURIComponent(m);var w=window.open(u,'_blank');if(!w){location.href=u}
