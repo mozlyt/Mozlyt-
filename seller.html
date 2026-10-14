@@ -614,7 +614,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       if(ME.status==='suspended')note(dashNote,'err','Your store is paused. Please contact MOZLYT on WhatsApp.');
       return Promise.all([MZ.q('products','select=id,category,name,photo,wholesale_price,suggested_price,status&order=sort,name'),MZ.q('seller_products','select=product_id,price,active&seller_id=eq.'+ME.id),MZ.q('orders','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=200'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.q('subscription_payments','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=50'),MZ.rpc('get_my_prices').catch(function(){return null}),MZ.q('franchise_product_prices','select=product_id,price').catch(function(){return []})]);
       }
-    }).then(function(r){if(!r)return;setTimeout(function(){try{if(location.hash==='#sub'){var sb=$('[data-t=sub]');if(sb)sb.click()}}catch(e){}},500);PAYINFO=r[5]||'';PRODUCTS=r[0];MINE={};r[1].forEach(function(x){MINE[x.product_id]=x});ORDERS=r[2];BILL=(r[3]&&r[3][0])||{monthly_price:0,yearly_price:0,pay_instructions:''};PAYS=r[4]||[];FPP={};if(r[5]&&r[5].franchise_live&&!ME.franchise)(r[6]||[]).forEach(function(x){FPP[x.product_id]=Number(x.price)});if(r[5]&&typeof r[5]==='object')BILL=Object.assign({},BILL,r[5]);drawAll()},function(er){
+    }).then(function(r){if(!r)return;setTimeout(function(){try{if(location.hash==='#sub'){var sb=$('[data-t=sub]');if(sb)sb.click()}}catch(e){}},500);PAYINFO=r[5]||'';PRODUCTS=r[0];MINE={};r[1].forEach(function(x){MINE[x.product_id]=x});ORDERS=r[2];BILL=(r[3]&&r[3][0])||{monthly_price:0,yearly_price:0,pay_instructions:''};PAYS=r[4]||[];FPP={};if(r[5]&&r[5].franchise_live&&!ME.franchise)(r[6]||[]).forEach(function(x){FPP[x.product_id]=Number(x.price)});if(r[5]&&typeof r[5]==='object')BILL=Object.assign({},BILL,r[5]);if(r[5].franchise_country){MZ.setCountry(r[5].franchise_country);if(MZ.cc!=='gh'){var pn=$('#payNow');if(pn)pn.style.display='none'}}drawAll()},function(er){
       if(er.status===401||/JWT|expired/i.test(er.message)){MZ.signOut();show('dashView',false);show('authView',true);view('fLogin');note(authNote,'info','Please log in again.')}else{show('authView',true);view('fLogin');note(authNote,'err',er.message)}});
   }
   function storeUrl(){return(ME.custom_domain&&false?('https://'+ME.custom_domain+'/'):MZ.siteUrl+'store.html?s='+ME.store_slug)}
@@ -643,11 +643,12 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function freeAvail(){return !!(ME&&ME.tier==='premium'&&daysLeft()>0&&!ME.free_skill&&!allSk())}
   function hasTraining(){return !!(hasBiz()||allSk()||(ME&&((ME.skills_unlocked||[]).length||ME.free_skill)))}
   var SKSEL='';
-  function skPrice(k){var v=BILL['skill_'+k];return v!=null?v:100}
+  function dflt(n){return MZ.cc==='gh'?n:null}
+  function skPrice(k){var v=BILL['skill_'+k];return v!=null?v:dflt(100)}
   function skName(k){var r=SKILLS.filter(function(x){return x[0]===k})[0];return r?r[1]:k}
   function isTr(){return String(TIER).indexOf('tr-')===0}
   function trItem(){return TIER==='tr-pro'?'pro':TIER==='tr-skill'?'skill:'+SKSEL:'basic'}
-  function trAmt(){return TIER==='tr-pro'?(BILL.training_pro_price!=null?BILL.training_pro_price:150):TIER==='tr-skill'?skPrice(SKSEL):(BILL.training_price!=null?BILL.training_price:100)}
+  function trAmt(){return TIER==='tr-pro'?(BILL.training_pro_price!=null?BILL.training_pro_price:dflt(150)):TIER==='tr-skill'?skPrice(SKSEL):(BILL.training_price!=null?BILL.training_price:dflt(100))}
   function itemName(it){return it==='pro'?'Pro: everything':it&&it.indexOf('skill:')===0?skName(it.slice(6)):'Basic: business lessons'}
   function buy(it){if(it==='pro')TIER='tr-pro';else if(it==='basic')TIER='tr-basic';else{TIER='tr-skill';SKSEL=it.slice(6)}drawSub();go('sub')}
   function refreshMe(cb){return MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(p){ME=p[0]||ME;TR=null;applyMode();drawSub();if(cb)cb()})}
@@ -675,9 +676,9 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       return'<label class="plan'+(TIER===t[0]?' on':'')+'"><input type="radio" name="tier" value="'+t[0]+'"'+(TIER===t[0]?' checked':'')+'><b>'+t[1]+(live2&&cur===t[0]?' <span class="tag">Your level</span>':'')+'</b><span class="pr">'+MZ.money(PLAN==='yearly'?y:m)+'</span><small>'+(PLAN==='yearly'?'per year':'per month')+'</small>'+(PLAN==='yearly'&&save>0?'<em>Save '+MZ.money(save)+' a year</em>':'')+'<ul>'+t[4].map(function(f){return'<li>'+esc(f)+'</li>'}).join('')+'</ul></label>'}).join('')+frCard+'</div>';
     function trCard(v,title,price,sub,lis,extra){return'<label class="plan'+(TIER===v?' on':'')+'"><input type="radio" name="tier" value="'+v+'"'+(TIER===v?' checked':'')+'><b>'+title+'</b><span class="pr">'+MZ.money(price)+'</span><small>'+sub+'</small>'+(extra||'')+'<ul>'+lis.map(function(f){return'<li>'+esc(f)+'</li>'}).join('')+'</ul></label>'}
     var tc=[];
-    if(!hasBiz())tc.push(trCard('tr-basic','Basic',BILL.training_price!=null?BILL.training_price:100,'one time',['Business lessons: sell and offer services','No shop included']));
+    if(!hasBiz())tc.push(trCard('tr-basic','Basic',BILL.training_price!=null?BILL.training_price:dflt(100),'one time',['Business lessons: sell and offer services','No shop included']));
     if(lockedSk.length)tc.push(trCard('tr-skill','Standard: one skill',skPrice(SKSEL),'one time, you choose the skill',['All lessons for your skill','Pay again for another skill later'],'<select id="skSel" style="margin:8px 0;width:100%">'+lockedSk.map(function(k){return'<option value="'+k[0]+'"'+(k[0]===SKSEL?' selected':'')+'>'+esc(k[1])+' &middot; '+MZ.money(skPrice(k[0]))+'</option>'}).join('')+'</select>'));
-    if(!allSk())tc.push(trCard('tr-pro','Pro: everything',BILL.training_pro_price!=null?BILL.training_pro_price:150,'one time',['Business lessons','Every skill, now and later']));
+    if(!allSk())tc.push(trCard('tr-pro','Pro: everything',BILL.training_pro_price!=null?BILL.training_pro_price:dflt(150),'one time',['Business lessons','Every skill, now and later']));
     $('#trainPlans').innerHTML=tc.length?'<div class="tiers">'+tc.join('')+'</div>':'';$('#trHead').hidden=!tc.length;$('#trSub').hidden=!tc.length;
     if(freeAvail())$('#trSub').innerHTML='Your Premium shop includes <b>one free skill</b>. Open the Training tab and choose it. Or buy more below.';else $('#trSub').textContent='Pick the lessons you want. Each is paid once and kept for good.';
     $$('#plans input[name=tier],#trainPlans input[name=tier]').forEach(function(i){i.onchange=function(){TIER=i.value;drawSub()}});
@@ -691,6 +692,8 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function payRows(){return PAYS.map(function(x){var cls=x.status==='confirmed'?'':(x.status==='rejected'?'bad':'warn');return'<div class="it"><div class="h"><b>'+(x.kind==='training'?'Training: '+esc(itemName(x.item)):cap(x.tier||'standard')+' &middot; '+(x.plan==='yearly'?'Yearly':'Monthly'))+' &middot; '+MZ.money(x.amount)+'</b><span class="tag '+cls+'">'+(x.status==='pending'?'Waiting for confirmation':x.status==='confirmed'?'Confirmed':'Not confirmed')+'</span></div><div class="m">Ref '+esc(x.reference)+' &middot; '+MZ.when(x.created_at)+'</div></div>'}).join('')||'<div class="empty">No payments yet.</div>'}
   $('#payNow').onclick=function(){var b=this,n=$('#payNowNote');note(n,'','');
     var kk=({standard:['monthly_price','yearly_price'],plus:['plus_monthly','plus_yearly'],premium:['premium_monthly','premium_yearly']})[TIER]||['monthly_price','yearly_price'],amt=isTr()?trAmt():Number(BILL[kk[PLAN==='yearly'?1:0]]);
+    if(MZ.cc!=='gh'){note(n,'err','Pay as shown in the instructions above, then send your reference below.');return}
+    if(!(amt>0)){note(n,'err','Your franchise has not set this price yet. Please ask them.');return}
     busy(b,true,'Opening payment...');
     MZ.pay({amount:amt,email:(ME&&ME.email)||MZ.user().email,kind:isTr()?'training':'subscription',tier:TIER,plan:PLAN,item:isTr()?trItem():''}).then(function(r){
       return MZ.q('subscription_payments','select=*&order=created_at.desc&limit=50').then(function(rr){PAYS=rr;drawSub();
@@ -794,7 +797,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     function cards(list){return'<div class="lst">'+(list.map(function(c){var n=lessonsOf(c.id).length,d=doneOf(c.id);return'<div class="it"><b style="font-size:17px">'+esc(c.title)+'</b><div class="m">'+esc(c.summary||'')+'</div><div class="bar"><i style="width:'+(n?Math.round(d/n*100):0)+'%"></i></div><div class="h"><span class="m">'+d+' of '+n+' lessons done</span><button class="b2" data-id="'+c.id+'" type="button">'+(d?(d>=n&&n?'Review':'Continue'):'Start')+'</button></div></div>'}).join('')||'<div class="empty">New lessons are coming soon.</div>')+'</div>'}
     function lockCard(what,item,price,sk){var h='<div class="empty" style="text-align:left"><b>'+what+'</b><br>Pay once to open these lessons. Price: <b>'+MZ.money(price)+'</b><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="b2" data-buy="'+item+'" type="button">Get these lessons</button>';
       if(sk&&freeAvail())h+='<button class="b2 ghost" data-free="'+sk+'" type="button">Use my free Premium skill</button>';
-      if(!allSk())h+='<button class="b2 ghost" data-buy="pro" type="button">Everything for '+MZ.money(BILL.training_pro_price!=null?BILL.training_pro_price:150)+'</button>';
+      if(!allSk())h+='<button class="b2 ghost" data-buy="pro" type="button">Everything for '+MZ.money(BILL.training_pro_price!=null?BILL.training_pro_price:dflt(150))+'</button>';
       return h+'<button class="linkbtn" data-rf type="button">I have paid, refresh</button></div></div>'}
     function bindLocks(){$$('#learnBox [data-buy]').forEach(function(b){b.onclick=function(){buy(b.dataset.buy)}});
       $$('#learnBox [data-free]').forEach(function(b){b.onclick=function(){if(!confirm('Use your free Premium skill on '+skName(b.dataset.free)+'? You can only choose once.'))return;b.disabled=true;MZ.rpc('choose_free_skill',{p_skill:b.dataset.free}).then(function(){return refreshMe(loadTrain)}).then(function(){flash('Skill unlocked')},function(er){flash(er.message);b.disabled=false})}});
@@ -810,7 +813,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       box.innerHTML=back('All skills')+'<h2 style="margin:12px 0 4px;font-size:24px">'+esc(sk[1])+'</h2><p class="sub">Lessons for this skill.</p>'+(!list.length?'<div class="empty">Lessons for '+esc(sk[1])+' are coming soon. We will open them here as soon as they are ready, so you can choose and pay then.</div>':!hasSk(TR.skill)?lockCard('Unlock '+sk[1],'skill:'+TR.skill,skPrice(TR.skill),TR.skill):cards(list));
       $('#bk').onclick=function(){TR.skill=null;drawTrain()};bindCourses();bindLocks();return}
     var P=PATHS.filter(function(x){return x[0]===TR.path})[0],pl=TR.c.filter(function(c){var t=c.tracks||[];return TR.path==='basic'?(!c.skill&&(t.indexOf('sell')>-1||t.indexOf('service')>-1)):t.indexOf(TR.path)>-1});
-    box.innerHTML=back('What do you want to learn?')+'<h2 style="margin:12px 0 4px;font-size:24px">'+P[1]+'</h2><p class="sub">'+P[2]+' Finish the lessons at your own pace.</p>'+(hasBiz()?cards(pl):lockCard('Unlock the business lessons','basic',BILL.training_price!=null?BILL.training_price:100,null));
+    box.innerHTML=back('What do you want to learn?')+'<h2 style="margin:12px 0 4px;font-size:24px">'+P[1]+'</h2><p class="sub">'+P[2]+' Finish the lessons at your own pace.</p>'+(hasBiz()?cards(pl):lockCard('Unlock the business lessons','basic',BILL.training_price!=null?BILL.training_price:dflt(100),null));
     $('#bk').onclick=function(){TR.path=null;drawTrain()};bindCourses();bindLocks()}
 
   /* ----- franchise ----- */
