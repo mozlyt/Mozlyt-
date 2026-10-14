@@ -365,7 +365,7 @@ body.has-list .wa-float{bottom:84px}
 <section id="dashView" hidden>
   <div class="top2"><div><h1 id="hello">Your store</h1><p class="sub" id="subline"></p></div><button class="b2 ghost" id="btnOut" type="button">Log out</button></div>
   <div id="dashNote"></div><div id="subNote"></div>
-  <div class="card2 mystore"><div class="ms-h"><b>My store</b><code id="storeUrl" hidden></code></div>
+  <div class="card2 mystore" id="myStoreCard"><div class="ms-h"><b>My store</b><code id="storeUrl" hidden></code></div>
     <div class="pills"><a class="pill2" id="openUrl" target="_blank" rel="noopener">Visit store</a><button class="pill2" type="button" id="cpUrl">Copy link</button><a class="pill2" id="shareUrl" target="_blank" rel="noopener">Share on WhatsApp</a></div></div>
   <div class="tabs" id="dtabs">
     <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
@@ -555,7 +555,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function applyPick(){if(!PICK)return;var it=PICK;PICK='';try{localStorage.removeItem('mz-item')}catch(e){}
     if(it==='pro'){buy('pro');return}
     if(it.indexOf('tier:')===0){TIER=it.slice(5);drawSub();return}
-    PRE=it==='basic'?{path:'sell',skill:null}:{path:'skill',skill:it.slice(6)};
+    PRE=it==='basic'?{path:'basic',skill:null}:{path:'skill',skill:it.slice(6)};
     if(TR){TR.path=PRE.path;TR.skill=PRE.skill;PRE=null}go('learn')}
   var KIND='shop',WANT=false;
   function setKind(k){KIND=k;$$('input[name=kind]').forEach(function(i){i.checked=i.value===k});$('#kShop').classList.toggle('on',k==='shop');$('#kTrain').classList.toggle('on',k==='trainee');$('#kFran').classList.toggle('on',k==='franchise');
@@ -594,7 +594,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function storeUrl(){return(ME.custom_domain&&false?('https://'+ME.custom_domain+'/'):MZ.siteUrl+'store.html?s='+ME.store_slug)}
   function isTrainee(){return !!(ME&&ME.account_type==='trainee'&&!ME.franchise)}
   function applyMode(){var t=isTrainee();
-    $$('#dtabs [data-t=over],#dtabs [data-t=prod],#dtabs [data-t=ord],#dtabs [data-t=set],#bnav [data-t=over],#bnav [data-t=prod],#bnav [data-t=ord],#pane-more [data-go=set]').forEach(function(b){b.style.display=t?'none':''})}
+    $$('#dtabs [data-t=over],#dtabs [data-t=prod],#dtabs [data-t=ord],#dtabs [data-t=set],#bnav [data-t=over],#bnav [data-t=prod],#bnav [data-t=ord],#pane-more [data-go=set]').forEach(function(b){b.style.display=t?'none':''});var ms=$('#myStoreCard');if(ms)ms.style.display=t?'none':''}
   function paint(){
     applyMode();
     ['#tabFr','#moreFr'].forEach(function(q){var e=$(q);if(e)e.style.display=ME.franchise?'':'none'});
@@ -736,7 +736,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   /* ----- training ----- */
   var TR=null;
-  var PATHS=[['sell','Sell products','Take a shop and learn how to sell with confidence.'],['service','Offer a service','Get clients, book them and keep them coming back.'],['skill','Learn a skill','Massage, beauty, fashion and more.']];
+  var PATHS=[['basic','Basic business skill','Free. How to sell products, or become a service provider.'],['sell','Sell products','Take a shop and learn how to sell with confidence.'],['service','Offer a service','Get clients, book them and keep them coming back.'],['skill','Learn a skill','Massage, beauty, fashion and more.']];
   function loadTrain(){var box=$('#learnBox');
     if(TR){drawTrain();return}
     box.innerHTML='<div class="empty">Loading lessons...</div>';
@@ -775,7 +775,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     if(TR.path==='skill'){var sk=SKILLS.filter(function(s){return s[0]===TR.skill})[0],list=TR.c.filter(function(c){return c.skill===TR.skill&&(c.tracks||[]).indexOf('skill')>-1});
       box.innerHTML=back('All skills')+'<h2 style="margin:12px 0 4px;font-size:24px">'+esc(sk[1])+'</h2><p class="sub">Lessons for this skill.</p>'+(!list.length?'<div class="empty">Lessons for '+esc(sk[1])+' are coming soon. We will open them here as soon as they are ready, so you can choose and pay then.</div>':!hasSk(TR.skill)?lockCard('Unlock '+sk[1],'skill:'+TR.skill,skPrice(TR.skill),TR.skill):cards(list));
       $('#bk').onclick=function(){TR.skill=null;drawTrain()};bindCourses();bindLocks();return}
-    var P=PATHS.filter(function(x){return x[0]===TR.path})[0],pl=TR.c.filter(function(c){return(c.tracks||[]).indexOf(TR.path)>-1});
+    var P=PATHS.filter(function(x){return x[0]===TR.path})[0],pl=TR.c.filter(function(c){var t=c.tracks||[];return TR.path==='basic'?(!c.skill&&(t.indexOf('sell')>-1||t.indexOf('service')>-1)):t.indexOf(TR.path)>-1});
     box.innerHTML=back('What do you want to learn?')+'<h2 style="margin:12px 0 4px;font-size:24px">'+P[1]+'</h2><p class="sub">'+P[2]+' Finish the lessons at your own pace.</p>'+(hasBiz()?cards(pl):lockCard('Unlock the business lessons','basic',BILL.training_price!=null?BILL.training_price:100,null));
     $('#bk').onclick=function(){TR.path=null;drawTrain()};bindCourses();bindLocks()}
 
