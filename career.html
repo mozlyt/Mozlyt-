@@ -423,9 +423,9 @@ body.has-list .wa-float{bottom:84px}
     <div class="plans stack">
       <div class="plan best pl" id="skillPlan"><div class="ph"><h3>Take a skill</h3><b>Pay once, no monthly fee</b></div><p class="sub" style="margin:4px 0 12px">Learn on your own training dashboard. Choose a level, pay once and the lessons are yours to keep.</p>
         <div class="lv" id="lv">
-          <label class="lvc on"><input type="radio" name="lv" value="basic" checked><span><b>Basic business skill</b><em>GH&#8373;100</em></span></label>
-          <label class="lvc"><input type="radio" name="lv" value="standard"><span><b>Standard skill</b><em>One skill, from GH&#8373;100</em></span></label>
-          <label class="lvc"><input type="radio" name="lv" value="pro"><span><b>Pro</b><em>GH&#8373;150</em></span></label>
+          <label class="lvc on"><input type="radio" name="lv" value="basic" checked><span><b>Basic business skill</b><em id="prB">GH&#8373;100</em></span></label>
+          <label class="lvc"><input type="radio" name="lv" value="standard"><span><b>Standard skill</b><em>One skill, from <span id="prK">GH&#8373;100</span></em></span></label>
+          <label class="lvc"><input type="radio" name="lv" value="pro"><span><b>Pro</b><em id="prO">GH&#8373;150</em></span></label>
         </div>
         <div id="lvBasic"><p class="sub" style="margin:0 0 10px">You get the business lessons listed here.</p>
           <details><summary>What you get</summary><div class="lst" id="catBasic"><div class="ci"><span>Loading lessons...</span></div></div><ul class="inc"><li>Your own training dashboard, yours to keep</li><li>Learn at your own pace and mark lessons complete</li><li>New business lessons added as they are ready</li><li>No shop included</li></ul></details></div>
@@ -435,11 +435,11 @@ body.has-list .wa-float{bottom:84px}
         <div id="lvPro" hidden><p class="sub" style="margin:0 0 10px">You get every skill and every lesson made available on the platform, now and later.</p>
           <details><summary>What you get</summary><ul class="inc"><li>Every business lesson (Basic)</li><li>Every skill, all categories</li><li>All new lessons as we publish them</li><li>Your own training dashboard, yours to keep</li><li>No shop included</li></ul></details></div>
         <a class="btn primary" id="skBtn" href="seller.html?kind=trainee&amp;item=basic">Subscribe</a></div>
-      <div class="plan best pl"><div class="ph"><h3>Take a shop</h3><b>From GH&#8373;50 a month</b></div><p class="sub" style="margin:4px 0 12px">Your own online store with training included.</p>
-        <details><summary>What you get</summary><ul class="inc"><li><b>Standard:</b> GH&#8373;50 a month or GH&#8373;500 a year</li><li><b>Plus:</b> GH&#8373;100 a month or GH&#8373;1,000 a year</li><li><b>Premium:</b> GH&#8373;150 a month or GH&#8373;1,500 a year</li><li>7-day free trial to start</li><li>Business training lessons included</li><li>Premium also includes one free skill of your choice</li><li>Your own online store and store link</li><li>Pick products and set your own prices</li><li>Orders and sales dashboard</li><li>Optional: Facebook, Instagram and TikTok ad tracking</li><li>Optional: your own custom address, like www.yourbrand.com</li></ul></details>
+      <div class="plan best pl"><div class="ph"><h3>Take a shop</h3><b>From <span id="prS0">GH&#8373;50</span> a month</b></div><p class="sub" style="margin:4px 0 12px">Your own online store with training included.</p>
+        <details><summary>What you get</summary><ul class="inc"><li><b>Standard:</b> <span id="prS">GH&#8373;50 a month or GH&#8373;500 a year</span></li><li><b>Plus:</b> <span id="prP">GH&#8373;100 a month or GH&#8373;1,000 a year</span></li><li><b>Premium:</b> <span id="prR">GH&#8373;150 a month or GH&#8373;1,500 a year</span></li><li><span id="prT">7</span>-day free trial to start</li><li>Business training lessons included</li><li>Premium also includes one free skill of your choice</li><li>Your own online store and store link</li><li>Pick products and set your own prices</li><li>Orders and sales dashboard</li><li>Optional: Facebook, Instagram and TikTok ad tracking</li><li>Optional: your own custom address, like www.yourbrand.com</li></ul></details>
         <a class="btn primary" href="seller.html">Subscribe</a></div>
-      <div class="plan best pl"><div class="ph"><h3>Franchise</h3><b>Partner price agreed with us</b></div><p class="sub" style="margin:4px 0 12px">Your own MOZLYT branch in your city or country.</p>
-        <details><summary>What you get</summary><ul class="inc"><li>Open a MOZLYT location in your city or country, for example in Nigeria</li><li>Everything in Take a shop</li><li>Every lesson and every skill</li><li>Your own dashboard, like a MOZLYT branch</li><li>Recruit and train your own sellers</li><li>Set the prices your recruits sell and charge at</li><li>Their payments go to you</li><li>Best wholesale prices from MOZLYT</li><li>Your partner price is agreed with us</li></ul></details>
+      <div class="plan best pl"><div class="ph"><h3>Franchise</h3><b id="prFr">GH&#8373;1,000 a month</b></div><p class="sub" style="margin:4px 0 12px">Your own MOZLYT branch in your city or country.</p>
+        <details><summary>What you get</summary><ul class="inc"><li>Open a MOZLYT location in your city or country, for example in Nigeria</li><li>Everything in Take a shop</li><li>Every lesson and every skill</li><li>Your own dashboard, like a MOZLYT branch</li><li>Recruit and train your own sellers</li><li>Set the prices your recruits sell and charge at</li><li>Their payments go to you</li><li>Best wholesale prices from MOZLYT</li><li>Your partner price is agreed with us, from <span id="prFr2">GH&#8373;1,000 a month</span></li></ul></details>
         <a class="btn primary" href="seller.html?kind=franchise">Subscribe</a></div>
     </div>
     <p class="note">Message us on WhatsApp if you have questions. For a franchise, we agree the terms together after you sign up, based on your capital and our agreement.</p>
@@ -542,6 +542,15 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
   sel.onchange=link;document.querySelectorAll('input[name=lv]').forEach(function(i){i.onchange=link});link();
   draw([]);
   var t=setInterval(function(){if(!window.MZ||!MZ.rpc)return;clearInterval(t);MZ.rpc('training_catalog',{}).then(function(r){draw(r||[])},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
+})();
+
+(function(){
+  function m(n){return'GH\u20B5'+Number(n).toLocaleString('en-GB')}
+  function set(id,t){var e=document.getElementById(id);if(e)e.textContent=t}
+  var t=setInterval(function(){if(!window.MZ||!MZ.rpc)return;clearInterval(t);MZ.rpc('public_prices',{}).then(function(p){if(!p)return;
+    set('prFr',m(p.franchise_price)+' a month');set('prFr2',m(p.franchise_price)+' a month');set('prS0',m(p.monthly_price));
+    set('prS',m(p.monthly_price)+' a month or '+m(p.yearly_price)+' a year');set('prP',m(p.plus_monthly)+' a month or '+m(p.plus_yearly)+' a year');set('prR',m(p.premium_monthly)+' a month or '+m(p.premium_yearly)+' a year');
+    set('prT',p.trial_days);set('prB',m(p.training_price));set('prO',m(p.training_pro_price))},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
 })();
 </script>
 </body>
