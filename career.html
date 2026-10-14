@@ -468,7 +468,12 @@ body.has-list .wa-float{bottom:84px}
         <a class="btn primary" id="skBtn" href="seller.html?kind=trainee&amp;item=basic">Subscribe</a></div>
       <div class="plan best pl"><div class="ph"><h3>Take a shop</h3><b>From <span id="prS0">GH&#8373;50</span> a month</b></div><p class="sub" style="margin:4px 0 12px">Your own online store with training included.</p>
         <details><summary>What you get</summary><ul class="inc"><li><b>Standard:</b> <span id="prS">GH&#8373;50 a month or GH&#8373;500 a year</span></li><li><b>Plus:</b> <span id="prP">GH&#8373;100 a month or GH&#8373;1,000 a year</span></li><li><b>Premium:</b> <span id="prR">GH&#8373;150 a month or GH&#8373;1,500 a year</span></li><li><span id="prT">7</span>-day free trial to start</li><li>Business training lessons included</li><li>Premium also includes one free skill of your choice</li><li>Your own online store and store link</li><li>Pick products and set your own prices</li><li>Orders and sales dashboard</li><li>Optional: Facebook, Instagram and TikTok ad tracking</li><li>Optional: your own custom address, like www.yourbrand.com</li></ul></details>
-        <a class="btn primary" href="seller.html?kind=shop">Subscribe</a></div>
+        <div class="lv" id="shopLv">
+          <label class="lvc on"><input type="radio" name="sl" value="standard" checked><span><b>Standard</b><em id="prSa">GH&#8373;50 a month</em></span></label>
+          <label class="lvc"><input type="radio" name="sl" value="plus"><span><b>Plus</b><em id="prPa">GH&#8373;100 a month</em></span></label>
+          <label class="lvc"><input type="radio" name="sl" value="premium"><span><b>Premium</b><em id="prRa">GH&#8373;150 a month</em></span></label>
+        </div>
+        <a class="btn primary" id="shopBtn" href="seller.html?kind=shop&amp;item=tier:standard">Subscribe</a></div>
       <div class="plan best pl"><div class="ph"><h3>Franchise</h3><b id="prFr">GH&#8373;1,000 a month</b></div><p class="sub" style="margin:4px 0 12px">Your own MOZLYT branch in your city or country.</p>
         <details><summary>What you get</summary><ul class="inc"><li>Open a MOZLYT location in your city or country, for example in Nigeria</li><li>Everything in Take a shop</li><li>Every lesson and every skill</li><li>Your own dashboard, like a MOZLYT branch</li><li>Recruit and train your own sellers</li><li>Set the prices your recruits sell and charge at</li><li>Their payments go to you</li><li>Best wholesale prices from MOZLYT</li><li>Your partner price is agreed with us, from <span id="prFr2">GH&#8373;1,000 a month</span></li></ul></details>
         <a class="btn primary" href="seller.html?kind=franchise">Subscribe</a></div>
@@ -530,7 +535,7 @@ var PLATFORM_URL="";
   document.querySelectorAll('a.go').forEach(function(a){
     var label=a.textContent.trim();
     if(label==="Sign up as a franchise"){a.href="seller.html?kind=franchise";return}
-    if(label!=="Talk to us"){a.href=label==="Sign up for training"?"seller.html?kind=trainee":"seller.html?kind=shop";return}
+    if(label!=="Talk to us"){a.href=label==="Sign up for training"?"seller.html?kind=trainee&item=basic":"seller.html?kind=shop";return}
     var m=a.getAttribute("data-msg")||"Hello MOZLYT, I would like to join the network ("+label+"). Please tell me how it works and what the next step is.";
     a.href="https://wa.me/"+WA+"?text="+encodeURIComponent(m);
     a.target="_blank";a.rel="noopener";
@@ -591,7 +596,7 @@ homecare:["Basics of caring for someone at home","Hygiene, safe lifting and movi
   var t=setInterval(function(){if(!window.MZ||!MZ.rpc)return;clearInterval(t);MZ.rpc('public_prices',{}).then(function(p){if(!p)return;
     set('prFr',m(p.franchise_price)+' a month');set('prFr2',m(p.franchise_price)+' a month');set('prS0',m(p.monthly_price));
     set('prS',m(p.monthly_price)+' a month or '+m(p.yearly_price)+' a year');set('prP',m(p.plus_monthly)+' a month or '+m(p.plus_yearly)+' a year');set('prR',m(p.premium_monthly)+' a month or '+m(p.premium_yearly)+' a year');
-    set('prT',p.trial_days);set('prB',Number(p.training_price)===0?'Free':m(p.training_price));set('prO',m(p.training_pro_price))},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
+    set('prT',p.trial_days);set('prSa',m(p.monthly_price)+' a month');set('prPa',m(p.plus_monthly)+' a month');set('prRa',m(p.premium_monthly)+' a month');set('prB',Number(p.training_price)===0?'Free':m(p.training_price));set('prO',m(p.training_pro_price))},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
 })();
 
 (function(){var tr=document.getElementById('dtrack');if(!tr)return;var dots=document.querySelectorAll('#ddots i'),n=dots.length,paused=false;
@@ -600,6 +605,9 @@ homecare:["Basics of caring for someone at home","Hygiene, safe lifting and movi
   ['touchstart','mousedown'].forEach(function(e){tr.addEventListener(e,function(){paused=true})});
   setInterval(function(){if(paused||document.hidden)return;var i=(idx()+1)%n;tr.scrollTo({left:i*(tr.clientWidth+14),behavior:'smooth'})},4500);
 })();
+
+(function(){var b=document.getElementById('shopBtn');if(!b)return;function f(){var v=document.querySelector('input[name=sl]:checked').value;b.href='seller.html?kind=shop&item=tier:'+v;document.querySelectorAll('#shopLv .lvc').forEach(function(l){l.classList.toggle('on',l.querySelector('input').checked)})}
+  document.querySelectorAll('input[name=sl]').forEach(function(i){i.onchange=f});f()})();
 </script>
 </body>
 </html>
