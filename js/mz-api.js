@@ -62,7 +62,12 @@
     loggedIn: function () { return !!getSession(); },
     signUp: function (email, password, data, page) {
       return call('/auth/v1/signup?redirect_to=' + encodeURIComponent(SITE + (page || 'seller.html')), { method: 'POST', body: { email: email, password: password, data: data || {} } })
-        .then(function (j) { if (j && j.access_token) { saveTokens(j); return { confirmed: true }; } return { confirmed: false }; });
+        .then(function (j) {
+          if (j && j.access_token) { saveTokens(j); return { confirmed: true }; }
+          // accounts are confirmed automatically; sign straight in
+          return call('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: email, password: password } })
+            .then(function (t) { saveTokens(t); return { confirmed: true }; }, function () { return { confirmed: false }; });
+        });
     },
     signIn: function (email, password) {
       return call('/auth/v1/token?grant_type=password', { method: 'POST', body: { email: email, password: password } })
