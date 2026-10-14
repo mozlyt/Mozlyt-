@@ -333,6 +333,7 @@ body.has-list .wa-float{bottom:84px}
 <section id="dashView" hidden>
   <div class="top2"><div><h1>MOZLYT service provider</h1><p class="sub" id="who"></p></div><button class="b2 ghost" type="button" id="btnOut">Log out</button></div>
   <div class="tabs" id="dtabs"><button data-t="alerts" class="on" type="button">Bookings <span class="bdg" id="nBdg" hidden>0</span></button><button data-t="svc" type="button">My services</button></div>
+  <div id="stBanner" class="card2" hidden style="margin-bottom:12px;border-color:#14663f"></div>
   <div id="pane-alerts"><p class="sub" style="margin-bottom:10px">When a client books one of your services, it appears here. MOZLYT contacts the client and confirms with you.</p>
     <div class="pills" style="margin-bottom:10px"><button class="b2 ghost" type="button" id="btnAll">Mark all as read</button></div><div class="lst" id="nList"></div></div>
   <div id="pane-svc" hidden><div class="card2"><h3 style="margin:0 0 8px">Services you handle</h3><div id="mySvc" class="pills"></div><p class="sub" style="margin:12px 0 0">To add or change services, message MOZLYT on WhatsApp with your certificate for the new service.</p><a class="b2" style="text-decoration:none;display:inline-block;margin-top:10px" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20want%20to%20add%20a%20service." target="_blank" rel="noopener">Message MOZLYT</a></div></div>
@@ -379,7 +380,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     return Promise.all([MZ.q('profiles','select=full_name,phone,email&id=eq.'+MZ.user().id),MZ.q('provider_applications','select=*&user_id=eq.'+MZ.user().id)]).then(function(r){
       ME=(r[0]&&r[0][0])||{};APP=(r[1]&&r[1][0])||null;
       if(!APP||APP.status==='rejected'&&window.__reapply){return showApply(false)}
-      if(APP.status==='approved')return showDash();
+      if(APP.status==='approved'||APP.status==='new')return showDash();
       showWait()},function(er){views('authView');note(aNote,er.status===401?'info':'err',er.status===401?'Please log in again.':er.message)})}
 
   /* ---- application ---- */
@@ -415,7 +416,8 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   /* ---- dashboard ---- */
   function showDash(){views('dashView');$('#who').textContent=(APP.name||'')+(APP.email?' · '+APP.email:'');
-    $('#mySvc').innerHTML=(APP.approved_services||[]).map(function(s){return'<span class="tag">'+esc(s)+'</span>'}).join('')||'<span class="sub">No services yet.</span>';loadNotes();clearInterval(timer);timer=setInterval(loadNotes,60000)}
+    var pend=APP.status!=='approved';show('stBanner',pend);if(pend)$('#stBanner').innerHTML='<b style="color:#14663f">Application received. Thank you!</b><p class="sub" style="margin:6px 0 0">MOZLYT is checking your ID and certificate and will reply within about 2 working days. Booking alerts for your services will start appearing here once you are approved.</p>';
+    $('#mySvc').innerHTML=((pend?APP.services:APP.approved_services)||[]).map(function(s){return'<span class="tag'+(pend?' warn':'')+'">'+esc(s)+(pend?' (waiting for approval)':'')+'</span>'}).join('')||'<span class="sub">No services yet.</span>';loadNotes();clearInterval(timer);timer=setInterval(loadNotes,60000)}
   $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});show('pane-alerts',b.dataset.t==='alerts');show('pane-svc',b.dataset.t==='svc')}});
   function loadNotes(){MZ.q('provider_notifications','select=*&order=created_at.desc&limit=100').then(function(r){NOTES=r||[];drawNotes()},function(){})}
   function drawNotes(){var un=NOTES.filter(function(n){return!n.read}).length;$('#nBdg').hidden=!un;$('#nBdg').textContent=un;
