@@ -504,7 +504,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#kindNote').textContent=fr?'You get a training account now. Once we agree your terms, your franchise dashboard opens.':k==='trainee'?'You will get your own training dashboard. Choose your lessons and pay once. You can add a shop later.':'Start with a free trial. After that, keep your store open with a monthly or yearly plan.'}
   $$('input[name=kind]').forEach(function(i){i.onchange=function(){setKind(i.value)}});
   function pickName(){return PICK==='basic'?'Business lessons (Basic)':PICK==='pro'?'Pro: everything':PICK.indexOf('skill:')===0?skName(PICK.slice(6)):''}
-  try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='franchise'){setKind(qk);WANT=true;if(qk==='trainee'&&PICK){$('#kindNote').textContent='You chose: '+pickName()+'. Create your account and your training dashboard opens with it.'+(PICK==='basic'?' The business lessons are free.':' You pay once there.')+''}}}catch(e){}
+  try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='franchise'||qk==='shop'){setKind(qk);WANT=true;if(qk==='trainee'&&PICK){$('#kindNote').textContent='You chose: '+pickName()+'. Create your account and your training dashboard opens with it.'+(PICK==='basic'?' The business lessons are free.':' You pay once there.')+''}}}catch(e){}
   /* ----- tabs ----- */
   var PANES=['over','prod','ord','learn','sub','set','acc','fr','more'];
   function flag(k,set){var key='mz-f-'+(ME?ME.id:'x')+'-'+k;try{if(set){localStorage.setItem(key,'1');return true}return localStorage.getItem(key)==='1'}catch(e){return false}}
