@@ -208,6 +208,20 @@ section .sub{color:var(--mute);max-width:58ch;margin-bottom:34px}
 .list li:before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;border-radius:50%;background:var(--green)}
 
 /* pricing */
+
+.cat .tier{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:16px}
+.cat .th{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.cat .th h3{font-size:21px}.cat .th b{font-size:17px}
+.cat .lst{display:grid;gap:10px;margin-top:14px}
+.cat .ci{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.cat .ci p{margin:4px 0 0;font-size:14px;color:var(--muted,#667)}
+.cat .tg{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;margin-left:8px;vertical-align:middle}
+.cat .tg.ok{background:#e3f4ea;color:#14663f}.cat .tg.soon{background:#fdf1d8;color:#8a5a00}
+.cat .btn{padding:10px 16px;font-size:14px}
+.cat details{margin-top:6px;font-size:14px}.cat details summary{cursor:pointer;color:var(--green);font-weight:600}
+.cat ol{margin:8px 0 0 18px;display:grid;gap:3px}
+.skg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+@media(max-width:700px){.skg{grid-template-columns:1fr}}
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 @media(max-width:860px){.plans{grid-template-columns:1fr}}
 .plan{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:24px}
@@ -384,6 +398,23 @@ body.has-list .wa-float{bottom:84px}
   </div>
 </section>
 
+<section id="catalogue" class="cat white">
+  <div class="wrap">
+    <h2>What you can learn</h2>
+    <p class="sub">Choose a plan, tap sign up, create your account and your training dashboard opens with what you picked. Each level includes the one before it.</p>
+    <div class="tier"><div class="th"><h3>Basic: business lessons</h3><b>GH&#8373;100, paid once</b></div>
+      <p class="sub" style="margin:6px 0 0">How to start, price, promote and run your business. Included free with every shop.</p>
+      <div class="lst" id="catBasic"><div class="ci"><span>Loading lessons...</span></div></div></div>
+    <div class="tier"><div class="th"><h3>Standard: one skill</h3><b>Priced per skill, from GH&#8373;100</b></div>
+      <p class="sub" style="margin:6px 0 0">Pick the skill you want to learn. A Premium shop includes one skill of your choice free.</p>
+      <div class="skg" id="catSkills"></div></div>
+    <div class="tier"><div class="th"><h3>Pro: everything</h3><b>GH&#8373;150, paid once</b></div>
+      <p class="sub" style="margin:6px 0 12px">Every business lesson and every skill, including new lessons as we add them. Franchise partners get this too.</p>
+      <a class="btn primary" href="seller.html?kind=trainee&amp;item=pro">Sign up for Pro</a></div>
+    <p class="note">Lessons marked Coming soon are being prepared. We open them on your dashboard as soon as they are ready.</p>
+  </div>
+</section>
+
 <section id="plans">
   <div class="wrap">
     <h2>Simple monthly plans</h2>
@@ -478,6 +509,21 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
   window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;if(btn)btn.style.display='block'});
   if(btn)btn.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;btn.style.display='none'})});
   window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
+})();
+
+(function(){
+  var SK=[["massage","Massage"],["beauty","Beauty and skincare"],["hair","Hair and scalp care"],["fashion","Fashion and styling"],["fitness","Fitness and sculpting"],["nutrition","Nutrition and meal prep"],["catering","Catering"],["homecare","Home health care"]];
+  var SOON=["Market your business","Strategic marketing"];
+  function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function item(c,sk){var n=(c.lessons||[]).length;return'<div class="ci"><div><b>'+esc(c.title)+'</b>'+(c.live?'<span class="tg ok">Available</span>':'<span class="tg soon">Coming soon</span>')+(c.summary?'<p>'+esc(c.summary)+'</p>':'')+(n?'<details><summary>'+n+' lessons</summary><ol>'+c.lessons.map(function(l){return'<li>'+esc(l)+'</li>'}).join('')+'</ol></details>':'')+'</div>'+sk+'</div>'}
+  function draw(cat){
+    var biz=cat.filter(function(c){return !c.skill}).map(function(c){c.live=true;return c});
+    SOON.forEach(function(t){if(!biz.some(function(c){return c.title.toLowerCase()===t.toLowerCase()}))biz.push({title:t,live:false,lessons:[]})});
+    document.getElementById('catBasic').innerHTML=biz.map(function(c){return item(c,'')}).join('')+'<div><a class="btn primary" href="seller.html?kind=trainee&amp;item=basic">Sign up for business lessons</a></div>';
+    document.getElementById('catSkills').innerHTML=SK.map(function(k){var cs=cat.filter(function(c){return c.skill===k[0]});var live=cs.length>0;
+      return'<div class="ci" style="display:block"><div><b>'+esc(k[1])+'</b>'+(live?'<span class="tg ok">Available</span>':'<span class="tg soon">Coming soon</span>')+'</div>'+(live?cs.map(function(c){return'<details><summary>'+esc(c.title)+' ('+(c.lessons||[]).length+' lessons)</summary><ol>'+(c.lessons||[]).map(function(l){return'<li>'+esc(l)+'</li>'}).join('')+'</ol></details>'}).join(''):'')+'<div style="margin-top:10px"><a class="btn ghost" href="seller.html?kind=trainee&amp;item=skill:'+k[0]+'">Sign up for '+esc(k[1])+'</a></div></div>'}).join('')}
+  draw([]);
+  var t=setInterval(function(){if(!window.MZ||!MZ.rpc)return;clearInterval(t);MZ.rpc('training_catalog',{}).then(function(r){draw(r||[])},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
 })();
 </script>
 </body>
