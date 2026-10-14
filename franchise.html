@@ -269,6 +269,41 @@ body.has-list .wa-float{bottom:84px}
 .f textarea{min-height:110px}
 [hidden]{display:none!important}
 </style>
+
+<style id="mz-fr">
+.lvgrid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px;margin:0 0 20px}
+@media(max-width:820px){.lvgrid{grid-template-columns:minmax(0,1fr)}}
+.lvh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.lvh b{font-size:16px}.lvh small{color:var(--mute)}
+.livedot{display:inline-flex;align-items:center;gap:6px;background:#E3F6EE;color:#146B4A;font-size:12px;font-weight:700;padding:2px 10px;border-radius:99px}
+.livedot i{width:8px;height:8px;border-radius:50%;background:#1F9E6E;animation:mzp 1.6s infinite}
+@keyframes mzp{0%{box-shadow:0 0 0 0 rgba(31,158,110,.5)}100%{box-shadow:0 0 0 8px rgba(31,158,110,0)}}
+.lvlist{display:grid;gap:0}
+.lvrow{display:flex;align-items:center;gap:12px;padding:11px 8px;border-top:1px solid #EEF1F5;border-radius:8px}
+.lvrow.fresh{background:#F1FAF6;animation:mzf 2.5s ease-out}
+@keyframes mzf{from{background:#D7F3E6}to{background:#F1FAF6}}
+.lvt{flex:0 0 auto;min-width:58px;text-align:center;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px}
+.lvRecruit{background:#E3F6EE;color:#146B4A}.lvOrder{background:#FFF4DA;color:#8A5A00}.lvMoney{background:#E3F6EE;color:#146B4A}.lvAlert{background:#FDEBE7;color:#A33A26}
+.lvx{flex:1;min-width:0;font-size:14.5px}.lvw{color:var(--mute);font-size:13px;white-space:nowrap}
+.newsit{display:grid;gap:3px;padding:12px;border-radius:10px;background:#F8FAFC;border:1px solid #EEF1F5;margin-bottom:8px}
+.newsit .nh{display:flex;justify-content:space-between;gap:8px}.newsit span:last-child{color:var(--mute);font-size:13px}
+.ntag{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 8px;border-radius:99px;background:#E6EEF9;color:#1F4E8C}.ntag.pin{background:#F2B134;color:#0E2A47}
+.navhelp{display:none}
+@media(min-width:901px){
+ #frBody{display:grid;grid-template-columns:240px minmax(0,1fr);gap:24px;align-items:start}
+ #frBody>#dtabs{grid-column:1;grid-row:1/span 30;position:sticky;top:96px;flex-direction:column;overflow:visible;background:#0E2A47;border-radius:16px;padding:14px;margin:16px 0 0;gap:4px}
+ #frBody>div:not(#dtabs){grid-column:2}
+ #dtabs button{width:100%;text-align:left;background:transparent;color:#C9D6E6;border:0;border-radius:10px;padding:0 14px;min-height:44px;font-weight:500}
+ #dtabs button:hover{background:rgba(255,255,255,.08)}
+ #dtabs button.on{background:#fff;color:#0E2A47;font-weight:700}
+ .navhelp{display:grid;gap:6px;margin-top:14px;background:#16385A;border-radius:12px;padding:14px;color:#fff}
+ .navhelp span{font-size:13px;color:#B9C7D8}.navhelp a{background:#5FD3A1;color:#0E2A47;text-decoration:none;text-align:center;font-weight:700;padding:11px 12px;border-radius:8px;margin-top:2px}
+}
+.stat{border-radius:14px;padding:18px 20px}.stat b{font-size:28px}
+#frBody{margin-top:16px}
+#pane-over .stats{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+@media(min-width:901px){#pane-over .stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){#dtabs{display:flex!important;margin:0 0 16px}}
+</style>
 </head>
 <body>
 <header class="mz-header" id="mzHeader">
@@ -301,9 +336,10 @@ body.has-list .wa-float{bottom:84px}
   <div class="top2"><div><h1 id="brName">MOZLYT franchise</h1><p class="sub" id="who"></p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><a class="b2 ghost" href="seller.html?own=1" style="text-decoration:none">My shop and training</a><button class="b2 ghost" id="btnOut" type="button">Log out</button></div></div>
   <div class="card2" id="frStatus"></div>
   <div id="frBody">
-  <div class="tabs" id="dtabs" style="margin-top:16px"><button data-t="over" class="on" type="button">Overview</button><button data-t="ord" type="button">Orders</button><button data-t="rec" type="button">Recruits</button><button data-t="pay" type="button">Payments</button><button data-t="prod" type="button">Products</button><button data-t="train" type="button">Training</button><button data-t="price" type="button">Prices</button><button data-t="link" type="button">Recruit link</button></div>
+  <div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="ord" type="button">Shop orders</button><button data-t="rec" type="button">Recruits</button><button data-t="pay" type="button">Payments</button><button data-t="prod" type="button">Shop and products</button><button data-t="price" type="button">Prices</button><button data-t="train" type="button">Training</button><button data-t="link" type="button">Recruit link</button><div class="navhelp"><b>Need help?</b><span>Technical issues go straight to MOZLYT. You never fix anything yourself.</span><a href="https://wa.me/233538729743" target="_blank" rel="noopener">Message support</a></div></div>
 
   <div id="pane-over"><div class="stats"><div class="stat"><b id="frN">0</b><span>Recruits</span></div><div class="stat"><b id="frA">0</b><span>Active stores</span></div><div class="stat"><b id="frP">0</b><span>Payments waiting</span></div><div class="stat"><b id="frO">0</b><span>Recruit orders</span></div><div class="stat"><b id="frM">0</b><span>Earned this month</span></div><div class="stat"><b id="frT">0</b><span>Earned in total</span></div></div>
+<div class="lvgrid"><div class="card2"><div class="lvh"><b>Live updates</b><span class="livedot"><i></i>Live</span><small>Everything happening in your country</small></div><div id="lvFeed" class="lvlist"><div class="empty">Loading...</div></div></div><div class="card2"><div class="lvh"><b>News from MOZLYT</b></div><div id="newsBox" class="lvlist"><div class="empty">Loading...</div></div></div></div>
     <h3 style="margin:22px 0 10px">Payments waiting for you</h3><div class="lst" id="frPendO"></div>
     <h3 style="margin:22px 0 10px">Newest recruit orders</h3><div class="lst" id="frOrdO"></div></div>
   <div id="pane-ord" hidden><div class="tools"><select id="of"><option value="">All statuses</option></select></div><div class="lst" id="frOrd"></div></div>
@@ -365,6 +401,29 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
           FR={rec:r[0]||[],pays:r[1]||[],ord:o||[]};FRP={};(r[2]||[]).forEach(function(x){FRP[x.product_id]=Number(x.price)});PRODUCTS=r[3]||[];BILL=(r[4]&&r[4][0])||{};draw()})})
     }).catch(function(er){view();note(aNote,er.status===401?'info':'err',er.status===401?'Please log in again.':er.message)})}
 
+
+  var SEEN={},PTIMER=null;
+  function ago(d){var s=Math.max(0,(Date.now()-new Date(d).getTime())/1000);if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+' min ago';if(s<86400)return Math.floor(s/3600)+' h ago';return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}
+  function first(n){return String(n||'Someone').split(' ')[0]}
+  function drawLive(){
+    var ev=[],now=new Date();
+    FR.rec.forEach(function(x){ev.push({k:'r'+x.id,t:x.created_at,ty:'Recruit',tx:esc(first(x.full_name||x.store_name))+' joined through your link'});
+      if(x.sub_expires_at){var dl=Math.ceil((new Date(x.sub_expires_at)-now)/864e5);if(dl>=0&&dl<=7)ev.push({k:'e'+x.id+x.sub_expires_at,t:new Date(now-6e5).toISOString(),ty:'Alert',tx:esc(first(x.full_name||x.store_name))+'&#39;s subscription ends in '+dl+' day'+(dl===1?'':'s')})}});
+    FR.pays.forEach(function(x){var u=FR.rec.filter(function(y){return y.id===x.seller_id})[0]||{};
+      if(x.status==='confirmed')ev.push({k:'p'+x.id,t:x.confirmed_at||x.created_at,ty:'Money',tx:'Payment received: '+MZ.money(x.amount)+' from '+esc(first(u.full_name||u.store_name))});
+      else if(x.status==='pending')ev.push({k:'w'+x.id,t:x.created_at,ty:'Alert',tx:'Payment of '+MZ.money(x.amount)+' from '+esc(first(u.full_name||u.store_name))+' is waiting for you'})});
+    FR.ord.forEach(function(o){ev.push({k:'o'+o.id,t:o.created_at,ty:'Order',tx:'New shop order #'+o.id+(o.total!=null?', '+MZ.money(o.total):'')})});
+    ev.sort(function(a,b){return new Date(b.t)-new Date(a.t)});ev=ev.slice(0,8);
+    var first_=Object.keys(SEEN).length===0;
+    $('#lvFeed').innerHTML=ev.map(function(e){var fresh=!first_&&!SEEN[e.k];SEEN[e.k]=1;return'<div class="lvrow'+(fresh?' fresh':'')+'"><span class="lvt lv'+e.ty+'">'+e.ty+'</span><span class="lvx">'+e.tx+'</span><span class="lvw">'+ago(e.t)+'</span></div>'}).join('')||'<div class="empty">Nothing yet. Share your recruit link and the first updates will appear here.</div>'}
+  function loadNews(){MZ.q('announcements','select=*&order=pinned.desc,created_at.desc&limit=6').then(function(a){
+      a=(a||[]).filter(function(x){return!x.country||x.country===ME.franchise_country}).slice(0,4);
+      $('#newsBox').innerHTML=a.map(function(x){return'<div class="newsit"><div class="nh"><span class="ntag'+(x.pinned?' pin':'')+'">'+esc(x.pinned?'Pinned':(x.label||'News'))+'</span><small>'+ago(x.created_at)+'</small></div><b>'+esc(x.title)+'</b><span>'+esc(x.body||'')+'</span></div>'}).join('')||'<div class="empty">No news yet. Updates from MOZLYT will appear here.</div>'},function(){$('#newsBox').innerHTML='<div class="empty">No news yet. Updates from MOZLYT will appear here.</div>'})}
+  function poll(){if(!ME||!frLive()||document.hidden||$('#pane-over').hidden)return;
+    Promise.all([MZ.q('profiles','select=id,full_name,store_name,store_slug,phone,email,sub_expires_at,plan,tier,training_paid,status,created_at&franchise_id=eq.'+ME.id+'&order=created_at.desc'),MZ.q('subscription_payments','select=*&franchise_id=eq.'+ME.id+'&order=created_at.desc&limit=200')]).then(function(r){
+      var changed=(r[0]||[]).length!==FR.rec.length||(r[1]||[]).length!==FR.pays.length||JSON.stringify((r[1]||[]).map(function(x){return x.status}))!==JSON.stringify(FR.pays.map(function(x){return x.status}));
+      FR.rec=r[0]||[];FR.pays=r[1]||[];drawLive();if(changed){$('#frN').textContent=FR.rec.length;$('#frP').textContent=FR.pays.filter(function(x){return x.status==='pending'}).length}},function(){})}
+
   function frRow(x,act){var u=FR.rec.filter(function(y){return y.id===x.seller_id})[0]||{};
     return'<div class="it"><div class="h"><b>'+esc(u.full_name||u.store_name||'Recruit')+' &middot; '+(x.kind==='training'?'Training: '+esc(itemName(x.item)):cap(x.tier||'standard')+' '+(x.plan==='yearly'?'yearly':'monthly'))+' &middot; '+MZ.money(x.amount)+'</b>'+(act?'':'<span class="tag '+(x.status==='confirmed'?'':'bad')+'">'+x.status+'</span>')+'</div><div class="m">Ref <b>'+esc(x.reference)+'</b> &middot; '+esc(u.phone||'')+' &middot; '+MZ.when(x.created_at)+'</div>'+(act?'<div style="display:flex;gap:8px;margin-top:8px"><button class="b2" data-fok="'+x.id+'" type="button">Confirm</button><button class="b2 red" data-fno="'+x.id+'" type="button">Reject</button></div>':'')+'</div>'}
   function ordRow(o){var u=FR.rec.filter(function(y){return y.id===o.seller_id})[0]||{};return'<div class="it"><div class="h"><b>Order #'+o.id+' &middot; '+esc(o.customer_name||'Customer')+'</b><span class="tag">'+esc(o.status||'')+'</span></div><div class="m">'+esc(u.store_name||u.full_name||'Recruit')+' &middot; '+MZ.when(o.created_at)+(o.total!=null?' &middot; <b>'+MZ.money(o.total)+'</b>':'')+'</div></div>'}
@@ -385,7 +444,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var act=FR.rec.filter(function(x){return x.sub_expires_at&&new Date(x.sub_expires_at)>now}).length,pend=FR.pays.filter(function(x){return x.status==='pending'}).length;
     $('#frA').textContent=act;$('#frP').textContent=pend;$('#frO').textContent=FR.ord.length;$('#frN').textContent=FR.rec.length;$('#frM').textContent=MZ.money(mo);$('#frT').textContent=MZ.money(tot);
     var sts=[];FR.ord.forEach(function(o){if(sts.indexOf(o.status)<0)sts.push(o.status)});$('#of').innerHTML='<option value="">All statuses</option>'+sts.map(function(s){return'<option>'+esc(s)+'</option>'}).join('');
-    orders();$('#frOrdO').innerHTML=FR.ord.slice(0,5).map(ordRow).join('')||'<div class="empty">No recruit orders yet.</div>';
+    drawLive();loadNews();orders();$('#frOrdO').innerHTML=FR.ord.slice(0,5).map(ordRow).join('')||'<div class="empty">No recruit orders yet.</div>';
     var pl=FR.pays.filter(function(x){return x.status==='pending'});
     $('#frPend').innerHTML=pl.map(function(x){return frRow(x,true)}).join('')||'<div class="empty">Nothing waiting.</div>';
     $('#frPendO').innerHTML=pl.slice(0,5).map(function(x){return frRow(x,true)}).join('')||'<div class="empty">Nothing waiting.</div>';
@@ -422,6 +481,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   var h=MZ.takeHash();view();if(h&&h.error)note(aNote,'err',h.error);
   if(MZ.loggedIn())boot();
+  PTIMER=setInterval(poll,20000);
 })();
 </script>
 <footer class="mz-footer">
