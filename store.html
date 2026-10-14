@@ -269,7 +269,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.rpc('get_store',{p_slug:sl}).then(function(s){
       if(!s){fail('We could not find this store. It may have moved or been paused.');return}
       STORE=s;slug=sl;try{CART=JSON.parse(localStorage.getItem(KEY+slug)||'{}')}catch(e){CART={}}
-      document.title=s.store_name+' | MOZLYT';$('#sName').textContent=s.store_name;$('#h1').textContent=s.store_name;
+      document.title=s.store_name+' | MOZLYT';MZ.pixels(s.meta_pixel,s.tiktok_pixel);MZ.track('ViewContent',{});$('#sName').textContent=s.store_name;$('#h1').textContent=s.store_name;
       show('state',false);show('shop',true);cats();draw();cartDraw();
     },function(er){fail(er.message)})}
   function fail(t){$('#state').textContent=t}
@@ -280,7 +280,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function draw(){var q=$('#q').value.toLowerCase().trim(),c=$('#cat').value;
     var list=STORE.products.filter(function(p){return(c==='All categories'||p.category===c)&&(!q||p.name.toLowerCase().indexOf(q)>-1)});
     $('#grid').innerHTML=list.map(function(p){return'<div class="pc"><div class="ph">'+(p.photo?'<img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(p.photo)+'">':'Photo coming soon')+'</div><div class="b"><h4>'+esc(p.name)+'</h4><div class="price">'+MZ.money(p.price)+'</div>'+(p.sold_out?'<span class="tag bad">Sold out</span>':'<button class="b2" data-id="'+p.id+'">Add to cart</button>')+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">'+(STORE.products.length?'No products match.':'This store is getting ready. Please check back soon.')+'</div>';
-    $$('#grid [data-id]').forEach(function(b){b.onclick=function(){var id=b.dataset.id;CART[id]=(CART[id]||0)+1;save();flash('Added to cart')}})}
+    $$('#grid [data-id]').forEach(function(b){b.onclick=function(){var id=b.dataset.id;CART[id]=(CART[id]||0)+1;save();flash('Added to cart');var pp=prod(id);MZ.track('AddToCart',{value:pp?pp.price:0,name:pp?pp.name:''})}})}
   $('#q').addEventListener('input',draw);$('#cat').addEventListener('change',draw);
 
   function save(){try{localStorage.setItem(KEY+slug,JSON.stringify(CART))}catch(e){}cartDraw()}
@@ -298,7 +298,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.rpc('place_store_order',{p_slug:slug,p_name:$('#oName').value.trim(),p_phone:$('#oPhone').value.trim(),p_address:$('#oAddr').value.trim(),p_notes:$('#oNote').value.trim(),p_items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(id){
       var txt='Hello '+STORE.store_name+', I just placed order #'+id+':\n'+L.map(function(l){return l.q+' x '+l.p.name+' ('+MZ.money(l.p.price*l.q)+')'}).join('\n')+'\nTotal: '+MZ.money(total())+'\nName: '+$('#oName').value.trim()+'\nDelivery: '+($('#oAddr').value.trim()||'to be agreed');
       var url='https://wa.me/'+MZ.phoneIntl(STORE.whatsapp)+'?text='+encodeURIComponent(txt);
-      CART={};save();show('fOrder',false);$('#clines').innerHTML='';$('#ctotal').textContent='';
+      MZ.track('Purchase',{value:total()});CART={};save();show('fOrder',false);$('#clines').innerHTML='';$('#ctotal').textContent='';
       $('#done').innerHTML='<div class="msg ok"><b>Order #'+id+' received.</b> The seller will confirm with you shortly.</div><a class="btn primary" style="width:100%;justify-content:center" target="_blank" rel="noopener" href="'+url+'">Send the details on WhatsApp</a>';show('done',true);
     },function(er){note($('#oNoteBox'),'err',/not available/i.test(er.message)?'One of the items is no longer available. Please remove it and try again.':er.message)}).then(function(){busy(b,false)})};
 })();

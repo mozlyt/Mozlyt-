@@ -245,12 +245,15 @@ body.has-list .wa-float{bottom:84px}
 <section id="dashView" hidden>
   <div class="top2"><div><h1>MOZLYT admin</h1><p class="sub" id="who"></p></div><button class="b2 ghost" id="btnOut" type="button">Log out</button></div>
   <div id="dNote"></div>
-  <div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="book" type="button">Bookings</button><button data-t="ord" type="button">Orders</button><button data-t="sell" type="button">Sellers</button><button data-t="prod" type="button">Products</button></div>
+  <div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="book" type="button">Bookings</button><button data-t="ord" type="button">Orders</button><button data-t="sell" type="button">Sellers</button><button data-t="prod" type="button">Products</button><button data-t="set" type="button">Ad tracking</button></div>
 
   <div id="pane-over"><div class="stats" id="stats"></div><h3 style="margin:18px 0 10px">Newest bookings</h3><div class="lst" id="ovBook"></div><h3 style="margin:22px 0 10px">Newest orders</h3><div class="lst" id="ovOrd"></div></div>
   <div id="pane-book" hidden><div class="tools"><select id="bf"><option value="">All statuses</option><option>new</option><option>confirmed</option><option>done</option><option>cancelled</option></select></div><div class="lst" id="bookList"></div></div>
   <div id="pane-ord" hidden><div class="tools"><select id="of"><option value="">All orders</option><option value="main">MOZLYT shop</option><option value="sellers">Seller stores</option></select><select id="os"><option value="">All statuses</option><option>new</option><option>confirmed</option><option>paid</option><option>delivered</option><option>cancelled</option></select></div><div class="lst" id="ordList"></div></div>
   <div id="pane-sell" hidden><div class="scroll"><table class="tbl" id="sellTbl"></table></div></div>
+  <div id="pane-set" hidden><div class="card2"><h3 style="margin:0 0 6px">MOZLYT ad tracking</h3>
+    <p class="sub" style="margin-bottom:12px">Paste MOZLYT's own Pixel IDs. They load on the main site (home, shop, career) and report visits and bookings to your ad accounts.</p>
+    <form id="fPx" class="f"><label>Facebook / Instagram Pixel ID<input id="px1" inputmode="numeric" placeholder="e.g. 123456789012345"></label><label>TikTok Pixel ID<input id="px2" placeholder="e.g. C9ABCDEF1234567890"></label><button class="btn primary" type="submit">Save</button></form></div></div>
   <div id="pane-prod" hidden>
     <p class="sub">Set wholesale prices (what sellers pay you) and suggested retail prices. Sellers see wholesale prices.</p>
     <div class="tools"><input id="pq" type="search" placeholder="Search products"><select id="pcat"></select></div>
@@ -279,14 +282,14 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:'MOZLYT admin'}).then(function(r){if(r.confirmed)boot();else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(aNote,'ok','We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in.')}},function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();MZ.recover($('#fEmail').value.trim()).then(function(){note(aNote,'ok','If that email has an account, a reset link is on its way.')},function(er){note(aNote,'err',er.message)})};
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){show('dashView',false);show('authView',true);view('fLogin')})};
-  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','book','ord','sell','prod'].forEach(function(t){show('pane-'+t,t===b.dataset.t)})}});
+  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','book','ord','sell','prod','set'].forEach(function(t){show('pane-'+t,t===b.dataset.t)})}});
 
   function boot(){
     show('authView',false);
     return MZ.rpc('is_admin').then(function(ok){
       if(!ok){show('dashView',false);show('authView',true);view('fLogin');note(aNote,'err','This account is not a MOZLYT admin. Make sure you use an approved admin email and have confirmed it.');return}
       $('#who').textContent=MZ.user().email;show('dashView',true);
-      return Promise.all([MZ.q('bookings','select=*&order=created_at.desc&limit=300'),MZ.q('orders','select=*&order=created_at.desc&limit=300'),MZ.q('profiles','select=*&order=created_at.desc'),MZ.q('products','select=*&order=sort,name'),MZ.q('seller_products','select=seller_id,active')]).then(function(r){
+      return Promise.all([MZ.q('bookings','select=*&order=created_at.desc&limit=300'),MZ.q('orders','select=*&order=created_at.desc&limit=300'),MZ.q('profiles','select=*&order=created_at.desc'),MZ.q('products','select=*&order=sort,name'),MZ.q('seller_products','select=seller_id,active'),MZ.q('site_settings','select=key,value')]).then(function(r){var st={};r[5].forEach(function(x){st[x.key]=x.value});$('#px1').value=st.meta_pixel||'';$('#px2').value=st.tiktok_pixel||'';
         BOOK=r[0];ORD=r[1];SELL=r[2];PROD=r[3];LISTED={};r[4].forEach(function(x){if(x.active)LISTED[x.seller_id]=(LISTED[x.seller_id]||0)+1});drawAll()})
     }).catch(function(er){show('authView',true);view('fLogin');note(aNote,er.status===401?'info':'err',er.status===401?'Please log in again.':er.message)})}
 
@@ -326,6 +329,9 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       return'<tr data-id="'+p.id+'"><td>'+esc(p.name)+'</td><td>'+esc(p.category)+'</td><td><input data-k="w" type="number" min="0" step="0.01" value="'+esc(p.wholesale_price==null?'':p.wholesale_price)+'"></td><td><input data-k="s" type="number" min="0" step="0.01" value="'+esc(p.suggested_price==null?'':p.suggested_price)+'"></td><td><select data-k="st"><option'+(p.status==='available'?' selected':'')+'>available</option><option'+(p.status==='sold out'?' selected':'')+'>sold out</option></select></td><td><button class="b2">Save</button></td></tr>'}).join('');
     $$('#prodTbl tr[data-id]').forEach(function(tr){$('button',tr).onclick=function(){var id=Number(tr.dataset.id),w=$('[data-k=w]',tr).value,s=$('[data-k=s]',tr).value;
       MZ.update('products','id=eq.'+id,{wholesale_price:w===''?null:Number(w),suggested_price:s===''?null:Number(s),status:$('[data-k=st]',tr).value}).then(function(r){PROD=PROD.map(function(p){return p.id===id?r[0]:p});flash('Saved')},function(er){flash(er.message)})}})}
+  $('#fPx').onsubmit=function(e){e.preventDefault();var v1=$('#px1').value.trim(),v2=$('#px2').value.trim();
+    if(v1&&!/^[0-9]{8,20}$/.test(v1)){flash('Facebook Pixel ID is numbers only');return}if(v2&&!/^[A-Za-z0-9]{8,32}$/.test(v2)){flash('TikTok Pixel ID is letters and numbers only');return}
+    MZ.upsert('site_settings',[{key:'meta_pixel',value:v1||null,updated_at:new Date().toISOString()},{key:'tiktok_pixel',value:v2||null,updated_at:new Date().toISOString()}],'key').then(function(){flash('Saved')},function(er){flash(er.message)})};
   $('#pq').oninput=prods;$('#pcat').onchange=prods;
 
   var h=MZ.takeHash();show('authView',true);view('fLogin');if(h&&h.error)note(aNote,'err',h.error);if(h&&h.type==='recovery')note(aNote,'info','Your password link worked. Log in on the seller page to set a new password: seller.html');

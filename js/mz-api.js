@@ -106,4 +106,39 @@
     when: function (iso) { try { return new Date(iso).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } }
   };
   window.MZ = MZ;
+
+  /* ---------- ad tracking (Meta and TikTok pixels) ---------- */
+  var PX = { meta: false, tt: false };
+  var TT_EVENT = { ViewContent: 'ViewContent', AddToCart: 'AddToCart', Purchase: 'PlaceAnOrder', Lead: 'SubmitForm' };
+  MZ.pixels = function (meta, tiktok) {
+    try {
+      if (meta && /^[0-9]{8,20}$/.test(meta) && !PX.meta) {
+        PX.meta = true;
+        (function (f, b, e, v) { if (f.fbq) return; var n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = true; n.version = '2.0'; n.queue = []; var t = b.createElement(e); t.async = true; t.src = v; var s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        window.fbq('init', meta); window.fbq('track', 'PageView');
+      }
+      if (tiktok && /^[A-Za-z0-9]{8,32}$/.test(tiktok) && !PX.tt) {
+        PX.tt = true;
+        (function (w, d, t) { w.TiktokAnalyticsObject = t; var q = w[t] = w[t] || []; q.methods = ['page', 'track', 'identify', 'instances', 'debug', 'on', 'off', 'once', 'ready', 'alias', 'group', 'enableCookie', 'disableCookie']; q.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))); }; }; for (var i = 0; i < q.methods.length; i++) q.setAndDefer(q, q.methods[i]); q.instance = function (t) { for (var e = q._i[t] || [], n = 0; n < q.methods.length; n++) q.setAndDefer(e, q.methods[n]); return e; }; q.load = function (e, n) { var i = 'https://analytics.tiktok.com/i18n/pixel/events.js'; q._i = q._i || {}; q._i[e] = []; q._i[e]._u = i; q._t = q._t || {}; q._t[e] = +new Date(); q._o = q._o || {}; q._o[e] = n || {}; var o = d.createElement('script'); o.type = 'text/javascript'; o.async = true; o.src = i + '?sdkid=' + e + '&lib=' + t; var a = d.getElementsByTagName('script')[0]; a.parentNode.insertBefore(o, a); }; q.load(tiktok); q.page(); })(window, document, 'ttq');
+      }
+    } catch (e) { }
+  };
+  MZ.track = function (name, d) {
+    d = d || {};
+    try {
+      if (PX.meta && window.fbq) window.fbq('track', name, d.value != null ? { value: d.value, currency: 'GHS', content_name: d.name } : {});
+      if (PX.tt && window.ttq) window.ttq.track(TT_EVENT[name] || name, d.value != null ? { value: d.value, currency: 'GHS', content_name: d.name } : {});
+    } catch (e) { }
+  };
+  /* MOZLYT's own pixels, set by the admin, load on the main site pages */
+  MZ.sitePixels = function () {
+    return MZ.q('site_settings', 'select=key,value').then(function (rows) {
+      var m = {}; (rows || []).forEach(function (r) { m[r.key] = r.value; });
+      MZ.pixels(m.meta_pixel, m.tiktok_pixel);
+    }).catch(function () { });
+  };
+  if (!/\/(seller|admin|store)\.html$/.test(location.pathname)) {
+    var go = function () { MZ.sitePixels(); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+  }
 })();

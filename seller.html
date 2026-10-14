@@ -304,6 +304,11 @@ body.has-list .wa-float{bottom:84px}
       <form id="fDom" class="f"><label>Your domain<input id="eDom" placeholder="www.amawellness.com" autocapitalize="none"><small>Leave empty if you do not have one.</small></label>
       <button class="btn primary" type="submit">Save domain</button></form>
       <div id="domInfo" style="margin-top:14px"></div></div>
+    <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Ad tracking (optional)</h3>
+      <p class="sub" style="margin-bottom:12px">Running Facebook, Instagram or TikTok ads? Paste your Pixel ID and your store will report visits, add-to-cart and orders to your ad account. Get the ID from Meta Events Manager or TikTok Ads Manager (Events, Web Events).</p>
+      <form id="fPix" class="f"><label>Facebook / Instagram Pixel ID<input id="ePx1" inputmode="numeric" placeholder="e.g. 123456789012345" autocapitalize="none"></label>
+      <label>TikTok Pixel ID<input id="ePx2" placeholder="e.g. C9ABCDEF1234567890" autocapitalize="none"></label>
+      <button class="btn primary" type="submit">Save tracking</button></form></div>
   </div>
 
   <div id="pane-acc" hidden>
@@ -376,7 +381,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#hello').textContent=ME.store_name||'Your store';$('#subline').textContent='Welcome, '+(ME.full_name||'seller')+'.';
     var u=storeUrl();$('#storeUrl').textContent=u;$('#openUrl').href=u;$('#cpUrl').onclick=function(){copy(u)};
     $('#shareUrl').href='https://wa.me/?text='+encodeURIComponent('Shop with me on my MOZLYT store: '+u);
-    $('#eStore').value=ME.store_name||'';$('#ePhone').value=ME.phone||'';$('#eDom').value=ME.custom_domain||'';$('#accEmail').textContent=ME.email||'';domInfo()}
+    $('#eStore').value=ME.store_name||'';$('#ePhone').value=ME.phone||'';$('#eDom').value=ME.custom_domain||'';$('#ePx1').value=ME.meta_pixel_id||'';$('#ePx2').value=ME.tiktok_pixel_id||'';$('#accEmail').textContent=ME.email||'';domInfo()}
   function drawAll(){drawOver();drawProducts();drawOrders()}
 
   /* ----- overview ----- */
@@ -420,6 +425,11 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     if(raw&&!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(raw)){flash('That does not look like a domain, for example www.amawellness.com');return}
     var b=$('button',this);busy(b,true,'Saving...');
     MZ.update('profiles','id=eq.'+ME.id,{custom_domain:raw||null}).then(function(r){ME=r[0]||ME;paint();flash(raw?'Domain saved':'Domain removed')},function(er){flash(/duplicate|unique/i.test(er.message)?'That domain is already used by another store.':er.message)}).then(function(){busy(b,false)})};
+  $('#fPix').onsubmit=function(e){e.preventDefault();var a=$('#ePx1').value.trim(),c=$('#ePx2').value.trim();
+    if(a&&!/^[0-9]{8,20}$/.test(a)){flash('The Facebook Pixel ID is numbers only, about 15 digits');return}
+    if(c&&!/^[A-Za-z0-9]{8,32}$/.test(c)){flash('The TikTok Pixel ID is letters and numbers only');return}
+    var b=$('button',this);busy(b,true,'Saving...');
+    MZ.update('profiles','id=eq.'+ME.id,{meta_pixel_id:a||null,tiktok_pixel_id:c||null}).then(function(r){ME=r[0]||ME;flash('Tracking saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
   function domInfo(){var d=ME.custom_domain,el=$('#domInfo');
     if(!d){el.innerHTML='<div class="m" style="color:var(--mute);font-size:14px">No domain yet. Your store works at the link above. You can add your own domain at any time.</div>';return}
     el.innerHTML='<div class="msg info"><b>'+esc(d)+'</b> is saved. Custom domains are switched on by MOZLYT. Message us on WhatsApp and we will connect it for you.</div>'+

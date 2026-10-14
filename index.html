@@ -607,6 +607,7 @@ body.has-list .wa-float{bottom:84px}
     var d=document.getElementById('bdate').value,t=document.getElementById('btime').value,w=document.getElementById('bwhere').value,a=document.getElementById('barea').value.trim();
     var m="Hello MOZLYT, I would like to book: "+sel.value+".\nDate: "+(d||"flexible")+"\nTime: "+t+"\nWhere: "+w+"\nArea: "+(a||"-")+"\n\nPlease send me the price and availability.";
     var u='https://wa.me/233538729743?text='+encodeURIComponent(m);
+    try{if(window.MZ){MZ.track('Lead',{})}}catch(x){}
     try{if(window.MZ)MZ.insert('bookings',{service:sel.value,preferred_date:d||null,time_slot:t,place:w,area:a||null,status:'new'}).catch(function(){})}catch(x){}
     var win=window.open(u,'_blank');if(!win){location.href=u}
   });
