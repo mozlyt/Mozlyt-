@@ -334,14 +334,16 @@ body.has-list .wa-float{bottom:84px}
 <!-- ========== DASHBOARD ========== -->
 <section id="franView" class="authcard" hidden>
   <h1>Franchise application</h1>
-  <p class="sub" id="faSub">A franchise is not like opening a shop. Before you get franchise access, MOZLYT must check who you are and that you are qualified to run a branch.</p>
+  <p class="sub" id="faSub">A franchise is not like opening a shop. Before you get franchise access, MOZLYT must check who you are and that you are qualified to run a branch. <b>We reply within about 2 working days.</b> Only after we confirm your documents are genuine will you be asked to pay.</p>
   <div id="faDone" class="card2" hidden></div>
   <form id="fFa" class="form" novalidate>
+    <label>Email<input id="faEmail" readonly></label>
+    <label>WhatsApp number we will contact you on<input id="faPhone" type="tel" maxlength="30" placeholder="e.g. 0241234567"></label>
     <label>Country<select id="faCountry"><option value="">Select your country</option></select></label>
     <label>City or town (optional)<input id="faLoc" maxlength="120" placeholder="e.g. Lagos"></label>
     <label>Tell us about yourself and your plan (optional)<textarea id="faMsg" rows="3" maxlength="800"></textarea></label>
     <label>Your ID card (Ghana Card, passport or driver's licence) - photo or PDF<input id="faId" type="file" accept="image/*,application/pdf"></label>
-    <label>Your certificate to run as a manager (business registration, professional or manager certificate) - photo or PDF<input id="faCert" type="file" accept="image/*,application/pdf"></label>
+    <label>Your certificate to run as a manager (a genuine business registration, or a certificate showing you can manage a branch) - photo or PDF<input id="faCert" type="file" accept="image/*,application/pdf"></label>
     <div class="card2" style="margin:0"><b>MOZLYT franchise terms</b>
       <ol class="sub" style="margin:8px 0 0;padding-left:18px;display:grid;gap:6px">
         <li>I will follow the rules, policies and prices of MOZLYT, and I will not do anything that stands against them.</li>
@@ -352,7 +354,8 @@ body.has-list .wa-float{bottom:84px}
         <li>MOZLYT keeps my documents private and uses them only to verify me.</li></ol>
     </div>
     <label style="display:flex;gap:10px;align-items:flex-start"><input id="faAgree" type="checkbox" style="margin-top:4px"><span>I have read and I agree to the MOZLYT franchise terms.</span></label>
-    <button class="btn primary" type="submit">Send my application</button>
+    <button class="btn primary" type="submit" id="faBtn" disabled>Send my application</button>
+    <small id="faNeed"></small>
   </form>
   <p class="note" id="faNote"></p>
   <p class="sub"><a href="#" id="faSkip">Continue to my training dashboard instead</a> &middot; <a href="#" id="faOut">Log out</a></p>
@@ -514,23 +517,31 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.updatePassword($('#rPass').value).then(function(){flash('Password saved');boot()},function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){ME=null;show('dashView',false);show('authView',true);view('fLogin')})};
 
+  function addWD(d,n){d=new Date(d);while(n>0){d.setDate(d.getDate()+1);var w=d.getDay();if(w!==0&&w!==6)n--}return d}
   function showFran(){show('dashView',false);show('authView',false);show('franView',true);
-    $('#fFa').hidden=true;$('#faDone').hidden=true;
-    MZ.q('franchise_applications','select=*&user_id=eq.'+MZ.user().id).catch(function(){return[]}).then(function(r){var a=r&&r[0];
-      MZ.rpc('public_prices').then(function(p){if(p&&p.franchise_price!=null)$('#faFee').textContent=MZ.money(p.franchise_price)+' a month'}).catch(function(){});
-      if(a&&a.status==='new'){$('#faDone').hidden=false;$('#faDone').innerHTML='<b>Application received.</b><br>MOZLYT is checking your documents. We will contact you on WhatsApp. Your franchise login opens once you are approved.'}
-      else{if(a&&a.status==='rejected'){$('#faDone').hidden=false;$('#faDone').innerHTML='<b style="color:#9b2c20">Your last application was not approved.</b>'+(a.review_note?'<br>'+esc(a.review_note):'')+'<br>You can fix the documents and send it again.'}
-        $('#fFa').hidden=false;if(a){$('#faLoc').value=a.location||'';$('#faCountry').value=a.country||''}}})}
+    $('#fFa').hidden=true;$('#faDone').hidden=true;$('#faEmail').value=ME.email||'';if(!$('#faPhone').value)$('#faPhone').value=ME.phone||'';
+    Promise.all([MZ.q('franchise_applications','select=*&user_id=eq.'+MZ.user().id).catch(function(){return[]}),MZ.q('subscription_payments','select=*&kind=eq.franchise&seller_id=eq.'+MZ.user().id+'&order=created_at.desc').catch(function(){return[]}),MZ.rpc('get_my_prices').catch(function(){return null})]).then(function(rs){var a=rs[0]&&rs[0][0],pays=rs[1]||[],P=rs[2]||{};var fee=MZ.money(P.franchise_price!=null?P.franchise_price:1000);$('#faFee').textContent=fee+' a month';
+      var dn=$('#faDone');
+      if(a&&a.status==='new'){dn.hidden=false;dn.innerHTML='<b>Application received.</b><br>MOZLYT is checking your documents. You will hear from us by about <b>'+addWD(a.created_at,2).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+'</b> (2 working days), on WhatsApp '+esc(a.phone)+' and by email.'}
+      else if(a&&a.status==='approved'){var pend=pays.filter(function(x){return x.status==='pending'})[0];dn.hidden=false;
+        dn.innerHTML='<b style="color:#14663f">Your documents are confirmed genuine.</b><br>'+(pend?'We received your payment reference <b>'+esc(pend.reference)+'</b>. MOZLYT will confirm it and open your franchise login.':'To open your franchise, pay <b>'+fee+'</b> as agreed:<div style="margin:10px 0;white-space:pre-line">'+esc(P.pay_instructions||'Message MOZLYT on WhatsApp for how to pay.')+'</div><form id="fFp" class="form"><label>Payment reference<input id="fpRef" maxlength="60" placeholder="Mobile money transaction ID"></label><button class="btn primary" type="submit">I have paid</button></form><div id="fpNote"></div>')
+        var f=$('#fFp');if(f)f.onsubmit=function(e){e.preventDefault();var b=$('button',f);busy(b,true,'Sending...');MZ.rpc('request_franchise_payment',{p_reference:$('#fpRef').value.trim()}).then(function(){showFran()},function(er){note($('#fpNote'),'err',er.message)}).then(function(){busy(b,false)})}}
+      else{if(a&&a.status==='rejected'){dn.hidden=false;dn.innerHTML='<b style="color:#9b2c20">Your last application was not approved.</b>'+(a.review_note?'<br>'+esc(a.review_note):'')+'<br>You can fix the documents and send it again.'}
+        $('#fFa').hidden=false;if(a){$('#faLoc').value=a.location||'';$('#faCountry').value=a.country||''}faCheck()}})}
   function sendFran(e){e.preventDefault();var b=$('button[type=submit]',this),n=$('#faNote'),id=$('#faId').files[0],ce=$('#faCert').files[0];note(n,'','');
     if(!$('#faCountry').value){note(n,'err','Please select your country.');return}
+    if($('#faPhone').value.replace(/\D/g,'').length<9){note(n,'err','Please enter a valid WhatsApp number.');return}
     if(!id||!ce){note(n,'err','Please upload your ID card and your certificate.');return}
     if(id.size>8388608||ce.size>8388608){note(n,'err','Each file must be under 8 MB.');return}
     if(!$('#faAgree').checked){note(n,'err','Please tick the box to agree to the terms.');return}
     busy(b,true,'Sending...');var u=MZ.user().id,t=Date.now();
     var ext=function(f){var m=(f.name.match(/\.([a-z0-9]{2,5})$/i)||[])[1];return m?m.toLowerCase():'jpg'};
     Promise.all([MZ.upload('franchise-docs',u+'/id-'+t+'.'+ext(id),id),MZ.upload('franchise-docs',u+'/cert-'+t+'.'+ext(ce),ce)]).then(function(p){
-      return MZ.rpc('submit_franchise_application',{p_name:ME.full_name||'',p_phone:ME.phone||'',p_location:$('#faLoc').value.trim(),p_country:$('#faCountry').value,p_message:$('#faMsg').value.trim(),p_id_path:p[0],p_cert_path:p[1],p_terms:true})}).then(function(){showFran()},function(er){note(n,'err',er.message)}).then(function(){busy(b,false)})}
+      return MZ.rpc('submit_franchise_application',{p_name:ME.full_name||'',p_phone:$('#faPhone').value.replace(/[^\d+]/g,''),p_location:$('#faLoc').value.trim(),p_country:$('#faCountry').value,p_message:$('#faMsg').value.trim(),p_id_path:p[0],p_cert_path:p[1],p_terms:true})}).then(function(){showFran()},function(er){note(n,'err',er.message)}).then(function(){busy(b,false)})}
   $('#faCountry').innerHTML='<option value="">Select your country</option>'+MZC.map(function(k){return'<option value="'+k.c+'">'+esc(k.n)+'</option>'}).join('');
+  function faCheck(){var miss=[];if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)miss.push('your WhatsApp number');if(!$('#faCountry').value)miss.push('your country');if(!$('#faId').files[0])miss.push('your ID card');if(!$('#faCert').files[0])miss.push('your certificate');if(!$('#faAgree').checked)miss.push('agreeing to the terms');
+    $('#faBtn').disabled=miss.length>0;$('#faNeed').textContent=miss.length?'Still needed: '+miss.join(', ')+'.':'Everything is ready. MOZLYT will check your documents and reply within about 2 working days.'}
+  ['faPhone','faCountry','faId','faCert','faAgree'].forEach(function(i){var e=$('#'+i);e.addEventListener('input',faCheck);e.addEventListener('change',faCheck)});
   $('#fFa').onsubmit=sendFran;
   $('#faSkip').onclick=function(e){e.preventDefault();try{localStorage.removeItem('mz-fran')}catch(x){}show('franView',false);boot()};
   $('#faOut').onclick=function(e){e.preventDefault();$('#btnOut').click();show('franView',false)};
