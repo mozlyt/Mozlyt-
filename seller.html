@@ -504,7 +504,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#kindNote').textContent=fr?'You get a training account now. Once we agree your terms, your franchise dashboard opens.':k==='trainee'?'You will get your own training dashboard. Choose your lessons and pay once. You can add a shop later.':'Start with a free trial. After that, keep your store open with a monthly or yearly plan.'}
   $$('input[name=kind]').forEach(function(i){i.onchange=function(){setKind(i.value)}});
   function pickName(){return PICK==='basic'?'Business lessons (Basic)':PICK==='pro'?'Pro: everything':PICK.indexOf('skill:')===0?skName(PICK.slice(6)):''}
-  try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='franchise'){setKind(qk);WANT=true;if(qk==='trainee'&&PICK){$('#kindNote').textContent='You chose: '+pickName()+'. Create your account and your training dashboard opens with it. You pay once there.'}}}catch(e){}
+  try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='franchise'){setKind(qk);WANT=true;if(qk==='trainee'&&PICK){$('#kindNote').textContent='You chose: '+pickName()+'. Create your account and your training dashboard opens with it.'+(PICK==='basic'?' The business lessons are free.':' You pay once there.')+''}}}catch(e){}
   /* ----- tabs ----- */
   var PANES=['over','prod','ord','learn','sub','set','acc','fr','more'];
   function flag(k,set){var key='mz-f-'+(ME?ME.id:'x')+'-'+k;try{if(set){localStorage.setItem(key,'1');return true}return localStorage.getItem(key)==='1'}catch(e){return false}}
@@ -538,7 +538,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var u=storeUrl();$('#storeUrl').textContent=u;$('#openUrl').href=u;$('#cpUrl').onclick=function(){copy(u);flag('shared',true);drawOver()};$('#shareUrl').onclick=function(){flag('shared',true)};
     $('#shareUrl').href='https://wa.me/?text='+encodeURIComponent('Shop with me on my MOZLYT store: '+u);
     $('#eStore').value=ME.store_name||'';$('#ePhone').value=ME.phone||'';$('#eDom').value=ME.custom_domain||'';$('#ePx1').value=ME.meta_pixel_id||'';$('#ePx2').value=ME.tiktok_pixel_id||'';$('#accEmail').textContent=ME.email||'';domInfo()}
-  function drawAll(){drawOver();drawProducts();drawOrders();drawSub()}
+  function drawAll(){drawOver();drawProducts();drawOrders();drawSub();if(TR)drawTrain()}
 
   /* ----- subscription ----- */
   function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
@@ -547,7 +547,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     function lk(id,form,ok,need){var el=$(id);el.innerHTML=ok?'':'<div class="lockbox"><b>Included in '+need+'</b><br>Upgrade to use this. <button type="button" class="b2" data-go="sub">See plans</button></div>';$$(form+' input,'+form+' button').forEach(function(x){x.disabled=!ok})}
     lk('#lockPix','#fPix',pixOk,'Plus and Premium');lk('#lockDom','#fDom',domOk,'Premium');
     $$('[data-go=sub]').forEach(function(b){b.onclick=function(){$('[data-t=sub]').click()}})}
-  function hasBiz(){return !!(ME&&(ME.training_paid||ME.training_all||(ME.franchise&&!ME.franchise_paused)||(ME.account_type!=='trainee'&&daysLeft()>0)))}
+  function hasBiz(){return !!(ME&&((BILL&&BILL.training_price!=null&&Number(BILL.training_price)===0)||ME.training_paid||ME.training_all||(ME.franchise&&!ME.franchise_paused)||(ME.account_type!=='trainee'&&daysLeft()>0)))}
   function allSk(){return !!(ME&&(ME.training_all||(ME.franchise&&!ME.franchise_paused)))}
   function hasSk(k){return !!(ME&&(allSk()||(ME.skills_unlocked||[]).indexOf(k)>-1||(ME.tier==='premium'&&daysLeft()>0&&ME.free_skill===k)))}
   function freeAvail(){return !!(ME&&ME.tier==='premium'&&daysLeft()>0&&!ME.free_skill&&!allSk())}

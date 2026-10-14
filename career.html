@@ -421,9 +421,9 @@ body.has-list .wa-float{bottom:84px}
     <h2>Pick your path</h2>
     <p class="sub">Tap What you get to see everything included, then tap Subscribe to create your account. Your dashboard opens with what you picked.</p>
     <div class="plans stack">
-      <div class="plan best pl" id="skillPlan"><div class="ph"><h3>Take a skill</h3><b>Pay once, no monthly fee</b></div><p class="sub" style="margin:4px 0 12px">Learn on your own training dashboard. Choose a level, pay once and the lessons are yours to keep.</p>
+      <div class="plan best pl" id="skillPlan"><div class="ph"><h3>Take a skill</h3><b>Basic is free. Standard and Pro: pay once</b></div><p class="sub" style="margin:4px 0 12px">Learn on your own training dashboard. Choose a level. Basic is free. Standard and Pro are paid once, with no monthly fee, and the lessons are yours to keep.</p>
         <div class="lv" id="lv">
-          <label class="lvc on"><input type="radio" name="lv" value="basic" checked><span><b>Basic business skill</b><em id="prB">GH&#8373;100</em></span></label>
+          <label class="lvc on"><input type="radio" name="lv" value="basic" checked><span><b>Basic business skill</b><em id="prB">Free</em></span></label>
           <label class="lvc"><input type="radio" name="lv" value="standard"><span><b>Standard skill</b><em>One skill, from <span id="prK">GH&#8373;100</span></em></span></label>
           <label class="lvc"><input type="radio" name="lv" value="pro"><span><b>Pro</b><em id="prO">GH&#8373;150</em></span></label>
         </div>
@@ -560,7 +560,7 @@ homecare:["Basics of caring for someone at home","Hygiene, safe lifting and movi
   var t=setInterval(function(){if(!window.MZ||!MZ.rpc)return;clearInterval(t);MZ.rpc('public_prices',{}).then(function(p){if(!p)return;
     set('prFr',m(p.franchise_price)+' a month');set('prFr2',m(p.franchise_price)+' a month');set('prS0',m(p.monthly_price));
     set('prS',m(p.monthly_price)+' a month or '+m(p.yearly_price)+' a year');set('prP',m(p.plus_monthly)+' a month or '+m(p.plus_yearly)+' a year');set('prR',m(p.premium_monthly)+' a month or '+m(p.premium_yearly)+' a year');
-    set('prT',p.trial_days);set('prB',m(p.training_price));set('prO',m(p.training_pro_price))},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
+    set('prT',p.trial_days);set('prB',Number(p.training_price)===0?'Free':m(p.training_price));set('prO',m(p.training_pro_price))},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
 })();
 </script>
 </body>
