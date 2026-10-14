@@ -470,6 +470,15 @@ body.has-list .wa-float{bottom:84px}
 <div class="listbar" id="listbar"><span><b id="lcount">0</b> in your list</span><button type="button" id="lclear">Clear</button><a class="btn" id="lsend" href="#" target="_blank" rel="noopener">Send on WhatsApp</a></div>
 <div class="toast" id="toast" role="status"></div>
 
+<style id="mz-pmod">.card .pic,.card h3{cursor:pointer}
+.pmod{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:14px}.pmod[hidden]{display:none}.pbg{position:absolute;inset:0;background:rgba(10,20,15,.6)}
+.pbox{position:relative;background:#fff;border-radius:16px;max-width:520px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.pimg{background:#eef3ef;display:grid;place-items:center;min-height:200px}.pimg img{width:100%;max-height:60vh;object-fit:contain;display:block}
+.pbody{padding:16px;display:grid;gap:8px}.pbody h3{margin:0;font-size:20px}.pbody p{margin:0;color:#5b6b62;white-space:pre-wrap;line-height:1.5}.pbody .pr{font-weight:700;font-size:18px}
+.pbody .pbtn{display:block;text-align:center;border:0;border-radius:10px;background:#14663f;color:#fff;font-weight:700;padding:12px;font-size:15px;cursor:pointer;text-decoration:none}
+.pbody .pbtn.alt{background:#fff;color:#14663f;border:1.5px solid #14663f}
+.px{position:absolute;top:8px;right:8px;z-index:2;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.92);font-size:24px;line-height:1;cursor:pointer}</style>
+<div class="pmod" id="pmod" hidden role="dialog" aria-modal="true"><div class="pbg" id="pbg"></div><div class="pbox"><button type="button" class="px" id="px" aria-label="Close">&times;</button><div class="pimg" id="pimg"></div><div class="pbody"><h3 id="pname"></h3><div class="pr" id="pprice"></div><p id="pdesc"></p><div id="pact" style="display:grid;gap:8px"></div></div></div></div>
 <script>
 /* PRODUCT LIST FROM GOOGLE SHEETS
    Paste the link of your published Google Sheet (CSV) between the quotes below.
@@ -480,7 +489,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   var WA="233538729743",CATS=[{"id": "massage", "title": "Massage tools and recovery", "tint": "t1", "icon": "massage"}, {"id": "fitness", "title": "Fitness equipment", "tint": "t3", "icon": "fit"}, {"id": "nutrition", "title": "Nutrition", "tint": "t5", "icon": "nut"}, {"id": "skincare", "title": "Skincare and beauty", "tint": "t4", "icon": "skin"}, {"id": "cooking", "title": "Cooking tools", "tint": "t2", "icon": "cook"}, {"id": "fashion", "title": "Fashion", "tint": "t6", "icon": "fash"}, {"id": "gifts", "title": "Gift packages", "tint": "t7", "icon": "gift"}];
   var shelves=document.getElementById('shelves'),chips=document.querySelector('.chips .wrap'),empty=document.getElementById('empty'),
       bar=document.getElementById('listbar'),cnt=document.getElementById('lcount'),send=document.getElementById('lsend'),toast=document.getElementById('toast'),
-      q=document.getElementById('q'),list=[],t,NS='http://www.w3.org/2000/svg';
+      q=document.getElementById('q'),list=[],ALL={},t,NS='http://www.w3.org/2000/svg';
   function say(s){toast.textContent=s;toast.classList.add('show');clearTimeout(t);t=setTimeout(function(){toast.classList.remove('show')},1500)}
   function msg(){return "Hello MOZLYT, I would like prices and availability for:\n"+list.map(function(n,i){return (i+1)+". "+n}).join("\n")+"\n\nMy area: "}
   function refresh(){cnt.textContent=list.length;bar.classList.toggle('show',list.length>0);document.body.classList.toggle('has-list',list.length>0);send.href='https://wa.me/'+WA+'?text='+encodeURIComponent(msg())}
@@ -496,7 +505,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
       else f+=c}
     if(f!==''||row.length){row.push(f);r.push(row)}return r}
   function fromCSV(tx){var r=parseCSV(tx);if(!r.length)return[];var h=r.shift().map(function(x){return x.toLowerCase().replace(/[^a-z]/g,'')}),ix=function(n){return h.indexOf(n)};
-    return r.map(function(x){return{cat:(x[ix('category')]||'').trim(),name:(x[ix('name')]||'').trim(),price:(x[ix('price')]||'').trim(),status:(x[ix('status')]||'').trim().toLowerCase(),photo:(x[ix('photo')]||'').trim()}}).filter(function(p){return p.name&&p.status!=='hidden'})}
+    return r.map(function(x){return{cat:(x[ix('category')]||'').trim(),name:(x[ix('name')]||'').trim(),price:(x[ix('price')]||'').trim(),status:(x[ix('status')]||'').trim().toLowerCase(),photo:(x[ix('photo')]||'').trim(),desc:''}}).filter(function(p){return p.name&&p.status!=='hidden'})}
   function priceText(p){if(!p)return 'Price on request';return /^[\d.,\s]+$/.test(p)?'GH₵ '+p.trim():p}
   function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'more'}
   function catFor(v){var l=v.toLowerCase(),i,c;for(i=0;i<CATS.length;i++){c=CATS[i];if(l==c.id||l==c.title.toLowerCase()||c.title.toLowerCase().indexOf(l)===0&&l.length>3||(l.indexOf(c.id)===0&&l.length<=c.id.length+3))return c}return null}
@@ -510,7 +519,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
       var sec=el('section','row'),h=el('div','row-h'),a=el('a',null,'Ask on WhatsApp'),g=el('div','grid');sec.id=c.id;
       h.appendChild(el('h2',null,c.title));a.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, I am interested in your '+c.title.toLowerCase()+' range. Please tell me what is available.');a.target='_blank';a.rel='noopener';h.appendChild(a);
       groups[c.id].forEach(function(p){
-        var card=el('div','card'),pic=el('div','pic '+c.tint),b=el('button','add');
+        var card=el('div','card'),pic=el('div','pic '+c.tint),b=el('button','add');ALL[p.name]={p:p,c:c};
         if(p.photo){var im=el('img');im.src=p.photo;im.alt=p.name;im.loading='lazy';im.onerror=function(){pic.removeChild(im);pic.appendChild(icon(c.icon))};pic.appendChild(im)}else pic.appendChild(icon(c.icon));
         b.type='button';
         if(p.status.indexOf('sold')===0||p.status==='out'){b.textContent='Sold out';b.disabled=true;card.className='card soldout'}else setBtn(b,list.indexOf(p.name)>-1);
@@ -522,6 +531,16 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
       var ch=el('a','chip',c.title.replace('Massage tools and recovery','Massage and recovery'));ch.href='#'+c.id;chips.appendChild(ch)});
     if(q.value)q.dispatchEvent(new Event('input'));
   }
+  var pm=document.getElementById('pmod');
+  function openP(name){var o=ALL[name];if(!o)return;var p=o.p,sold=p.status.indexOf('sold')===0||p.status==='out';
+    var pi=document.getElementById('pimg');pi.textContent='';if(p.photo){var im=el('img');im.src=p.photo;im.alt=p.name;pi.appendChild(im)}else pi.appendChild(icon(o.c.icon));
+    document.getElementById('pname').textContent=p.name;document.getElementById('pprice').textContent=priceText(p.price);document.getElementById('pdesc').textContent=p.desc||'Message us on WhatsApp for details, sizes and availability.';
+    var a=document.getElementById('pact');a.textContent='';
+    if(sold){a.appendChild(el('div','price','Sold out'))}else{var ab=el('button','pbtn',list.indexOf(p.name)>-1?'Remove from list':'Add to list');ab.type='button';ab.onclick=function(){var i=list.indexOf(p.name);if(i>-1){list.splice(i,1);say(p.name+' removed')}else{list.push(p.name);say(p.name+' added to your list')}shelves.querySelectorAll('.card').forEach(function(c){if(c.querySelector('h3').textContent===p.name){var bb=c.querySelector('.add');if(bb&&!bb.disabled)setBtn(bb,list.indexOf(p.name)>-1)}});refresh();pm.hidden=true};a.appendChild(ab);
+      var w=el('a','pbtn alt','Ask about this on WhatsApp');w.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, I am interested in: '+p.name+'. Please share the price and availability.');w.target='_blank';w.rel='noopener';a.appendChild(w)}
+    pm.hidden=false}
+  shelves.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.pic,h3');if(!t||e.target.closest('.add'))return;var card=t.closest('.card');if(card)openP(card.querySelector('h3').textContent)});
+  document.getElementById('px').onclick=document.getElementById('pbg').onclick=function(){pm.hidden=true};document.addEventListener('keydown',function(e){if(e.key==='Escape')pm.hidden=true});
   shelves.addEventListener('click',function(e){
     var b=e.target.closest&&e.target.closest('.add');if(!b||b.disabled)return;
     var name=b.parentNode.querySelector('h3').textContent,i=list.indexOf(name);
@@ -539,6 +558,10 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
     empty.style.display=shown?'none':'block'});
   /* keep the built-in list as a backup, then swap in the sheet when it loads */
   if(INLINE_CSV){var _i=fromCSV(INLINE_CSV);if(_i.length)render(_i)}
+  /* the admin product list is the source of truth once it loads */
+  window.addEventListener('load',function(){if(!window.MZ||!MZ.q)return;MZ.q('products','select=name,category,description,suggested_price,photo,status&order=sort,name').then(function(rows){
+    var items=(rows||[]).filter(function(r){return r.status!=='hidden'}).map(function(r){return{cat:r.category||'',name:r.name,price:r.suggested_price==null?'':String(r.suggested_price),status:(r.status||'available')==='available'?'in stock':String(r.status).toLowerCase(),photo:r.photo||'',desc:r.description||''}});
+    if(items.length){ALL={};render(items)}}).catch(function(){})});
   if(SHEET_CSV_URL&&window.fetch){
     fetch(SHEET_CSV_URL,{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(tx){var items=fromCSV(tx);if(items.length)render(items)}).catch(function(){});
   }
