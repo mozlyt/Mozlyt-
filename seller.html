@@ -596,8 +596,12 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       if(!p||!p[0]){throw new Error('We could not find your seller profile. Please log out and sign up again.')}
       ME=p[0];var wf='';try{wf=localStorage.getItem('mz-fran')}catch(e){}
       if(wf&&!ME.franchise){return showFran()}
-      var skipped='';try{skipped=sessionStorage.getItem('mz-fskip')}catch(e){}
-      if(!ME.franchise&&!skipped){return MZ.q('franchise_applications','select=status&user_id=eq.'+MZ.user().id+'&order=created_at.desc&limit=1').then(function(fa){var st=fa&&fa[0]&&fa[0].status;if(st==='approved'||st==='new'){return showFran()}return enterDash()},function(){return enterDash()})}
+      var qk2='';try{qk2=new URLSearchParams(location.search).get('kind')||''}catch(e){}
+      if(!ME.franchise){return MZ.q('franchise_applications','select=status&user_id=eq.'+MZ.user().id+'&order=created_at.desc&limit=1').then(function(fa){var st=fa&&fa[0]&&fa[0].status;
+        if((st==='approved'||st==='new')&&qk2==='franchise'){return showFran()}
+        var r=enterDash();
+        if(st==='approved'||st==='new'){try{dashNote.innerHTML='<div class="msg ok">'+(st==='approved'?'<b>Your franchise application is approved.</b> <a href="seller.html?kind=franchise">Pay the franchise fee to open it</a>':'<b>Your franchise application is being checked.</b> <a href="seller.html?kind=franchise">See where it is</a>')+'</div>'}catch(e){}}
+        return r},function(){return enterDash()})}
       return enterDash();
       function enterDash(){
       show('dashView',true);if(ME.franchise&&location.search.indexOf('own=1')<0){location.replace('franchise.html');return}
