@@ -276,7 +276,7 @@ body.has-list .wa-float{bottom:84px}
       <a href="shop.html">Shop</a>
       <a href="blog.html">Blog</a>
       <a href="about.html">About us</a>
-      <span class="mz-ctas"><a class="mz-btn mz-primary" href="index.html#services">Book a service</a><a class="mz-btn mz-gold" href="career.html">Take a career with us</a></span>
+      <span class="mz-ctas"><a class="mz-btn mz-primary" href="index.html#services">Book a service</a><a class="mz-btn mz-gold" href="career.html">Take a career with us</a><a class="mz-btn mz-primary" href="provider.html">Work with us</a></span>
     </nav>
     <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
   </div>
@@ -298,13 +298,14 @@ body.has-list .wa-float{bottom:84px}
 <section id="dashView" hidden>
   <div class="top2"><div><h1>MOZLYT admin</h1><p class="sub" id="who"></p></div><button class="b2 ghost" id="btnOut" type="button">Log out</button></div>
   <div id="dNote"></div>
-  <style>@media(max-width:820px){#dtabs{display:flex!important;position:sticky;top:0;z-index:40;background:var(--bg,#f5f7f4);padding:8px 0}}</style><div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="book" type="button">Bookings</button><button data-t="ord" type="button">Orders</button><button data-t="sell" type="button">Sellers</button><button data-t="fr" type="button" id="tabFr">Franchises</button><button data-t="fapp" type="button" id="tabFapp">Franchise requests</button><button data-t="subs" type="button">Subscriptions</button><button data-t="prod" type="button">Products</button><button data-t="train" type="button">Training</button><button data-t="set" type="button">Ad tracking</button></div>
+  <style>@media(max-width:820px){#dtabs{display:flex!important;position:sticky;top:0;z-index:40;background:var(--bg,#f5f7f4);padding:8px 0}}</style><div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="book" type="button">Bookings</button><button data-t="ord" type="button">Orders</button><button data-t="sell" type="button">Sellers</button><button data-t="fr" type="button" id="tabFr">Franchises</button><button data-t="fapp" type="button" id="tabFapp">Franchise requests</button><button data-t="papp" type="button" id="tabPapp">Work with us</button><button data-t="subs" type="button">Subscriptions</button><button data-t="prod" type="button">Products</button><button data-t="train" type="button">Training</button><button data-t="set" type="button">Ad tracking</button></div>
 
   <div id="pane-over"><div class="stats" id="stats"></div><h3 style="margin:18px 0 10px">Newest bookings</h3><div class="lst" id="ovBook"></div><h3 style="margin:22px 0 10px">Newest orders</h3><div class="lst" id="ovOrd"></div></div>
   <div id="pane-book" hidden><div class="tools"><select id="bf"><option value="">All statuses</option><option>new</option><option>confirmed</option><option>done</option><option>cancelled</option></select></div><div class="lst" id="bookList"></div></div>
   <div id="pane-ord" hidden><div class="tools"><select id="of"><option value="">All orders</option><option value="main">MOZLYT shop</option><option value="sellers">Seller stores</option></select><select id="os"><option value="">All statuses</option><option>new</option><option>confirmed</option><option>paid</option><option>delivered</option><option>cancelled</option></select></div><div class="lst" id="ordList"></div></div>
   <div id="pane-fapp" hidden><p class="sub" style="margin-bottom:12px">People applying for a franchise. They agreed to the terms and uploaded an ID card and a certificate. Applicants whose certificate reads management or marketing are approved automatically and get their dashboard at once with a 7-day trial. Please open their documents and check them: tap Checked, or Revoke if something is wrong. Other certificates wait here for you (reply within 2 working days).</p><div class="lst" id="fappList"></div></div>
   <div id="pane-sell" hidden><div class="scroll"><table class="tbl stack" id="sellTbl"></table></div></div>
+  <div id="pane-papp" hidden><p class="sub" style="margin-bottom:12px">People who want to work with MOZLYT and handle services (therapists, trainers and so on). Open their ID and certificate, tick the services they are qualified for, then approve. Approved providers get a dashboard and are told when a client books one of their services. Reply within 2 working days.</p><div class="lst" id="pappList"></div></div>
   <div id="pane-fr" hidden><p class="sub" style="margin-bottom:12px">Franchise partners, separate from shop sellers. Each has its own branch, recruits and monthly franchise fee.</p><div class="scroll"><table class="tbl stack" id="frTbl"></table></div></div>
   <div id="pane-train" hidden>
     <p class="sub">Create courses and lessons for your trainees. Only published courses are visible to sellers. Videos: paste a YouTube link.</p>
@@ -370,7 +371,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:'MOZLYT admin'}).then(function(r){if(r.confirmed)boot();else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(aNote,'ok','We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in.')}},function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();MZ.recover($('#fEmail').value.trim()).then(function(){note(aNote,'ok','If that email has an account, a reset link is on its way.')},function(er){note(aNote,'err',er.message)})};
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){show('dashView',false);show('authView',true);view('fLogin')})};
-  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','book','ord','sell','fr','fapp','subs','prod','train','set'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='train')loadTrain()}});
+  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','book','ord','sell','fr','fapp','papp','subs','prod','train','set'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='train')loadTrain()}});
 
   function boot(){
     show('authView',false);
@@ -389,7 +390,24 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $$('#fappList [data-revoke]').forEach(function(b){b.onclick=function(){var nt=prompt('Reason (optional)')||'';if(!confirm('Remove franchise access from this person?'))return;b.disabled=true;MZ.rpc('admin_revoke_franchise',{p_app:Number(b.dataset.revoke),p_note:nt}).then(function(){flash('Franchise revoked');return Promise.all([MZ.q('franchise_applications','select=*&order=created_at.desc'),MZ.q('profiles','select=*&order=created_at.desc')])}).then(function(r){FAPP=r[0]||FAPP;SELL=r[1]||SELL;fapps();sellers()},function(er){flash(er.message);b.disabled=false})}});
     $$('#fappList [data-rv]').forEach(function(b){b.onclick=function(){var ok=b.dataset.ok==='1',nt=ok?'':(prompt('Reason for the applicant (optional)')||'');if(ok&&!confirm('Documents are genuine? The applicant will then be asked to pay the franchise fee. The franchise opens when you confirm that payment in Payments.'))return;b.disabled=true;MZ.rpc('admin_review_franchise',{p_app:Number(b.dataset.rv),p_approve:ok,p_note:nt}).then(function(){flash(ok?'Approved. The applicant can now pay.':'Rejected');return MZ.q('franchise_applications','select=*&order=created_at.desc')}).then(function(r){FAPP=r||FAPP;fapps()},function(er){flash(er.message);b.disabled=false})}});
     $$('#fappList [data-fa]').forEach(function(b){b.onclick=function(){b.disabled=true;MZ.update('franchise_applications','id=eq.'+b.dataset.fa,{status:b.dataset.st}).then(function(r){FAPP=FAPP.map(function(x){return String(x.id)===b.dataset.fa?Object.assign({},x,{status:b.dataset.st}):x});fapps()},function(er){flash(er.message);b.disabled=false})}})}
-  function drawAll(){over();books();orders();sellers();prods();subs();fapps()}
+  var PAPP=[];
+  function loadProv(){MZ.q('provider_applications','select=*&order=created_at.desc&limit=200').then(function(r){PAPP=r||[];papps()},function(){})}
+  function papps(){var n=PAPP.filter(function(x){return x.status==='new'}).length;$('#tabPapp').textContent='Work with us'+(n?' ('+n+')':'');
+    $('#pappList').innerHTML=PAPP.map(function(x){var wa='https://wa.me/'+MZ.phoneIntl(x.phone)+'?text='+encodeURIComponent('Hello '+x.name+', this is MOZLYT about your application to work with us.');
+      var sv=(x.services||[]),ap=x.approved_services||[];
+      return'<div class="it" data-p="'+x.id+'"><div class="h"><b>'+mzFlag(x.country,16)+esc(x.name)+(x.location?' &middot; '+esc(x.location):'')+'</b><span class="tag '+(x.status==='new'?'warn':(x.status==='closed'||x.status==='rejected')?'bad':'')+'">'+x.status+'</span></div>'+
+      '<div class="m">'+esc(x.phone)+' &middot; <a href="mailto:'+esc(x.email||'')+'">'+esc(x.email||'')+'</a> &middot; '+MZ.when(x.created_at)+'</div><div class="m">Certificate says: <b>'+esc(x.cert_title||'')+'</b></div>'+(x.message?'<div>'+esc(x.message)+'</div>':'')+
+      '<div class="m" style="margin-top:6px">'+(x.status==='new'?'Services asked for (untick any they are not qualified for):':'Approved services:')+'</div><div class="pills" style="margin:4px 0 8px">'+(x.status==='new'?sv.map(function(s){return'<label class="pill2" style="display:inline-flex;gap:6px;align-items:center"><input type="checkbox" data-sv="'+esc(s)+'" checked> '+esc(s)+'</label>'}).join(''):(ap.length?ap:sv).map(function(s){return'<span class="tag">'+esc(s)+'</span>'}).join(''))+'</div>'+
+      (x.review_note?'<div class="m">Note: '+esc(x.review_note)+'</div>':'')+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="b2" data-pdoc="'+esc(x.id_path||'')+'" type="button">View ID card</button><button class="b2" data-pdoc="'+esc(x.cert_path||'')+'" type="button">View certificate</button>'+
+      (x.status==='new'?'<button class="b2" data-pok="'+x.id+'" type="button">Approve selected services</button><button class="b2 ghost" data-pno="'+x.id+'" type="button">Reject</button>':x.status==='approved'?'<button class="b2 ghost" data-prev="'+x.id+'" type="button">Remove access</button>':'')+
+      '<a class="b2" style="text-decoration:none" target="_blank" rel="noopener" href="'+wa+'">WhatsApp</a></div></div>'}).join('')||'<div class="empty">No applications yet.</div>';
+    $$('#pappList [data-pdoc]').forEach(function(b){b.onclick=function(){if(!b.dataset.pdoc)return;var w=window.open('','_blank');MZ.signUrl('franchise-docs',b.dataset.pdoc).then(function(u){w.location=u},function(er){if(w)w.close();flash(er.message)})}});
+    function done(m){return function(){flash(m);loadProv()}}
+    $$('#pappList [data-pok]').forEach(function(b){b.onclick=function(){var card=b.closest('.it'),sv=$$('[data-sv]',card).filter(function(c){return c.checked}).map(function(c){return c.dataset.sv});if(!sv.length){flash('Tick at least one service');return}if(!confirm('Approve for: '+sv.join(', ')+'?'))return;b.disabled=true;MZ.rpc('admin_review_provider',{p_app:Number(b.dataset.pok),p_ok:true,p_services:sv,p_note:''}).then(done('Approved'),function(er){flash(er.message);b.disabled=false})}});
+    $$('#pappList [data-pno]').forEach(function(b){b.onclick=function(){var nt=prompt('Reason for the applicant (optional)')||'';b.disabled=true;MZ.rpc('admin_review_provider',{p_app:Number(b.dataset.pno),p_ok:false,p_services:null,p_note:nt}).then(done('Rejected'),function(er){flash(er.message);b.disabled=false})}});
+    $$('#pappList [data-prev]').forEach(function(b){b.onclick=function(){var nt=prompt('Reason (optional)')||'';if(!confirm('Remove this provider\'s access?'))return;b.disabled=true;MZ.rpc('admin_revoke_provider',{p_app:Number(b.dataset.prev),p_note:nt}).then(done('Access removed'),function(er){flash(er.message);b.disabled=false})}})}
+  function drawAll(){over();books();orders();sellers();prods();subs();fapps();loadProv()}
   function over(){var nb=BOOK.filter(function(b){return b.status==='new'}).length,no=ORD.filter(function(o){return o.status==='new'}).length;
     $('#stats').innerHTML=[['New bookings',nb],['All bookings',BOOK.length],['New orders',no],['All orders',ORD.length],['Sellers',SELL.length],['Products',PROD.length]].map(function(x){return'<div class="stat"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>'}).join('');
     $('#ovBook').innerHTML=BOOK.slice(0,5).map(bookRow).join('')||'<div class="empty">No bookings yet.</div>';$('#ovOrd').innerHTML=ORD.slice(0,5).map(orderRow).join('')||'<div class="empty">No orders yet.</div>';bindB($('#ovBook'));bindO($('#ovOrd'))}
@@ -522,6 +540,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     <div>
       <h4>Careers</h4>
       <a href="career.html">Take a career with us</a>
+      <a href="provider.html">Work with us</a>
       <a href="what-we-do.html#skill">Take a skill</a>
       <a href="what-we-do.html#sellers">Take a shop</a>
       <a href="what-we-do.html#franchise">Franchise</a>

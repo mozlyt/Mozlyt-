@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Work with MOZLYT</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="author" content="MOZLYT">
+<meta name="geo.region" content="GH-AA">
+<meta name="geo.placename" content="Accra">
+
+<link rel="manifest" href="manifest.webmanifest">
+
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MOZLYT">
+
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="img/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="theme-color" content="#0E2A47">
+
+<style>
+:root{--ink:#0E2A47;--green:#1F9D6B;--green-d:#157650;--gold:#F2B134;--paper:#F6F8F5;--white:#fff;--line:#DCE4DE;--mute:#5B6B7A}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.15;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:600;font-size:15px;border:2px solid transparent;cursor:pointer;text-align:center;font-family:inherit}
+.btn.primary{background:var(--green);color:#fff}
+.btn.primary:hover{background:var(--green-d)}
+.btn.ghost{border-color:var(--ink);color:var(--ink);background:transparent}
+.btn.gold{background:var(--gold);color:var(--ink)}
+
+.hero{padding:64px 0 48px}
+.hero h1{font-size:clamp(34px,6vw,58px);max-width:20ch;margin-bottom:16px}
+.hero p{font-size:19px;color:var(--mute);max-width:58ch}
+
+section{padding:56px 0}
+section h2{font-size:clamp(26px,4.2vw,40px);margin-bottom:10px}
+.white{background:var(--white)}
+.story{display:grid;grid-template-columns:1fr 1.3fr;gap:44px;align-items:start}
+@media(max-width:860px){.story{grid-template-columns:1fr;gap:18px}}
+.story p{margin-bottom:14px;font-size:17px;max-width:62ch}
+.mv{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.mv{grid-template-columns:1fr}}
+.mv div{border-radius:18px;padding:28px 26px}
+.mv h3{font-size:24px;margin-bottom:8px}
+.mv .m{background:var(--ink);color:#fff}
+.mv .m p{color:#C9D6E4}
+.mv .v{background:#E6F5EE}
+.mv .v p{color:var(--mute)}
+.mv p{font-size:17px}
+
+.vals{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:22px}
+.val{border-top:4px solid var(--green);padding-top:14px}
+.val:nth-child(2){border-color:var(--gold)}
+.val:nth-child(3){border-color:var(--ink)}
+.val:nth-child(4){border-color:#8FA9C8}
+.val h3{font-size:21px;margin-bottom:6px}
+.val p{font-size:15px;color:var(--mute)}
+
+.founder{display:grid;grid-template-columns:240px 1fr;gap:34px;align-items:center}
+@media(max-width:700px){.founder{grid-template-columns:1fr}}
+.ph{aspect-ratio:1/1;border-radius:20px;background:linear-gradient(135deg,#BFE6D4,#7CCBA6);display:grid;place-items:center;font-family:Georgia,serif;font-size:64px;color:var(--ink);max-width:240px;position:relative}
+.ph small{position:absolute;bottom:10px;font-family:system-ui;font-size:11.5px;color:var(--mute)}
+img.ph{display:block;width:100%;height:auto;object-fit:cover;background:#0E2A47}
+.founder h3{font-size:26px}
+.founder .role{color:var(--green-d);font-weight:700;margin:2px 0 10px}
+.founder p{font-size:16.5px;max-width:58ch}
+
+.where{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.where span{padding:10px 18px;border:2px solid var(--ink);border-radius:99px;font-weight:600;font-size:14px}
+.where span.g{background:var(--green);border-color:var(--green);color:#fff}
+.where span.y{background:var(--gold);border-color:var(--gold)}
+
+.contact{display:grid;grid-template-columns:1fr 1.1fr;gap:34px;align-items:start}
+@media(max-width:860px){.contact{grid-template-columns:1fr}}
+.cl{list-style:none;display:grid;gap:14px;margin-top:14px}
+.cl li b{display:block;font-size:13.5px;color:var(--mute);font-weight:700}
+.cl li span{font-size:17px}
+form{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:14px}
+label{font-weight:700;font-size:13.5px;display:grid;gap:6px}
+input,textarea{padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:var(--white);color:var(--ink)}
+textarea{min-height:110px;resize:vertical}
+
+.final{background:var(--ink);color:#fff;text-align:center}
+.final h2{color:#fff}
+.final p{color:#B9C7D6;max-width:52ch;margin:0 auto 24px}
+.final .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.final .btn.ghost{border-color:#fff;color:#fff}
+.note{font-size:12.5px;color:var(--mute);padding:18px 0 4px}
+</style>
+<style id="mz-shared">
+.mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.mz-header{background:#fff;border-bottom:1px solid #DCE4DE;position:sticky;top:0;z-index:50}
+.mz-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.mz-logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:22px;letter-spacing:.02em;color:#0E2A47;text-decoration:none}
+.mz-logo span{color:#1F9D6B}
+.mz-nav{display:flex;align-items:center;gap:22px;font-size:14.5px}
+.mz-nav a{color:#5B6B7A;text-decoration:none}
+.mz-nav a.mz-cur{color:#0E2A47;font-weight:700;border-bottom:3px solid #1F9D6B;padding-bottom:3px}
+.mz-ctas{display:flex;gap:10px;margin-left:8px}
+.mz-btn{display:inline-block;padding:9px 16px;border-radius:10px;font-weight:600;font-size:14px;text-align:center;border:2px solid transparent;white-space:nowrap}
+.mz-btn.mz-primary{background:#1F9D6B;color:#fff}
+.mz-btn.mz-primary:hover{background:#157650}
+.mz-btn.mz-gold{background:#F2B134;color:#0E2A47}
+.mz-burger{display:none;width:44px;height:44px;border:1px solid #DCE4DE;border-radius:10px;background:#fff;cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0}
+.mz-burger span{display:block;width:20px;height:2px;background:#0E2A47;border-radius:2px;transition:transform .2s,opacity .2s}
+.mz-open .mz-burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.mz-open .mz-burger span:nth-child(2){opacity:0}
+.mz-open .mz-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(prefers-reduced-motion:reduce){.mz-burger span{transition:none}}
+@media(max-width:900px){
+  .mz-burger{display:flex}
+  .mz-nav{display:none;position:absolute;left:0;right:0;top:64px;background:#fff;border-bottom:1px solid #DCE4DE;flex-direction:column;align-items:stretch;gap:0;padding:6px 20px 20px;box-shadow:0 16px 30px rgba(14,42,71,.12);font-size:16px}
+  .mz-open .mz-nav{display:flex}
+  .mz-nav > a{padding:14px 0;border-bottom:1px solid #EEF2F0}
+  .mz-nav a.mz-cur{border-bottom:1px solid #EEF2F0;padding-bottom:14px;color:#1F9D6B}
+  .mz-ctas{flex-direction:column;margin:16px 0 0}
+  .mz-btn{padding:13px 16px;font-size:15px}
+}
+.mz-footer{background:#0E2A47;color:#B9C7D6;padding:0;text-align:left;font-size:14.5px;line-height:1.55}
+.mz-fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px;padding-top:52px;padding-bottom:36px}
+@media(max-width:900px){.mz-fgrid{grid-template-columns:1fr 1fr;gap:28px;padding-top:40px}.mz-fbrand{grid-column:1/-1}}
+.mz-footer .mz-logo{color:#fff;display:inline-block;padding:0}
+.mz-footer .mz-logo span{color:#5FD3A1}
+.mz-footer p{margin:12px 0 0;max-width:38ch;color:#B9C7D6}
+.mz-footer h4{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;color:#fff;margin:0 0 10px;font-weight:700}
+.mz-footer a{color:#B9C7D6;text-decoration:none;margin:0;display:block;padding:5px 0}
+.mz-footer a:hover{color:#fff;text-decoration:underline}
+.mz-contact{margin-top:14px;color:#DCE6F1}
+.mz-social{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.mz-footer .mz-social a{display:inline-block;padding:7px 14px;border:1px solid #38577A;border-radius:99px;font-size:13px;color:#DCE6F1}
+.mz-footer .mz-social a:hover{border-color:#fff;text-decoration:none}
+.mz-fbottom{border-top:1px solid #23415F;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:18px;padding-bottom:24px;font-size:13px;color:#8FA3BA}
+.mz-footer .mz-fbottom a{display:inline-block;margin-left:18px;padding:0;color:#B9C7D6;text-decoration:underline}
+
+.mz-footer .mz-logo{display:inline-flex}
+.mz-footer .mz-social{gap:10px}
+.mz-footer .mz-social a{display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:#fff;color:#000;transition:transform .15s,background .15s}
+.mz-footer .mz-social a svg{width:22px;height:22px;display:block}
+.mz-footer .mz-social a:hover{background:#5FD3A1;color:#000;transform:translateY(-2px);text-decoration:none}
+@media(prefers-reduced-motion:reduce){.mz-footer .mz-social a{transition:none}.mz-footer .mz-social a:hover{transform:none}}
+:where([id]){scroll-margin-top:76px}
+.mz-logo{display:inline-flex;align-items:center}
+.mz-mark{width:36px;height:36px;border-radius:9px;margin-right:9px;display:block}
+.mz-footer .mz-contact a{display:inline;padding:0;color:#fff;text-decoration:underline}
+.wa-float{position:fixed;right:16px;bottom:16px;z-index:60;display:flex;align-items:center;gap:8px;background:#25D366;color:#073B1F;font-weight:700;font-size:14px;padding:12px 18px 12px 14px;border-radius:99px;box-shadow:0 8px 22px rgba(0,0,0,.28);text-decoration:none;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wa-float svg{width:24px;height:24px;fill:#073B1F;flex:none}
+@media(max-width:600px){.wa-float span{display:none}.wa-float{padding:14px}}
+body.has-list .wa-float{bottom:84px}
+</style>
+
+<style id="mz-dash">
+.dash{padding:26px 0 60px;min-height:70vh}
+.dash h1{font-size:clamp(26px,4.6vw,38px);margin:0 0 6px}
+.dash .sub{color:var(--mute);margin:0 0 20px;font-size:16px}
+.card2{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 6px 22px rgba(14,42,71,.05)}
+.authcard{max-width:460px;margin:10px auto}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:0 0 18px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.tabs button{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 16px;border-radius:99px;font:600 14.5px/1 inherit;font-family:inherit;cursor:pointer}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.f{display:grid;gap:12px}
+.f label{display:grid;gap:5px;font-size:13.5px;font-weight:600;color:var(--ink)}
+.f input,.f select,.f textarea{width:100%;padding:12px 13px;border:1px solid #cfd8d2;border-radius:10px;font:16px inherit;font-family:inherit;background:#fff;color:var(--ink)}
+.f small{font-weight:400;color:var(--mute);font-size:12.5px}
+.f .btn{justify-content:center;width:100%;border:0;cursor:pointer}
+.msg{padding:11px 13px;border-radius:10px;font-size:14.5px;margin:0 0 14px}
+.msg.err{background:#FDECEA;color:#9b2c20}.msg.ok{background:#E6F5EE;color:#14663f}.msg.info{background:#FFF6DE;color:#6b4e00}
+.linkbtn{background:none;border:0;color:var(--green-d);text-decoration:underline;font:inherit;cursor:pointer;padding:0}
+.top2{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+.stat b{display:block;font-size:26px;color:var(--ink);font-family:Georgia,serif}.stat span{font-size:13px;color:var(--mute)}
+.linkcard{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px}
+.linkcard code{background:rgba(255,255,255,.12);padding:7px 11px;border-radius:8px;font-size:14px;word-break:break-all;flex:1 1 220px}
+.linkcard .b{background:#fff;color:var(--ink);border:0;border-radius:9px;padding:9px 14px;font:700 14px inherit;font-family:inherit;cursor:pointer;text-decoration:none}
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.pc{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.pc .ph{width:100%;max-width:none;border-radius:0;aspect-ratio:1/1;background:#eef3ef;display:grid;place-items:center;overflow:hidden;color:var(--mute);font-size:13px}
+.pc .ph img{display:block;width:100%;height:100%;object-fit:cover}
+.pc .b{padding:12px 13px;display:grid;grid-template-columns:minmax(0,1fr);gap:8px;flex:1}
+.pc h4{margin:0;font-size:15px;line-height:1.3}
+.pc .w{font-size:13px;color:var(--mute)}
+.pc .row{display:flex;gap:8px}
+.pc input{flex:1;min-width:0;padding:10px;border:1px solid #cfd8d2;border-radius:9px;font:15px inherit;font-family:inherit}
+.pc .on{border-color:var(--green)}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:99px;padding:3px 9px;background:#E6F5EE;color:#14663f}
+.tag.warn{background:#FFF1D6;color:#7a5200}.tag.bad{background:#FDECEA;color:#9b2c20}
+.b2{border:0;border-radius:9px;padding:10px 14px;font:700 14px inherit;font-family:inherit;cursor:pointer;background:var(--green);color:#fff}
+.b2.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}.b2.red{background:#fff;color:#9b2c20;border:1px solid #f0c7c2}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.tools input,.tools select{padding:10px 12px;border:1px solid #cfd8d2;border-radius:10px;font:15px inherit;font-family:inherit;background:#fff}
+.tools input{flex:1 1 200px}
+.lst{display:grid;gap:10px}
+.paths{display:grid;gap:12px}.pathc{display:grid;gap:4px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;font-family:inherit;color:var(--ink);cursor:pointer}.pathc b{font-size:18px}.pathc span{color:var(--mute);font-size:14.5px}.pathc:hover{border-color:var(--green)}
+.skillg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.skt{display:grid;gap:4px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;font-family:inherit;color:var(--ink);cursor:pointer}.skt b{font-size:16px}.skt span{color:var(--mute);font-size:13px}
+@media(min-width:821px){.paths{grid-template-columns:repeat(3,1fr)}.skillg{grid-template-columns:repeat(4,1fr)}}
+
+.mystore{margin-bottom:16px}.ms-h{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.ms-h code{background:#eef4f0;padding:8px 11px;border-radius:9px;font-size:13.5px;word-break:break-all}
+.pills{display:flex;gap:8px;flex-wrap:wrap}.pill2{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:10px 16px;font:600 14px inherit;font-family:inherit;cursor:pointer;text-decoration:none}
+.pill2:first-child{background:var(--ink);color:#fff;border-color:var(--ink)}
+.prog{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;align-items:center;margin-bottom:16px}
+.ring{--p:0;width:72px;height:72px;border-radius:50%;background:conic-gradient(var(--green) calc(var(--p)*1%),#e6eee8 0);display:grid;place-items:center;position:relative}
+.ring:before{content:"";position:absolute;inset:8px;background:#fff;border-radius:50%}.ring b{position:relative;font-size:16px}
+.prog h3{margin:0}.prog .sub{margin:2px 0 0;font-size:14px}
+.chk{grid-column:1/-1;list-style:none;margin:10px 0 0;padding:0}
+.chk li{display:flex;align-items:center;gap:12px;padding:11px 2px;border-top:1px solid var(--line);font-weight:600}
+.chk i{width:22px;height:22px;border-radius:50%;border:2px solid #c5d0c8;flex:none;display:grid;place-items:center;font-style:normal;font-size:12px;color:#fff}
+.chk li.done i{background:var(--green);border-color:var(--green)}.chk li.done span{color:var(--mute);text-decoration:line-through}.chk .b2{margin-left:auto;padding:7px 12px;white-space:nowrap;flex:none}.chk span{flex:1;min-width:0}.prog:not(.open) .chk li:not(.next){display:none}
+.sec{margin:20px 0 10px}
+.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.qa button{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 6px 13px;display:grid;gap:9px;justify-items:center;font:600 13.5px inherit;font-family:inherit;color:var(--ink);cursor:pointer}
+.qa svg{width:26px;height:26px;stroke:var(--mute);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tips{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px;margin:0 0 18px;-webkit-overflow-scrolling:touch}
+.tip{flex:0 0 min(300px,82%);scroll-snap-align:start;border-radius:16px;padding:16px 18px;background:var(--ink);color:#fff;display:grid;gap:5px;text-align:left;border:0;cursor:pointer;font-family:inherit}
+.tip b{font-size:17px}.tip span{font-size:13.5px;opacity:.92}.tip.g{background:var(--green-d)}.tip.y{background:var(--gold);color:var(--ink)}
+.seg{display:flex;gap:8px;margin:0 0 12px}.seg button{border:0;background:#eaefeb;border-radius:99px;padding:10px 16px;font:600 14.5px inherit;font-family:inherit;color:var(--mute);cursor:pointer}.seg button.on{background:#dcefe5;color:var(--ink)}
+.oc{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;width:100%;font-family:inherit;text-align:left;color:var(--ink);cursor:default}button.oc{cursor:pointer}
+.oc img,.oc .no{width:56px;height:56px;border-radius:10px;object-fit:cover;background:#eaefeb;flex:none;display:block}
+.oc .t{flex:1;min-width:0;display:grid;gap:3px}.oc .t b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.oc .t span{font-size:13px;color:var(--mute)}
+.mgroup{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:14px}.mhead{padding:12px 16px 4px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.mrow{display:flex;align-items:center;justify-content:space-between;width:100%;background:#fff;border:0;border-top:1px solid var(--line);padding:16px;font:600 16px inherit;font-family:inherit;color:var(--ink);text-align:left;cursor:pointer;text-decoration:none}.mhead+.mrow{border-top:0}
+.mrow:after{content:"\203A";color:var(--mute);font-size:22px;line-height:1}
+.bnav{display:none}
+@media(max-width:820px){#dtabs{display:none}
+ .bnav{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:70;background:#fff;border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+ .bnav button{border:0;background:none;display:grid;gap:3px;justify-items:center;padding:6px 0;font:600 11.5px inherit;font-family:inherit;color:var(--mute);cursor:pointer}
+ .bnav svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.bnav button.on{color:var(--green-d)}
+ .dash{padding-bottom:100px}body.has-bnav .wa-float{display:none}}
+@media(max-width:520px){#pgrid .ph{aspect-ratio:4/3}}
+@media(min-width:821px){.qa{grid-template-columns:repeat(6,1fr)}}
+
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.per{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin-bottom:14px;background:#fff}.per label{padding:9px 20px;font-weight:700;cursor:pointer}.per label.on{background:var(--ink);color:#fff}.per input{display:none}.plan ul{margin:10px 0 0;padding-left:18px;font-size:14px;color:var(--mute)}.plan li{margin:3px 0}.lockbox{background:#FFF8E6;border:1px solid #f1dfae;border-radius:12px;padding:12px 14px;margin:0 0 12px;font-size:14.5px}.lockbox .b2{margin-top:8px}
+.plan{position:relative;display:flex;flex-direction:column;gap:2px;padding:16px;border:2px solid var(--line);border-radius:14px;background:#fff;cursor:pointer}
+.plan.on{border-color:var(--green);box-shadow:0 0 0 3px rgba(47,107,79,.12)}
+.plan input{position:absolute;opacity:0;pointer-events:none}
+.plan .pr{font-size:1.5rem;font-weight:800}
+.plan em{font-style:normal;color:#14663f;font-weight:700;font-size:.85rem;margin-top:4px}
+@media(max-width:700px){.tiers{grid-template-columns:1fr}}
+
+.it{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:6px}
+.it .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.it .m{color:var(--mute);font-size:13.5px}
+.it select,.it input,.it textarea{padding:8px 10px;border:1px solid #cfd8d2;border-radius:8px;font:14px inherit;font-family:inherit}
+.tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
+.tbl th,.tbl td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}.tbl th{background:#f3f7f4;font-size:12.5px;color:var(--mute)}
+.stack td[data-l="Store"]{font-size:16px}
+@media(max-width:760px){.scroll{overflow:visible}.tbl.stack{display:block;border:0;background:none;border-radius:0}.tbl.stack tbody{display:block}.tbl.stack tr{display:block;background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:12px;padding:6px 0;box-shadow:0 1px 2px rgba(16,40,30,.05)}.tbl.stack tr:first-child{display:none}.tbl.stack td{display:flex;justify-content:space-between;align-items:center;gap:14px;border:0;padding:7px 14px;text-align:right}.tbl.stack td::before{content:attr(data-l);color:var(--mute);font-size:12.5px;text-align:left;flex:none}.tbl.stack td:empty{display:none}.tbl.stack td[data-l="Franchise"],.tbl.stack td[data-l="Subscription"]{flex-wrap:wrap;justify-content:flex-end}.tbl.stack td[data-l="Franchise"]::before,.tbl.stack td[data-l="Subscription"]::before{flex-basis:100%}.tbl.stack td>div,.tbl.stack td>span{max-width:100%}}
+.tbl input{width:96px;padding:7px;border:1px solid #cfd8d2;border-radius:7px;font:14px inherit;font-family:inherit}
+.scroll{overflow-x:auto}
+.empty{text-align:center;color:var(--mute);padding:30px 10px}
+.steps3{display:grid;gap:10px;margin:0;padding:0;list-style:none}.steps3 li{padding-left:34px;position:relative}
+.steps3 li:before{content:attr(data-n);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-weight:700;font-size:13px;display:grid;place-items:center}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:99px;font-size:14.5px;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.bar{height:8px;border-radius:99px;background:#e3ebe6;overflow:hidden}.bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+.lsn{display:flex;gap:10px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;text-align:left;width:100%;font:inherit;color:var(--ink)}
+.lsn .ck{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid #cfd8d2;display:grid;place-items:center;font-size:13px;color:#fff}.lsn.done .ck{background:var(--green);border-color:var(--green)}
+.lbody{white-space:pre-wrap;line-height:1.65;font-size:16px}.vid{position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#000;margin:0 0 14px}.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.f textarea{min-height:110px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="mz-header" id="mzHeader">
+  <div class="mz-wrap mz-bar">
+    <a class="mz-logo" href="index.html"><img class="mz-mark" src="img/logo.png" alt="" width="36" height="36">MOZ<span>LYT</span></a>
+    <nav class="mz-nav" id="mzNav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="index.html#services">Services</a>
+      <a href="what-we-do.html">What we do</a>
+      <a href="shop.html">Shop</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About us</a>
+      <span class="mz-ctas"><a class="mz-btn mz-primary" href="index.html#services">Book a service</a><a class="mz-btn mz-gold" href="career.html">Take a career with us</a><a class="mz-btn mz-primary" href="provider.html">Work with us</a></span>
+    </nav>
+    <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<main class="dash"><div class="wrap">
+
+<section id="authView" class="authcard" hidden>
+  <h1>Work with us</h1><p class="sub">Offer your service to MOZLYT clients. Create an account, send your ID and certificate, and choose the services you handle. When a client books one of them, you are told on your dashboard.</p>
+  <div class="card2"><div id="aNote"></div>
+    <div class="tabs" id="atabs"><button type="button" class="on" data-v="login">Log in</button><button type="button" data-v="join">Create account</button></div>
+    <form id="fLogin" class="f"><label>Email<input type="email" id="lEmail" autocomplete="email" required></label><label>Password<input type="password" id="lPass" autocomplete="current-password" required></label>
+      <button class="btn primary" type="submit">Log in</button></form>
+    <form id="fJoin" class="f" hidden><label>Full name<input id="jName" maxlength="80" autocomplete="name" required></label><label>WhatsApp number<input id="jPhone" type="tel" maxlength="30" autocomplete="tel" placeholder="e.g. 0241234567" required></label><label>Email<input type="email" id="jEmail" autocomplete="email" required></label><label>Password<input type="password" id="jPass" autocomplete="new-password" minlength="8" required><small>At least 8 characters.</small></label>
+      <button class="btn primary" type="submit">Create my account</button></form>
+  </div>
+</section>
+
+<section id="applyView" hidden>
+  <div class="top2"><div><h1>Apply to work with MOZLYT</h1><p class="sub">Only people who are qualified in the services they choose are accepted. Nothing is charged to apply. We reply within about 2 working days.</p></div><button class="b2 ghost" type="button" id="btnOut2">Log out</button></div>
+  <div class="card2"><div id="faNote"></div>
+  <form id="fApply" class="f" novalidate>
+    <label>Email<input id="faEmail" readonly></label>
+    <label>WhatsApp number we will contact you on<input id="faPhone" type="tel" maxlength="30" placeholder="e.g. 0241234567"></label>
+    <label>Country<select id="faCountry"><option value="">Select your country</option></select></label>
+    <label>City or town (optional)<input id="faLoc" maxlength="120" placeholder="e.g. Accra"></label>
+    <div><b>Which services will you be responsible for?</b><div class="sub" style="margin:2px 0 8px">Tick only the services you are qualified for.</div><div id="faSvc" class="chk"></div></div>
+    <label>What does your certificate say? (for example: Diploma in Massage Therapy)<input id="faCertTitle" maxlength="160"></label>
+    <label>Your ID card (Ghana Card, passport or driver's licence) - photo or PDF<input id="faId" type="file" accept="image/*,application/pdf"></label>
+    <label>Your certificate for these services - photo or PDF<input id="faCert" type="file" accept="image/*,application/pdf"></label>
+    <label>Anything else we should know (optional)<textarea id="faMsg" rows="3" maxlength="800"></textarea></label>
+    <div class="card2" style="margin:0"><b>MOZLYT service provider terms</b>
+      <ol class="sub" style="margin:8px 0 0;padding-left:18px;display:grid;gap:6px">
+        <li>I am qualified for every service I choose, and the ID and certificate I send are mine and true.</li>
+        <li>I will follow the rules, quality standards and prices of MOZLYT, and I will not do anything that stands against them.</li>
+        <li>I will respect every client, arrive on time, and keep their information and safety private and secure.</li>
+        <li>I will promote the beliefs and mission of MOZLYT and I will not harm its name.</li>
+        <li>MOZLYT may check my documents, and may pause or end my access if I break these terms or am not qualified for a service.</li>
+        <li>MOZLYT keeps my documents private and uses them only to verify me. The arrangement for each booking is agreed with MOZLYT before I start.</li></ol>
+    </div>
+    <label style="display:flex;gap:10px;align-items:flex-start"><input id="faAgree" type="checkbox" style="margin-top:4px"><span>I have read and I agree to the MOZLYT service provider terms.</span></label>
+    <button class="btn primary" type="submit" id="faBtn" disabled>Send my application</button><small id="faNeed" class="sub"></small>
+  </form></div>
+</section>
+
+<section id="waitView" hidden>
+  <div class="top2"><div><h1>Your application</h1></div><button class="b2 ghost" type="button" id="btnOut3">Log out</button></div>
+  <div class="card2" id="waitBox"></div>
+</section>
+
+<section id="dashView" hidden>
+  <div class="top2"><div><h1>MOZLYT service provider</h1><p class="sub" id="who"></p></div><button class="b2 ghost" type="button" id="btnOut">Log out</button></div>
+  <div class="tabs" id="dtabs"><button data-t="alerts" class="on" type="button">Bookings <span class="bdg" id="nBdg" hidden>0</span></button><button data-t="svc" type="button">My services</button></div>
+  <div id="pane-alerts"><p class="sub" style="margin-bottom:10px">When a client books one of your services, it appears here. MOZLYT contacts the client and confirms with you.</p>
+    <div class="pills" style="margin-bottom:10px"><button class="b2 ghost" type="button" id="btnAll">Mark all as read</button></div><div class="lst" id="nList"></div></div>
+  <div id="pane-svc" hidden><div class="card2"><h3 style="margin:0 0 8px">Services you handle</h3><div id="mySvc" class="pills"></div><p class="sub" style="margin:12px 0 0">To add or change services, message MOZLYT on WhatsApp with your certificate for the new service.</p><a class="b2" style="text-decoration:none;display:inline-block;margin-top:10px" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20want%20to%20add%20a%20service." target="_blank" rel="noopener">Message MOZLYT</a></div></div>
+</section>
+
+</div></main>
+<style>
+.f .chk{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.f .chk label{display:flex;flex-direction:row;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;cursor:pointer;font-size:14.5px;font-weight:500}
+.f .chk label input{width:auto;flex:none;margin:0;padding:0}
+.f .chk label.on{border-color:#14663f;background:#eef8f2}
+.bdg{display:inline-block;min-width:18px;padding:2px 6px;border-radius:99px;background:#c0392b;color:#fff;font-size:12px;margin-left:4px;text-align:center}
+.it.unread{border-left:4px solid #14663f;background:#f4fbf7}
+</style>
+<script src="js/mz-api.js"></script>
+<script>
+
+var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
+function esc(s){return MZ.esc(s)}
+var MZC="GH Ghana|NG Nigeria|BJ Benin|BF Burkina Faso|CM Cameroon|CV Cabo Verde|TD Chad|CI Cote d'Ivoire|GM Gambia|GN Guinea|GW Guinea-Bissau|LR Liberia|ML Mali|NE Niger|SN Senegal|SL Sierra Leone|TG Togo|AO Angola|BW Botswana|CD DR Congo|CG Congo|EG Egypt|ET Ethiopia|GA Gabon|KE Kenya|MW Malawi|MZ Mozambique|NA Namibia|RW Rwanda|ZA South Africa|TZ Tanzania|UG Uganda|ZM Zambia|ZW Zimbabwe|MA Morocco|DZ Algeria|TN Tunisia|GB United Kingdom|US United States|CA Canada|DE Germany|FR France|NL Netherlands|IT Italy|ES Spain|AE United Arab Emirates|IN India|BR Brazil|JM Jamaica|TT Trinidad and Tobago".split('|').map(function(x){return{c:x.slice(0,2),n:x.slice(3)}});
+function mzCountry(c){c=String(c||'').toUpperCase();return MZC.filter(function(x){return x.c===c})[0]||null}
+function mzFlag(c,h){var k=mzCountry(c);return k?'<img alt="" src="https://flagcdn.com/w40/'+k.c.toLowerCase()+'.png" style="height:'+(h||22)+'px;width:auto;vertical-align:-4px;border-radius:3px;margin-right:8px;box-shadow:0 0 0 1px rgba(0,0,0,.12)">':''}
+function pwEye(){document.querySelectorAll('input[type=password]').forEach(function(i){if(i.dataset.eye)return;i.dataset.eye='1';var w=document.createElement('span');w.style.cssText='position:relative;display:block';i.parentNode.insertBefore(w,i);w.appendChild(i);i.style.paddingRight='64px';var b=document.createElement('button');b.type='button';b.textContent='Show';b.setAttribute('aria-label','Show password');b.style.cssText='position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:#14663f;font-weight:700;font-size:13px;padding:8px;cursor:pointer';b.onclick=function(){var h=i.type==='password';i.type=h?'text':'password';b.textContent=h?'Hide':'Show';b.setAttribute('aria-label',h?'Hide password':'Show password')};w.appendChild(b)})}
+pwEye();
+function show(id,on){var e=$('#'+id);if(e)e.hidden=!on}
+function flash(t,ms){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},ms||2600)}
+function note(box,type,text){box.innerHTML=text?'<div class="msg '+type+'">'+esc(text)+'</div>':''}
+function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.dataset.l=btn.textContent;btn.textContent=label}}else if(btn.dataset.l){btn.textContent=btn.dataset.l;delete btn.dataset.l}}
+function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){flash('Copied')},function(){var i=document.createElement('input');i.value=t;document.body.appendChild(i);i.select();try{document.execCommand('copy');flash('Copied')}catch(e){prompt('Copy this:',t)}i.remove()})}
+
+(function(){
+  var SERVICES=['Shiatsu massage','Chair massage','Office wellness session','Personal fitness coaching','Body sculpting programme','Group fitness session','Nutrition consultation','Personalised meal plan','Supplement packs','Facial treatment','Skin consultation','Hair and scalp care','Personal styling','Custom outfit','Meal prep','Event catering','Wellness gift package','Gift a massage','Home health care'];
+  var ME=null,APP=null,NOTES=[],aNote=$('#aNote'),timer=null;
+  function views(v){['authView','applyView','waitView','dashView'].forEach(function(x){show(x,x===v)});try{window.scrollTo(0,0)}catch(e){}}
+  function out(){clearInterval(timer);MZ.signOut().then(function(){ME=null;APP=null;views('authView')})}
+  $('#btnOut').onclick=$('#btnOut2').onclick=$('#btnOut3').onclick=out;
+  $$('#atabs button').forEach(function(b){b.onclick=function(){$$('#atabs button').forEach(function(x){x.classList.toggle('on',x===b)});show('fLogin',b.dataset.v==='login');show('fJoin',b.dataset.v==='join');note(aNote,'','')}});
+  $('#fLogin').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Logging in...');MZ.signIn($('#lEmail').value.trim(),$('#lPass').value).then(boot,function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
+  $('#fJoin').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this),ph=$('#jPhone').value.replace(/[^\d+]/g,'');
+    if(ph.replace(/\D/g,'').length<9){note(aNote,'err','Please enter a valid WhatsApp number.');return}
+    busy(b,true,'Creating...');MZ.signUp($('#jEmail').value.trim(),$('#jPass').value,{full_name:$('#jName').value.trim(),phone:ph,kind:'provider'}).then(function(r){
+      if(r.confirmed)return boot();
+      $$('#atabs button')[0].click();$('#lEmail').value=$('#jEmail').value;note(aNote,'ok','Account created. Check your email for a confirmation link, then log in here.')},function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
+
+  function boot(){
+    return Promise.all([MZ.q('profiles','select=full_name,phone,email&id=eq.'+MZ.user().id),MZ.q('provider_applications','select=*&user_id=eq.'+MZ.user().id)]).then(function(r){
+      ME=(r[0]&&r[0][0])||{};APP=(r[1]&&r[1][0])||null;
+      if(!APP||APP.status==='rejected'&&window.__reapply){return showApply()}
+      if(APP.status==='approved')return showDash();
+      showWait()},function(er){views('authView');note(aNote,er.status===401?'info':'err',er.status===401?'Please log in again.':er.message)})}
+
+  /* ---- application ---- */
+  function svcDraw(){$('#faSvc').innerHTML=SERVICES.map(function(s,i){return'<label><input type="checkbox" value="'+esc(s)+'"> <span>'+esc(s)+'</span></label>'}).join('');
+    $$('#faSvc input').forEach(function(c){c.onchange=function(){c.parentNode.classList.toggle('on',c.checked);faCheck()}})}
+  function chosen(){return $$('#faSvc input').filter(function(c){return c.checked}).map(function(c){return c.value})}
+  function faCheck(){var miss=[];if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)miss.push('your WhatsApp number');if(!$('#faCountry').value)miss.push('your country');if(!chosen().length)miss.push('at least one service');if(!$('#faCertTitle').value.trim())miss.push('what your certificate says');if(!$('#faId').files[0])miss.push('your ID card');if(!$('#faCert').files[0])miss.push('your certificate');if(!$('#faAgree').checked)miss.push('agreeing to the terms');
+    $('#faBtn').disabled=miss.length>0;$('#faNeed').textContent=miss.length?'Still needed: '+miss.join(', ')+'.':'Everything is ready.'}
+  function showApply(){views('applyView');$('#faEmail').value=ME.email||'';$('#faPhone').value=ME.phone||'';$('#faCountry').innerHTML='<option value="">Select your country</option>'+MZC.map(function(k){return'<option value="'+k.c+'">'+esc(k.n)+'</option>'}).join('');$('#faCountry').value='GH';svcDraw();faCheck();
+    if(APP&&APP.status==='rejected')note($('#faNote'),'err','Your last application was not accepted'+(APP.review_note?': '+APP.review_note:'')+'. You can apply again with the right documents.')}
+  ['faPhone','faCountry','faCertTitle','faId','faCert','faAgree'].forEach(function(i){var e=$('#'+i);e.addEventListener('input',faCheck);e.addEventListener('change',faCheck)});
+  $('#fApply').onsubmit=function(e){e.preventDefault();var b=$('#faBtn'),n=$('#faNote'),id=$('#faId').files[0],ce=$('#faCert').files[0];note(n,'','');
+    if(!id||!ce){note(n,'err','Please upload your ID card and your certificate.');return}
+    if(id.size>8388608||ce.size>8388608){note(n,'err','Each file must be under 8 MB.');return}
+    busy(b,true,'Sending...');var u=MZ.user().id,t=Date.now(),ext=function(f){var m=(f.name.match(/\.([a-z0-9]{2,5})$/i)||[])[1];return m?m.toLowerCase():'jpg'};
+    Promise.all([MZ.upload('franchise-docs',u+'/prov-id-'+t+'.'+ext(id),id),MZ.upload('franchise-docs',u+'/prov-cert-'+t+'.'+ext(ce),ce)]).then(function(p){
+      return MZ.rpc('submit_provider_application',{p_name:ME.full_name||'',p_phone:$('#faPhone').value.replace(/[^\d+]/g,''),p_country:$('#faCountry').value,p_location:$('#faLoc').value.trim(),p_message:$('#faMsg').value.trim(),p_services:chosen(),p_id_path:p[0],p_cert_path:p[1],p_cert_title:$('#faCertTitle').value.trim(),p_terms:true})}).then(function(){window.__reapply=false;return boot()},function(er){note(n,'err',er.message)}).then(function(){busy(b,false)})};
+
+  function showWait(){views('waitView');var s=APP.status,h;
+    if(s==='new')h='<b style="color:#14663f">Application received</b><p class="sub" style="margin:8px 0 0">MOZLYT is checking your ID and certificate. We reply within about <b>2 working days</b>. You asked for: '+esc((APP.services||[]).join(', '))+'.</p>';
+    else if(s==='rejected')h='<b style="color:#9b2c20">Not accepted</b><p class="sub" style="margin:8px 0 12px">'+(APP.review_note?esc(APP.review_note):'The documents did not match the services you chose.')+'</p><button class="btn primary" type="button" id="btnRe">Apply again</button>';
+    else h='<b style="color:#9b2c20">Your access is closed</b><p class="sub" style="margin:8px 0 0">'+(APP.review_note?esc(APP.review_note):'Please message MOZLYT on WhatsApp.')+'</p>';
+    $('#waitBox').innerHTML=h;var re=$('#btnRe');if(re)re.onclick=function(){window.__reapply=true;showApply()}}
+
+  /* ---- dashboard ---- */
+  function showDash(){views('dashView');$('#who').textContent=(APP.name||'')+(APP.email?' · '+APP.email:'');
+    $('#mySvc').innerHTML=(APP.approved_services||[]).map(function(s){return'<span class="tag">'+esc(s)+'</span>'}).join('')||'<span class="sub">No services yet.</span>';loadNotes();clearInterval(timer);timer=setInterval(loadNotes,60000)}
+  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});show('pane-alerts',b.dataset.t==='alerts');show('pane-svc',b.dataset.t==='svc')}});
+  function loadNotes(){MZ.q('provider_notifications','select=*&order=created_at.desc&limit=100').then(function(r){NOTES=r||[];drawNotes()},function(){})}
+  function drawNotes(){var un=NOTES.filter(function(n){return!n.read}).length;$('#nBdg').hidden=!un;$('#nBdg').textContent=un;
+    $('#nList').innerHTML=NOTES.map(function(n){return'<div class="it'+(n.read?'':' unread')+'" data-id="'+n.id+'"><div class="h"><b>'+esc(n.title)+'</b>'+(n.read?'':'<span class="tag warn">new</span>')+'</div><div class="m">'+esc(n.body||'')+' &middot; '+MZ.when(n.created_at)+'</div></div>'}).join('')||'<div class="empty">No bookings for your services yet. You will see them here as soon as a client books.</div>';
+    $$('#nList .it.unread').forEach(function(el){el.onclick=function(){var id=Number(el.dataset.id);MZ.update('provider_notifications','id=eq.'+id,{read:true}).then(function(){NOTES.forEach(function(n){if(n.id===id)n.read=true});drawNotes()})}})}
+  $('#btnAll').onclick=function(){if(!NOTES.some(function(n){return!n.read}))return;MZ.update('provider_notifications','read=eq.false',{read:true}).then(function(){NOTES.forEach(function(n){n.read=true});drawNotes()})};
+
+  if(MZ.loggedIn()){boot()}else{views('authView')}
+  try{var q=new URLSearchParams(location.search).get('join');if(q){$$('#atabs button')[1].click()}}catch(e){}
+})();
+</script>
+<footer class="mz-footer">
+  <div class="mz-wrap mz-fgrid">
+    <div class="mz-fbrand">
+      <a class="mz-logo" href="index.html"><img class="mz-mark" src="img/logo.png" alt="" width="36" height="36">MOZ<span>LYT</span></a>
+      <p>Trusted wellness, fitness, beauty, fashion and food services and products. Based in Accra, Ghana.</p>
+      <div class="mz-contact">WhatsApp: <a href="https://wa.me/233538729743" target="_blank" rel="noopener">053 872 9743</a><br>Email: <a href="mailto:Info@mozlyt.com">Info@mozlyt.com</a></div>
+      <div class="mz-social"><a href="https://www.instagram.com/mozlyt" target="_blank" rel="noopener" aria-label="Instagram: mozlyt" title="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg></a><a href="https://www.tiktok.com/@mozlyt" target="_blank" rel="noopener" aria-label="TikTok: @mozlyt" title="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.6 2h-3.2v13.3a2.7 2.7 0 1 1-2.7-2.7c.3 0 .5 0 .8.1V9.4a5.9 5.9 0 1 0 5.1 5.8V8.6a7.4 7.4 0 0 0 4.3 1.4V6.8a4.3 4.3 0 0 1-4.3-4.8z"/></svg></a><a href="https://www.facebook.com/mozlythealth" target="_blank" rel="noopener" aria-label="Facebook: mozlythealth" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.5 22v-8.2h2.8l.5-3.4h-3.3V8.3c0-1 .4-1.7 1.8-1.7h1.6V3.6A21 21 0 0 0 14.6 3.5c-2.5 0-4.2 1.5-4.2 4.3v2.6H7.6v3.4h2.8V22z"/></svg></a><a href="https://wa.me/233538729743" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4z"/></svg></a><a href="mailto:Info@mozlyt.com" aria-label="Email" title="Email"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 7.5l8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a></div>
+    </div>
+    <div>
+      <h4>Customers</h4>
+      <a href="index.html#services">Book a service</a>
+      <a href="shop.html">Shop products</a>
+      <a href="massage-in-accra.html">Massage in Accra</a>
+      <a href="index.html#how">How booking works</a>
+      <a href="index.html#delivery">Delivery areas</a>
+      <a href="pay.html">Pay for an agreed order</a>
+    </div>
+    <div>
+      <h4>Careers</h4>
+      <a href="career.html">Take a career with us</a>
+      <a href="provider.html">Work with us</a>
+      <a href="what-we-do.html#skill">Take a skill</a>
+      <a href="what-we-do.html#sellers">Take a shop</a>
+      <a href="what-we-do.html#franchise">Franchise</a>
+      <a href="what-we-do.html">What we do</a>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <a href="about.html">About us</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html#contact">Contact</a>
+      <a href="#" id="installApp" style="display:none;font-weight:700;color:#5FD3A1">Install the MOZLYT app</a>
+    </div>
+  </div>
+  <div class="mz-wrap mz-fbottom">
+    <span>&copy; 2026 MOZLYT. Accra, Ghana. Get the app: open this site in your phone browser, then choose Add to Home Screen.</span>
+  </div>
+</footer>
+<script>
+(document.getElementById('cform')||document.createElement('i')).addEventListener('submit',function(e){
+  e.preventDefault();
+  var m="Hello MOZLYT, my name is "+document.getElementById('cname').value.trim()+". "+document.getElementById('cmsg').value.trim()+(document.getElementById('cphone').value.trim()?"\nMy number: "+document.getElementById('cphone').value.trim():"");
+  var u='https://wa.me/233538729743?text='+encodeURIComponent(m);var w=window.open(u,'_blank');if(!w){location.href=u}
+});
+</script>
+<script id="mz-shared-js">(function(){var h=document.getElementById('mzHeader');if(!h)return;var b=h.querySelector('.mz-burger');
+function set(o){h.classList.toggle('mz-open',o);b.setAttribute('aria-expanded',o?'true':'false')}
+b.addEventListener('click',function(){set(!h.classList.contains('mz-open'))});
+h.querySelectorAll('.mz-nav a').forEach(function(a){a.addEventListener('click',function(){set(false)})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});})();</script>
+<a class="wa-float" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20would%20like%20to%20know%20more." target="_blank" rel="noopener" aria-label="Chat with MOZLYT on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.1.1.6-.1 1.2z"/></svg><span>Chat on WhatsApp</span></a>
+<script>
+(function(){
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+  var deferred=null,btn=document.getElementById('installApp');
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;if(btn)btn.style.display='block'});
+  if(btn)btn.addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;btn.style.display='none'})});
+  window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
+})();
+</script>
+</body>
+</html>
