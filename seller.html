@@ -327,7 +327,7 @@ body.has-list .wa-float{bottom:84px}
   <div class="card2 mystore"><div class="ms-h"><b>My store</b><code id="storeUrl" hidden></code></div>
     <div class="pills"><a class="pill2" id="openUrl" target="_blank" rel="noopener">Visit store</a><button class="pill2" type="button" id="cpUrl">Copy link</button><a class="pill2" id="shareUrl" target="_blank" rel="noopener">Share on WhatsApp</a></div></div>
   <div class="tabs" id="dtabs">
-    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
+    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button><button type="button" data-t="fr" id="tabFr" style="display:none">Franchise</button>
   </div>
 
   <div id="pane-over">
@@ -351,7 +351,7 @@ body.has-list .wa-float{bottom:84px}
 
   <div id="pane-more" hidden>
     <div class="mgroup"><div class="mhead">Your store</div>
-      <button class="mrow" type="button" data-go="sub">Subscription</button><button class="mrow" type="button" data-go="set">Store settings</button><button class="mrow" type="button" data-go="acc">Account</button></div>
+      <button class="mrow" type="button" data-go="sub">Subscription</button><button class="mrow" type="button" data-go="set">Store settings</button><button class="mrow" type="button" data-go="acc">Account</button><button class="mrow" type="button" data-go="fr" id="moreFr" style="display:none">Franchise dashboard</button></div>
     <div class="mgroup"><a class="mrow" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20need%20help%20with%20my%20seller%20account" target="_blank" rel="noopener">Get help on WhatsApp</a><button class="mrow" type="button" id="moreOut">Log out</button></div>
   </div>
 
@@ -364,6 +364,24 @@ body.has-list .wa-float{bottom:84px}
       <form id="fPay" class="f"><label>Payment reference or Mobile Money transaction ID<input id="payRef" maxlength="60" minlength="4" required placeholder="e.g. 4821937465"></label>
       <button class="btn primary" type="submit">I have paid</button></form></div>
     <h3 style="margin:22px 0 10px">Payment history</h3><div class="lst" id="payList"></div>
+  </div>
+
+  <div id="pane-fr" hidden>
+    <div class="card2" id="frStatus"></div>
+    <div id="frBody">
+      <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Your recruit link</h3><p class="sub" style="margin-bottom:12px">Sellers and trainees who sign up with your link pay you, not MOZLYT. They still use the same MOZLYT system.</p>
+        <div class="pills"><button class="b2" id="frCopy" type="button">Copy link</button><a class="b2 ghost" id="frShare" target="_blank" rel="noopener" style="text-decoration:none">Share on WhatsApp</a></div></div>
+      <div class="stats" style="margin-top:16px"><div class="card2"><small>Recruits</small><b id="frN">0</b></div><div class="card2"><small>Earned this month</small><b id="frM">0</b></div><div class="card2"><small>Earned in total</small><b id="frT">0</b></div></div>
+      <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">How your recruits pay you</h3><p class="sub" style="margin-bottom:10px">Shown to your recruits when they pay. Add your MoMo number and name.</p>
+        <form id="fFrPay" class="f"><label>Payment instructions<textarea id="frPay" rows="3" maxlength="600" placeholder="Send to MoMo 024 000 0000 (Your Name), then enter the transaction ID."></textarea></label><button class="btn primary" type="submit">Save</button></form></div>
+      <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Your prices for recruits</h3><p class="sub" style="margin-bottom:10px">Set what your recruits pay you. Leave a box empty to use the MOZLYT price shown inside it.</p>
+        <form id="fFrPrices" class="f"><div id="frPrices" class="f"></div><button class="btn primary" type="submit">Save prices</button></form></div>
+      <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Selling prices in your recruits' stores</h3><p class="sub" style="margin-bottom:10px">Set what customers pay for each product in your recruits' stores. Leave empty to let each recruit choose.</p>
+        <form id="fFrSell" class="f"><div id="frSell" class="f" style="max-height:420px;overflow:auto"></div><button class="btn primary" type="submit">Save selling prices</button></form></div>
+      <h3 style="margin:22px 0 10px">Payments waiting for you</h3><div class="lst" id="frPend"></div>
+      <h3 style="margin:22px 0 10px">Your recruits</h3><div class="lst" id="frRec"></div>
+      <h3 style="margin:22px 0 10px">Recent payments</h3><div class="lst" id="frDone"></div>
+    </div>
   </div>
 
   <div id="pane-set" hidden>
@@ -411,7 +429,7 @@ function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.
 function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){flash('Copied')},function(){var i=document.createElement('input');i.value=t;document.body.appendChild(i);i.select();try{document.execCommand('copy');flash('Copied')}catch(e){prompt('Copy this:',t)}i.remove()})}
 
 (function(){
-  var BILL={},PAYS=[],PLAN='monthly',TIER='standard',ME=null, PRODUCTS=[], MINE={}, ORDERS=[], CAT_ALL='All categories';
+  var FPP={},FRP={},PAYINFO='',BILL={},PAYS=[],PLAN='monthly',TIER='standard',ME=null, PRODUCTS=[], MINE={}, ORDERS=[], CAT_ALL='All categories';
   var authNote=$('#authNote'), dashNote=$('#dashNote');
 
   function view(name){['fLogin','fSign','fForgot','fReset'].forEach(function(i){show(i,i===name)});$('#tLogin').classList.toggle('on',name==='fLogin');$('#tSign').classList.toggle('on',name==='fSign');$('#authNote').innerHTML=''}
@@ -433,7 +451,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#fSign').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);var ph=$('#sPhone').value.replace(/[^\d+]/g,'');
     if(ph.replace(/\D/g,'').length<9){note(authNote,'err','Please enter a valid WhatsApp number.');return}
     busy(b,true,'Creating...');note(authNote,'','');
-    MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:$('#sStore').value.trim(),store_slug:$('#sSlug').value}).then(function(r){
+    MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:$('#sStore').value.trim(),store_slug:$('#sSlug').value,ref:REF}).then(function(r){
       if(r.confirmed){boot()}else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(authNote,'ok','Account created. We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in here. Check your spam folder if you do not see it.')}
     },function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Sending...');
@@ -442,12 +460,13 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.updatePassword($('#rPass').value).then(function(){flash('Password saved');boot()},function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){ME=null;show('dashView',false);show('authView',true);view('fLogin')})};
 
+  var REF='';try{var q=new URLSearchParams(location.search).get('ref');if(q){REF=q.trim().slice(0,12);localStorage.setItem('mz-ref',REF)}else REF=localStorage.getItem('mz-ref')||''}catch(e){}
   /* ----- tabs ----- */
-  var PANES=['over','prod','ord','learn','sub','set','acc','more'];
+  var PANES=['over','prod','ord','learn','sub','set','acc','fr','more'];
   function flag(k,set){var key='mz-f-'+(ME?ME.id:'x')+'-'+k;try{if(set){localStorage.setItem(key,'1');return true}return localStorage.getItem(key)==='1'}catch(e){return false}}
   function go(t){PANES.forEach(function(x){show('pane-'+x,x===t)});$$('#dtabs button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});
     var bt=['over','prod','ord','learn'].indexOf(t)>-1?t:'more';$$('#bnav button').forEach(function(b){b.classList.toggle('on',b.dataset.t===bt)});
-    if(t==='learn'){flag('learn',true);loadTrain()}try{window.scrollTo(0,0)}catch(e){}}
+    if(t==='learn'){flag('learn',true);loadTrain()}if(t==='fr')loadFr();try{window.scrollTo(0,0)}catch(e){}}
   $$('#dtabs button,#bnav button').forEach(function(b){b.onclick=function(){go(b.dataset.t)}});
   $$('#pane-more [data-go]').forEach(function(b){b.onclick=function(){go(b.dataset.go)}});
   $('#moreOut').onclick=function(){$('#btnOut').click()};
@@ -460,12 +479,13 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       if(!p||!p[0]){throw new Error('We could not find your seller profile. Please log out and sign up again.')}
       ME=p[0];show('dashView',true);paint();
       if(ME.status==='suspended')note(dashNote,'err','Your store is paused. Please contact MOZLYT on WhatsApp.');
-      return Promise.all([MZ.q('products','select=id,category,name,photo,wholesale_price,suggested_price,status&order=sort,name'),MZ.q('seller_products','select=product_id,price,active&seller_id=eq.'+ME.id),MZ.q('orders','select=*&order=created_at.desc&limit=200'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.q('subscription_payments','select=*&order=created_at.desc&limit=50')]);
-    }).then(function(r){PRODUCTS=r[0];MINE={};r[1].forEach(function(x){MINE[x.product_id]=x});ORDERS=r[2];BILL=(r[3]&&r[3][0])||{monthly_price:0,yearly_price:0,pay_instructions:''};PAYS=r[4]||[];drawAll()},function(er){
+      return Promise.all([MZ.q('products','select=id,category,name,photo,wholesale_price,suggested_price,status&order=sort,name'),MZ.q('seller_products','select=product_id,price,active&seller_id=eq.'+ME.id),MZ.q('orders','select=*&order=created_at.desc&limit=200'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.q('subscription_payments','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=50'),MZ.rpc('get_my_prices').catch(function(){return null}),MZ.q('franchise_product_prices','select=product_id,price').catch(function(){return []})]);
+    }).then(function(r){PAYINFO=r[5]||'';PRODUCTS=r[0];MINE={};r[1].forEach(function(x){MINE[x.product_id]=x});ORDERS=r[2];BILL=(r[3]&&r[3][0])||{monthly_price:0,yearly_price:0,pay_instructions:''};PAYS=r[4]||[];FPP={};if(r[5]&&r[5].franchise_live&&!ME.franchise)(r[6]||[]).forEach(function(x){FPP[x.product_id]=Number(x.price)});if(r[5]&&typeof r[5]==='object')BILL=Object.assign({},BILL,r[5]);drawAll()},function(er){
       if(er.status===401||/JWT|expired/i.test(er.message)){MZ.signOut();show('dashView',false);show('authView',true);view('fLogin');note(authNote,'info','Please log in again.')}else{show('authView',true);view('fLogin');note(authNote,'err',er.message)}});
   }
   function storeUrl(){return(ME.custom_domain&&false?('https://'+ME.custom_domain+'/'):MZ.siteUrl+'store.html?s='+ME.store_slug)}
   function paint(){
+    $('#tabFr').style.display=ME.franchise?'':'none';$('#moreFr').style.display=ME.franchise?'':'none';
     $('#hello').textContent=ME.store_name||'Your store';$('#subline').textContent='Welcome, '+(ME.full_name||'seller')+'.';
     var u=storeUrl();$('#storeUrl').textContent=u;$('#openUrl').href=u;$('#cpUrl').onclick=function(){copy(u);flag('shared',true);drawOver()};$('#shareUrl').onclick=function(){flag('shared',true)};
     $('#shareUrl').href='https://wa.me/?text='+encodeURIComponent('Shop with me on my MOZLYT store: '+u);
@@ -474,7 +494,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   /* ----- subscription ----- */
   function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
-  function lockUI(){var t=(daysLeft()>0&&ME.tier)||'standard';if(!ME.plan)t='standard';if(ME.franchise)t='premium';
+  function lockUI(){var t=(daysLeft()>0&&ME.tier)||'standard';if(!ME.plan)t='standard';if(ME.franchise&&frLive())t='premium';
     var pixOk=t==='plus'||t==='premium',domOk=t==='premium';
     function lk(id,form,ok,need){var el=$(id);el.innerHTML=ok?'':'<div class="lockbox"><b>Included in '+need+'</b><br>Upgrade to use this. <button type="button" class="b2" data-go="sub">See plans</button></div>';$$(form+' input,'+form+' button').forEach(function(x){x.disabled=!ok})}
     lk('#lockPix','#fPix',pixOk,'Plus and Premium');lk('#lockDom','#fDom',domOk,'Premium');
@@ -485,7 +505,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var d=daysLeft(),live=d>0,box=$('#subStatus'),nt=$('#subNote');
     var until=ME.sub_expires_at?new Date(ME.sub_expires_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'';
     var planTxt=ME.plan?(cap(ME.tier||'standard')+' &middot; '+(ME.plan==='yearly'?'Yearly':'Monthly')):'Free trial';
-    box.innerHTML=ME.franchise?'<b style="color:#14663f">MOZLYT franchise partner</b><br>Your shop (with ad tracking and your own address) and all training are included.':live?'<b style="color:#14663f">Your store is live</b><br>'+planTxt+' &middot; active until <b>'+until+'</b> ('+d+' day'+(d===1?'':'s')+' left)':'<b style="color:#9b2c20">Your store is closed</b><br>Your subscription ended'+(until?' on '+until:'')+'. Customers see a closed page until you renew. Your products and orders are safe.'+(ME.training_paid?'<br>Your training stays open.':'');
+    box.innerHTML=ME.franchise?'<b style="color:#14663f">MOZLYT franchise partner</b><br>Your shop (with ad tracking and your own address) and all training are included. Open the Franchise tab to manage your recruits.':live?'<b style="color:#14663f">Your store is live</b><br>'+planTxt+' &middot; active until <b>'+until+'</b> ('+d+' day'+(d===1?'':'s')+' left)':'<b style="color:#9b2c20">Your store is closed</b><br>Your subscription ended'+(until?' on '+until:'')+'. Customers see a closed page until you renew. Your products and orders are safe.'+(ME.training_paid?'<br>Your training stays open.':'');
     nt.innerHTML='';
     if(ME.franchise){}else if(!live)note(nt,'err','Your store is closed. Open the Subscription tab to renew and go live again.');
     else if(d<=7)note(nt,'info','Your subscription ends in '+d+' day'+(d===1?'':'s')+'. Renew in the Subscription tab to keep your store open.');
@@ -557,12 +577,12 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var sel=$('#pcat'),cur=sel.value||CAT_ALL;sel.innerHTML=cats.map(function(c){return'<option'+(c===cur?' selected':'')+'>'+esc(c)+'</option>'}).join('');
     var q=$('#pq').value.toLowerCase().trim(),view=$('#pview').value;
     var list=PRODUCTS.filter(function(p){return(sel.value===CAT_ALL||p.category===sel.value)&&(!q||p.name.toLowerCase().indexOf(q)>-1)&&(view==='all'||MINE[p.id])});
-    $('#pgrid').innerHTML=list.map(function(p){var m=MINE[p.id],price=m?m.price:(p.suggested_price||'');
+    $('#pgrid').innerHTML=list.map(function(p){var m=MINE[p.id],lk=FPP[p.id]!=null,price=lk?FPP[p.id]:(m?m.price:(p.suggested_price||''));
       return'<div class="pc'+(m&&m.active?' on':'')+'" data-id="'+p.id+'"><div class="ph">'+(p.photo?'<img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(p.photo)+'">':'Photo coming soon')+'</div><div class="b"><h4>'+esc(p.name)+'</h4>'+
-        '<div class="w">Wholesale: <b>'+(p.wholesale_price==null?'ask MOZLYT':MZ.money(p.wholesale_price))+'</b>'+(p.status!=='available'?' <span class="tag bad">Sold out</span>':'')+(m&&m.active?' <span class="tag">In your store</span>':'')+'</div>'+
-        '<div class="row"><input type="number" inputmode="decimal" min="1" step="0.01" placeholder="Your price GH₵" value="'+esc(price)+'"><button class="b2" data-a="save">'+(m?'Update':'Add')+'</button></div>'+(m?'<button class="b2 red" data-a="del">Remove from my store</button>':'')+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">No products match.</div>';
+        '<div class="w">'+(ME.franchise&&Number(ME.franchise_discount)>0?'Franchise price: <b>'+(p.wholesale_price==null?'ask MOZLYT':MZ.money(Math.round(p.wholesale_price*(1-Number(ME.franchise_discount)/100)*100)/100))+'</b>':'Wholesale: <b>'+(p.wholesale_price==null?'ask MOZLYT':MZ.money(p.wholesale_price))+'</b>')+(p.status!=='available'?' <span class="tag bad">Sold out</span>':'')+(m&&m.active?' <span class="tag">In your store</span>':'')+'</div>'+
+        (lk?'<div class="m" style="margin-bottom:6px">Price set by your franchise</div>':'')+'<div class="row"><input type="number" inputmode="decimal" min="1" step="0.01" placeholder="Your price GH₵" value="'+esc(price)+'"'+(lk?' disabled':'')+'><button class="b2" data-a="save">'+(m?'Update':'Add')+'</button></div>'+(m?'<button class="b2 red" data-a="del">Remove from my store</button>':'')+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">No products match.</div>';
     $$('#pgrid .pc').forEach(function(c){var id=Number(c.dataset.id);
-      $('[data-a=save]',c).onclick=function(){var v=parseFloat($('input',c).value);if(!(v>0)){flash('Enter your selling price first');return}
+      $('[data-a=save]',c).onclick=function(){var v=FPP[id]!=null?FPP[id]:parseFloat($('input',c).value);if(!(v>0)){flash('Enter your selling price first');return}
         var b=this;busy(b,true);MZ.upsert('seller_products',[{seller_id:ME.id,product_id:id,price:v,active:true}],'seller_id,product_id').then(function(){MINE[id]={product_id:id,price:v,active:true};flash('Saved to your store');drawProducts();drawOver()},function(er){flash(er.message)}).then(function(){busy(b,false)})};
       var d=$('[data-a=del]',c);if(d)d.onclick=function(){MZ.remove('seller_products','seller_id=eq.'+ME.id+'&product_id=eq.'+id).then(function(){delete MINE[id];flash('Removed');drawProducts();drawOver()},function(er){flash(er.message)})}})}
   ['pq','pcat','pview'].forEach(function(i){$('#'+i).addEventListener(i==='pq'?'input':'change',drawProducts)});
@@ -618,6 +638,36 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var P=PATHS.filter(function(x){return x[0]===TR.path})[0],pl=TR.c.filter(function(c){return(c.tracks||[]).indexOf(TR.path)>-1});
     box.innerHTML=back('What do you want to learn?')+'<h2 style="margin:12px 0 4px;font-size:24px">'+P[1]+'</h2><p class="sub">'+P[2]+' Finish the lessons at your own pace.</p>'+cards(pl);
     $('#bk').onclick=function(){TR.path=null;drawTrain()};bindCourses()}
+
+  /* ----- franchise ----- */
+  var FR={rec:[],pays:[]},FRK=[['monthly_price','Standard, monthly'],['yearly_price','Standard, yearly'],['plus_monthly','Plus, monthly'],['plus_yearly','Plus, yearly'],['premium_monthly','Premium, monthly'],['premium_yearly','Premium, yearly'],['training_price','Training only, one time']];
+  function frLive(){return !!(ME&&ME.franchise&&ME.franchise_expires_at&&new Date(ME.franchise_expires_at)>new Date())}
+  function frLink(){return MZ.siteUrl+'seller.html?ref='+encodeURIComponent(ME.franchise_code||'')}
+  function loadFr(){if(!ME||!ME.franchise)return;
+    Promise.all([MZ.q('profiles','select=id,full_name,store_name,phone,email,sub_expires_at,plan,tier,training_paid,status,created_at&franchise_id=eq.'+ME.id+'&order=created_at.desc'),MZ.q('subscription_payments','select=*&franchise_id=eq.'+ME.id+'&order=created_at.desc&limit=200'),MZ.q('profiles','select=*&id=eq.'+ME.id),MZ.q('franchise_product_prices','select=product_id,price&franchise_id=eq.'+ME.id)]).then(function(r){FR={rec:r[0]||[],pays:r[1]||[]};FRP={};(r[3]||[]).forEach(function(x){FRP[x.product_id]=Number(x.price)});if(r[2]&&r[2][0]){ME=r[2][0]}drawFr()},function(er){flash(er.message)})}
+  function frRow(x,act){var u=FR.rec.filter(function(y){return y.id===x.seller_id})[0]||{};
+    return'<div class="it"><div class="h"><b>'+esc(u.full_name||u.store_name||'Recruit')+' &middot; '+(x.kind==='training'?'Training':cap(x.tier||'standard')+' '+(x.plan==='yearly'?'yearly':'monthly'))+' &middot; '+MZ.money(x.amount)+'</b>'+(act?'':'<span class="tag '+(x.status==='confirmed'?'':'bad')+'">'+x.status+'</span>')+'</div><div class="m">Ref <b>'+esc(x.reference)+'</b> &middot; '+esc(u.phone||'')+' &middot; '+MZ.when(x.created_at)+'</div>'+(act?'<div style="display:flex;gap:8px;margin-top:8px"><button class="b2" data-fok="'+x.id+'" type="button">Confirm</button><button class="b2 red" data-fno="'+x.id+'" type="button">Reject</button></div>':'')+'</div>'}
+  function drawFr(){
+    var live=frLive(),until=ME.franchise_expires_at?new Date(ME.franchise_expires_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'';
+    var terms=ME.franchise_fee!=null?MZ.money(ME.franchise_fee)+' '+(ME.franchise_plan==='yearly'?'a year':'a month'):'the agreed amount';
+    $('#frStatus').innerHTML=live?'<b style="color:#14663f">Franchise active</b><br>Paid up until <b>'+until+'</b>. Your agreed payment to MOZLYT: <b>'+terms+'</b>.':'<b style="color:#9b2c20">Franchise payment due</b><br>Your dashboard is paused until you pay MOZLYT '+terms+'. Your recruits keep their stores and training.<br><a class="b2" style="display:inline-block;margin-top:10px;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/233538729743?text='+encodeURIComponent('Hello MOZLYT, I want to renew my franchise. Code: '+(ME.franchise_code||''))+'">Message MOZLYT to renew</a>';
+    $('#frBody').hidden=!live;if(!live)return;
+    var u=frLink();$('#frCopy').onclick=function(){copy(u)};$('#frShare').href='https://wa.me/?text='+encodeURIComponent('Join MOZLYT with me, start your shop or training here: '+u);
+    var ok=FR.pays.filter(function(x){return x.status==='confirmed'}),now=new Date(),tot=ok.reduce(function(a,x){return a+Number(x.amount||0)},0),mo=ok.filter(function(x){var d=new Date(x.confirmed_at||x.created_at);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()}).reduce(function(a,x){return a+Number(x.amount||0)},0);
+    $('#frN').textContent=FR.rec.length;$('#frM').textContent=MZ.money(mo);$('#frT').textContent=MZ.money(tot);
+    $('#frPay').value=ME.franchise_pay_info||'';
+    $('#frSell').innerHTML=PRODUCTS.map(function(p){return'<label>'+esc(p.name)+(p.suggested_price?' <small>(suggested '+MZ.money(p.suggested_price)+')</small>':'')+'<input type="number" min="0" step="0.01" data-pid="'+p.id+'" placeholder="Recruit chooses" value="'+(FRP[p.id]!=null?FRP[p.id]:'')+'"></label>'}).join('');
+    var fp=ME.franchise_prices||{};
+    $('#frPrices').innerHTML=FRK.map(function(k){return'<label>'+k[1]+' (GH&#8373;)<input type="number" min="0" step="1" data-k="'+k[0]+'" placeholder="'+(BILL[k[0]]!=null?BILL[k[0]]:'')+'" value="'+(fp[k[0]]!=null?fp[k[0]]:'')+'"></label>'}).join('');
+    $('#frPend').innerHTML=FR.pays.filter(function(x){return x.status==='pending'}).map(function(x){return frRow(x,true)}).join('')||'<div class="empty">Nothing waiting.</div>';
+    $('#frDone').innerHTML=FR.pays.filter(function(x){return x.status!=='pending'}).slice(0,30).map(function(x){return frRow(x,false)}).join('')||'<div class="empty">No payments yet.</div>';
+    $('#frRec').innerHTML=FR.rec.map(function(x){var lv=x.sub_expires_at&&new Date(x.sub_expires_at)>new Date();return'<div class="it"><div class="h"><b>'+esc(x.full_name||'Recruit')+(x.store_name?' &middot; '+esc(x.store_name):'')+'</b><span class="tag '+(lv?'':'bad')+'">'+(lv?(x.plan?cap(x.tier||'standard'):'Trial'):'Expired')+'</span></div><div class="m">'+esc(x.phone||'')+' &middot; joined '+MZ.when(x.created_at)+(x.training_paid?' &middot; has training':'')+'</div></div>'}).join('')||'<div class="empty">No recruits yet. Share your link to get started.</div>';
+    $$('#frPend [data-fok]').forEach(function(b){b.onclick=function(){b.disabled=true;MZ.rpc('admin_confirm_payment',{p_id:Number(b.dataset.fok)}).then(function(){flash('Confirmed');loadFr()},function(er){flash(er.message);b.disabled=false})}});
+    $$('#frPend [data-fno]').forEach(function(b){b.onclick=function(){b.disabled=true;MZ.rpc('admin_reject_payment',{p_id:Number(b.dataset.fno)}).then(function(){flash('Rejected');loadFr()},function(er){flash(er.message);b.disabled=false})}})}
+  $('#fFrPay').onsubmit=function(e){e.preventDefault();var b=$('button',this);busy(b,true,'Saving...');MZ.update('profiles','id=eq.'+ME.id,{franchise_pay_info:$('#frPay').value.trim()}).then(function(r){ME=r[0]||ME;flash('Saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+  $('#fFrSell').onsubmit=function(e){e.preventDefault();var b=$('button',this),up=[],del=[];$$('#frSell input').forEach(function(i){var id=Number(i.dataset.pid);if(i.value!==''&&Number(i.value)>=0)up.push({franchise_id:ME.id,product_id:id,price:Number(i.value)});else if(FRP[id]!=null)del.push(id)});
+    busy(b,true,'Saving...');(up.length?MZ.upsert('franchise_product_prices',up,'franchise_id,product_id'):Promise.resolve()).then(function(){return del.length?MZ.remove('franchise_product_prices','franchise_id=eq.'+ME.id+'&product_id=in.('+del.join(',')+')'):0}).then(function(){FRP={};up.forEach(function(x){FRP[x.product_id]=x.price});flash('Selling prices saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+  $('#fFrPrices').onsubmit=function(e){e.preventDefault();var b=$('button',this),o={};$$('#frPrices input').forEach(function(i){if(i.value!==''&&Number(i.value)>=0)o[i.dataset.k]=Number(i.value)});busy(b,true,'Saving...');MZ.update('profiles','id=eq.'+ME.id,{franchise_prices:o}).then(function(r){ME=r[0]||ME;flash('Prices saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
 
   /* ----- settings ----- */
   $('#fSet').onsubmit=function(e){e.preventDefault();var b=$('button',this);busy(b,true,'Saving...');
