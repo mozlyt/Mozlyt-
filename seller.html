@@ -197,6 +197,14 @@ body.has-list .wa-float{bottom:84px}
 .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.tools input,.tools select{padding:10px 12px;border:1px solid #cfd8d2;border-radius:10px;font:15px inherit;font-family:inherit;background:#fff}
 .tools input{flex:1 1 200px}
 .lst{display:grid;gap:10px}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.plan{position:relative;display:flex;flex-direction:column;gap:2px;padding:16px;border:2px solid var(--line);border-radius:14px;background:#fff;cursor:pointer}
+.plan.on{border-color:var(--green);box-shadow:0 0 0 3px rgba(47,107,79,.12)}
+.plan input{position:absolute;opacity:0;pointer-events:none}
+.plan .pr{font-size:1.5rem;font-weight:800}
+.plan em{font-style:normal;color:#14663f;font-weight:700;font-size:.85rem;margin-top:4px}
+@media(max-width:480px){.plans{grid-template-columns:1fr}}
+
 .it{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:6px}
 .it .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
 .it .m{color:var(--mute);font-size:13.5px}
@@ -257,7 +265,7 @@ body.has-list .wa-float{bottom:84px}
       <label>Store link<input id="sSlug" placeholder="ama-wellness" required maxlength="30" autocapitalize="none" autocomplete="off"><small id="slugHint">Your link will be mozlyt.com/store.html?s=<b>your-name</b></small></label>
       <label>Email<input type="email" id="sEmail" autocomplete="email" required></label>
       <label>Password<input type="password" id="sPass" autocomplete="new-password" minlength="8" required><small>At least 8 characters.</small></label>
-      <button class="btn primary" type="submit">Create my account</button>
+      <p class="sub" style="margin:0;font-size:14px">Start with a free trial. After that, keep your store open with a monthly or yearly plan.</p><button class="btn primary" type="submit">Create my account</button>
       <small>By signing up you agree to sell honestly and deliver what customers order.</small>
     </form>
 
@@ -277,11 +285,11 @@ body.has-list .wa-float{bottom:84px}
 <!-- ========== DASHBOARD ========== -->
 <section id="dashView" hidden>
   <div class="top2"><div><h1 id="hello">Your store</h1><p class="sub" id="subline"></p></div><button class="b2 ghost" id="btnOut" type="button">Log out</button></div>
-  <div id="dashNote"></div>
+  <div id="dashNote"></div><div id="subNote"></div>
   <div class="linkcard"><span>Your store link</span><code id="storeUrl"></code>
     <button class="b" type="button" id="cpUrl">Copy</button><a class="b" id="openUrl" target="_blank" rel="noopener">Open</a><a class="b" id="shareUrl" target="_blank" rel="noopener">Share on WhatsApp</a></div>
   <div class="tabs" id="dtabs">
-    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="learn">Training</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
+    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
   </div>
 
   <div id="pane-over">
@@ -300,6 +308,17 @@ body.has-list .wa-float{bottom:84px}
   <div id="pane-learn" hidden><div id="learnBox"></div></div>
 
   <div id="pane-ord" hidden><div class="lst" id="ordList"></div></div>
+
+  <div id="pane-sub" hidden>
+    <div class="card2" id="subStatus"></div>
+    <h3 style="margin:22px 0 10px">Choose a plan</h3>
+    <div class="plans" id="plans"></div>
+    <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Pay and activate</h3>
+      <p class="sub" id="payHow" style="margin-bottom:12px"></p>
+      <form id="fPay" class="f"><label>Payment reference or Mobile Money transaction ID<input id="payRef" maxlength="60" minlength="4" required placeholder="e.g. 4821937465"></label>
+      <button class="btn primary" type="submit">I have paid</button></form></div>
+    <h3 style="margin:22px 0 10px">Payment history</h3><div class="lst" id="payList"></div>
+  </div>
 
   <div id="pane-set" hidden>
     <div class="card2"><form id="fSet" class="f">
@@ -334,11 +353,11 @@ function esc(s){return MZ.esc(s)}
 function show(id,on){var e=$('#'+id);if(e)e.hidden=!on}
 function flash(t,ms){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},ms||2600)}
 function note(box,type,text){box.innerHTML=text?'<div class="msg '+type+'">'+esc(text)+'</div>':''}
-function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(label){if(on){btn.dataset.l=btn.textContent;btn.textContent=label}else btn.textContent=btn.dataset.l||btn.textContent}}
+function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.dataset.l=btn.textContent;btn.textContent=label}}else if(btn.dataset.l){btn.textContent=btn.dataset.l;delete btn.dataset.l}}
 function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){flash('Copied')},function(){var i=document.createElement('input');i.value=t;document.body.appendChild(i);i.select();try{document.execCommand('copy');flash('Copied')}catch(e){prompt('Copy this:',t)}i.remove()})}
 
 (function(){
-  var ME=null, PRODUCTS=[], MINE={}, ORDERS=[], CAT_ALL='All categories';
+  var BILL={},PAYS=[],PLAN='yearly',ME=null, PRODUCTS=[], MINE={}, ORDERS=[], CAT_ALL='All categories';
   var authNote=$('#authNote'), dashNote=$('#dashNote');
 
   function view(name){['fLogin','fSign','fForgot','fReset'].forEach(function(i){show(i,i===name)});$('#tLogin').classList.toggle('on',name==='fLogin');$('#tSign').classList.toggle('on',name==='fSign');$('#authNote').innerHTML=''}
@@ -370,7 +389,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){ME=null;show('dashView',false);show('authView',true);view('fLogin')})};
 
   /* ----- tabs ----- */
-  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','prod','ord','learn','set','acc'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='learn')loadTrain()}});
+  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','prod','ord','learn','sub','set','acc'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='learn')loadTrain()}});
 
   /* ----- load everything ----- */
   function boot(){
@@ -379,8 +398,8 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       if(!p||!p[0]){throw new Error('We could not find your seller profile. Please log out and sign up again.')}
       ME=p[0];show('dashView',true);paint();
       if(ME.status==='suspended')note(dashNote,'err','Your store is paused. Please contact MOZLYT on WhatsApp.');
-      return Promise.all([MZ.q('products','select=id,category,name,photo,wholesale_price,suggested_price,status&order=sort,name'),MZ.q('seller_products','select=product_id,price,active&seller_id=eq.'+ME.id),MZ.q('orders','select=*&order=created_at.desc&limit=200')]);
-    }).then(function(r){PRODUCTS=r[0];MINE={};r[1].forEach(function(x){MINE[x.product_id]=x});ORDERS=r[2];drawAll()},function(er){
+      return Promise.all([MZ.q('products','select=id,category,name,photo,wholesale_price,suggested_price,status&order=sort,name'),MZ.q('seller_products','select=product_id,price,active&seller_id=eq.'+ME.id),MZ.q('orders','select=*&order=created_at.desc&limit=200'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.q('subscription_payments','select=*&order=created_at.desc&limit=50')]);
+    }).then(function(r){PRODUCTS=r[0];MINE={};r[1].forEach(function(x){MINE[x.product_id]=x});ORDERS=r[2];BILL=(r[3]&&r[3][0])||{monthly_price:0,yearly_price:0,pay_instructions:''};PAYS=r[4]||[];drawAll()},function(er){
       if(er.status===401||/JWT|expired/i.test(er.message)){MZ.signOut();show('dashView',false);show('authView',true);view('fLogin');note(authNote,'info','Please log in again.')}else{show('authView',true);view('fLogin');note(authNote,'err',er.message)}});
   }
   function storeUrl(){return(ME.custom_domain&&false?('https://'+ME.custom_domain+'/'):MZ.siteUrl+'store.html?s='+ME.store_slug)}
@@ -389,7 +408,27 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var u=storeUrl();$('#storeUrl').textContent=u;$('#openUrl').href=u;$('#cpUrl').onclick=function(){copy(u)};
     $('#shareUrl').href='https://wa.me/?text='+encodeURIComponent('Shop with me on my MOZLYT store: '+u);
     $('#eStore').value=ME.store_name||'';$('#ePhone').value=ME.phone||'';$('#eDom').value=ME.custom_domain||'';$('#ePx1').value=ME.meta_pixel_id||'';$('#ePx2').value=ME.tiktok_pixel_id||'';$('#accEmail').textContent=ME.email||'';domInfo()}
-  function drawAll(){drawOver();drawProducts();drawOrders()}
+  function drawAll(){drawOver();drawProducts();drawOrders();drawSub()}
+
+  /* ----- subscription ----- */
+  function daysLeft(){return ME&&ME.sub_expires_at?Math.ceil((new Date(ME.sub_expires_at)-new Date())/86400000):0}
+  function drawSub(){
+    var d=daysLeft(),live=d>0,box=$('#subStatus'),nt=$('#subNote');
+    var until=ME.sub_expires_at?new Date(ME.sub_expires_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'';
+    var planTxt=ME.plan?(ME.plan==='yearly'?'Yearly plan':'Monthly plan'):'Free trial';
+    box.innerHTML=live?'<b style="color:#14663f">Your store is live</b><br>'+planTxt+' &middot; active until <b>'+until+'</b> ('+d+' day'+(d===1?'':'s')+' left)':'<b style="color:#9b2c20">Your store is closed</b><br>Your subscription ended'+(until?' on '+until:'')+'. Customers see a closed page until you renew. Your products and orders are safe.';
+    nt.innerHTML='';
+    if(!live)note(nt,'err','Your store is closed. Open the Subscription tab to renew and go live again.');
+    else if(d<=7)note(nt,'info','Your subscription ends in '+d+' day'+(d===1?'':'s')+'. Renew in the Subscription tab to keep your store open.');
+    var m=Number(BILL.monthly_price||0),y=Number(BILL.yearly_price||0),save=Math.max(0,m*12-y);
+    $('#plans').innerHTML=[['monthly','Monthly',m,'per month',''],['yearly','Yearly',y,'per year',save>0?'Save '+MZ.money(save)+' a year':'']].map(function(x){
+      return'<label class="plan'+(PLAN===x[0]?' on':'')+'"><input type="radio" name="plan" value="'+x[0]+'"'+(PLAN===x[0]?' checked':'')+'><b>'+x[1]+'</b><span class="pr">'+MZ.money(x[2])+'</span><small>'+x[3]+'</small>'+(x[4]?'<em>'+x[4]+'</em>':'')+'</label>'}).join('');
+    $$('#plans input').forEach(function(i){i.onchange=function(){PLAN=i.value;drawSub()}});
+    $('#payHow').innerHTML='Plan: <b>'+(PLAN==='yearly'?'Yearly':'Monthly')+'</b> &middot; Amount: <b>'+MZ.money(PLAN==='yearly'?y:m)+'</b><br>'+esc(BILL.pay_instructions||'');
+    $('#payList').innerHTML=PAYS.map(function(x){var cls=x.status==='confirmed'?'':(x.status==='rejected'?'bad':'warn');return'<div class="it"><div class="h"><b>'+(x.plan==='yearly'?'Yearly':'Monthly')+' &middot; '+MZ.money(x.amount)+'</b><span class="tag '+cls+'">'+(x.status==='pending'?'Waiting for confirmation':x.status==='confirmed'?'Confirmed':'Not confirmed')+'</span></div><div class="m">Ref '+esc(x.reference)+' &middot; '+MZ.when(x.created_at)+'</div></div>'}).join('')||'<div class="empty">No payments yet.</div>'}
+  $('#fPay').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this),ref=$('#payRef').value.trim();busy(b,true,'Sending...');
+    MZ.rpc('request_subscription',{p_plan:PLAN,p_reference:ref}).then(function(){return MZ.q('subscription_payments','select=*&order=created_at.desc&limit=50')}).then(function(r){PAYS=r;$('#payRef').value='';drawSub();flash('Payment sent. We will confirm it shortly.');
+      window.open('https://wa.me/233538729743?text='+encodeURIComponent('Hello MOZLYT, I paid for the '+PLAN+' store plan. Store: '+ME.store_slug+'. Reference: '+ref),'_blank','noopener')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
 
   /* ----- overview ----- */
   function sumLines(o){return(o.items||[]).map(function(i){return(i.qty||1)+' x '+i.name}).join(', ')}

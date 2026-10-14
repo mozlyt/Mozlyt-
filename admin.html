@@ -197,6 +197,14 @@ body.has-list .wa-float{bottom:84px}
 .tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.tools input,.tools select{padding:10px 12px;border:1px solid #cfd8d2;border-radius:10px;font:15px inherit;font-family:inherit;background:#fff}
 .tools input{flex:1 1 200px}
 .lst{display:grid;gap:10px}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.plan{position:relative;display:flex;flex-direction:column;gap:2px;padding:16px;border:2px solid var(--line);border-radius:14px;background:#fff;cursor:pointer}
+.plan.on{border-color:var(--green);box-shadow:0 0 0 3px rgba(47,107,79,.12)}
+.plan input{position:absolute;opacity:0;pointer-events:none}
+.plan .pr{font-size:1.5rem;font-weight:800}
+.plan em{font-style:normal;color:#14663f;font-weight:700;font-size:.85rem;margin-top:4px}
+@media(max-width:480px){.plans{grid-template-columns:1fr}}
+
 .it{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:6px}
 .it .h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
 .it .m{color:var(--mute);font-size:13.5px}
@@ -250,7 +258,7 @@ body.has-list .wa-float{bottom:84px}
 <section id="dashView" hidden>
   <div class="top2"><div><h1>MOZLYT admin</h1><p class="sub" id="who"></p></div><button class="b2 ghost" id="btnOut" type="button">Log out</button></div>
   <div id="dNote"></div>
-  <div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="book" type="button">Bookings</button><button data-t="ord" type="button">Orders</button><button data-t="sell" type="button">Sellers</button><button data-t="prod" type="button">Products</button><button data-t="train" type="button">Training</button><button data-t="set" type="button">Ad tracking</button></div>
+  <div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="book" type="button">Bookings</button><button data-t="ord" type="button">Orders</button><button data-t="sell" type="button">Sellers</button><button data-t="subs" type="button">Subscriptions</button><button data-t="prod" type="button">Products</button><button data-t="train" type="button">Training</button><button data-t="set" type="button">Ad tracking</button></div>
 
   <div id="pane-over"><div class="stats" id="stats"></div><h3 style="margin:18px 0 10px">Newest bookings</h3><div class="lst" id="ovBook"></div><h3 style="margin:22px 0 10px">Newest orders</h3><div class="lst" id="ovOrd"></div></div>
   <div id="pane-book" hidden><div class="tools"><select id="bf"><option value="">All statuses</option><option>new</option><option>confirmed</option><option>done</option><option>cancelled</option></select></div><div class="lst" id="bookList"></div></div>
@@ -260,6 +268,13 @@ body.has-list .wa-float{bottom:84px}
     <p class="sub">Create courses and lessons for your trainees. Only published courses are visible to sellers. Videos: paste a YouTube link.</p>
     <div class="tools"><select id="tcSel"></select><button class="b2" id="tcNew" type="button">New course</button></div>
     <div id="tcBox"></div>
+  </div>
+  <div id="pane-subs" hidden>
+    <div class="card2"><h3 style="margin:0 0 6px">Plan prices</h3>
+      <p class="sub" style="margin-bottom:12px">Sellers pay these amounts to keep their store open. New sellers get a free trial first (set 0 to turn it off).</p>
+      <form id="fBill" class="f"><label>Monthly price (GH&#8373;)<input id="bM" type="number" min="0" step="1" required></label><label>Yearly price (GH&#8373;)<input id="bY" type="number" min="0" step="1" required></label><label>Free trial days for new sellers<input id="bT" type="number" min="0" max="90" step="1" required></label><label>Payment instructions shown to sellers<textarea id="bI" rows="3" maxlength="600"></textarea></label><button class="btn primary" type="submit">Save prices</button></form></div>
+    <h3 style="margin:22px 0 10px">Payments waiting for you</h3><div class="lst" id="payPend"></div>
+    <h3 style="margin:22px 0 10px">Recent payments</h3><div class="lst" id="payDone"></div>
   </div>
   <div id="pane-set" hidden><div class="card2"><h3 style="margin:0 0 6px">MOZLYT ad tracking</h3>
     <p class="sub" style="margin-bottom:12px">Paste MOZLYT's own Pixel IDs. They load on the main site (home, shop, career) and report visits and bookings to your ad accounts.</p>
@@ -280,7 +295,7 @@ function esc(s){return MZ.esc(s)}
 function show(id,on){var e=$('#'+id);if(e)e.hidden=!on}
 function flash(t,ms){var d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(function(){d.remove()},ms||2600)}
 function note(box,type,text){box.innerHTML=text?'<div class="msg '+type+'">'+esc(text)+'</div>':''}
-function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(label){if(on){btn.dataset.l=btn.textContent;btn.textContent=label}else btn.textContent=btn.dataset.l||btn.textContent}}
+function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.dataset.l=btn.textContent;btn.textContent=label}}else if(btn.dataset.l){btn.textContent=btn.dataset.l;delete btn.dataset.l}}
 function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(function(){flash('Copied')},function(){var i=document.createElement('input');i.value=t;document.body.appendChild(i);i.select();try{document.execCommand('copy');flash('Copied')}catch(e){prompt('Copy this:',t)}i.remove()})}
 
 (function(){
@@ -292,18 +307,18 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:'MOZLYT admin'}).then(function(r){if(r.confirmed)boot();else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(aNote,'ok','We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in.')}},function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();MZ.recover($('#fEmail').value.trim()).then(function(){note(aNote,'ok','If that email has an account, a reset link is on its way.')},function(er){note(aNote,'err',er.message)})};
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){show('dashView',false);show('authView',true);view('fLogin')})};
-  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','book','ord','sell','prod','train','set'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='train')loadTrain()}});
+  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','book','ord','sell','subs','prod','train','set'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='train')loadTrain()}});
 
   function boot(){
     show('authView',false);
     return MZ.rpc('is_admin').then(function(ok){
       if(!ok){show('dashView',false);show('authView',true);view('fLogin');note(aNote,'err','This account is not a MOZLYT admin. Make sure you use an approved admin email and have confirmed it.');return}
       $('#who').textContent=MZ.user().email;show('dashView',true);
-      return Promise.all([MZ.q('bookings','select=*&order=created_at.desc&limit=300'),MZ.q('orders','select=*&order=created_at.desc&limit=300'),MZ.q('profiles','select=*&order=created_at.desc'),MZ.q('products','select=*&order=sort,name'),MZ.q('seller_products','select=seller_id,active'),MZ.q('site_settings','select=key,value')]).then(function(r){var st={};r[5].forEach(function(x){st[x.key]=x.value});$('#px1').value=st.meta_pixel||'';$('#px2').value=st.tiktok_pixel||'';
+      return Promise.all([MZ.q('bookings','select=*&order=created_at.desc&limit=300'),MZ.q('orders','select=*&order=created_at.desc&limit=300'),MZ.q('profiles','select=*&order=created_at.desc'),MZ.q('products','select=*&order=sort,name'),MZ.q('seller_products','select=seller_id,active'),MZ.q('site_settings','select=key,value'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.q('subscription_payments','select=*&order=created_at.desc&limit=200')]).then(function(r){BILL=(r[6]&&r[6][0])||{};PAYS=r[7]||[];var st={};r[5].forEach(function(x){st[x.key]=x.value});$('#px1').value=st.meta_pixel||'';$('#px2').value=st.tiktok_pixel||'';
         BOOK=r[0];ORD=r[1];SELL=r[2];PROD=r[3];LISTED={};r[4].forEach(function(x){if(x.active)LISTED[x.seller_id]=(LISTED[x.seller_id]||0)+1});drawAll()})
     }).catch(function(er){show('authView',true);view('fLogin');note(aNote,er.status===401?'info':'err',er.status===401?'Please log in again.':er.message)})}
 
-  function drawAll(){over();books();orders();sellers();prods()}
+  function drawAll(){over();books();orders();sellers();prods();subs()}
   function over(){var nb=BOOK.filter(function(b){return b.status==='new'}).length,no=ORD.filter(function(o){return o.status==='new'}).length;
     $('#stats').innerHTML=[['New bookings',nb],['All bookings',BOOK.length],['New orders',no],['All orders',ORD.length],['Sellers',SELL.length],['Products',PROD.length]].map(function(x){return'<div class="stat"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>'}).join('');
     $('#ovBook').innerHTML=BOOK.slice(0,5).map(bookRow).join('')||'<div class="empty">No bookings yet.</div>';$('#ovOrd').innerHTML=ORD.slice(0,5).map(orderRow).join('')||'<div class="empty">No orders yet.</div>';bindB($('#ovBook'));bindO($('#ovOrd'))}
@@ -329,9 +344,25 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function orders(){var f=$('#of').value,st=$('#os').value;$('#ordList').innerHTML=ORD.filter(function(o){return(!f||(f==='main'?!o.seller_id:!!o.seller_id))&&(!st||o.status===st)}).map(orderRow).join('')||'<div class="empty">No orders.</div>';bindO($('#ordList'))}
   $('#of').onchange=orders;$('#os').onchange=orders;
 
-  function sellers(){$('#sellTbl').innerHTML='<tr><th>Store</th><th>Seller</th><th>Phone</th><th>Store link</th><th>Products</th><th>Domain</th><th>Joined</th><th>Status</th></tr>'+SELL.map(function(s){
-    return'<tr><td><b>'+esc(s.store_name)+'</b></td><td>'+esc(s.full_name||'')+'<br><small>'+esc(s.email||'')+'</small></td><td>'+esc(s.phone||'')+'</td><td><a target="_blank" rel="noopener" href="store.html?s='+esc(s.store_slug)+'">'+esc(s.store_slug)+'</a></td><td>'+(LISTED[s.id]||0)+'</td><td>'+esc(s.custom_domain||'')+'</td><td>'+MZ.when(s.created_at)+'</td><td><button class="b2 '+(s.status==='active'?'ghost':'')+'" data-id="'+s.id+'" data-s="'+s.status+'">'+(s.status==='active'?'Pause':'Activate')+'</button></td></tr>'}).join('');
-    $$('#sellTbl button').forEach(function(b){b.onclick=function(){var next=b.dataset.s==='active'?'suspended':'active';MZ.rpc('admin_set_seller_status',{p_id:b.dataset.id,p_status:next}).then(function(){SELL.forEach(function(s){if(s.id===b.dataset.id)s.status=next});flash('Updated');sellers()},function(er){flash(er.message)})}})}
+  function sellers(){$('#sellTbl').innerHTML='<tr><th>Store</th><th>Seller</th><th>Phone</th><th>Store link</th><th>Products</th><th>Domain</th><th>Joined</th><th>Subscription</th><th>Status</th></tr>'+SELL.map(function(s){
+    return'<tr><td><b>'+esc(s.store_name)+'</b></td><td>'+esc(s.full_name||'')+'<br><small>'+esc(s.email||'')+'</small></td><td>'+esc(s.phone||'')+'</td><td><a target="_blank" rel="noopener" href="store.html?s='+esc(s.store_slug)+'">'+esc(s.store_slug)+'</a></td><td>'+(LISTED[s.id]||0)+'</td><td>'+esc(s.custom_domain||'')+'</td><td>'+MZ.when(s.created_at)+'</td><td>'+subCell(s)+'</td><td><button class="b2 '+(s.status==='active'?'ghost':'')+'" data-id="'+s.id+'" data-s="'+s.status+'">'+(s.status==='active'?'Pause':'Activate')+'</button></td></tr>'}).join('');
+    $$('#sellTbl [data-exp]').forEach(function(b){b.onclick=function(){setExp(b.dataset.exp)}});
+    $$('#sellTbl button[data-s]').forEach(function(b){b.onclick=function(){var next=b.dataset.s==='active'?'suspended':'active';MZ.rpc('admin_set_seller_status',{p_id:b.dataset.id,p_status:next}).then(function(){SELL.forEach(function(s){if(s.id===b.dataset.id)s.status=next});flash('Updated');sellers()},function(er){flash(er.message)})}})}
+
+  /* ----- subscriptions ----- */
+  var BILL={},PAYS=[];
+  function subCell(s){var live=s.sub_expires_at&&new Date(s.sub_expires_at)>new Date();return'<span class="tag '+(live?'':'bad')+'">'+(live?(s.plan||'trial'):'expired')+'</span><br><small>'+(s.sub_expires_at?MZ.when(s.sub_expires_at):'no date')+'</small><br><button class="b2 ghost" type="button" data-exp="'+s.id+'">Set date</button>'}
+  function setExp(id){var s=SELL.filter(function(x){return x.id===id})[0];var v=prompt('Subscription end date for '+s.store_name+' (YYYY-MM-DD). Leave empty to expire it now.',s.sub_expires_at?s.sub_expires_at.slice(0,10):'');if(v===null)return;v=v.trim();var d=v?new Date(v+'T23:59:59'):new Date(Date.now()-1000);if(isNaN(d)){flash('Use the format YYYY-MM-DD');return}
+    MZ.rpc('admin_set_expiry',{p_id:id,p_plan:s.plan||null,p_expires:d.toISOString()}).then(function(){s.sub_expires_at=d.toISOString();flash('Updated');sellers()},function(er){flash(er.message)})}
+  function payRow(x,act){var s=SELL.filter(function(y){return y.id===x.seller_id})[0]||{};return'<div class="it"><div class="h"><b>'+esc(s.store_name||'Seller')+' &middot; '+(x.plan==='yearly'?'Yearly':'Monthly')+' &middot; '+MZ.money(x.amount)+'</b>'+(act?'':'<span class="tag '+(x.status==='confirmed'?'':'bad')+'">'+x.status+'</span>')+'</div><div class="m">Ref <b>'+esc(x.reference)+'</b> &middot; '+esc(s.phone||'')+' &middot; '+MZ.when(x.created_at)+'</div>'+(act?'<div style="display:flex;gap:8px"><button class="b2" data-ok="'+x.id+'" type="button">Confirm and activate</button><button class="b2 red" data-no="'+x.id+'" type="button">Reject</button></div>':'')+'</div>'}
+  function subs(){
+    $('#bM').value=BILL.monthly_price!=null?BILL.monthly_price:'';$('#bY').value=BILL.yearly_price!=null?BILL.yearly_price:'';$('#bT').value=BILL.trial_days!=null?BILL.trial_days:'';$('#bI').value=BILL.pay_instructions||'';
+    $('#payPend').innerHTML=PAYS.filter(function(x){return x.status==='pending'}).map(function(x){return payRow(x,true)}).join('')||'<div class="empty">Nothing waiting.</div>';
+    $('#payDone').innerHTML=PAYS.filter(function(x){return x.status!=='pending'}).slice(0,30).map(function(x){return payRow(x,false)}).join('')||'<div class="empty">No payments yet.</div>';
+    $$('#payPend [data-ok]').forEach(function(b){b.onclick=function(){b.disabled=true;MZ.rpc('admin_confirm_payment',{p_id:Number(b.dataset.ok)}).then(function(){return Promise.all([MZ.q('subscription_payments','select=*&order=created_at.desc&limit=200'),MZ.q('profiles','select=*&order=created_at.desc')])}).then(function(r){PAYS=r[0];SELL=r[1];flash('Store activated');subs();sellers()},function(er){flash(er.message);b.disabled=false})}});
+    $$('#payPend [data-no]').forEach(function(b){b.onclick=function(){if(!confirm('Reject this payment?'))return;MZ.rpc('admin_reject_payment',{p_id:Number(b.dataset.no)}).then(function(){PAYS.forEach(function(x){if(String(x.id)===b.dataset.no)x.status='rejected'});subs()},function(er){flash(er.message)})}})}
+  $('#fBill').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Saving...');
+    MZ.update('billing_settings','id=eq.1',{monthly_price:Number($('#bM').value),yearly_price:Number($('#bY').value),trial_days:Math.round(Number($('#bT').value)),pay_instructions:$('#bI').value.trim(),updated_at:new Date().toISOString()}).then(function(r){BILL=r[0]||BILL;flash('Prices saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
 
   function prods(){var cats=['All categories'].concat(PROD.map(function(p){return p.category}).filter(function(c,i,a){return a.indexOf(c)===i}));var sel=$('#pcat'),cur=sel.value||'All categories';sel.innerHTML=cats.map(function(c){return'<option'+(c===cur?' selected':'')+'>'+esc(c)+'</option>'}).join('');
     var q=$('#pq').value.toLowerCase().trim();
