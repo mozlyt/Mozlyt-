@@ -222,6 +222,10 @@ section .sub{color:var(--mute);max-width:58ch;margin-bottom:34px}
 .cat ol{margin:8px 0 0 18px;display:grid;gap:3px}
 .skg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
 @media(max-width:700px){.skg{grid-template-columns:1fr}}
+.pl .lv{display:grid;gap:8px;margin:0 0 14px}
+.pl .lvc{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:#fff}
+.pl .lvc.on{border:2px solid var(--green);background:#f1faf5;padding:11px 13px}
+.pl .lvc input{accent-color:var(--green)}.pl .lvc span{display:flex;justify-content:space-between;gap:10px;flex:1;flex-wrap:wrap}.pl .lvc em{font-style:normal;color:var(--muted,#667);font-size:14px}
 .plans.stack{grid-template-columns:1fr;max-width:760px;margin:0 auto}
 .pl .ph{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .pl details{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 16px;background:#fafaf7}
@@ -414,18 +418,23 @@ body.has-list .wa-float{bottom:84px}
 
 <section id="plans">
   <div class="wrap">
-    <h2>Pick your plan</h2>
-    <p class="sub">Tap What you get to see everything in a plan, then tap Subscribe to create your account. Your dashboard opens with what you picked.</p>
+    <h2>Pick your path</h2>
+    <p class="sub">Tap What you get to see everything included, then tap Subscribe to create your account. Your dashboard opens with what you picked.</p>
     <div class="plans stack">
-      <div class="plan best pl"><div class="ph"><h3>Basic business skill</h3><b>GH&#8373;100, paid once</b></div><p class="sub" style="margin:4px 0 12px">How to start, price, promote and run your business. Included free with every shop.</p>
-        <details><summary>What you get</summary><div class="lst" id="catBasic"><div class="ci"><span>Loading lessons...</span></div></div><ul class="inc"><li>Your own training dashboard, yours to keep</li><li>Learn at your own pace and mark lessons complete</li><li>New business lessons added as they are ready</li><li>No shop included</li></ul></details>
-        <a class="btn primary" href="seller.html?kind=trainee&amp;item=basic">Subscribe</a></div>
-      <div class="plan best pl"><div class="ph"><h3>Take a skill</h3><b>From GH&#8373;100 per skill, paid once</b></div><p class="sub" style="margin:4px 0 12px">Choose the skill you want to learn. A Premium shop includes one skill free.</p>
-        <details><summary>What you get</summary><div class="skg" id="catSkills"></div><ul class="inc"><li>One skill of your choice, with every lesson in it</li><li>Your own training dashboard, yours to keep</li><li>Skills marked Coming soon open on your dashboard as soon as they are ready</li><li>No shop included</li></ul></details>
-        <label class="skpick">Choose a skill<select id="skSel"></select></label><a class="btn primary" id="skBtn" href="seller.html?kind=trainee&amp;item=skill:massage">Subscribe</a></div>
-      <div class="plan best pl"><div class="ph"><h3>Pro training</h3><b>GH&#8373;150, paid once</b></div><p class="sub" style="margin:4px 0 12px">Every business lesson and every skill, including new lessons as we add them.</p>
-        <details><summary>What you get</summary><ul class="inc"><li>Every business lesson (Basic)</li><li>Every skill, all categories</li><li>All new lessons as we publish them</li><li>Your own training dashboard, yours to keep</li><li>No shop included</li></ul></details>
-        <a class="btn primary" href="seller.html?kind=trainee&amp;item=pro">Subscribe</a></div>
+      <div class="plan best pl" id="skillPlan"><div class="ph"><h3>Take a skill</h3><b>Pay once, no monthly fee</b></div><p class="sub" style="margin:4px 0 12px">Learn on your own training dashboard. Choose a level, pay once and the lessons are yours to keep.</p>
+        <div class="lv" id="lv">
+          <label class="lvc on"><input type="radio" name="lv" value="basic" checked><span><b>Basic business skill</b><em>GH&#8373;100</em></span></label>
+          <label class="lvc"><input type="radio" name="lv" value="standard"><span><b>Standard skill</b><em>One skill, from GH&#8373;100</em></span></label>
+          <label class="lvc"><input type="radio" name="lv" value="pro"><span><b>Pro</b><em>GH&#8373;150</em></span></label>
+        </div>
+        <div id="lvBasic"><p class="sub" style="margin:0 0 10px">You get the business lessons listed here.</p>
+          <details><summary>What you get</summary><div class="lst" id="catBasic"><div class="ci"><span>Loading lessons...</span></div></div><ul class="inc"><li>Your own training dashboard, yours to keep</li><li>Learn at your own pace and mark lessons complete</li><li>New business lessons added as they are ready</li><li>No shop included</li></ul></details></div>
+        <div id="lvStandard" hidden><p class="sub" style="margin:0 0 10px">You pick one skill from the list and get every lesson in it.</p>
+          <details><summary>What you get</summary><div class="skg" id="catSkills"></div><ul class="inc"><li>One skill of your choice, with every lesson in it</li><li>Your own training dashboard, yours to keep</li><li>Skills marked Coming soon open on your dashboard as soon as they are ready</li><li>No shop included</li></ul></details>
+          <label class="skpick">Choose your skill<select id="skSel"></select></label></div>
+        <div id="lvPro" hidden><p class="sub" style="margin:0 0 10px">You get every skill and every lesson made available on the platform, now and later.</p>
+          <details><summary>What you get</summary><ul class="inc"><li>Every business lesson (Basic)</li><li>Every skill, all categories</li><li>All new lessons as we publish them</li><li>Your own training dashboard, yours to keep</li><li>No shop included</li></ul></details></div>
+        <a class="btn primary" id="skBtn" href="seller.html?kind=trainee&amp;item=basic">Subscribe</a></div>
       <div class="plan best pl"><div class="ph"><h3>Take a shop</h3><b>Free trial, then monthly or yearly</b></div><p class="sub" style="margin:4px 0 12px">Your own online store with training included.</p>
         <details><summary>What you get</summary><ul class="inc"><li>Business training lessons included</li><li>Premium also includes one free skill of your choice</li><li>Your own online store and store link</li><li>Pick products and set your own prices</li><li>Orders and sales dashboard</li><li>Monthly or yearly plan, with a free trial to start</li><li>Optional: Facebook, Instagram and TikTok ad tracking</li><li>Optional: your own custom address, like www.yourbrand.com</li></ul></details>
         <a class="btn primary" href="seller.html">Subscribe</a></div>
@@ -526,7 +535,11 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
       return'<div class="ci"><b>'+esc(k[1])+'</b>'+(cs.length?'<span class="tg ok">Available</span>':'<span class="tg soon">Coming soon</span>')+cs.map(function(c){return'<div style="margin-top:4px">'+esc(c.title)+'</div>'+lessons(c)}).join('')+'</div>'}).join('')}
   var sel=document.getElementById('skSel'),btn=document.getElementById('skBtn');
   sel.innerHTML=SK.map(function(k){return'<option value="'+k[0]+'">'+esc(k[1])+'</option>'}).join('');
-  function link(){btn.href='seller.html?kind=trainee&item=skill:'+sel.value}sel.onchange=link;link();
+  function link(){var v=(document.querySelector('input[name=lv]:checked')||{}).value||'basic';
+    ['Basic','Standard','Pro'].forEach(function(n){document.getElementById('lv'+n).hidden=n.toLowerCase()!==v});
+    document.querySelectorAll('#lv .lvc').forEach(function(l){l.classList.toggle('on',l.querySelector('input').checked)});
+    btn.href='seller.html?kind=trainee&item='+(v==='standard'?'skill:'+sel.value:v)}
+  sel.onchange=link;document.querySelectorAll('input[name=lv]').forEach(function(i){i.onchange=link});link();
   draw([]);
   var t=setInterval(function(){if(!window.MZ||!MZ.rpc)return;clearInterval(t);MZ.rpc('training_catalog',{}).then(function(r){draw(r||[])},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
 })();
