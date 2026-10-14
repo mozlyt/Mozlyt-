@@ -142,8 +142,13 @@ nav a.on{color:var(--ink);font-weight:700;border-bottom:3px solid var(--green);p
 .top h1{font-size:clamp(30px,5vw,46px);margin-bottom:8px}
 .top p{color:#B9C7D6;max-width:52ch;margin-bottom:18px}
 .search{display:flex;max-width:520px;background:var(--white);border-radius:12px;overflow:hidden}
-.search input{flex:1;border:0;padding:14px 16px;font-size:15px;font-family:inherit;color:var(--ink);outline-offset:-3px;min-width:0}
+.search input{flex:1;width:0;border:0;padding:14px 16px;font-size:15px;font-family:inherit;color:var(--ink);outline-offset:-3px;min-width:0}
 .search span{display:grid;place-items:center;padding:0 16px;color:var(--green-d)}
+.search .cam{border:0;background:none;display:grid;place-items:center;padding:0 14px;color:var(--green-d);cursor:pointer;border-left:1px solid #e3e8e3}
+.search .cam svg{width:24px;height:24px}
+.pnote{display:flex;gap:10px;align-items:center;flex-wrap:wrap;max-width:520px;margin:10px 0 0;padding:10px 14px;border-radius:10px;background:#fff;color:var(--ink);font-size:14.5px}
+.pnote[hidden]{display:none}
+.pnote button{border:0;background:var(--green-d);color:#fff;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer}
 
 /* trust strip */
 .trust{background:var(--white);border-bottom:1px solid var(--line)}
@@ -343,7 +348,7 @@ body.has-list .wa-float{bottom:84px}
   <div class="wrap">
     <div class="top-grid"><div class="top-l"><h1>Shop MOZLYT</h1>
     <p>Massage tools, fitness gear, nutrition, skincare, kitchen essentials and more. Add what you like to your list, send it on WhatsApp, and we reply with prices.</p>
-    <label class="search"><input id="q" type="search" placeholder="Search products" aria-label="Search products"><span><svg class="i"><use href="#mag"/></svg></span></label></div><aside class="steps" aria-label="How ordering works"><b>How ordering works</b><ol><li><i>1</i><span>Tap <em>Add to list</em> on what you like</span></li><li><i>2</i><span>Send your list to us on WhatsApp</span></li><li><i>3</i><span>We reply with prices and delivery</span></li></ol></aside></div>
+    <label class="search"><input id="q" type="search" placeholder="Search products" aria-label="Search products"><span><svg class="i"><use href="#mag"/></svg></span><button type="button" class="cam" id="camBtn" aria-label="Search with a photo" title="Search with a photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.8"/></svg></button><input type="file" id="camIn" accept="image/*" capture="environment" hidden></label><div id="pnote" class="pnote" hidden></div></div><aside class="steps" aria-label="How ordering works"><b>How ordering works</b><ol><li><i>1</i><span>Tap <em>Add to list</em> on what you like</span></li><li><i>2</i><span>Send your list to us on WhatsApp</span></li><li><i>3</i><span>We reply with prices and delivery</span></li></ol></aside></div>
   </div>
 </div>
 
@@ -553,10 +558,25 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
     shelves.querySelectorAll('.row').forEach(function(r){
       var any=0,head=r.querySelector('h2').textContent.toLowerCase();
       r.querySelectorAll('.card').forEach(function(c){
-        var m=!v||c.querySelector('h3').textContent.toLowerCase().indexOf(v)>-1||head.indexOf(v)>-1;
+        var m=PHOTO?PHOTO.indexOf(c.querySelector('h3').textContent)>-1:(!v||c.querySelector('h3').textContent.toLowerCase().indexOf(v)>-1||head.indexOf(v)>-1);
         c.style.display=m?'':'none';if(m)any++});
       r.style.display=any?'':'none';shown+=any});
     empty.style.display=shown?'none':'block'});
+  /* search with a photo */
+  var PHOTO=null,pn=document.getElementById('pnote'),camB=document.getElementById('camBtn'),camI=document.getElementById('camIn');
+  function note(t,clear){pn.textContent='';pn.appendChild(document.createTextNode(t));if(clear){var b=document.createElement('button');b.type='button';b.textContent='Show all products';b.onclick=function(){PHOTO=null;pn.hidden=true;q.dispatchEvent(new Event('input'))};pn.appendChild(b)}pn.hidden=false}
+  function shrink(file,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var m=800,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.72).split(',')[1])};im.onerror=function(){cb(null)};im.src=r.result};r.onerror=function(){cb(null)};r.readAsDataURL(file)}
+  camB.addEventListener('click',function(){camI.value='';camI.click()});
+  camI.addEventListener('change',function(){var f=camI.files&&camI.files[0];if(!f)return;note('Looking at your photo...');camB.disabled=true;
+    shrink(f,function(b64){if(!b64){camB.disabled=false;note('Sorry, we could not read that photo. Please try another one or type what you want.');return}
+      var go=window.MZ&&MZ.fn?MZ.fn('identify-product',{image:b64}):Promise.reject();
+      go.then(function(r){camB.disabled=false;
+        if(!r||r.ready===false){note('Photo search is coming soon. For now, please type what you are looking for.');return}
+        if(r.reason==='busy'){note('Too many photo searches just now. Please try again later or type what you want.');return}
+        if(!r.names||!r.names.length){PHOTO=null;note(r.seen?'We could not find a match for "'+r.seen+'". Try typing a word, or message us on WhatsApp.':'We could not find a match. Try another photo, type a word, or message us on WhatsApp.');return}
+        PHOTO=r.names;q.value='';note('Products that look like your photo'+(r.seen?' ('+r.seen+')':'')+':',true);q.dispatchEvent(new Event('input'));var f1=shelves.querySelector('.row:not([style*="none"])');if(f1)f1.scrollIntoView({behavior:'smooth',block:'start'})},
+      function(){camB.disabled=false;note('Photo search did not work. Please check your internet or type what you want.')})})});
+  q.addEventListener('input',function(){if(PHOTO&&q.value){PHOTO=null;pn.hidden=true}},true);
   /* keep the built-in list as a backup, then swap in the sheet when it loads */
   if(INLINE_CSV){var _i=fromCSV(INLINE_CSV);if(_i.length)render(_i)}
   /* the admin product list is the source of truth once it loads */
