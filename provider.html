@@ -284,21 +284,20 @@ body.has-list .wa-float{bottom:84px}
 <main class="dash"><div class="wrap">
 
 <section id="authView" class="authcard" hidden>
-  <h1>Work with us</h1><p class="sub">Offer your service to MOZLYT clients. Create an account, send your ID and certificate, and choose the services you handle. When a client books one of them, you are told on your dashboard.</p>
+  <h1>Work with us</h1><p class="sub">Offer your service to MOZLYT clients. Log in, or create an account with your ID, certificate and the services you handle. When a client books one of them, you are told on your dashboard.</p>
   <div class="card2"><div id="aNote"></div>
     <div class="tabs" id="atabs"><button type="button" class="on" data-v="login">Log in</button><button type="button" data-v="join">Create account</button></div>
     <form id="fLogin" class="f"><label>Email<input type="email" id="lEmail" autocomplete="email" required></label><label>Password<input type="password" id="lPass" autocomplete="current-password" required></label>
       <button class="btn primary" type="submit">Log in</button></form>
-    <form id="fJoin" class="f" hidden><label>Full name<input id="jName" maxlength="80" autocomplete="name" required></label><label>WhatsApp number<input id="jPhone" type="tel" maxlength="30" autocomplete="tel" placeholder="e.g. 0241234567" required></label><label>Email<input type="email" id="jEmail" autocomplete="email" required></label><label>Password<input type="password" id="jPass" autocomplete="new-password" minlength="8" required><small>At least 8 characters.</small></label>
-      <button class="btn primary" type="submit">Create my account</button></form>
   </div>
 </section>
 
 <section id="applyView" hidden>
-  <div class="top2"><div><h1>Apply to work with MOZLYT</h1><p class="sub">Only people who are qualified in the services they choose are accepted. Nothing is charged to apply. We reply within about 2 working days.</p></div><button class="b2 ghost" type="button" id="btnOut2">Log out</button></div>
+  <div class="top2"><div><h1 id="apTitle">Apply to work with MOZLYT</h1><p class="sub">Only people who are qualified in the services they choose are accepted. Nothing is charged to apply. We reply within about 2 working days.</p></div><button class="b2 ghost" type="button" id="btnOut2">Log out</button></div>
   <div class="card2"><div id="faNote"></div>
   <form id="fApply" class="f" novalidate>
-    <label>Email<input id="faEmail" readonly></label>
+    <div id="joinFields" class="f" hidden><label>Full name<input id="jName" maxlength="80" autocomplete="name"></label><label>Email<input type="email" id="jEmail" autocomplete="email"></label><label>Password<input type="password" id="jPass" autocomplete="new-password" minlength="8"><small>At least 8 characters.</small></label></div>
+    <label id="faEmailRow">Email<input id="faEmail" readonly></label>
     <label>WhatsApp number we will contact you on<input id="faPhone" type="tel" maxlength="30" placeholder="e.g. 0241234567"></label>
     <label>Country<select id="faCountry"><option value="">Select your country</option></select></label>
     <label>City or town (optional)<input id="faLoc" maxlength="120" placeholder="e.g. Accra"></label>
@@ -364,19 +363,15 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   var ME=null,APP=null,NOTES=[],aNote=$('#aNote'),timer=null;
   function views(v){['authView','applyView','waitView','dashView'].forEach(function(x){show(x,x===v)});try{window.scrollTo(0,0)}catch(e){}}
   function out(){clearInterval(timer);MZ.signOut().then(function(){ME=null;APP=null;views('authView')})}
-  $('#btnOut').onclick=$('#btnOut2').onclick=$('#btnOut3').onclick=out;
-  $$('#atabs button').forEach(function(b){b.onclick=function(){$$('#atabs button').forEach(function(x){x.classList.toggle('on',x===b)});show('fLogin',b.dataset.v==='login');show('fJoin',b.dataset.v==='join');note(aNote,'','')}});
+  $('#btnOut').onclick=$('#btnOut3').onclick=out;$('#btnOut2').onclick=function(){if(JOIN){views('authView')}else out()};
+  $$('#atabs button').forEach(function(b){b.onclick=function(){if(b.dataset.v==='join'){ME={};APP=null;showApply(true);return}$$('#atabs button').forEach(function(x){x.classList.toggle('on',x===b)});note(aNote,'','')}});
   $('#fLogin').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Logging in...');MZ.signIn($('#lEmail').value.trim(),$('#lPass').value).then(boot,function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
-  $('#fJoin').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this),ph=$('#jPhone').value.replace(/[^\d+]/g,'');
-    if(ph.replace(/\D/g,'').length<9){note(aNote,'err','Please enter a valid WhatsApp number.');return}
-    busy(b,true,'Creating...');MZ.signUp($('#jEmail').value.trim(),$('#jPass').value,{full_name:$('#jName').value.trim(),phone:ph,kind:'provider'}).then(function(r){
-      if(r.confirmed)return boot();
-      $$('#atabs button')[0].click();$('#lEmail').value=$('#jEmail').value;note(aNote,'ok','Account created. Check your email for a confirmation link, then log in here.')},function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
+
 
   function boot(){
     return Promise.all([MZ.q('profiles','select=full_name,phone,email&id=eq.'+MZ.user().id),MZ.q('provider_applications','select=*&user_id=eq.'+MZ.user().id)]).then(function(r){
       ME=(r[0]&&r[0][0])||{};APP=(r[1]&&r[1][0])||null;
-      if(!APP||APP.status==='rejected'&&window.__reapply){return showApply()}
+      if(!APP||APP.status==='rejected'&&window.__reapply){return showApply(false)}
       if(APP.status==='approved')return showDash();
       showWait()},function(er){views('authView');note(aNote,er.status===401?'info':'err',er.status===401?'Please log in again.':er.message)})}
 
@@ -384,23 +379,28 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function svcDraw(){$('#faSvc').innerHTML=SERVICES.map(function(s,i){return'<label><input type="checkbox" value="'+esc(s)+'"> <span>'+esc(s)+'</span></label>'}).join('');
     $$('#faSvc input').forEach(function(c){c.onchange=function(){c.parentNode.classList.toggle('on',c.checked);faCheck()}})}
   function chosen(){return $$('#faSvc input').filter(function(c){return c.checked}).map(function(c){return c.value})}
-  function faCheck(){var miss=[];if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)miss.push('your WhatsApp number');if(!$('#faCountry').value)miss.push('your country');if(!chosen().length)miss.push('at least one service');if(!$('#faCertTitle').value.trim())miss.push('what your certificate says');if(!$('#faId').files[0])miss.push('your ID card');if(!$('#faCert').files[0])miss.push('your certificate');if(!$('#faAgree').checked)miss.push('agreeing to the terms');
+  function faCheck(){var miss=[];if(JOIN){if(($('#jName').value||'').trim().length<2)miss.push('your full name');if(!/^\S+@\S+\.\S+$/.test($('#jEmail').value.trim()))miss.push('your email');if(($('#jPass').value||'').length<8)miss.push('a password of 8 or more characters')}if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)miss.push('your WhatsApp number');if(!$('#faCountry').value)miss.push('your country');if(!chosen().length)miss.push('at least one service');if(!$('#faCertTitle').value.trim())miss.push('what your certificate says');if(!$('#faId').files[0])miss.push('your ID card');if(!$('#faCert').files[0])miss.push('your certificate');if(!$('#faAgree').checked)miss.push('agreeing to the terms');
     $('#faBtn').disabled=miss.length>0;$('#faNeed').textContent=miss.length?'Still needed: '+miss.join(', ')+'.':'Everything is ready.'}
-  function showApply(){views('applyView');$('#faEmail').value=ME.email||'';$('#faPhone').value=ME.phone||'';$('#faCountry').innerHTML='<option value="">Select your country</option>'+MZC.map(function(k){return'<option value="'+k.c+'">'+esc(k.n)+'</option>'}).join('');$('#faCountry').value='GH';svcDraw();faCheck();
+  var JOIN=false;
+  function showApply(join){JOIN=!!join;views('applyView');show('joinFields',JOIN);show('faEmailRow',!JOIN);$('#apTitle').textContent=JOIN?'Create your account and apply':'Apply to work with MOZLYT';$('#btnOut2').textContent=JOIN?'I already have an account':'Log out';$('#faEmail').value=ME.email||'';$('#faPhone').value=ME.phone||'';$('#faCountry').innerHTML='<option value="">Select your country</option>'+MZC.map(function(k){return'<option value="'+k.c+'">'+esc(k.n)+'</option>'}).join('');$('#faCountry').value='GH';svcDraw();faCheck();
     if(APP&&APP.status==='rejected')note($('#faNote'),'err','Your last application was not accepted'+(APP.review_note?': '+APP.review_note:'')+'. You can apply again with the right documents.')}
-  ['faPhone','faCountry','faCertTitle','faId','faCert','faAgree'].forEach(function(i){var e=$('#'+i);e.addEventListener('input',faCheck);e.addEventListener('change',faCheck)});
+  ['jName','jEmail','jPass','faPhone','faCountry','faCertTitle','faId','faCert','faAgree'].forEach(function(i){var e=$('#'+i);e.addEventListener('input',faCheck);e.addEventListener('change',faCheck)});
   $('#fApply').onsubmit=function(e){e.preventDefault();var b=$('#faBtn'),n=$('#faNote'),id=$('#faId').files[0],ce=$('#faCert').files[0];note(n,'','');
     if(!id||!ce){note(n,'err','Please upload your ID card and your certificate.');return}
     if(id.size>8388608||ce.size>8388608){note(n,'err','Each file must be under 8 MB.');return}
-    busy(b,true,'Sending...');var u=MZ.user().id,t=Date.now(),ext=function(f){var m=(f.name.match(/\.([a-z0-9]{2,5})$/i)||[])[1];return m?m.toLowerCase():'jpg'};
-    Promise.all([MZ.upload('franchise-docs',u+'/prov-id-'+t+'.'+ext(id),id),MZ.upload('franchise-docs',u+'/prov-cert-'+t+'.'+ext(ce),ce)]).then(function(p){
-      return MZ.rpc('submit_provider_application',{p_name:ME.full_name||'',p_phone:$('#faPhone').value.replace(/[^\d+]/g,''),p_country:$('#faCountry').value,p_location:$('#faLoc').value.trim(),p_message:$('#faMsg').value.trim(),p_services:chosen(),p_id_path:p[0],p_cert_path:p[1],p_cert_title:$('#faCertTitle').value.trim(),p_terms:true})}).then(function(){window.__reapply=false;return boot()},function(er){note(n,'err',er.message)}).then(function(){busy(b,false)})};
+    busy(b,true,'Sending...');var t=Date.now(),ext=function(f){var m=(f.name.match(/\.([a-z0-9]{2,5})$/i)||[])[1];return m?m.toLowerCase():'jpg'};
+    var ph=$('#faPhone').value.replace(/[^\d+]/g,'');
+    var acct=JOIN?MZ.signUp($('#jEmail').value.trim(),$('#jPass').value,{full_name:$('#jName').value.trim(),phone:ph,kind:'provider'},'provider.html').then(function(r){if(!r.confirmed){var e=new Error('NOCONFIRM');e.nc=1;throw e}ME={full_name:$('#jName').value.trim(),phone:ph,email:$('#jEmail').value.trim()}}):Promise.resolve();
+    acct.then(function(){var u=MZ.user().id;return Promise.all([MZ.upload('franchise-docs',u+'/prov-id-'+t+'.'+ext(id),id),MZ.upload('franchise-docs',u+'/prov-cert-'+t+'.'+ext(ce),ce)])}).then(function(p){
+      return MZ.rpc('submit_provider_application',{p_name:ME.full_name||'',p_phone:ph,p_country:$('#faCountry').value,p_location:$('#faLoc').value.trim(),p_message:$('#faMsg').value.trim(),p_services:chosen(),p_id_path:p[0],p_cert_path:p[1],p_cert_title:$('#faCertTitle').value.trim(),p_terms:true})}).then(function(){window.__reapply=false;JOIN=false;return boot()},function(er){
+      if(er&&er.nc){JOIN=false;views('authView');$$('#atabs button')[0].click();$('#lEmail').value=$('#jEmail').value;note(aNote,'ok','Account created. Check your email for a confirmation link, then log in here and send your ID, certificate and services to finish.');return}
+      note(n,'err',er.message)}).then(function(){busy(b,false)})};
 
   function showWait(){views('waitView');var s=APP.status,h;
     if(s==='new')h='<b style="color:#14663f">Application received</b><p class="sub" style="margin:8px 0 0">MOZLYT is checking your ID and certificate. We reply within about <b>2 working days</b>. You asked for: '+esc((APP.services||[]).join(', '))+'.</p>';
     else if(s==='rejected')h='<b style="color:#9b2c20">Not accepted</b><p class="sub" style="margin:8px 0 12px">'+(APP.review_note?esc(APP.review_note):'The documents did not match the services you chose.')+'</p><button class="btn primary" type="button" id="btnRe">Apply again</button>';
     else h='<b style="color:#9b2c20">Your access is closed</b><p class="sub" style="margin:8px 0 0">'+(APP.review_note?esc(APP.review_note):'Please message MOZLYT on WhatsApp.')+'</p>';
-    $('#waitBox').innerHTML=h;var re=$('#btnRe');if(re)re.onclick=function(){window.__reapply=true;showApply()}}
+    $('#waitBox').innerHTML=h;var re=$('#btnRe');if(re)re.onclick=function(){window.__reapply=true;showApply(false)}}
 
   /* ---- dashboard ---- */
   function showDash(){views('dashView');$('#who').textContent=(APP.name||'')+(APP.email?' · '+APP.email:'');
@@ -413,7 +413,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#btnAll').onclick=function(){if(!NOTES.some(function(n){return!n.read}))return;MZ.update('provider_notifications','read=eq.false',{read:true}).then(function(){NOTES.forEach(function(n){n.read=true});drawNotes()})};
 
   if(MZ.loggedIn()){boot()}else{views('authView')}
-  try{var q=new URLSearchParams(location.search).get('join');if(q){$$('#atabs button')[1].click()}}catch(e){}
+  try{var q=new URLSearchParams(location.search).get('join');if(q&&!MZ.loggedIn()){showApply(true)}}catch(e){}
 })();
 </script>
 <footer class="mz-footer">

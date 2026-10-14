@@ -60,8 +60,8 @@
     /* ---------- accounts ---------- */
     user: function () { var s = getSession(); return s && s.user ? s.user : null; },
     loggedIn: function () { return !!getSession(); },
-    signUp: function (email, password, data) {
-      return call('/auth/v1/signup?redirect_to=' + encodeURIComponent(SITE + 'seller.html'), { method: 'POST', body: { email: email, password: password, data: data || {} } })
+    signUp: function (email, password, data, page) {
+      return call('/auth/v1/signup?redirect_to=' + encodeURIComponent(SITE + (page || 'seller.html')), { method: 'POST', body: { email: email, password: password, data: data || {} } })
         .then(function (j) { if (j && j.access_token) { saveTokens(j); return { confirmed: true }; } return { confirmed: false }; });
     },
     signIn: function (email, password) {
