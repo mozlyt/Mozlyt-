@@ -524,6 +524,15 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
 
 (function(){
   var SK=[["massage","Massage"],["beauty","Beauty and skincare"],["hair","Hair and scalp care"],["fashion","Fashion and styling"],["fitness","Fitness and sculpting"],["nutrition","Nutrition and meal prep"],["catering","Catering"],["homecare","Home health care"]];
+var TOP={
+massage:["How the body responds to touch","Safety, hygiene and who should not be massaged","Swedish and relaxation massage routines","Deep tissue and shiatsu basics","Chair and office massage","Working with clients, pricing and rebooking"],
+beauty:["Know your skin type","Daily skincare routines and products","Facials step by step","Treating acne, dark spots and dry skin","Hygiene and safe products","Selling skincare to clients"],
+hair:["Hair and scalp types","Washing, conditioning and scalp care","Treating dandruff, breakage and hair loss","Natural hair care and protective styles","Safe products and tools","Pricing and building a hair care clientele"],
+fashion:["Understanding body shapes and colours","Building outfits and wardrobes","Styling clients for work, events and everyday","Sourcing fabrics and fashion products","Pricing and selling fashion","Showing your work online"],
+fitness:["Basics of exercise and safe form","Strength training and sculpting plans","Home and gym workouts","Warm up, recovery and injury prevention","Coaching clients and tracking progress","Running a fitness business"],
+nutrition:["Basics of nutrition and calories","Planning balanced meals","Meal prep step by step","Healthy local Ghanaian recipes","Eating for weight loss and for muscle gain","Selling meal plans and coaching"],
+catering:["Food safety and kitchen hygiene","Planning menus and portions","Costing and pricing your food","Cooking for events and orders","Packaging and delivery","Getting customers and repeat orders"],
+homecare:["Basics of caring for someone at home","Hygiene, safe lifting and moving","Daily routines and comfort","Recognising when to call a doctor","Working with families","Setting up and pricing a home care service"]};
   var SOON=["Market your business","Strategic marketing"];
   function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
   function lessons(c){var n=(c.lessons||[]).length;return n?'<details><summary>'+n+' lessons</summary><ol>'+c.lessons.map(function(l){return'<li>'+esc(l)+'</li>'}).join('')+'</ol></details>':''}
@@ -532,7 +541,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
     SOON.forEach(function(t){if(!biz.some(function(c){return c.title.toLowerCase()===t.toLowerCase()}))biz.push({title:t,live:false,lessons:[]})});
     document.getElementById('catBasic').innerHTML=biz.map(function(c){return'<div class="ci"><b>'+esc(c.title)+'</b>'+(c.live?'<span class="tg ok">Available</span>':'<span class="tg soon">Coming soon</span>')+(c.summary?'<p>'+esc(c.summary)+'</p>':'')+lessons(c)+'</div>'}).join('');
     document.getElementById('catSkills').innerHTML=SK.map(function(k){var cs=cat.filter(function(c){return c.skill===k[0]});
-      return'<div class="ci"><b>'+esc(k[1])+'</b>'+(cs.length?'<span class="tg ok">Available</span>':'<span class="tg soon">Coming soon</span>')+cs.map(function(c){return'<div style="margin-top:4px">'+esc(c.title)+'</div>'+lessons(c)}).join('')+'</div>'}).join('')}
+      var inner=cs.length?cs.map(function(c){return'<div style="margin-top:4px">'+esc(c.title)+'</div>'+lessons(c)}).join(''):'<details><summary>What you will learn</summary><ol>'+(TOP[k[0]]||[]).map(function(l){return'<li>'+esc(l)+'</li>'}).join('')+'</ol></details>';
+      return'<div class="ci"><b>'+esc(k[1])+'</b>'+(cs.length?'<span class="tg ok">Available</span>':'<span class="tg soon">Coming soon</span>')+inner+'</div>'}).join('')}
   var sel=document.getElementById('skSel'),btn=document.getElementById('skBtn');
   sel.innerHTML=SK.map(function(k){return'<option value="'+k[0]+'">'+esc(k[1])+'</option>'}).join('');
   function link(){var v=(document.querySelector('input[name=lv]:checked')||{}).value||'basic';
