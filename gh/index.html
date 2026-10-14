@@ -662,6 +662,16 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
   window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
 })();
 </script>
+<script>
+/* Offer visitors the version of MOZLYT for their country. A choice, never an automatic redirect. */
+(function(){try{var p=location.pathname;if(p!=='/'&&p!=='/index.html')return;if(localStorage.getItem('mz-cc-no'))return;
+var tz=(Intl.DateTimeFormat().resolvedOptions().timeZone||'');var map={'Africa/Accra':['gh','Ghana']};var m=map[tz];if(!m)return;
+var b=document.createElement('div');b.setAttribute('role','region');b.setAttribute('aria-label','Choose your country');
+b.style.cssText='background:#0E2A47;color:#fff;font:600 14px system-ui,sans-serif;padding:10px 16px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap';
+b.innerHTML='Visiting from '+m[1]+'? <a href="/'+m[0]+'/" style="background:#F2B134;color:#0E2A47;padding:8px 16px;border-radius:99px;text-decoration:none;font-weight:700">Go to MOZLYT '+m[1]+'</a><button type="button" style="background:none;border:1px solid #5b7490;color:#fff;border-radius:99px;padding:7px 14px;cursor:pointer;font:inherit">Stay here</button>';
+b.querySelector('button').onclick=function(){try{localStorage.setItem('mz-cc-no','1')}catch(e){}b.remove()};
+document.body.insertBefore(b,document.body.firstChild)}catch(e){}})();
+</script>
 <script>try{localStorage.setItem('mz-cc','gh')}catch(e){}</script>
 </body>
 </html>
