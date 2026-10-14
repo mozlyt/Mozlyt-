@@ -222,6 +222,20 @@ section .sub{color:var(--mute);max-width:58ch;margin-bottom:34px}
 .cat ol{margin:8px 0 0 18px;display:grid;gap:3px}
 .skg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
 @media(max-width:700px){.skg{grid-template-columns:1fr}}
+.plans.stack{grid-template-columns:1fr;max-width:760px;margin:0 auto}
+.pl .ph{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.pl details{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 16px;background:#fafaf7}
+.pl summary{cursor:pointer;font-weight:700;color:var(--green)}
+.pl .inc{margin:12px 0 0}
+.pl .lst{display:grid;gap:10px;margin-top:12px}
+.pl .ci{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.pl .ci p{margin:4px 0 0;font-size:14px;color:var(--muted,#667)}
+.pl .tg{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;margin-left:8px}
+.pl .tg.ok{background:#e3f4ea;color:#14663f}.pl .tg.soon{background:#fdf1d8;color:#8a5a00}
+.pl .ci details{border:0;padding:0;margin:6px 0 0;background:none;font-size:14px}.pl .ci summary{font-weight:600}
+.pl ol{margin:8px 0 0 18px;display:grid;gap:3px}
+.pl .skg{display:grid;gap:10px;margin-top:12px}
+.pl .skpick{display:block;font-weight:600;font-size:14px;margin:0 0 10px}.pl .skpick select{display:block;width:100%;margin-top:6px;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
 .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 @media(max-width:860px){.plans{grid-template-columns:1fr}}
 .plan{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:24px}
@@ -398,40 +412,28 @@ body.has-list .wa-float{bottom:84px}
   </div>
 </section>
 
-<section id="catalogue" class="cat white">
-  <div class="wrap">
-    <h2>What you can learn</h2>
-    <p class="sub">Choose a plan, tap sign up, create your account and your training dashboard opens with what you picked. Each level includes the one before it.</p>
-    <div class="tier"><div class="th"><h3>Basic: business lessons</h3><b>GH&#8373;100, paid once</b></div>
-      <p class="sub" style="margin:6px 0 0">How to start, price, promote and run your business. Included free with every shop.</p>
-      <div class="lst" id="catBasic"><div class="ci"><span>Loading lessons...</span></div></div></div>
-    <div class="tier"><div class="th"><h3>Standard: one skill</h3><b>Priced per skill, from GH&#8373;100</b></div>
-      <p class="sub" style="margin:6px 0 0">Pick the skill you want to learn. A Premium shop includes one skill of your choice free.</p>
-      <div class="skg" id="catSkills"></div></div>
-    <div class="tier"><div class="th"><h3>Pro: everything</h3><b>GH&#8373;150, paid once</b></div>
-      <p class="sub" style="margin:6px 0 12px">Every business lesson and every skill, including new lessons as we add them. Franchise partners get this too.</p>
-      <a class="btn primary" href="seller.html?kind=trainee&amp;item=pro">Sign up for Pro</a></div>
-    <p class="note">Lessons marked Coming soon are being prepared. We open them on your dashboard as soon as they are ready.</p>
-  </div>
-</section>
-
 <section id="plans">
   <div class="wrap">
-    <h2>Simple monthly plans</h2>
-    <p class="sub">Begin with training, or go straight to a shop. Each step includes the one before it.</p>
-    <div class="plans">
-      <div class="plan"><h3>Trainee</h3>
-        <p style="margin:6px 0 0;font-weight:700;font-size:18px">Pay once <span style="font-weight:400;font-size:14px;color:var(--muted,#667)">for what you want to learn</span></p>
-        <ul><li>Basic: business lessons, GH&#8373;100</li><li>Standard: one skill of your choice, priced per skill</li><li>Pro: every lesson and skill, GH&#8373;150</li><li>Your own training dashboard, yours to keep</li><li>No shop included</li></ul>
-        <a class="btn ghost go" href="#">Sign up for training</a></div>
-      <div class="plan best"><h3>Take a shop</h3>
-        <ul><li>Business training lessons included</li><li>Premium also includes one free skill of your choice</li><li>Your own online store and store link</li><li>Pick products and set your own prices</li><li>Orders and sales dashboard</li><li>Monthly or yearly plan, with a free trial to start</li><li>Optional: Facebook, Instagram and TikTok ad tracking</li><li>Optional: your own custom address, like www.yourbrand.com</li></ul>
-        <a class="btn primary go" href="#">Take a shop</a></div>
-      <div class="plan"><h3>Franchise</h3>
-        <ul><li>Open a MOZLYT location in your city or country, for example in Nigeria</li><li>Everything in Take a shop</li><li>Every lesson and every skill</li><li>Your own dashboard, like a MOZLYT branch</li><li>Recruit and train your own sellers</li><li>Set the prices your recruits sell and charge at</li><li>Their payments go to you</li><li>Best wholesale prices from MOZLYT</li><li>Your partner price is agreed with us</li></ul>
-        <a class="btn ghost go" href="#" data-msg="Hello MOZLYT, I would like to open a MOZLYT franchise in my location. Please tell me how it works and what the next step is.">Sign up as a franchise</a></div>
+    <h2>Pick your plan</h2>
+    <p class="sub">Tap What you get to see everything in a plan, then tap Subscribe to create your account. Your dashboard opens with what you picked.</p>
+    <div class="plans stack">
+      <div class="plan best pl"><div class="ph"><h3>Basic business skill</h3><b>GH&#8373;100, paid once</b></div><p class="sub" style="margin:4px 0 12px">How to start, price, promote and run your business. Included free with every shop.</p>
+        <details><summary>What you get</summary><div class="lst" id="catBasic"><div class="ci"><span>Loading lessons...</span></div></div><ul class="inc"><li>Your own training dashboard, yours to keep</li><li>Learn at your own pace and mark lessons complete</li><li>New business lessons added as they are ready</li><li>No shop included</li></ul></details>
+        <a class="btn primary" href="seller.html?kind=trainee&amp;item=basic">Subscribe</a></div>
+      <div class="plan best pl"><div class="ph"><h3>Take a skill</h3><b>From GH&#8373;100 per skill, paid once</b></div><p class="sub" style="margin:4px 0 12px">Choose the skill you want to learn. A Premium shop includes one skill free.</p>
+        <details><summary>What you get</summary><div class="skg" id="catSkills"></div><ul class="inc"><li>One skill of your choice, with every lesson in it</li><li>Your own training dashboard, yours to keep</li><li>Skills marked Coming soon open on your dashboard as soon as they are ready</li><li>No shop included</li></ul></details>
+        <label class="skpick">Choose a skill<select id="skSel"></select></label><a class="btn primary" id="skBtn" href="seller.html?kind=trainee&amp;item=skill:massage">Subscribe</a></div>
+      <div class="plan best pl"><div class="ph"><h3>Pro training</h3><b>GH&#8373;150, paid once</b></div><p class="sub" style="margin:4px 0 12px">Every business lesson and every skill, including new lessons as we add them.</p>
+        <details><summary>What you get</summary><ul class="inc"><li>Every business lesson (Basic)</li><li>Every skill, all categories</li><li>All new lessons as we publish them</li><li>Your own training dashboard, yours to keep</li><li>No shop included</li></ul></details>
+        <a class="btn primary" href="seller.html?kind=trainee&amp;item=pro">Subscribe</a></div>
+      <div class="plan best pl"><div class="ph"><h3>Take a shop</h3><b>Free trial, then monthly or yearly</b></div><p class="sub" style="margin:4px 0 12px">Your own online store with training included.</p>
+        <details><summary>What you get</summary><ul class="inc"><li>Business training lessons included</li><li>Premium also includes one free skill of your choice</li><li>Your own online store and store link</li><li>Pick products and set your own prices</li><li>Orders and sales dashboard</li><li>Monthly or yearly plan, with a free trial to start</li><li>Optional: Facebook, Instagram and TikTok ad tracking</li><li>Optional: your own custom address, like www.yourbrand.com</li></ul></details>
+        <a class="btn primary" href="seller.html">Subscribe</a></div>
+      <div class="plan best pl"><div class="ph"><h3>Franchise</h3><b>Partner price agreed with us</b></div><p class="sub" style="margin:4px 0 12px">Your own MOZLYT branch in your city or country.</p>
+        <details><summary>What you get</summary><ul class="inc"><li>Open a MOZLYT location in your city or country, for example in Nigeria</li><li>Everything in Take a shop</li><li>Every lesson and every skill</li><li>Your own dashboard, like a MOZLYT branch</li><li>Recruit and train your own sellers</li><li>Set the prices your recruits sell and charge at</li><li>Their payments go to you</li><li>Best wholesale prices from MOZLYT</li><li>Your partner price is agreed with us</li></ul></details>
+        <a class="btn primary" href="seller.html?kind=franchise">Subscribe</a></div>
     </div>
-    <p class="note">Message us on WhatsApp and we will explain each option. For a franchise, sign up and we will agree the terms together, based on your capital and our agreement.</p>
+    <p class="note">Message us on WhatsApp if you have questions. For a franchise, we agree the terms together after you sign up, based on your capital and our agreement.</p>
   </div>
 </section>
 
@@ -515,13 +517,16 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
   var SK=[["massage","Massage"],["beauty","Beauty and skincare"],["hair","Hair and scalp care"],["fashion","Fashion and styling"],["fitness","Fitness and sculpting"],["nutrition","Nutrition and meal prep"],["catering","Catering"],["homecare","Home health care"]];
   var SOON=["Market your business","Strategic marketing"];
   function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-  function item(c,sk){var n=(c.lessons||[]).length;return'<div class="ci"><div><b>'+esc(c.title)+'</b>'+(c.live?'<span class="tg ok">Available</span>':'<span class="tg soon">Coming soon</span>')+(c.summary?'<p>'+esc(c.summary)+'</p>':'')+(n?'<details><summary>'+n+' lessons</summary><ol>'+c.lessons.map(function(l){return'<li>'+esc(l)+'</li>'}).join('')+'</ol></details>':'')+'</div>'+sk+'</div>'}
+  function lessons(c){var n=(c.lessons||[]).length;return n?'<details><summary>'+n+' lessons</summary><ol>'+c.lessons.map(function(l){return'<li>'+esc(l)+'</li>'}).join('')+'</ol></details>':''}
   function draw(cat){
     var biz=cat.filter(function(c){return !c.skill}).map(function(c){c.live=true;return c});
     SOON.forEach(function(t){if(!biz.some(function(c){return c.title.toLowerCase()===t.toLowerCase()}))biz.push({title:t,live:false,lessons:[]})});
-    document.getElementById('catBasic').innerHTML=biz.map(function(c){return item(c,'')}).join('')+'<div><a class="btn primary" href="seller.html?kind=trainee&amp;item=basic">Sign up for business lessons</a></div>';
-    document.getElementById('catSkills').innerHTML=SK.map(function(k){var cs=cat.filter(function(c){return c.skill===k[0]});var live=cs.length>0;
-      return'<div class="ci" style="display:block"><div><b>'+esc(k[1])+'</b>'+(live?'<span class="tg ok">Available</span>':'<span class="tg soon">Coming soon</span>')+'</div>'+(live?cs.map(function(c){return'<details><summary>'+esc(c.title)+' ('+(c.lessons||[]).length+' lessons)</summary><ol>'+(c.lessons||[]).map(function(l){return'<li>'+esc(l)+'</li>'}).join('')+'</ol></details>'}).join(''):'')+'<div style="margin-top:10px"><a class="btn ghost" href="seller.html?kind=trainee&amp;item=skill:'+k[0]+'">Sign up for '+esc(k[1])+'</a></div></div>'}).join('')}
+    document.getElementById('catBasic').innerHTML=biz.map(function(c){return'<div class="ci"><b>'+esc(c.title)+'</b>'+(c.live?'<span class="tg ok">Available</span>':'<span class="tg soon">Coming soon</span>')+(c.summary?'<p>'+esc(c.summary)+'</p>':'')+lessons(c)+'</div>'}).join('');
+    document.getElementById('catSkills').innerHTML=SK.map(function(k){var cs=cat.filter(function(c){return c.skill===k[0]});
+      return'<div class="ci"><b>'+esc(k[1])+'</b>'+(cs.length?'<span class="tg ok">Available</span>':'<span class="tg soon">Coming soon</span>')+cs.map(function(c){return'<div style="margin-top:4px">'+esc(c.title)+'</div>'+lessons(c)}).join('')+'</div>'}).join('')}
+  var sel=document.getElementById('skSel'),btn=document.getElementById('skBtn');
+  sel.innerHTML=SK.map(function(k){return'<option value="'+k[0]+'">'+esc(k[1])+'</option>'}).join('');
+  function link(){btn.href='seller.html?kind=trainee&item=skill:'+sel.value}sel.onchange=link;link();
   draw([]);
   var t=setInterval(function(){if(!window.MZ||!MZ.rpc)return;clearInterval(t);MZ.rpc('training_catalog',{}).then(function(r){draw(r||[])},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
 })();
