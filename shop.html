@@ -310,9 +310,7 @@ footer{padding:28px 0;font-size:13px;color:var(--mute);text-align:center}
 @media(max-width:600px){.wa-float span{display:none}.wa-float{padding:14px}}
 body.has-list .wa-float{bottom:84px}
 </style>
-<style>picture{display:contents;border-radius:inherit}</style><link rel="stylesheet" href="/css/mz-dark.css">
-<script src="/js/mz-theme.js" defer></script>
-</head>
+<style>picture{display:contents;border-radius:inherit}</style></head>
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -524,7 +522,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
       h.appendChild(el('h2',null,c.title));a.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, I am interested in your '+c.title.toLowerCase()+' range. Please tell me what is available.');a.target='_blank';a.rel='noopener';h.appendChild(a);
       groups[c.id].forEach(function(p){
         var card=el('div','card'),pic=el('div','pic '+c.tint),b=el('button','add');ALL[p.name]={p:p,c:c};
-        if(p.photo){var im=el('img'),wu=/^img\/p\/[^?]+\.jpg$/.test(p.photo)?p.photo.slice(0,-4)+'.webp':p.photo,tried=wu===p.photo;im.src=wu;im.alt=p.name;im.loading='lazy';im.decoding='async';im.width=360;im.height=360;im.onerror=function(){if(!tried){tried=true;im.src=p.photo;return}pic.removeChild(im);pic.appendChild(icon(c.icon))};pic.appendChild(im)}else pic.appendChild(icon(c.icon));
+        if(p.photo){var im=el('img'),wu=/^\/?img\/p\/[^?]+\.jpg$/.test(p.photo)?p.photo.slice(0,-4)+'.webp':p.photo,tried=wu===p.photo;im.src=wu;im.alt=p.name;im.loading='lazy';im.decoding='async';im.width=360;im.height=360;im.onerror=function(){if(!tried){tried=true;im.src=p.photo;return}pic.removeChild(im);pic.appendChild(icon(c.icon))};pic.appendChild(im)}else pic.appendChild(icon(c.icon));
         b.type='button';
         if(p.status.indexOf('sold')===0||p.status==='out'){b.textContent='Sold out';b.disabled=true;card.className='card soldout'}else setBtn(b,list.indexOf(p.name)>-1);
         card.appendChild(pic);card.appendChild(el('h3',null,p.name));card.appendChild(el('div','price',priceText(p.price)));card.appendChild(b);
@@ -578,7 +576,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   /* keep the built-in list as a backup, then swap in the sheet when it loads */
   if(INLINE_CSV){var _i=fromCSV(INLINE_CSV);if(_i.length)render(_i)}
   /* the admin product list is the source of truth once it loads */
-  function mapRows(rows){return(rows||[]).filter(function(r){return r.status!=='hidden'}).map(function(r){return{cat:r.category||'',name:r.name,price:r.suggested_price==null?'':String(r.suggested_price),status:(r.status||'available')==='available'?'in stock':String(r.status).toLowerCase(),photo:r.photo||'',desc:r.description||''}})}
+  function mapRows(rows){return(rows||[]).filter(function(r){return r.status!=='hidden'}).map(function(r){return{cat:r.category||'',name:r.name,price:r.suggested_price==null?'':String(r.suggested_price),status:(r.status||'available')==='available'?'in stock':String(r.status).toLowerCase(),photo:r.photo?(/^(https?:|\/)/.test(r.photo)?r.photo:'/'+r.photo):'',desc:r.description||''}})}
   var CK='mz-shop-cache',cached=null;try{cached=JSON.parse(localStorage.getItem(CK)||'null')}catch(e){}
   if(cached&&cached.length){var ci=mapRows(cached);if(ci.length){ALL={};render(ci)}}
   function loadLive(){if(!window.MZ||!MZ.q)return;MZ.q('products','select=name,category,description,suggested_price,photo,status&order=sort,name').then(function(rows){
