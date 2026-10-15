@@ -633,6 +633,8 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     return MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(p){
       if(!p||!p[0]){throw new Error('We could not find your seller profile. Please log out and sign up again.')}
       ME=p[0];var wf='';try{wf=localStorage.getItem('mz-fran')}catch(e){}
+      var qk0='';try{qk0=new URLSearchParams(location.search).get('kind')||''}catch(e){}
+      if(ME.franchise&&(qk0==='shop'||qk0==='trainee')){var nm=ME.email||'';return MZ.signOut().then(function(){ME=null;show('dashView',false);show('franView',false);show('authView',true);view('fSign');note($('#authNote'),'info','You were logged in as a franchise ('+nm+'). You have been logged out so you can create a separate '+(qk0==='shop'?'shop':'training')+' account here with a different email. Your franchise login is unchanged.')})}
       if(wf&&!ME.franchise){return showFran()}
       var qk2='';try{qk2=new URLSearchParams(location.search).get('kind')||''}catch(e){}
       if(!ME.franchise){return MZ.q('franchise_applications','select=status&user_id=eq.'+MZ.user().id+'&order=created_at.desc&limit=1').then(function(fa){var st=fa&&fa[0]&&fa[0].status;
