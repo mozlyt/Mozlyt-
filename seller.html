@@ -329,6 +329,14 @@ html body .dash{padding-bottom:120px}}
 @keyframes bnPop{0%{transform:scale(.85)}100%{transform:scale(1)}}
 @keyframes bnBob{0%,100%{transform:translateY(-2px) scale(1.12)}50%{transform:translateY(-5px) scale(1.12)}}
 @media(prefers-reduced-motion:reduce){html body .bnav,html body .bnav::before,html body .bnav button.on,html body .bnav button.on svg{animation:none!important}}</style>
+<style id="menuFix">@media(max-width:860px){
+html body .mz-nav{background:linear-gradient(170deg,#122231,#070c12)!important;border-bottom:2px solid #1F9D6B!important;box-shadow:0 22px 40px rgba(0,0,0,.6)!important;padding:10px 22px 22px!important;max-height:calc(100vh - 64px);overflow-y:auto}
+html body .mz-open .mz-nav{animation:mnDrop .3s ease both}
+html body .mz-nav>a:not(.mz-btn){color:#fff!important;font-size:18px!important;font-weight:800!important;padding:16px 4px!important;border-bottom:1px solid #24404a!important;display:block}
+html body .mz-nav>a:not(.mz-btn):active,html body .mz-nav>a:not(.mz-btn):hover{color:#34c78d!important;padding-left:10px!important}
+html body .mz-nav a.mz-cur{color:#34c78d!important;border-bottom:1px solid #24404a!important}
+html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;padding:15px 16px!important;border-radius:14px!important;font-size:16px!important;font-weight:800!important}}
+@keyframes mnDrop{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}</style>
 </head>
 <body>
 <header class="mz-header" id="mzHeader">
