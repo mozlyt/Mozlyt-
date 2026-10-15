@@ -68,7 +68,7 @@ html.mz-ready .mz-header{animation:mzIn .8s both}
 .mz-btn.mz-primary:after,.mz-btn.mz-gold:after{content:"";position:absolute;top:0;bottom:0;left:-70%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);transition:left .6s}
 .mz-btn.mz-primary:hover:after,.mz-btn.mz-gold:hover:after{left:130%}
 @media(prefers-reduced-motion:reduce){#mzs{display:none}html.mz-sp::before{display:none}.mz-rv{opacity:1;transform:none;transition:none}html.mz-ready h1,html.mz-ready .mz-header,.grid>.card{animation:none}.mz-btn:after{display:none}}
-</style>
+.top{padding:16px 0 14px!important}.top-grid{display:block!important}.top .search{margin:0!important;max-width:none!important}.sbox{position:fixed;inset:0;background:rgba(10,25,45,.6);display:none;align-items:center;justify-content:center;z-index:300;padding:16px}.sbox.show{display:flex}.sbox div{background:#fff;color:#10233f;border-radius:16px;padding:22px;max-width:380px;width:100%}.sbox h3{margin:0 0 8px;font-size:20px}.sbox p{margin:0 0 14px;color:#4a5b73;line-height:1.5}.sbox a,.sbox button{display:block;width:100%;box-sizing:border-box;text-align:center;padding:13px;border-radius:10px;font-weight:700;font-size:16px;margin-top:8px;border:0;cursor:pointer;text-decoration:none}.sbox a{background:#1F9D6B;color:#fff}.sbox button{background:#eef2f7;color:#10233f}</style>
 <script>
 (function(){
   var d=document.documentElement,seen=0,reduce=0;
@@ -342,22 +342,11 @@ body.has-list .wa-float{bottom:84px}
     <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
   </div>
 </header>
-<div class="mz-note">MOZLYT Somalia is opening soon. Availability, delivery time and fee are confirmed on WhatsApp before you pay.</div>
 
 <div class="top">
   <div class="wrap">
-    <div class="top-grid"><div class="top-l"><h1>Shop MOZLYT</h1>
-    <p>Massage tools, fitness gear, nutrition, skincare, kitchen essentials and more. Add what you like to your list, send it on WhatsApp, and we reply with prices.</p>
-    <label class="search"><input id="q" type="search" placeholder="Search products" aria-label="Search products"><span><svg class="i"><use href="#mag"/></svg></span><button type="button" class="cam" id="camBtn" aria-label="Search with a photo" title="Search with a photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.8"/></svg></button><input type="file" id="camIn" accept="image/*" hidden></label><div id="pnote" class="pnote" hidden></div></div><aside class="steps" aria-label="How ordering works"><b>How ordering works</b><ol><li><i>1</i><span>Tap <em>Add to list</em> on what you like</span></li><li><i>2</i><span>Send your list to us on WhatsApp</span></li><li><i>3</i><span>We reply with prices and delivery</span></li></ol></aside></div>
-  </div>
-</div>
-
-<div class="trust">
-  <div class="wrap">
-    <div class="tr"><span class="ic"><svg class="i"><use href="#truck"/></svg></span><div><b>Delivery across Somalia</b><span>Fee confirmed on WhatsApp</span></div></div>
-    <div class="tr"><span class="ic"><svg class="i"><use href="#lock"/></svg></span><div><b>Prices on request</b><span>We reply on WhatsApp</span></div></div>
-    <div class="tr"><span class="ic"><svg class="i"><use href="#check"/></svg></span><div><b>Trusted quality</b><span>Products checked by MOZLYT</span></div></div>
-    <div class="tr"><span class="ic"><svg class="i"><use href="#chat"/></svg></span><div><b>Help when you need it</b><span>Chat with us on WhatsApp</span></div></div>
+    <div class="top-grid"><div class="top-l">
+    <label class="search"><input id="q" type="search" placeholder="Search products" aria-label="Search products"><span><svg class="i"><use href="#mag"/></svg></span><button type="button" class="cam" id="camBtn" aria-label="Search with a photo" title="Search with a photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.8"/></svg></button><input type="file" id="camIn" accept="image/*" hidden></label><div id="pnote" class="pnote" hidden></div></div></div>
   </div>
 </div>
 
@@ -425,7 +414,6 @@ body.has-list .wa-float{bottom:84px}
   </section>
 </div>
   <div class="empty" id="empty">No products match your search. <a href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20looking%20for%20a%20product.%20" target="_blank" rel="noopener" style="color:var(--green-d);font-weight:700">Ask us on WhatsApp</a></div>
-  <p class="note">Prices are given on request. Tap Add to list on the things you like, then send your list to us on WhatsApp and we reply with prices and delivery. Photos are for illustration; the product you receive may differ slightly in colour or design. Ask us about other colours and designs.</p>
 </main>
 <section class="wrap" style="margin:34px auto 10px">
   <div style="background:#fff;border:1px solid var(--line,#dfe8e2);border-radius:18px;padding:22px 20px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
@@ -476,7 +464,8 @@ body.has-list .wa-float{bottom:84px}
   </div>
 </footer>
 <p class="mz-part">MOZLYT Somalia is part of <a href="/">MOZLYT</a>.</p>
-<div class="listbar" id="listbar"><span><b id="lcount">0</b> in your list</span><button type="button" id="lclear">Clear</button><a class="btn" id="lsend" href="#" target="_blank" rel="noopener">Send on WhatsApp</a></div>
+<div class="sbox" id="sbox"><div><h3>Do you want it shipped?</h3><p>Request shipment and we reply on WhatsApp with the price, delivery fee and time. You pay only after we confirm.</p><a id="shipYes" href="#" target="_blank" rel="noopener">Request shipment</a><a id="shipNo" href="#" target="_blank" rel="noopener" style="background:#10233f">Just ask the price</a><button type="button" id="shipX">Cancel</button></div></div>
+<div class="listbar" id="listbar"><span><b id="lcount">0</b> in your list</span><button type="button" id="lclear">Clear</button><a class="btn" id="lsend" href="#">Buy</a></div>
 <div class="toast" id="toast" role="status"></div>
 
 <style id="mz-pmod">.card .pic,.card h3{cursor:pointer}
@@ -501,7 +490,8 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
       q=document.getElementById('q'),list=[],ALL={},t,NS='http://www.w3.org/2000/svg';
   function say(s){toast.textContent=s;toast.classList.add('show');clearTimeout(t);t=setTimeout(function(){toast.classList.remove('show')},1500)}
   function msg(){return "Hello MOZLYT, I would like prices and availability for:\n"+list.map(function(n,i){return (i+1)+". "+n}).join("\n")+"\n\nMy area: "}
-  function refresh(){cnt.textContent=list.length;bar.classList.toggle('show',list.length>0);document.body.classList.toggle('has-list',list.length>0);send.href='https://wa.me/'+WA+'?text='+encodeURIComponent(msg())}
+  function refresh(){cnt.textContent=list.length;bar.classList.toggle('show',list.length>0);document.body.classList.toggle('has-list',list.length>0);var L=list.map(function(n,i){return (i+1)+'. '+n}).join('\n');var y=document.getElementById('shipYes'),no=document.getElementById('shipNo');if(y){y.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, I would like to buy and I request shipment for:\n'+L+'\n\nMy delivery area: ');no.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, please send me the price and availability for:\n'+L)}}
+  (function(){var sb=document.getElementById('sbox');send.addEventListener('click',function(e){e.preventDefault();sb.classList.add('show')});sb.addEventListener('click',function(e){if(e.target===sb||e.target.id==='shipX'||e.target.id==='shipYes'||e.target.id==='shipNo')sb.classList.remove('show')})})();
   function setBtn(b,on){b.classList.toggle('done',on);b.textContent=on?'Added ✓':'Add to list'}
   function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
   function icon(id){var s=document.createElementNS(NS,'svg');s.setAttribute('class','i');var u=document.createElementNS(NS,'use');u.setAttribute('href','#'+id);s.appendChild(u);return s}
