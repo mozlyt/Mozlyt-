@@ -365,6 +365,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
     <div id="tcBox"></div>
   </div>
   <div id="pane-subs" hidden>
+    <div class="stats" id="subStats"></div>
     <div class="card2"><h3 style="margin:0 0 6px">Plan prices</h3>
       <p class="sub" style="margin-bottom:12px">Sellers pay these amounts to keep their store open. New sellers get a free trial first (set 0 to turn it off).</p>
       <form id="fBill" class="f"><p class="sub" style="margin:0"><b>Standard</b> (store link) &middot; <b>Plus</b> (adds ad tracking) &middot; <b>Premium</b> (adds custom address)</p>
@@ -610,6 +611,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.rpc('admin_set_expiry',{p_id:id,p_plan:s.plan||null,p_expires:d.toISOString(),p_tier:tv}).then(function(){s.sub_expires_at=d.toISOString();s.tier=tv;flash('Updated');sellers()},function(er){flash(er.message)})}
   function payRow(x,act){var s=SELL.filter(function(y){return y.id===x.seller_id})[0]||{};return'<div class="it"><div class="h"><b>'+esc(s.store_name||'Seller')+' &middot; '+(x.kind==='franchise'?'FRANCHISE platform fee, '+(x.plan==='yearly'?'yearly':'monthly')+' (documents already approved)':x.kind==='training'?'training: '+(x.item==='pro'?'Pro (everything)':x.item&&x.item.indexOf('skill:')===0?x.item.slice(6):'Basic')+' (one-time)':(x.tier||'standard')+' '+(x.plan==='yearly'?'yearly':'monthly'))+' &middot; '+MZ.money(x.amount)+'</b>'+(act?'':'<span class="tag '+(x.status==='confirmed'?'':'bad')+'">'+x.status+'</span>')+'</div><div class="m">Ref <b>'+esc(x.reference)+'</b> &middot; '+esc(s.phone||'')+' &middot; '+MZ.when(x.created_at)+'</div>'+(act?'<div style="display:flex;gap:8px"><button class="b2" data-ok="'+x.id+'" type="button">Confirm and activate</button><button class="b2 red" data-no="'+x.id+'" type="button">Reject</button></div>':'')+'</div>'}
   function subs(){
+    (function(){var ids={};PAYS.forEach(function(x){if(x.status==='confirmed')ids[x.seller_id]=1});$('#subStats').innerHTML='<div class="stat"><b>'+Object.keys(ids).length+'</b><span>People who subscribed</span></div>'})();
     [['bM','monthly_price'],['bY','yearly_price'],['bPM','plus_monthly'],['bPY','plus_yearly'],['bRM','premium_monthly'],['bRY','premium_yearly'],['bTr','training_price'],['bTp','training_pro_price'],['bFr','franchise_price'],['bFrY','franchise_yearly_price']].forEach(function(x){$('#'+x[0]).value=BILL[x[1]]!=null?BILL[x[1]]:''});$('#skP').innerHTML=SKN.map(function(k){return'<label>'+k[1]+' (GH&#8373;)<input type="number" min="0" step="1" data-sk="'+k[0]+'" value="'+(SKP[k[0]]!=null?SKP[k[0]]:100)+'"></label>'}).join('');$('#bT').value=BILL.trial_days!=null?BILL.trial_days:'';$('#bI').value=BILL.pay_instructions||'';
     $('#payPend').innerHTML=PAYS.filter(function(x){return x.status==='pending'}).map(function(x){return payRow(x,true)}).join('')||'<div class="empty">Nothing waiting.</div>';
     $('#payDone').innerHTML=PAYS.filter(function(x){return x.status!=='pending'}).slice(0,30).map(function(x){return payRow(x,false)}).join('')||'<div class="empty">No payments yet.</div>';
