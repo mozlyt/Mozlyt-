@@ -122,6 +122,19 @@ header{background:#05070a;border-bottom:1px solid #18202a}
 .hero,.dark,.buy,footer{background:radial-gradient(900px 420px at 85% -10%,rgba(31,157,107,.22),transparent 60%),radial-gradient(700px 400px at 5% 110%,rgba(242,177,52,.10),transparent 60%),linear-gradient(135deg,#020305 0%,#080d14 50%,#06161f 100%)}
 .btn.k,nav .lg{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5)}
 .pg{background:#fff}.pg>b,.pg>h3{color:#0E2A47}.pv b,.pv h3{color:inherit}
+.hero{background:#000!important;padding:70px 0 80px;text-align:center}
+.hero::after{display:none}
+.hero .wrap{display:flex;flex-direction:column;align-items:center}
+.orb{width:120px;height:120px;border-radius:30px;display:grid;place-items:center;margin-bottom:34px;background:radial-gradient(circle at 50% 40%,#16202b,#04070a);box-shadow:0 0 0 1px rgba(255,255,255,.08),0 0 80px rgba(31,157,107,.35),0 30px 60px rgba(0,0,0,.8);animation:fl 6s ease-in-out infinite}
+.orb img{width:78px;height:78px;border-radius:18px}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero .eyb{display:inline-block;margin-bottom:26px;padding:9px 18px;border-radius:999px;font-size:12.5px;letter-spacing:1.5px;color:#e8edf3;background:linear-gradient(#05080b,#05080b) padding-box,linear-gradient(90deg,#1F9D6B,#2b3a4a 50%,#F2B134) border-box;border:1px solid transparent}
+.hero h1{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.025em;line-height:1.02;font-size:clamp(46px,9vw,88px);max-width:11em;margin:0 auto 22px;background:linear-gradient(180deg,#fff 30%,#8c96a3 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.hero p{color:#9aa4b1;font-size:19px;max-width:34em;margin:0 auto 34px}
+.hero .bt{justify-content:center;flex-direction:column;width:100%;max-width:420px}
+.hero .btn{width:100%;text-align:center;border-radius:999px;padding:17px 24px;font-size:17px;background:linear-gradient(#0d1116,#07090c);color:#fff;border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 30px rgba(31,157,107,.12)}
+.hero .btn.g{box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 34px rgba(31,157,107,.3);border-color:rgba(52,199,141,.45)}
+.hero .btn.o{color:#e8edf3;border-color:rgba(242,177,52,.35)}
 </style>
 </head>
 <body>
@@ -130,6 +143,7 @@ header{background:#05070a;border-bottom:1px solid #18202a}
 
 <main>
 <div class="hero"><div class="wrap">
+<div class="orb"><img src="/img/logo.png" alt="" width="96" height="96"></div>
 <div class="eyb">WELLNESS, FITNESS AND BEAUTY</div>
 <h1>One brand. A MOZLYT in every city.</h1>
 <p>MOZLYT is a network of locally owned franchises. Each one gives its community services, products and the chance to start a business of their own. Find the MOZLYT near you, or own one.</p>
