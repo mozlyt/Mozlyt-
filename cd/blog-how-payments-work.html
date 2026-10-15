@@ -311,7 +311,22 @@ body.has-list .wa-float{bottom:84px}
 <div class="cta"><h2>Questions about how MOZLYT works?</h2><p>Message MOZLYT on WhatsApp and we will explain it in plain words.</p>
 <p style="display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 0"><a class="btn gold" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20would%20like%20to%20understand%20how%20MOZLYT%20works." target="_blank" rel="noopener">Message us on WhatsApp</a><a class="btn ghost" style="color:#fff;border-color:#fff" href="/seller.html">Open a shop or apply</a></p></div>
 <h2>More from the blog</h2><ul class="more"><li><a href="/cd/blog-become-a-service-provider.html">How to Become a MOZLYT Service Provider</a></li><li><a href="/cd/blog-open-your-first-online-shop.html">How to Open Your First Online Shop on MOZLYT, Step by Step</a></li><li><a href="/cd/blog-price-your-products-and-make-profit.html">How to Price Your Products and Actually Make a Profit</a></li><li><a href="/cd/blog-sell-on-whatsapp-instagram-tiktok.html">How to Sell on WhatsApp, Instagram and TikTok Without Spamming</a></li><li><a href="/cd/blog-product-photos-and-descriptions-with-a-phone.html">Product Photos and Descriptions That Sell, Using Only Your Phone</a></li></ul>
-</article></main>
+<style>.sub-box{background:var(--ink);color:#fff;border-radius:20px;padding:30px 24px;margin:26px 0 40px}.sub-box h2{color:#fff;font-size:clamp(24px,3.6vw,32px);margin:0 0 6px}.sub-box p{color:#dbe4ec;margin:0 0 14px}
+.sub-box form{display:grid;gap:10px;max-width:520px}.sub-box input[type=email]{width:100%;font:inherit;font-size:17px;padding:14px 16px;border-radius:12px;border:2px solid transparent;min-height:50px;box-sizing:border-box}
+.sub-box input[type=email]:focus{outline:none;border-color:var(--gold)}.sub-box .btn{border:0;cursor:pointer;font:inherit;font-weight:700;font-size:17px;min-height:50px}
+.sub-box .sm{font-size:13.5px;color:#b9c8d6;margin:2px 0 0}.sub-box .ok{background:#E6F5EE;color:#0b4a2d;border-radius:12px;padding:14px 16px;font-weight:600}.sub-box .er{color:#ffd0d0;font-weight:600}</style><div class="sub-box" id="subscribe"><h2>Get new guides in your inbox</h2><p>Join free. We send new blog posts and practical tips to start, grow and earn. No spam, and you can leave any time.</p>
+<form id="bsForm" novalidate><label for="bsEmail" class="sm" style="color:#fff;font-size:15px">Your email</label><input id="bsEmail" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required maxlength="254"><button class="btn gold" type="submit" id="bsBtn">Subscribe</button><div id="bsMsg" role="status" aria-live="polite"></div><p class="sm">By subscribing you agree to receive emails from MOZLYT. See our <a href="/cd/privacy.html" style="color:#fff;text-decoration:underline">privacy policy</a>.</p></form></div>
+<script src="/js/mz-api.js" defer></script>
+<script>
+(function(){var f=document.getElementById('bsForm');if(!f)return;var m=document.getElementById('bsMsg'),b=document.getElementById('bsBtn');
+function cc(){try{var x=/^\/([a-z]{2})\//.exec(location.pathname);return x?x[1]:(localStorage.getItem('mz-cc')||'')}catch(e){return ''}}
+function done(){f.innerHTML='<div class="ok">Thank you! You are subscribed. We will send you our new guides.</div>'}
+f.addEventListener('submit',function(e){e.preventDefault();var v=document.getElementById('bsEmail').value.trim().toLowerCase();m.className='';m.textContent='';
+if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){m.className='er';m.textContent='Please enter a valid email address.';return}
+if(!window.MZ){m.className='er';m.textContent='Please wait a moment and try again.';return}
+b.disabled=true;b.textContent='Subscribing...';
+MZ.insert('blog_subscribers',{email:v,country:cc()||null}).then(done,function(er){var t=String(er&&er.message||'');if(/duplicate|already|23505|409/i.test(t))done();else{m.className='er';m.textContent='Sorry, we could not subscribe you right now. Please try again, or message us on WhatsApp.';b.disabled=false;b.textContent='Subscribe'}})});})();
+</script></article></main>
 <footer class="mz-footer">
   <div class="mz-wrap mz-fgrid">
     <div class="mz-fbrand">
