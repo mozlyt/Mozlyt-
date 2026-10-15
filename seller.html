@@ -558,7 +558,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     busy(b,true,'Creating...');note(authNote,'','');
     MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:KIND!=='shop'?'':$('#sStore').value.trim(),store_slug:KIND!=='shop'?'':$('#sSlug').value,tier:pickTier(),ref:REF,kind:KIND,country:(function(){try{return(localStorage.getItem('mz-cc')||'').toUpperCase()}catch(e){return''}})()}).then(function(r){
       if(KIND==='franchise'){try{localStorage.setItem('mz-fran','1')}catch(e){}}
-      if(r.confirmed){boot()}else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(authNote,'ok','Account created. We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in here. Check your spam folder if you do not see it.')}
+      if(r.confirmed){boot()}else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(authNote,'ok','Account created. Log in with your email and password to open your dashboard.')}
     },function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Sending...');
     MZ.recover($('#fEmail').value.trim()).then(function(){note(authNote,'ok','If that email has an account, a reset link is on its way.')},function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
@@ -616,6 +616,21 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function pickName(){return PICK.indexOf('tier:')===0?cap(PICK.slice(5))+' shop plan':PICK==='basic'?'Business lessons (Basic)':PICK==='pro'?'Pro: everything':PICK.indexOf('skill:')===0?skName(PICK.slice(6)):''}
   try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='shop'||qk==='franchise'){try{if(qk==='franchise')localStorage.setItem('mz-fran','1');else localStorage.removeItem('mz-fran')}catch(e){}setKind(qk);WANT=true;$('#kindPick').hidden=true;
     var T={trainee:['Sign up for training','Create your account to start learning. The business lessons are free.'],franchise:['Sign up as a franchise','Create your account and tell us where you want to open your MOZLYT branch.'],shop:['Take a shop','Create your account and your dashboard opens straight away. Your first 7 days are free. Cancel any time.']}[qk];$('#authTitle').textContent=T[0];$('#authSub').textContent=T[1];if((qk==='trainee'||qk==='shop')&&PICK){$('#kindNote').textContent='You chose: '+pickName()+'. Create your account and your dashboard opens with it.'+(PICK==='basic'?' The business lessons are free.':PICK.indexOf('tier:')===0?' Your free trial starts now. Pay when you are ready to keep the store open.':' You pay once there.')}}}catch(e){}
+
+  /* ----- payment reminder pop-up: shown every time a seller opens the dashboard until a plan has more than a week left ----- */
+  function payPop(){
+    if(!ME||ME.franchise||isTrainee()||document.getElementById('payPop'))return;
+    var d=daysLeft(),paid=!!ME.plan;if(paid&&d>7)return;
+    if(document.getElementById('appPop')){setTimeout(payPop,1000);return}
+    var msg=d<=0?'<b>Your store is closed.</b> Make a payment to open it again.':(paid?'Your subscription ends in <b>'+d+' day'+(d===1?'':'s')+'</b>. Make a payment now so your store stays open and you are not logged out before your due time.':'Your free trial ends in <b>'+d+' day'+(d===1?'':'s')+'</b>. Make a payment now so your store stays open and you are not logged out before your due time.');
+    var m=document.createElement('div');m.id='payPop';
+    m.style.cssText='position:fixed;inset:0;z-index:9998;background:rgba(3,8,14,.72);display:flex;align-items:center;justify-content:center;padding:16px';
+    m.innerHTML='<div role="dialog" aria-modal="true" style="background:#fff;color:#0E2A47;border-radius:22px;max-width:380px;width:100%;padding:26px 22px 18px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.4)"><h3 style="margin:0 0 8px;font-size:22px;color:#0E2A47">Keep your store open</h3><p style="margin:0 0 14px;color:#4a5a6a;font-size:15px;line-height:1.5">'+msg+'</p><button type="button" id="ppYes" style="display:block;width:100%;border:0;border-radius:12px;font:700 16px/1 inherit;padding:15px;cursor:pointer;background:#1F9D6B;color:#fff">Make a payment</button><button type="button" id="ppNo" style="display:block;width:100%;border:0;border-radius:12px;font:600 15px/1 inherit;padding:13px;cursor:pointer;background:none;color:#4a5a6a;margin-top:6px">Later</button></div>';
+    document.body.appendChild(m);
+    function close(){m.remove()}
+    $('#ppNo').onclick=close;m.addEventListener('click',function(e){if(e.target===m)close()});
+    $('#ppYes').onclick=function(){close();var sb=$('[data-t=sub]');if(sb)sb.click();else go('sub');try{window.scrollTo(0,0)}catch(e){}};
+  }
   /* ----- tabs ----- */
   var PANES=['over','prod','ord','learn','sub','set','acc','fr','more'];
   function flag(k,set){var key='mz-f-'+(ME?ME.id:'x')+'-'+k;try{if(set){localStorage.setItem(key,'1');return true}return localStorage.getItem(key)==='1'}catch(e){return false}}
@@ -645,7 +660,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       return enterDash();
       function enterDash(){
       show('dashView',true);if(ME.franchise&&location.search.indexOf('own=1')<0){location.replace('franchise.html');return}
-      paint();if(isTrainee())go('learn');applyPick();if(window.mzAppPop)setTimeout(window.mzAppPop,900);
+      paint();if(isTrainee())go('learn');applyPick();if(window.mzAppPop)setTimeout(window.mzAppPop,900);if(!isTrainee()&&!ME.franchise)setTimeout(payPop,1600);
       if(ME.status==='suspended')note(dashNote,'err','Your store is paused. Please contact MOZLYT on WhatsApp.');
       return Promise.all([MZ.q('products','select=id,category,name,photo,wholesale_price,suggested_price,status&order=sort,name'),MZ.q('seller_products','select=product_id,price,active&seller_id=eq.'+ME.id),MZ.q('orders','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=200'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.q('subscription_payments','select=*&seller_id=eq.'+ME.id+'&order=created_at.desc&limit=50'),MZ.rpc('get_my_prices').catch(function(){return null}),MZ.q('franchise_product_prices','select=product_id,price').catch(function(){return []})]);
       }
