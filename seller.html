@@ -402,7 +402,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
   <p class="sub"><a href="#" id="faSkip">Continue to my training dashboard instead</a> &middot; <a href="#" id="faOut">Log out</a></p>
 </section>
 <section id="dashView" hidden>
-  <div class="top2"><div><h1 id="hello">Your store</h1><p class="sub" id="subline"></p></div><button class="b2 ghost" id="btnOut" type="button">Log out</button></div>
+  <div class="top2"><div><h1 id="hello">Your store</h1><p class="sub" id="subline"></p></div><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="b2 ghost" id="btnTheme" type="button">Colors and background</button><button class="b2 ghost" id="btnOut" type="button">Log out</button></span></div>
   <div id="dashNote"></div><div id="subNote"></div>
   <div class="card2 mystore" id="myStoreCard"><div class="ms-h"><b>My store</b><code id="storeUrl" hidden></code></div>
     <div class="pills"><a class="pill2" id="openUrl" target="_blank" rel="noopener">Visit store</a><button class="pill2" type="button" id="cpUrl">Copy link</button><a class="pill2" id="shareUrl" target="_blank" rel="noopener">Share on WhatsApp</a></div></div>
@@ -514,6 +514,46 @@ form{background:transparent!important;border:0!important;padding:0!important}
 
 </div></main>
 
+<script>window.MZ_NO_COUNTRY_THEME=1</script><script src="js/mz-theme.js"></script>
+<div id="themeBox" hidden style="position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:16px"><div class="card2" style="max-width:460px;width:100%;max-height:92vh;overflow:auto"><h3 style="margin:0 0 4px">Your colors</h3><p class="sub" style="margin-bottom:12px">Choose the colors of your dashboard. Only you see them.</p>
+<div id="thPrev" style="border-radius:14px;padding:14px;margin-bottom:14px;border:1px solid rgba(128,128,128,.4)"></div>
+<b style="font-size:14px">Main color</b><div id="thAcc" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px"></div>
+<label class="sub" style="display:flex;align-items:center;gap:8px;font-size:13.5px">Or pick your own <input type="color" id="thCustom" style="width:44px;height:32px;padding:0;border:0"></label>
+<b style="font-size:14px;display:block;margin-top:14px">Background</b><div id="thBg" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px"></div>
+<label class="sub" style="display:flex;align-items:center;gap:8px;font-size:13.5px">Or pick your own <input type="color" id="thCustomBg" style="width:44px;height:32px;padding:0;border:0"></label>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px"><button class="b2" id="thSave" type="button">Save</button><button class="b2 ghost" id="thReset" type="button">Back to MOZLYT colors</button><button class="b2 ghost" id="thClose" type="button">Close</button></div></div></div>
+<script>
+(function(){
+var ACC=['#1F9D6B','#10B981','#22C55E','#84CC16','#14B8A6','#06B6D4','#0EA5E9','#3B82F6','#2563EB','#6366F1','#8B5CF6','#A855F7','#D946EF','#EC4899','#F43F5E','#EF4444','#F97316','#F59E0B','#F2B134','#EAB308','#B45309','#64748B','#FFFFFF','#111827','#D4AF37'];
+var BG=[['Black','#05070a'],['Midnight','#0a1220'],['Navy','#0b1b3a'],['Charcoal','#15171b'],['Forest','#06140e'],['Purple','#1e0f3a'],['Wine','#1c0a0f'],['White','#f6f8fb'],['Cream','#fbf6ea'],['Sky','#e8f1fa'],['Mint','#e9f6ef'],['Lavender','#efe9fb'],['Blush','#fbeef0'],['Grey','#e5e7eb']];
+var DEF={accent:'#1F9D6B',bg:'#05070a'},T=null,SAVED=null,RAW=null;
+function lum(h){var c=h.replace('#','');return(.299*parseInt(c.substr(0,2),16)+.587*parseInt(c.substr(2,2),16)+.114*parseInt(c.substr(4,2),16))/255}
+function okc(t){return t&&/^#[0-9a-fA-F]{6}$/.test(t.accent||'')&&/^#[0-9a-fA-F]{6}$/.test(t.bg||'')}
+function dashOf(raw){if(!raw)return null;if(raw.site||raw.dash)return okc(raw.dash)?raw.dash:null;return okc(raw)?raw:null}
+function apply(){var st=document.getElementById('mz-theme-css');if(!st){st=document.createElement('style');st.id='mz-theme-css';document.head.appendChild(st)}st.textContent=okc(T)?MZTheme.css(T):''}
+function cur(){return T||DEF}
+function prev(){var c=cur(),L=lum(c.bg)>.5,ink=L?'#10233f':'#fff',bt=lum(c.accent)>.62?'#05070a':'#fff',el=document.getElementById('thPrev');el.style.background=c.bg;el.style.color=ink;el.innerHTML='<b>Your dashboard</b><div style="margin:6px 0 10px;font-size:13px;opacity:.8">This is how it will look.</div><span style="display:inline-block;padding:9px 16px;border-radius:10px;background:'+c.accent+';color:'+bt+';font-weight:700;font-size:14px">Button</span> <span style="color:'+c.accent+';font-weight:700;margin-left:10px;font-size:14px">A link</span>'}
+function draw(){var c=cur(),$=function(i){return document.getElementById(i)};
+$('thAcc').innerHTML=ACC.map(function(x){return'<button type="button" data-a="'+x+'" aria-label="'+x+'" style="width:34px;height:34px;border-radius:50%;border:'+(c.accent.toLowerCase()===x.toLowerCase()?'3px solid #888':'2px solid rgba(128,128,128,.5)')+';background:'+x+';cursor:pointer"></button>'}).join('');
+$('thBg').innerHTML=BG.map(function(b){return'<button type="button" data-b="'+b[1]+'" style="padding:8px 12px;border-radius:10px;border:'+(c.bg.toLowerCase()===b[1]?'2px solid #888':'1px solid rgba(128,128,128,.5)')+';background:'+b[1]+';color:'+(lum(b[1])>.5?'#10233f':'#fff')+'!important;font-size:13px;cursor:pointer">'+b[0]+'</button>'}).join('');
+$('thCustom').value=c.accent;$('thCustomBg').value=c.bg;
+[].forEach.call(document.querySelectorAll('#thAcc [data-a]'),function(b){b.onclick=function(){set({accent:b.dataset.a,bg:cur().bg})}});
+[].forEach.call(document.querySelectorAll('#thBg [data-b]'),function(b){b.onclick=function(){set({accent:cur().accent,bg:b.dataset.b})}});prev()}
+function set(v){T=v;apply();draw()}
+function show(on){var bx=document.getElementById('themeBox');bx.hidden=!on;bx.style.display=on?'flex':'none'}
+function out(){var o={};if(RAW&&RAW.site)o.site=RAW.site;o.dash=T;return T?o:(RAW&&RAW.site?{site:RAW.site,dash:null}:null)}
+function save(){var v=out();try{if(window.MZ&&MZ.user())MZ.update('profiles','id=eq.'+MZ.user().id,{franchise_theme:v}).catch(function(){})}catch(e){}try{localStorage.setItem('mz-seller-theme',JSON.stringify(T))}catch(e){}}
+document.addEventListener('click',function(e){var t=e.target;
+ if(t.id==='btnTheme'){SAVED=T;show(true);draw()}
+ else if(t.id==='thClose'){T=SAVED;apply();show(false)}
+ else if(t.id==='thReset'){T=null;apply();save();SAVED=null;show(false)}
+ else if(t.id==='thSave'){SAVED=T;save();show(false)}});
+document.addEventListener('input',function(e){if(e.target.id==='thCustom')set({accent:e.target.value,bg:cur().bg});if(e.target.id==='thCustomBg')set({accent:cur().accent,bg:e.target.value})});
+try{var l=JSON.parse(localStorage.getItem('mz-seller-theme')||'null');if(okc(l)){T=l;apply()}}catch(e){}
+function load(n){try{if(window.MZ&&MZ.user()){MZ.q('profiles','select=franchise_theme&id=eq.'+MZ.user().id).then(function(r){RAW=r&&r[0]&&r[0].franchise_theme;T=dashOf(RAW);apply();try{localStorage.setItem('mz-seller-theme',JSON.stringify(T))}catch(x){}}).catch(function(){})}else if(n<12)setTimeout(function(){load(n+1)},700)}catch(e){}}
+setTimeout(function(){load(0)},800);
+})();
+</script>
 <script src="js/mz-api.js"></script>
 <script src="js/mz-pay.js"></script>
 <script>
@@ -831,20 +871,23 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function lessonsOf(cid){return TR.l.filter(function(l){return l.course_id===cid})}
   function doneOf(cid){return lessonsOf(cid).filter(function(l){return TR.p[l.id]}).length}
   function embed(u){var m=/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{6,15})/.exec(u||'');return m?'https://www.youtube.com/embed/'+m[1]:''}
+  function certificate(C){var nm=(ME&&(ME.full_name||ME.store_name))||'Learner',d=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),id='MZ-'+(ME&&ME.id?String(ME.id).slice(0,6).toUpperCase():'000000')+'-'+C.id;
+    var h='<!doctype html><html><head><meta charset="utf-8"><title>Certificate - '+esc(C.title)+'</title><style>@page{size:A4 landscape;margin:0}body{margin:0;background:#eef2ee;font-family:Georgia,serif;color:#0E2A47}.c{box-sizing:border-box;width:297mm;height:210mm;margin:0 auto;background:#fff;border:14px double #1F9D6B;padding:22mm 24mm;text-align:center;display:flex;flex-direction:column;justify-content:center}.lg{font:800 26px Arial,sans-serif;letter-spacing:3px}.lg span{color:#1F9D6B}h1{font-size:46px;margin:18px 0 6px;letter-spacing:2px}.s{font:16px Arial,sans-serif;color:#5B6B7A}.n{font-size:40px;margin:14px 0;border-bottom:2px solid #F2B134;display:inline-block;padding:0 28px 6px;align-self:center}.t{font-size:28px;font-weight:bold;margin:10px 0 18px}.f{display:flex;justify-content:space-between;margin-top:26px;font:14px Arial,sans-serif;color:#5B6B7A}.pb{text-align:center;margin:14px}@media print{body{background:#fff}.pb{display:none}}</style></head><body><div class="c"><div class="lg">MOZ<span>LYT</span></div><h1>CERTIFICATE OF COMPLETION</h1><div class="s">This certifies that</div><div class="n">'+esc(nm)+'</div><div class="s">has successfully completed every lesson of</div><div class="t">'+esc(C.title)+'</div><div class="s">MOZLYT Training Academy, Accra, Ghana</div><div class="f"><span>Date: '+d+'</span><span>Certificate no. '+id+'</span><span>mozlyt.com</span></div></div><div class="pb"><button onclick="print()" style="padding:12px 22px;font-size:16px">Print or save as PDF</button></div></body></html>';
+    var w=window.open('','_blank');if(!w){flash('Allow pop-ups to open your certificate');return}w.document.open();w.document.write(h);w.document.close()}
   function drawTrain(){var box=$('#learnBox');
     if(TR.lesson){var L=TR.l.filter(function(x){return x.id===TR.lesson})[0],all=lessonsOf(L.course_id),i=all.indexOf(L),nx=all[i+1],done=!!TR.p[L.id],em=embed(L.video_url);
       box.innerHTML='<button class="linkbtn" id="bk" type="button">&larr; Back to lessons</button><div class="card2" style="margin-top:12px"><p class="sub" style="margin:0 0 6px">Lesson '+(i+1)+' of '+all.length+'</p><h2 style="margin:0 0 14px;font-size:24px">'+esc(L.title)+'</h2>'+
         (em?'<div class="vid"><iframe src="'+em+'" allowfullscreen loading="lazy" title="Lesson video"></iframe></div>':(L.video_url?'<p><a class="btn ghost" target="_blank" rel="noopener" href="'+esc(L.video_url)+'">Watch the video</a></p>':''))+
         '<div class="lbody">'+esc(L.body||'')+'</div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><button class="btn primary" id="mk" type="button">'+(done?'Completed (tap to undo)':'Mark as complete')+'</button>'+(nx?'<button class="btn ghost" id="nx" type="button">Next lesson</button>':'')+'</div></div>';
       $('#bk').onclick=function(){TR.lesson=null;drawTrain()};
-      $('#mk').onclick=function(){var b=this;busy(b,true,'Saving...');(done?MZ.remove('lesson_progress','lesson_id=eq.'+L.id+'&user_id=eq.'+ME.id):MZ.insert('lesson_progress',{user_id:ME.id,lesson_id:L.id})).then(function(){if(done)delete TR.p[L.id];else TR.p[L.id]=1;if(!done&&nx){TR.lesson=nx.id}drawTrain();flash(done?'Marked as not done':'Well done!')},function(er){busy(b,false);flash(er.message)})};
+      $('#mk').onclick=function(){var b=this;busy(b,true,'Saving...');(done?MZ.remove('lesson_progress','lesson_id=eq.'+L.id+'&user_id=eq.'+ME.id):MZ.insert('lesson_progress',{user_id:ME.id,lesson_id:L.id})).then(function(){if(done)delete TR.p[L.id];else TR.p[L.id]=1;if(!done&&nx){TR.lesson=nx.id}var fin=!done&&!nx&&doneOf(L.course_id)>=all.length;if(fin){TR.lesson=null;TR.course=L.course_id}drawTrain();flash(done?'Marked as not done':(fin?'Course complete! Get your certificate.':'Well done!'))},function(er){busy(b,false);flash(er.message)})};
       if(nx)$('#nx').onclick=function(){TR.lesson=nx.id;drawTrain();window.scrollTo(0,0)};return}
     if(TR.course){var C=TR.c.filter(function(x){return x.id===TR.course})[0],ls=lessonsOf(C.id);
-      box.innerHTML='<button class="linkbtn" id="bk" type="button">&larr; All courses</button><h2 style="margin:12px 0 4px;font-size:24px">'+esc(C.title)+'</h2><p class="sub">'+esc(C.summary||'')+'</p><div class="bar" style="margin-bottom:14px"><i style="width:'+(ls.length?Math.round(doneOf(C.id)/ls.length*100):0)+'%"></i></div><div class="lst">'+
+      box.innerHTML='<button class="linkbtn" id="bk" type="button">&larr; All courses</button><h2 style="margin:12px 0 4px;font-size:24px">'+esc(C.title)+'</h2><p class="sub">'+esc(C.summary||'')+'</p><div class="bar" style="margin-bottom:14px"><i style="width:'+(ls.length?Math.round(doneOf(C.id)/ls.length*100):0)+'%"></i></div>'+(ls.length&&doneOf(C.id)>=ls.length?'<div class="lockbox" style="background:#E9F8F0;border-color:#bfe6d0"><b>Course complete. Well done!</b><br>Your certificate is ready.<br><button class="b2" id="cert" type="button">Get your certificate</button></div>':'<p class="sub" style="margin:0 0 12px">Finish every lesson to earn your certificate.</p>')+'<div class="lst">'+
         (ls.map(function(l,i){return'<button class="lsn'+(TR.p[l.id]?' done':'')+'" data-id="'+l.id+'" type="button"><span class="ck">'+(TR.p[l.id]?'&#10003;':'')+'</span><span><b>'+(i+1)+'. '+esc(l.title)+'</b></span></button>'}).join('')||'<div class="empty">Lessons are coming soon.</div>')+'</div>';
-      $('#bk').onclick=function(){TR.course=null;drawTrain()};$$('.lsn',box).forEach(function(b){b.onclick=function(){TR.lesson=Number(b.dataset.id);drawTrain();window.scrollTo(0,0)}});return}
+      $('#bk').onclick=function(){TR.course=null;drawTrain()};if($('#cert'))$('#cert').onclick=function(){certificate(C)};$$('.lsn',box).forEach(function(b){b.onclick=function(){TR.lesson=Number(b.dataset.id);drawTrain();window.scrollTo(0,0)}});return}
     function back(label,fn){return'<button class="linkbtn" id="bk" type="button">&larr; '+label+'</button>'}
-    function cards(list){return'<div class="lst">'+(list.map(function(c){var n=lessonsOf(c.id).length,d=doneOf(c.id);return'<div class="it"><b style="font-size:17px">'+esc(c.title)+'</b><div class="m">'+esc(c.summary||'')+'</div><div class="bar"><i style="width:'+(n?Math.round(d/n*100):0)+'%"></i></div><div class="h"><span class="m">'+d+' of '+n+' lessons done</span><button class="b2" data-id="'+c.id+'" type="button">'+(d?(d>=n&&n?'Review':'Continue'):'Start')+'</button></div></div>'}).join('')||'<div class="empty">New lessons are coming soon.</div>')+'</div>'}
+    function cards(list){return'<div class="lst">'+(list.map(function(c){var n=lessonsOf(c.id).length,d=doneOf(c.id);return'<div class="it"><b style="font-size:17px">'+esc(c.title)+'</b><div class="m">'+esc(c.summary||'')+'</div><div class="bar"><i style="width:'+(n?Math.round(d/n*100):0)+'%"></i></div><div class="h"><span class="m">'+d+' of '+n+' lessons done'+(n&&d>=n?' &middot; Certificate ready':'')+'</span><button class="b2" data-id="'+c.id+'" type="button">'+(d?(d>=n&&n?'Review':'Continue'):'Start')+'</button></div></div>'}).join('')||'<div class="empty">New lessons are coming soon.</div>')+'</div>'}
     function lockCard(what,item,price,sk){var h='<div class="empty" style="text-align:left"><b>'+what+'</b><br>Pay once to open these lessons. Price: <b>'+MZ.money(price)+'</b><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="b2" data-buy="'+item+'" type="button">Get these lessons</button>';
       if(sk&&freeAvail())h+='<button class="b2 ghost" data-free="'+sk+'" type="button">Use my free Premium skill</button>';
       if(!allSk())h+='<button class="b2 ghost" data-buy="pro" type="button">Everything for '+MZ.money(BILL.training_pro_price!=null?BILL.training_pro_price:dflt(150))+'</button>';
