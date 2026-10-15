@@ -155,6 +155,7 @@ textarea{min-height:110px;resize:vertical}
 @media(max-width:600px){.wa-float span{display:none}.wa-float{padding:14px}}
 body.has-list .wa-float{bottom:84px}
 </style>
+<link rel="stylesheet" href="/css/mz-dark.css">
 
 <style id="mz-dash">
 .btn[disabled],button.btn:disabled{background:#c9d1cc!important;border-color:#c9d1cc!important;color:#fff!important;cursor:not-allowed;opacity:1;box-shadow:none}
@@ -367,7 +368,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
 </section>
 
 <section id="dashView" hidden>
-  <div class="top2"><div><h1 id="brName">MOZLYT franchise</h1><p class="sub" id="who"></p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="b2" type="button" id="btnMktTop">Ask for marketing</button><a class="b2 ghost" href="seller.html?own=1" style="text-decoration:none">My shop and training</a><button class="b2 ghost" id="btnOut" type="button">Log out</button></div></div>
+  <div class="top2"><div><h1 id="brName">MOZLYT franchise</h1><p class="sub" id="who"></p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="b2" type="button" id="btnMktTop">Ask for marketing</button><button class="b2 ghost" type="button" id="btnTheme">Colors</button><a class="b2 ghost" href="seller.html?own=1" style="text-decoration:none">My shop and training</a><button class="b2 ghost" id="btnOut" type="button">Log out</button></div></div>
   <div class="card2" id="frStatus"></div>
   <div id="frBody">
   <div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="ord" type="button">Shop orders</button><button data-t="rec" type="button">Recruits</button><button data-t="pay" type="button">Payments</button><button data-t="prod" type="button">Shop and products</button><button data-t="price" type="button">Prices</button><button data-t="train" type="button">Training</button><button data-t="mkt" type="button">Marketing</button><button data-t="link" type="button">Recruit link</button><div class="navhelp"><b>Need help?</b><span>Technical issues go straight to MOZLYT. You never fix anything yourself.</span><a href="https://wa.me/233538729743" target="_blank" rel="noopener">Message support</a></div></div>
@@ -398,6 +399,10 @@ form{background:transparent!important;border:0!important;padding:0!important}
   </div>
 </section>
 
+<div id="themeBox" hidden style="position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:16px"><div class="card2" style="max-width:440px;width:100%;max-height:90vh;overflow:auto"><h3 style="margin:0 0 4px">Your colors</h3><p class="sub" style="margin-bottom:12px">Choose the colors you like for your dashboard. Only you see them.</p>
+<b style="font-size:14px">Main color</b><div id="thAcc" style="display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 10px"></div><label style="display:flex;align-items:center;gap:10px;font-size:14px">Any color you want <input type="color" id="thCustom" value="#1F9D6B" style="width:48px;height:34px;padding:0;border:0;background:none"></label>
+<b style="font-size:14px;display:block;margin-top:14px">Background</b><div id="thBg" style="display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 14px"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="b2" id="thSave" type="button">Save</button><button class="b2 ghost" id="thReset" type="button">Back to MOZLYT colors</button><button class="b2 ghost" id="thClose" type="button">Close</button></div><div id="thMsg" class="sub" style="margin-top:8px"></div></div></div>
 </div></main>
 <script src="js/mz-api.js"></script>
 <script>
@@ -532,6 +537,43 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   var h=MZ.takeHash();view();if(h&&h.error)note(aNote,'err',h.error);
   if(MZ.loggedIn())boot();
   PTIMER=setInterval(poll,20000);
+})();
+</script>
+
+<script>
+(function(){
+var ACC=['#1F9D6B','#14B8A6','#06B6D4','#3B82F6','#6366F1','#A855F7','#EC4899','#EF4444','#F97316','#F2B134','#84CC16','#E5E7EB'];
+var BG=[['Black','#05070a'],['Midnight','#0a1220'],['Charcoal','#15171b'],['Forest','#06140e'],['Plum','#150b1c'],['Wine','#1c0a0f'],['Ocean','#06151c'],['Brown','#1a120b']];
+var DEF={accent:'#1F9D6B',bg:'#05070a'},CUR=null,TMP=null;
+function hx(h){h=h.replace('#','');return[parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)]}
+function toH(a){return'#'+a.map(function(v){v=Math.max(0,Math.min(255,Math.round(v)));return(v<16?'0':'')+v.toString(16)}).join('')}
+function mix(a,b,p){var x=hx(a),y=hx(b);return toH([x[0]+(y[0]-x[0])*p,x[1]+(y[1]-x[1])*p,x[2]+(y[2]-x[2])*p])}
+function lum(h){var c=hx(h);return(.299*c[0]+.587*c[1]+.114*c[2])/255}
+function css(t){var a=t.accent,a2=mix(a,'#000000',.38),bg=t.bg,c1=mix(bg,'#ffffff',.07),c2=mix(bg,'#000000',.25),ln=mix(bg,'#ffffff',.15),al=mix(a,'#ffffff',.35),bt=lum(a)>.62?'#05070a':'#ffffff';
+return 'body,html,#dtabs{background:'+bg+'!important}.mz-header .mz-bar,.mz-bar{background:'+bg+'!important}.mz-hd,header,.mz-bar,.mz-header{background:'+bg+'!important;border-color:'+ln+'!important}'
++'.card2,.stat,.it,.per,.tbl,.mgroup{background:linear-gradient(145deg,'+c1+','+c2+')!important;border-color:'+ln+'!important}.tbl th{background:'+c1+'!important}.tbl th,.tbl td{border-color:'+ln+'!important}'
++'.btn.primary,.b2,#dtabs button.on,.tabs button.on{background:linear-gradient(135deg,'+a+','+a2+')!important;border-color:'+a+'!important;color:'+bt+'!important;box-shadow:0 6px 18px '+mix(a,bg,.6)+'!important}'
++'.b2.ghost,.b2.red{background:linear-gradient('+c1+','+c2+')!important;border-color:'+ln+'!important;color:#fff!important;box-shadow:none!important}.b2.red{color:#ff8f82!important}'
++'.tabs button{background:linear-gradient('+c1+','+c2+')!important;border-color:'+ln+'!important}'
++'@media(min-width:901px){#dashView>#dtabs{background:linear-gradient(160deg,'+c1+','+c2+')!important;border-color:'+ln+'!important}}'
++'a,.linkbtn,.tag{color:'+al+'}.tag{background:'+mix(a,bg,.78)+'!important}'
++'footer,.mz-footer{background:linear-gradient(135deg,'+mix(bg,'#000000',.4)+','+bg+')!important}'
++'input,select,textarea{background:'+mix(bg,'#000000',.3)+'!important;border-color:'+ln+'!important}'}
+function apply(t){CUR=t;var st=document.getElementById('mz-theme-css');if(!st){st=document.createElement('style');st.id='mz-theme-css';document.head.appendChild(st)}st.textContent=t?css(t):''}
+function ok(t){return t&&/^#[0-9a-fA-F]{6}$/.test(t.accent||'')&&/^#[0-9a-fA-F]{6}$/.test(t.bg||'')&&lum(t.bg)<.35}
+try{var sv=JSON.parse(localStorage.getItem('mz-theme')||'null');if(ok(sv))apply(sv)}catch(e){}
+function draw(){var T=TMP||CUR||DEF;document.getElementById('thAcc').innerHTML=ACC.map(function(c){return'<button type="button" data-a="'+c+'" aria-label="'+c+'" style="width:36px;height:36px;border-radius:50%;border:'+(T.accent.toLowerCase()===c.toLowerCase()?'3px solid #fff':'2px solid #2a3644')+';background:'+c+';cursor:pointer"></button>'}).join('');
+document.getElementById('thBg').innerHTML=BG.map(function(b){return'<button type="button" data-b="'+b[1]+'" style="padding:8px 12px;border-radius:10px;border:'+(T.bg.toLowerCase()===b[1]?'2px solid #fff':'1px solid #2a3644')+';background:'+b[1]+';color:#fff;font-size:13px;cursor:pointer">'+b[0]+'</button>'}).join('');document.getElementById('thCustom').value=T.accent;
+[].forEach.call(document.querySelectorAll('#thAcc [data-a]'),function(b){b.onclick=function(){TMP={accent:b.dataset.a,bg:(TMP||CUR||DEF).bg};apply(TMP);draw()}});
+[].forEach.call(document.querySelectorAll('#thBg [data-b]'),function(b){b.onclick=function(){TMP={accent:(TMP||CUR||DEF).accent,bg:b.dataset.b};apply(TMP);draw()}})}
+function open(){var bx=document.getElementById('themeBox');bx.hidden=false;bx.style.display='flex';TMP=null;draw()}
+function close(){var bx=document.getElementById('themeBox');bx.hidden=true;bx.style.display='none';if(TMP){apply(ST);TMP=null}}
+var ST=CUR;
+document.addEventListener('click',function(e){var t=e.target;if(t.id==='btnTheme'){ST=CUR;open()}else if(t.id==='thClose'){close()}else if(t.id==='thReset'){TMP=null;apply(null);try{localStorage.removeItem('mz-theme')}catch(x){}save(null);ST=null;close();document.getElementById('thMsg').textContent=''}else if(t.id==='thSave'){var v=TMP||CUR||DEF;if(!ok(v)){document.getElementById('thMsg').textContent='Choose a darker background.';return}apply(v);ST=v;TMP=null;try{localStorage.setItem('mz-theme',JSON.stringify(v))}catch(x){}save(v);var bx=document.getElementById('themeBox');bx.hidden=true;bx.style.display='none'}});
+document.addEventListener('input',function(e){if(e.target.id==='thCustom'){TMP={accent:e.target.value,bg:(TMP||CUR||DEF).bg};apply(TMP);draw()}});
+function save(v){try{if(window.MZ&&MZ.user())MZ.update('profiles','id=eq.'+MZ.user().id,{franchise_theme:v}).catch(function(){})}catch(e){}}
+function load(n){try{if(window.MZ&&MZ.user()){MZ.q('profiles','select=franchise_theme&id=eq.'+MZ.user().id).then(function(r){var t=r&&r[0]&&r[0].franchise_theme;if(ok(t)){apply(t);ST=t;try{localStorage.setItem('mz-theme',JSON.stringify(t))}catch(x){}}}).catch(function(){})}else if(n<10)setTimeout(function(){load(n+1)},700)}catch(e){}}
+setTimeout(function(){load(0)},800);
 })();
 </script>
 <footer class="mz-footer">
