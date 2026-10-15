@@ -260,7 +260,7 @@ body.has-list .wa-float{bottom:84px}
     <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
   </div>
 </header>
-<div class="mz-note">MOZLYT Mauritius is opening soon. Availability, delivery time and fee are confirmed on WhatsApp before you pay.</div>
+<div id="mz-soon" style="max-width:560px;margin:0 auto;padding:90px 20px;text-align:center"><div style="font-size:13px;letter-spacing:2px;font-weight:700;color:#C98E14">COMING SOON</div><h1 style="font-family:Georgia,serif;font-size:38px;margin:12px 0">MOZLYT Mauritius</h1><p style="color:#4a5b73;font-size:18px;line-height:1.55">We are not open in Mauritius yet. Check back soon.</p><p><a href="/" style="display:inline-block;margin-top:10px;padding:13px 22px;background:#10233f;color:#fff;border-radius:10px;font-weight:700;text-decoration:none">Back to MOZLYT</a></p></div><div id="mz-gate" hidden>
 <div class="hero"><div class="wrap"><h1>Delivery &amp; Returns</h1><p>How MOZLYT delivers products, handles cancellations, returns and refunds.</p></div></div>
 <div class="legal"><div class="wrap">
 <p class="upd">Last updated: 14 October 2026</p>
@@ -285,6 +285,7 @@ body.has-list .wa-float{bottom:84px}
 <li>Shop plans and training fees: if you were charged by mistake or twice, contact us and we will refund the extra payment.</li></ul>
 <h2>How to start a return or refund</h2>
 <p>Message us on WhatsApp with your name, order or booking details and a photo if the item is damaged.</p><div class="note"><strong>Contact MOZLYT</strong><br>WhatsApp: <a href="https://wa.me/233538729743">053 872 9743</a><br>Email: <a href="mailto:info@mozlyt.com">info@mozlyt.com</a><br>Port Louis, Mauritius</div></div></div>
+</div>
 <footer class="mz-footer">
   <div class="mz-wrap mz-fgrid">
     <div class="mz-fbrand">
@@ -348,6 +349,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
   window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
 })();
 </script>
+<script>(function(){var cc='mu';fetch('https://ziaoopnwhmmrtnmeotia.supabase.co/rest/v1/rpc/public_stats',{method:'POST',headers:{apikey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppYW9vcG53aG1tcnRubWVvdGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MTA0MDAsImV4cCI6MjEwNzQ4NjQwMH0.YVeqd4OzvIRnQQN3zPrbh4K_46RWKXQTULz41uAR0Ms',Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppYW9vcG53aG1tcnRubWVvdGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MTA0MDAsImV4cCI6MjEwNzQ4NjQwMH0.YVeqd4OzvIRnQQN3zPrbh4K_46RWKXQTULz41uAR0Ms','Content-Type':'application/json'},body:'{}'}).then(function(r){return r.json()}).then(function(d){if(d&&d.live_countries&&d.live_countries.indexOf(cc)>-1){document.getElementById('mz-soon').remove();document.getElementById('mz-gate').hidden=false}}).catch(function(){})})()</script>
 <script>try{localStorage.setItem('mz-cc','mu')}catch(e){}</script>
 </body>
 </html>

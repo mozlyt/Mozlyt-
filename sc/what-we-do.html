@@ -271,7 +271,7 @@ body.has-list .wa-float{bottom:84px}
     <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
   </div>
 </header>
-<div class="mz-note">MOZLYT Seychelles is opening soon. Availability, delivery time and fee are confirmed on WhatsApp before you pay.</div>
+<div id="mz-soon" style="max-width:560px;margin:0 auto;padding:90px 20px;text-align:center"><div style="font-size:13px;letter-spacing:2px;font-weight:700;color:#C98E14">COMING SOON</div><h1 style="font-family:Georgia,serif;font-size:38px;margin:12px 0">MOZLYT Seychelles</h1><p style="color:#4a5b73;font-size:18px;line-height:1.55">We are not open in Seychelles yet. Check back soon.</p><p><a href="/" style="display:inline-block;margin-top:10px;padding:13px 22px;background:#10233f;color:#fff;border-radius:10px;font-weight:700;text-decoration:none">Back to MOZLYT</a></p></div><div id="mz-gate" hidden>
 
 <div class="hero">
   <div class="wrap">
@@ -362,6 +362,7 @@ body.has-list .wa-float{bottom:84px}
   </div>
 </section>
 
+</div>
 <footer class="mz-footer">
   <div class="mz-wrap mz-fgrid">
     <div class="mz-fbrand">
@@ -419,6 +420,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
   window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
 })();
 </script>
+<script>(function(){var cc='sc';fetch('https://ziaoopnwhmmrtnmeotia.supabase.co/rest/v1/rpc/public_stats',{method:'POST',headers:{apikey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppYW9vcG53aG1tcnRubWVvdGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MTA0MDAsImV4cCI6MjEwNzQ4NjQwMH0.YVeqd4OzvIRnQQN3zPrbh4K_46RWKXQTULz41uAR0Ms',Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppYW9vcG53aG1tcnRubWVvdGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MTA0MDAsImV4cCI6MjEwNzQ4NjQwMH0.YVeqd4OzvIRnQQN3zPrbh4K_46RWKXQTULz41uAR0Ms','Content-Type':'application/json'},body:'{}'}).then(function(r){return r.json()}).then(function(d){if(d&&d.live_countries&&d.live_countries.indexOf(cc)>-1){document.getElementById('mz-soon').remove();document.getElementById('mz-gate').hidden=false}}).catch(function(){})})()</script>
 <script>try{localStorage.setItem('mz-cc','sc')}catch(e){}</script>
 </body>
 </html>
