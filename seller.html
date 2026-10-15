@@ -911,6 +911,8 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   /* ----- start ----- */
   var h=MZ.takeHash();show('authView',true);view('fLogin');if(WANT&&!MZ.loggedIn())view('fSign');
+  try{var qr=new URLSearchParams(location.search),th=qr.get('token_hash');if(th&&qr.get('type')==='recovery'){history.replaceState(null,'',location.pathname);view('fLogin');
+    MZ.verifyRecovery(th).then(function(){view('fReset');note(authNote,'info','Choose a new password.')},function(){view('fLogin');note(authNote,'err','This link has expired or was already used. Tap Forgot password to get a new one.')});return}}catch(e){}
   if(h&&h.error)note(authNote,'err',h.error);
   if(h&&h.type==='recovery'){view('fReset');note(authNote,'info','Choose a new password.');return}
   if(h&&h.type==='signup')flash('Email confirmed. Welcome!');

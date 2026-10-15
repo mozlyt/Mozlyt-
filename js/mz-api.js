@@ -79,7 +79,14 @@
       return Promise.resolve();
     },
     recover: function (email) {
-      return call('/auth/v1/recover?redirect_to=' + encodeURIComponent(SITE + 'seller.html'), { method: 'POST', body: { email: email } });
+      // Branded MOZLYT email with a link that opens on mozlyt.com; falls back to the plain Supabase email if that is not available.
+      return fetch(URL_ + '/functions/v1/send-password-reset', { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email }) })
+        .then(function (r) { if (!r.ok) throw new Error('x'); return r.json(); })
+        .catch(function () { return call('/auth/v1/recover?redirect_to=' + encodeURIComponent(SITE + 'seller.html'), { method: 'POST', body: { email: email } }); });
+    },
+    verifyRecovery: function (tokenHash) {
+      return call('/auth/v1/verify', { method: 'POST', body: { type: 'recovery', token_hash: tokenHash } }).then(function (j) {
+        if (!j || !j.access_token) throw new Error('This link has expired or was already used.'); saveTokens(j); return true; });
     },
     updatePassword: function (password) {
       return freshToken().then(function (t) { if (!t) throw new Error('Your link has expired. Request a new one.'); return call('/auth/v1/user', { method: 'PUT', body: { password: password } }, t); });
