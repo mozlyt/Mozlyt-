@@ -570,7 +570,7 @@ body.has-list .wa-float{bottom:84px}
 <script>(function(){function E(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function go(){if(!window.MZ||!MZ.rpc){return setTimeout(go,300)}var sec=document.getElementById('proof'),n=0;
 Promise.all([MZ.rpc('public_stats',{}).catch(function(){return null}),MZ.q('proof_stories','select=name,role,quote&approved=eq.true&country=eq.'+(MZ.cc||'gh')+'&order=created_at.desc&limit=3').catch(function(){return[]})]).then(function(a){var st=a[0],sr=a[1]||[],h='';
-if(st){[['shops','online shops opened'],['orders','orders handled'],['bookings','service requests']].forEach(function(p){var v=+st[p[0]]||0;if(v>=1){n++;h+='<div class="step"><em>'+v+'</em><h3>'+p[1]+'</h3></div>'}})}
+if(st&&(MZ.cc||'gh')==='gh'){[['shops','online shops opened'],['orders','orders handled'],['bookings','service requests']].forEach(function(p){var v=+st[p[0]]||0;if(v>=1){n++;h+='<div class="step"><em>'+v+'</em><h3>'+p[1]+'</h3></div>'}})}
 document.getElementById('proofStats').innerHTML=h;
 document.getElementById('proofStories').innerHTML=sr.map(function(x){n++;return'<div class="step"><p>&ldquo;'+E(x.quote)+'&rdquo;</p><h3>'+E(x.name)+'</h3><em>'+E(x.role||'')+'</em></div>'}).join('');
 if(n)sec.hidden=false})}
