@@ -440,7 +440,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   function boot(){show('authView',false);
     return MZ.q('profiles','select=*&id=eq.'+MZ.user().id).then(function(p){
-      ME=p&&p[0];if(ME)MZ.setCountry(ME.franchise_country);if(!ME||!ME.franchise){show('dashView',false);show('authView',true);note(aNote,'err','This account is not a franchise yet. Sign up as a franchise, and MOZLYT will activate it once the terms are agreed.');return}
+      ME=p&&p[0];if(ME)MZ.setCountry(ME.franchise_country);if(!ME||!ME.franchise){show('dashView',false);try{localStorage.setItem('mz-fran','1')}catch(e){}location.replace('seller.html?kind=franchise');return}
       var kc=mzCountry(ME.franchise_country);$('#brName').innerHTML=mzFlag(ME.franchise_country,28)+esc('MOZLYT '+(kc?kc.c:'')+' franchise')+(kc?'<span class="sub" style="display:block;font-size:15px;font-weight:500;margin-top:4px">'+esc(kc.n)+'</span>':'');$('#who').textContent=(ME.full_name||'')+(ME.email?' · '+ME.email:'');show('dashView',true);
       return Promise.all([MZ.q('profiles','select=id,full_name,store_name,store_slug,phone,email,sub_expires_at,plan,tier,training_paid,status,created_at&franchise_id=eq.'+ME.id+'&order=created_at.desc'),MZ.q('subscription_payments','select=*&franchise_id=eq.'+ME.id+'&order=created_at.desc&limit=200'),MZ.q('franchise_product_prices','select=product_id,price&franchise_id=eq.'+ME.id),MZ.q('products','select=id,name,category,photo,status&order=sort,name'),MZ.q('billing_settings','select=*&id=eq.1'),MZ.rpc('get_my_prices')]).then(function(r){
         return(r[0]&&r[0].length?MZ.q('orders','select=*&seller_id=in.('+r[0].map(function(x){return x.id}).join(',')+')&order=created_at.desc&limit=200'):Promise.resolve([])).then(function(o){

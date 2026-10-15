@@ -636,7 +636,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       if(wf&&!ME.franchise){return showFran()}
       var qk2='';try{qk2=new URLSearchParams(location.search).get('kind')||''}catch(e){}
       if(!ME.franchise){return MZ.q('franchise_applications','select=status&user_id=eq.'+MZ.user().id+'&order=created_at.desc&limit=1').then(function(fa){var st=fa&&fa[0]&&fa[0].status;
-        if((st==='approved'||st==='new')&&qk2==='franchise'){return showFran()}
+        if(qk2==='franchise'){return showFran()}
         var r=enterDash();
         if(st==='approved'||st==='new'){try{dashNote.innerHTML='<div class="msg ok">'+(st==='approved'?'<b>Your franchise application is approved.</b> <a href="seller.html?kind=franchise">Pay the franchise fee to open it</a>':'<b>Your franchise application is being checked.</b> <a href="seller.html?kind=franchise">See where it is</a>')+'</div>'}catch(e){}}
         return r},function(){return enterDash()})}
