@@ -68,3 +68,6 @@ img.mz-mark{background:transparent}
 .mz-footer .mz-social a{background:#fff}
 .mz-header{background:#05070a!important;border-bottom:1px solid #18202a!important}
 .mz-header a,.mz-header .mz-logo{color:#fff!important}
+/* the front desk photo on the home page stays exactly as designed */
+.hero#top{background:#0E2A47 image-set(url(/img/photos/hero-desk.webp) type("image/webp"),url(/img/photos/hero-desk.jpg) type("image/jpeg")) no-repeat 78% 16%/cover!important}
+.hero#top h1{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;-webkit-text-fill-color:#fff!important;color:#fff!important;font-family:inherit!important;font-weight:inherit!important;letter-spacing:normal}
