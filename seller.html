@@ -305,7 +305,7 @@ body.has-list .wa-float{bottom:84px}
     </form>
 
     <form id="fSign" class="f" hidden>
-      <div class="paths" id="kindPick" style="margin-bottom:4px"><label class="pathc on" id="kShop"><input type="radio" name="kind" value="shop" checked style="display:none"><b>Take a shop</b><span>Sell online with a free trial. Training is included.</span></label><label class="pathc" id="kTrain"><input type="radio" name="kind" value="trainee" style="display:none"><b>Training only</b><span>Sign up and learn the lessons. No shop. From GH&#8373;100, paid once.</span></label><label class="pathc" id="kFran"><input type="radio" name="kind" value="franchise" style="display:none"><b>Franchise</b><span>Open a MOZLYT branch in your city or country.</span></label></div>
+      <div class="paths" id="kindPick" style="margin-bottom:4px"><label class="pathc on" id="kShop"><input type="radio" name="kind" value="shop" checked style="display:none"><b>Take a shop</b><span>Sell online with a free trial. Training is included.</span></label><label class="pathc" id="kTrain"><input type="radio" name="kind" value="trainee" style="display:none"><b>Training only</b><span>Sign up and learn the lessons. No shop. From GH&#8373;100, paid once.</span></label><label class="pathc" id="kFran" style="display:none"><input type="radio" name="kind" value="franchise" style="display:none"><b>Franchise</b><span>Open a MOZLYT branch in your city or country.</span></label></div>
       <div id="acctFields" class="f">
       <label>Your full name<input id="sName" autocomplete="name" required maxlength="80"></label>
       <label>WhatsApp number<input id="sPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 024 123 4567" required maxlength="20"><small id="phHint">Customers from your store will message this number.</small></label>
@@ -582,7 +582,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#kindNote').textContent=fr?'You get a training account now. Once we agree your terms, your franchise dashboard opens.':k==='trainee'?'You will get your own training dashboard. Choose your lessons and pay once. You can add a shop later.':'Start with a free trial. After that, keep your store open with a monthly or yearly plan.'}
   $$('input[name=kind]').forEach(function(i){i.onchange=function(){setKind(i.value)}});
   function pickName(){return PICK.indexOf('tier:')===0?cap(PICK.slice(5))+' shop plan':PICK==='basic'?'Business lessons (Basic)':PICK==='pro'?'Pro: everything':PICK.indexOf('skill:')===0?skName(PICK.slice(6)):''}
-  try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='franchise'||qk==='shop'){try{if(qk==='franchise')localStorage.setItem('mz-fran','1');else localStorage.removeItem('mz-fran')}catch(e){}setKind(qk);WANT=true;$('#kindPick').hidden=true;
+  try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='shop'){try{if(qk==='franchise')localStorage.setItem('mz-fran','1');else localStorage.removeItem('mz-fran')}catch(e){}setKind(qk);WANT=true;$('#kindPick').hidden=true;
     var T={trainee:['Sign up for training','Create your account to start learning. The business lessons are free.'],franchise:['Sign up as a franchise','Create your account and tell us where you want to open your MOZLYT branch.'],shop:['Take a shop','Create your account and your dashboard opens straight away. Your first 7 days are free. Cancel any time.']}[qk];$('#authTitle').textContent=T[0];$('#authSub').textContent=T[1];if((qk==='trainee'||qk==='shop')&&PICK){$('#kindNote').textContent='You chose: '+pickName()+'. Create your account and your dashboard opens with it.'+(PICK==='basic'?' The business lessons are free.':PICK.indexOf('tier:')===0?' Your free trial starts now. Pay when you are ready to keep the store open.':' You pay once there.')}}}catch(e){}
   /* ----- tabs ----- */
   var PANES=['over','prod','ord','learn','sub','set','acc','fr','more'];
@@ -906,7 +906,6 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       <a href="provider.html">Work with us</a>
       <a href="what-we-do.html#skill">Take a skill</a>
       <a href="what-we-do.html#sellers">Take a shop</a>
-      <a href="what-we-do.html#franchise">Franchise</a>
       <a href="what-we-do.html">What we do</a>
     </div>
     <div>
