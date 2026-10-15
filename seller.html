@@ -558,7 +558,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     busy(b,true,'Creating...');note(authNote,'','');
     MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:KIND!=='shop'?'':$('#sStore').value.trim(),store_slug:KIND!=='shop'?'':$('#sSlug').value,tier:pickTier(),ref:REF,kind:KIND,country:(function(){try{return(localStorage.getItem('mz-cc')||'').toUpperCase()}catch(e){return''}})()}).then(function(r){
       if(KIND==='franchise'){try{localStorage.setItem('mz-fran','1')}catch(e){}}
-      if(r.confirmed){boot()}else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(authNote,'ok','Account created. Log in with your email and password to open your dashboard.')}
+      if(r.confirmed){boot()}else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(authNote,'err','This email already has a MOZLYT account, and it was created with a different password. Log in with that password, or tap Forgot your password to choose a new one.')}
     },function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Sending...');
     MZ.recover($('#fEmail').value.trim()).then(function(){note(authNote,'ok','If that email has an account, a reset link is on its way.')},function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
