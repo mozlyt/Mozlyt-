@@ -271,6 +271,7 @@ body.has-list .wa-float{bottom:84px}
 </style>
 
 <style id="mz-fr">
+.capLock>*:not(.capCard){display:none!important}
 .lvgrid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px;margin:0 0 20px}
 @media(max-width:820px){.lvgrid{grid-template-columns:minmax(0,1fr)}}
 .lvh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.lvh b{font-size:16px}.lvh small{color:var(--mute)}
@@ -443,7 +444,10 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function orders(){var f=$('#of').value;$('#frOrd').innerHTML=FR.ord.filter(function(o){return!f||o.status===f}).map(ordRow).join('')||'<div class="empty">No recruit orders yet.</div>'}
   $('#of').onchange=orders;
 
+  function capUI(){var ok=!!(ME&&ME.capital_unlocked);['prod','price','link'].forEach(function(t){var p=$('#pane-'+t);if(!p)return;p.classList.toggle('capLock',!ok);var c=p.querySelector('.capCard');if(!ok&&!c){c=document.createElement('div');c.className='card2 capCard';p.insertBefore(c,p.firstChild)}if(ok&&c)c.remove();if(c)c.innerHTML='<h3 style="margin:0 0 6px">Locked: add capital to start your business</h3><p class="sub">Your subscription gives you access to the platform. To take the business, MOZLYT supplies your products against your capital'+(ME.capital_amount!=null?' of <b>'+MZ.money(ME.capital_amount)+'</b>':'')+'. Once MOZLYT confirms it, you can set prices, open your shop and recruit sellers.</p><a class="btn" target="_blank" rel="noopener" href="https://wa.me/233538729743?text='+encodeURIComponent('Hello MOZLYT, I am the franchise for '+(ME.store_name||'my country')+'. I want to add capital and unlock my business.')+'">Talk to MOZLYT on WhatsApp</a>'});
+    var cb=$('#btnMktTop');}
   function draw(){
+    capUI();
     var until=ME.franchise_expires_at?new Date(ME.franchise_expires_at).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'';
     var terms=ME.franchise_fee!=null?MZ.money(ME.franchise_fee)+' '+(ME.franchise_plan==='yearly'?'a year':'a month'):'the agreed amount';
     var due=ME.franchise_expires_at&&new Date(ME.franchise_expires_at)<=new Date(),live=frLive();var soon=(!due&&ME.franchise_expires_at)?Math.ceil((new Date(ME.franchise_expires_at)-new Date())/864e5):0;if(soon>7)soon=0;
