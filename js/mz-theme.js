@@ -37,6 +37,7 @@ return 'html,body,#dtabs{background:'+bg+'!important;color:'+ink+'}html body mai
 +'html body .sub,html body .m,html body small,html body .note,html body .stat span,html body .tbl th{color:'+mute+'!important}'
 +'html body a,html body .linkbtn,html body .row-h a{color:'+ad+'}'
 +'.mz-hd,header,.mz-bar,.mz-header,.mz-header .mz-bar,.trust,.chips{background:'+bg+'!important;border-color:'+ln+'!important}html body .mz-header .mz-nav a:not(.mz-btn),html body .mz-header .mz-logo,html body .mz-header a.mz-logo{color:'+ink+'!important}html body .mz-header .mz-logo span{color:'+ad+'!important}@media(max-width:860px){html body .mz-header .mz-nav{background:'+bg+'!important;border-color:'+ln+'!important}html body .mz-header .mz-nav>a,html body .mz-header .mz-nav a.mz-cur{border-bottom-color:'+ln+'!important}}'
++'html body .mz-burger{background:#fff!important;border-color:'+ln+'!important}html body .mz-burger span{background:'+ink+'!important}html body a.mz-btn.mz-gold,html body a.btn.gold{background:#fff6dc!important;border:1.5px solid #E0A526!important;color:#8a5a00!important;box-shadow:none!important}'
 +L+'{background:'+card+'!important;border-color:'+ln+'!important;color:'+ink+'!important}'
 +'.tbl th{background:'+c1+'!important}.tbl th,.tbl td{border-color:'+ln+'!important}'
 +B+'{background:linear-gradient(135deg,'+mix(bg,a,.16)+' 0%,'+mix(bg,a,.07)+' 100%)!important}footer,.mz-footer,.mz-ft{background:'+mix(bg,'#000000',.06)+'!important;border-top:1px solid '+ln+'}'
