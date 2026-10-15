@@ -556,7 +556,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#fSign').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);var ph=$('#sPhone').value.replace(/[^\d+]/g,'');
     if(ph.replace(/\D/g,'').length<9){note(authNote,'err','Please enter a valid WhatsApp number.');return}
     busy(b,true,'Creating...');note(authNote,'','');
-    MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:KIND!=='shop'?'':$('#sStore').value.trim(),store_slug:KIND!=='shop'?'':$('#sSlug').value,tier:pickTier(),ref:REF,kind:KIND}).then(function(r){
+    MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:$('#sName').value.trim(),phone:ph,store_name:KIND!=='shop'?'':$('#sStore').value.trim(),store_slug:KIND!=='shop'?'':$('#sSlug').value,tier:pickTier(),ref:REF,kind:KIND,country:(function(){try{return(localStorage.getItem('mz-cc')||'').toUpperCase()}catch(e){return''}})()}).then(function(r){
       if(KIND==='franchise'){try{localStorage.setItem('mz-fran','1')}catch(e){}}
       if(r.confirmed){boot()}else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(authNote,'ok','Account created. We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in here. Check your spam folder if you do not see it.')}
     },function(er){note(authNote,'err',er.message)}).then(function(){busy(b,false)})};
