@@ -1,0 +1,15 @@
+{
+  "id": "/seller.html",
+  "name": "MOZLYT",
+  "short_name": "MOZLYT",
+  "description": "Your MOZLYT dashboard: your shop, orders, products and training.",
+  "start_url": "/seller.html?app=1",
+  "scope": "/seller",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#0E2A47",
+  "icons": [
+    {"src": "/img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
