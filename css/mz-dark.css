@@ -88,3 +88,9 @@ img.mz-mark{background:transparent}
 .hero#top .book button{background-image:none!important;color:rgb(255, 255, 255)!important;background-color:rgb(31, 157, 107)!important;border-width:2px!important;border-style:solid!important;border-radius:10px!important;box-shadow:none!important;font-family:system-ui, -apple-system, "Segoe UI", Roboto, sans-serif!important;font-weight:600!important;-webkit-text-fill-color:rgb(255, 255, 255)!important}
 .hero#top h1{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important}
 .hero#top{background:#0E2A47 image-set(url(/img/photos/hero-desk.webp) type("image/webp"),url(/img/photos/hero-desk.jpg) type("image/jpeg")) no-repeat 78% 16%/cover!important}
+/* calm premium hero: lighter, softer overlay so the photo breathes */
+.hero#top::before{background:linear-gradient(180deg,rgba(8,36,44,.66) 0%,rgba(10,44,52,.46) 38%,rgba(12,48,54,.30) 62%,rgba(8,30,38,.58) 100%),radial-gradient(120% 70% at 50% 108%,rgba(31,157,107,.20),transparent 62%)!important}
+.hero#top::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;display:block!important;background:radial-gradient(60% 42% at 70% 46%,rgba(255,226,190,.20),transparent 70%);animation:mzCalm 9s ease-in-out infinite alternate}
+@keyframes mzCalm{from{opacity:.55;transform:scale(1)}to{opacity:1;transform:scale(1.06)}}
+@media(min-width:900px){.hero#top::before{background:linear-gradient(90deg,rgba(8,36,44,.78) 0%,rgba(10,44,52,.52) 40%,rgba(12,48,54,.16) 72%,rgba(8,30,38,.06) 100%),radial-gradient(90% 60% at 50% 110%,rgba(31,157,107,.16),transparent 62%)!important}}
+@media(prefers-reduced-motion:reduce){.hero#top::after{animation:none}}
