@@ -432,18 +432,7 @@ body.has-list .wa-float{bottom:84px}
         <div class="mrow"><span>Walking pad</span><b>DELIVERED</b></div>
       </div>
     </div>
-    <div class="dash slide">
-      <div class="d-bar"><span>Franchise dashboard</span><span>Your branch</span></div>
-      <div class="d-body mini">
-        <div class="mtabs"><i class="on">Overview</i><i>Recruits</i><i>Payments</i><i>Recruit orders</i><i>Prices</i><i>Recruit link</i></div>
-        <div class="mgrid"><div class="mst"><b>18</b><small>Recruits</small></div><div class="mst"><b>14</b><small>Active stores</small></div><div class="mst"><b>3</b><small>Payments waiting</small></div><div class="mst"><b>GH₵3,200</b><small>Earned this month</small></div></div>
-        <div class="mtable"><div class="mth"><span>Store</span><span>Plan</span><span>Status</span></div>
-          <div class="mtr"><span><b>Store one</b></span><span>plus monthly</span><span class="g">active</span></div>
-          <div class="mtr"><span><b>Store two</b></span><span>standard</span><span class="g">active</span></div>
-          <div class="mtr"><span><b>Store three</b></span><span>trainee</span><span class="r">expired</span></div></div>
-      </div>
-    </div>
-    </div><div class="ddots" id="ddots"><i class="on"></i><i></i><i></i></div></div>
+    </div><div class="ddots" id="ddots"><i class="on"></i><i></i></div></div>
   </div>
 </section>
 
@@ -474,11 +463,8 @@ body.has-list .wa-float{bottom:84px}
           <label class="lvc"><input type="radio" name="sl" value="premium"><span><b>Premium</b><em id="prRa">GH&#8373;150 a month</em></span></label>
         </div>
         <a class="btn primary" id="shopBtn" href="/seller.html?kind=shop&amp;item=tier:standard">Subscribe</a></div>
-      <div class="plan best pl"><div class="ph"><h3>Franchise</h3><b id="prFr">GH&#8373;1,000 a month</b></div><p class="sub" style="margin:4px 0 12px">Your own MOZLYT branch in your city or country. You agree to our franchise terms and send your ID card and a certificate. <b>If it reads management or marketing, your dashboard opens at once with 7 days free.</b></p>
-        <details><summary>What you get</summary><ul class="inc"><li>Needs your ID card, a manager certificate and agreement to the MOZLYT terms, checked before you get access</li><li>A management or marketing certificate opens your dashboard at once, with 7 days free, then GH&#8373;1,000 a month. Other certificates are checked within about 2 working days</li><li>Open a MOZLYT location in your city or country, for example in Nigeria</li><li>Everything in Take a shop</li><li>Every lesson and every skill</li><li>Your own dashboard, like a MOZLYT branch</li><li>Recruit and train your own sellers</li><li>Set the prices your recruits sell and charge at</li><li>Their payments go to you</li><li>Best wholesale prices from MOZLYT</li><li>Your partner price is agreed with us, from <span id="prFr2">GH&#8373;1,000 a month</span></li></ul></details>
-        <a class="btn primary" href="/seller.html?kind=franchise">Subscribe</a></div>
     </div>
-    <p class="note">Message us on WhatsApp if you have questions. Franchise: agree to our terms and send your ID and a management or marketing certificate for an instant start. Other certificates are checked within about 2 working days.</p>
+    <p class="note">Message us on WhatsApp if you have questions.</p>
   </div>
 </section>
 
@@ -513,7 +499,6 @@ body.has-list .wa-float{bottom:84px}
       <a href="/provider.html">Work with us</a>
       <a href="/ng/what-we-do.html#skill">Take a skill</a>
       <a href="/ng/what-we-do.html#sellers">Take a shop</a>
-      <a href="/ng/what-we-do.html#franchise">Franchise</a>
       <a href="/ng/what-we-do.html">What we do</a>
     </div>
     <div>
@@ -542,7 +527,6 @@ var PLATFORM_URL="";
   var WA="233538729743";
   document.querySelectorAll('a.go').forEach(function(a){
     var label=a.textContent.trim();
-    if(label==="Sign up as a franchise"){a.href="/seller.html?kind=franchise";return}
     if(label!=="Talk to us"){a.href=label==="Sign up for training"?"/seller.html?kind=trainee&item=basic":"/seller.html?kind=shop";return}
     var m=a.getAttribute("data-msg")||"Hello MOZLYT, I would like to join the network ("+label+"). Please tell me how it works and what the next step is.";
     a.href="https://wa.me/"+WA+"?text="+encodeURIComponent(m);
@@ -602,7 +586,7 @@ homecare:["Basics of caring for someone at home","Hygiene, safe lifting and movi
   function m(n){return'GH\u20B5'+Number(n).toLocaleString('en-GB')}
   function set(id,t){var e=document.getElementById(id);if(e)e.textContent=t}
   var t=setInterval(function(){if(!window.MZ||!MZ.rpc)return;clearInterval(t);MZ.rpc('public_prices',{}).then(function(p){if(!p)return;
-    set('prFr',m(p.franchise_price)+' a month');set('prFr2',m(p.franchise_price)+' a month');set('prS0',m(p.monthly_price));
+    set('prS0',m(p.monthly_price));
     set('prS',m(p.monthly_price)+' a month or '+m(p.yearly_price)+' a year');set('prP',m(p.plus_monthly)+' a month or '+m(p.plus_yearly)+' a year');set('prR',m(p.premium_monthly)+' a month or '+m(p.premium_yearly)+' a year');
     set('prT',p.trial_days);set('prSa',m(p.monthly_price)+' a month');set('prPa',m(p.plus_monthly)+' a month');set('prRa',m(p.premium_monthly)+' a month');set('prB',Number(p.training_price)===0?'Free':m(p.training_price));set('prO',m(p.training_pro_price))},function(){})},150);setTimeout(function(){clearInterval(t)},8000);
 })();
