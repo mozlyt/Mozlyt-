@@ -94,3 +94,4 @@ img.mz-mark{background:transparent}
 @keyframes mzCalm{from{opacity:.55;transform:scale(1)}to{opacity:1;transform:scale(1.06)}}
 @media(min-width:900px){.hero#top::before{background:linear-gradient(90deg,rgba(8,36,44,.78) 0%,rgba(10,44,52,.52) 40%,rgba(12,48,54,.16) 72%,rgba(8,30,38,.06) 100%),radial-gradient(90% 60% at 50% 110%,rgba(31,157,107,.16),transparent 62%)!important}}
 @media(prefers-reduced-motion:reduce){.hero#top::after{animation:none}}
+@media(max-width:860px){.mz-nav>a,.mz-nav a.mz-cur{border-bottom-color:#1f2a36!important}.mz-nav a.mz-cur{color:#34c78d!important}}
