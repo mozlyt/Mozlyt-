@@ -475,7 +475,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
 
   /* ---- alerts: new applications, orders, bookings, sign-ups, payments ---- */
-  var WSRC=[['bookings','','New booking'],['orders','','New order'],['profiles','','New sign-up'],['franchise_applications','&status=eq.new','New franchise request'],['provider_applications','&status=eq.new','New Work with us application'],['subscription_payments','&status=eq.pending','New payment to confirm']],WSEEN={},WUNREAD=0,WT=null,BASE_TITLE=document.title;
+  var WSRC=[['bookings','','New booking'],['orders','','New order'],['profiles','','New sign-up'],['franchise_applications','&status=eq.new&created_at=gte.'+new Date(Date.now()-14*864e5).toISOString(),'New franchise request'],['provider_applications','&status=eq.new','New Work with us application'],['subscription_payments','&status=eq.pending','New payment to confirm']],WSEEN={},WUNREAD=0,WT=null,BASE_TITLE=document.title;
   try{WSEEN=JSON.parse(localStorage.getItem('mzAdminSeen')||'{}')}catch(e){}
   function wsave(){try{localStorage.setItem('mzAdminSeen',JSON.stringify(WSEEN))}catch(e){}}
   function beep(){try{var c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.5);o.start();o.stop(c.currentTime+.5)}catch(e){}}
@@ -490,8 +490,9 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function wstart(){bell();if(WT)return;wcheck(true);WT=setInterval(function(){if(MZ.loggedIn())wcheck(false)},30000)}
   var FV={};try{FV=JSON.parse(sessionStorage.getItem('mz-fv')||'{}')}catch(e){}
   function fvOf(id){return FV[id]||{}}
-  function fapps(){var n=FAPP.filter(function(x){return x.status==='new'}).length;$('#tabFapp').textContent='Franchise requests'+(n?' ('+n+')':'');
-    $('#fappList').innerHTML=FAPP.map(function(x){var wa='https://wa.me/'+MZ.phoneIntl(x.phone)+'?text='+encodeURIComponent('Hello '+x.name+', this is MOZLYT about your franchise request.');
+  function stale(x){return x.status==='new'&&x.created_at&&(Date.now()-new Date(x.created_at).getTime())>14*864e5}
+  function fapps(){var FL=FAPP.filter(function(x){return!stale(x)});var n=FL.filter(function(x){return x.status==='new'}).length;$('#tabFapp').textContent='Franchise requests'+(n?' ('+n+')':'');
+    $('#fappList').innerHTML=FL.map(function(x){var wa='https://wa.me/'+MZ.phoneIntl(x.phone)+'?text='+encodeURIComponent('Hello '+x.name+', this is MOZLYT about your franchise request.');
       return'<div class="it"><div class="h"><b>'+mzFlag(x.country,16)+esc(x.name)+' &middot; '+esc((mzCountry(x.country)||{}).n||'')+(x.location?', '+esc(x.location):'')+'</b><span class="tag '+(x.status==='new'||(x.auto_approved&&!x.reviewed_at)?'warn':(x.status==='closed'||x.status==='rejected')?'bad':'')+'">'+(x.auto_approved&&x.status==='approved'?(x.reviewed_at?'auto-approved, checked':'auto-approved, not checked yet'):x.status)+'</span></div><div class="m">'+(x.cert_type?'Certificate: '+esc(x.cert_type)+(x.ocr_note?' ('+esc(x.ocr_note)+')':'')+' &middot; ':'')+esc(x.phone)+' &middot; <a href="mailto:'+esc(x.email)+'">'+esc(x.email)+'</a> &middot; '+MZ.when(x.created_at)+'</div>'+(x.message?'<div>'+esc(x.message)+'</div>':'')+
         (x.user_id?'<div class="m">Terms agreed '+(x.terms_accepted_at?MZ.when(x.terms_accepted_at):'no')+(x.review_note?' &middot; Note: '+esc(x.review_note):'')+'</div>'
           +'<div class="fa-step"><div class="fa-t">1. Check the documents</div><div class="fa-row"><button class="b2" data-doc="'+esc(x.id_path||'')+'" data-app="'+x.id+'" data-k="id" type="button">View ID card'+(fvOf(x.id).id?' &#10003;':'')+'</button><button class="b2" data-doc="'+esc(x.cert_path||'')+'" data-app="'+x.id+'" data-k="cert" type="button">View certificate'+(fvOf(x.id).cert?' &#10003;':'')+'</button></div></div>'
