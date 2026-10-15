@@ -472,7 +472,7 @@ body.has-list .wa-float{bottom:84px}
   <div class="wrap">
     <h2>Build a business that is truly yours</h2>
     <p>Join the MOZLYT network and start with training, supply and a coach who wants you to win.</p>
-    <a class="btn primary go" href="#">Join MOZLYT DZ</a>
+    <a class="btn primary" id="joinBtn" href="#plans">Join MOZLYT DZ</a>
   </div>
 </section>
 
@@ -517,6 +517,14 @@ body.has-list .wa-float{bottom:84px}
   </div>
 </footer>
 <p class="mz-part">MOZLYT Algeria is part of <a href="/">MOZLYT</a>.</p>
+<style>
+.jm{position:fixed;inset:0;background:rgba(16,35,63,.6);display:none;align-items:center;justify-content:center;z-index:9999;padding:16px}.jm.on{display:flex}
+.jm .bx{background:#fff;border-radius:18px;max-width:420px;width:100%;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative}
+.jm h3{margin:0;font-size:22px}.jm p{margin:0;color:#4a5b73}.jm .btn{display:block;text-align:center}
+.jm .x{position:absolute;top:10px;right:14px;background:none;border:0;font-size:26px;cursor:pointer;color:#4a5b73}
+</style>
+<div class="jm" id="joinModal" role="dialog" aria-modal="true" aria-labelledby="jmT"><div class="bx"><button class="x" type="button" id="jmX" aria-label="Close">&times;</button><h3 id="jmT">What would you like to do?</h3><p>Choose how you want to start with MOZLYT.</p><a class="btn primary" href="/seller.html?kind=trainee&amp;item=basic">Take a skill</a><a class="btn primary" href="/seller.html?kind=shop">Take a shop</a></div></div>
+<script>(function(){var b=document.getElementById('joinBtn'),m=document.getElementById('joinModal');if(!b||!m)return;b.addEventListener('click',function(e){e.preventDefault();m.classList.add('on')});document.getElementById('jmX').onclick=function(){m.classList.remove('on')};m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('on')});document.addEventListener('keydown',function(e){if(e.key==='Escape')m.classList.remove('on')})})();</script>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
