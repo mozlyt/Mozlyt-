@@ -156,6 +156,7 @@ textarea{min-height:110px;resize:vertical}
 body.has-list .wa-float{bottom:84px}
 </style>
 <link rel="stylesheet" href="/css/mz-dark.css">
+<script src="/js/mz-theme.js" defer></script>
 
 <style id="mz-dash">
 .btn[disabled],button.btn:disabled{background:#c9d1cc!important;border-color:#c9d1cc!important;color:#fff!important;cursor:not-allowed;opacity:1;box-shadow:none}
@@ -399,7 +400,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
   </div>
 </section>
 
-<div id="themeBox" hidden style="position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:16px"><div class="card2" style="max-width:440px;width:100%;max-height:90vh;overflow:auto"><h3 style="margin:0 0 4px">Your colors</h3><p class="sub" style="margin-bottom:12px">Choose the colors you like for your dashboard. Only you see them.</p>
+<div id="themeBox" hidden style="position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:16px"><div class="card2" style="max-width:440px;width:100%;max-height:90vh;overflow:auto"><h3 style="margin:0 0 4px">Your colors</h3><p class="sub" style="margin-bottom:12px">Choose the colors you like. They apply to your whole MOZLYT site: your dashboard and every page your customers see.</p>
 <b style="font-size:14px">Main color</b><div id="thAcc" style="display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 10px"></div><label style="display:flex;align-items:center;gap:10px;font-size:14px">Any color you want <input type="color" id="thCustom" value="#1F9D6B" style="width:48px;height:34px;padding:0;border:0;background:none"></label>
 <b style="font-size:14px;display:block;margin-top:14px">Background</b><div id="thBg" style="display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 14px"></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="b2" id="thSave" type="button">Save</button><button class="b2 ghost" id="thReset" type="button">Back to MOZLYT colors</button><button class="b2 ghost" id="thClose" type="button">Close</button></div><div id="thMsg" class="sub" style="margin-top:8px"></div></div></div>
@@ -540,6 +541,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 })();
 </script>
 
+<script>window.MZ_NO_COUNTRY_THEME=1</script><script src="js/mz-theme.js"></script>
 <script>
 (function(){
 var ACC=['#1F9D6B','#14B8A6','#06B6D4','#3B82F6','#6366F1','#A855F7','#EC4899','#EF4444','#F97316','#F2B134','#84CC16','#E5E7EB'];
@@ -549,16 +551,7 @@ function hx(h){h=h.replace('#','');return[parseInt(h.substr(0,2),16),parseInt(h.
 function toH(a){return'#'+a.map(function(v){v=Math.max(0,Math.min(255,Math.round(v)));return(v<16?'0':'')+v.toString(16)}).join('')}
 function mix(a,b,p){var x=hx(a),y=hx(b);return toH([x[0]+(y[0]-x[0])*p,x[1]+(y[1]-x[1])*p,x[2]+(y[2]-x[2])*p])}
 function lum(h){var c=hx(h);return(.299*c[0]+.587*c[1]+.114*c[2])/255}
-function css(t){var a=t.accent,a2=mix(a,'#000000',.38),bg=t.bg,c1=mix(bg,'#ffffff',.07),c2=mix(bg,'#000000',.25),ln=mix(bg,'#ffffff',.15),al=mix(a,'#ffffff',.35),bt=lum(a)>.62?'#05070a':'#ffffff';
-return 'body,html,#dtabs{background:'+bg+'!important}.mz-header .mz-bar,.mz-bar{background:'+bg+'!important}.mz-hd,header,.mz-bar,.mz-header{background:'+bg+'!important;border-color:'+ln+'!important}'
-+'.card2,.stat,.it,.per,.tbl,.mgroup{background:linear-gradient(145deg,'+c1+','+c2+')!important;border-color:'+ln+'!important}.tbl th{background:'+c1+'!important}.tbl th,.tbl td{border-color:'+ln+'!important}'
-+'.btn.primary,.b2,#dtabs button.on,.tabs button.on{background:linear-gradient(135deg,'+a+','+a2+')!important;border-color:'+a+'!important;color:'+bt+'!important;box-shadow:0 6px 18px '+mix(a,bg,.6)+'!important}'
-+'.b2.ghost,.b2.red{background:linear-gradient('+c1+','+c2+')!important;border-color:'+ln+'!important;color:#fff!important;box-shadow:none!important}.b2.red{color:#ff8f82!important}'
-+'.tabs button{background:linear-gradient('+c1+','+c2+')!important;border-color:'+ln+'!important}'
-+'@media(min-width:901px){#dashView>#dtabs{background:linear-gradient(160deg,'+c1+','+c2+')!important;border-color:'+ln+'!important}}'
-+'a,.linkbtn,.tag{color:'+al+'}.tag{background:'+mix(a,bg,.78)+'!important}'
-+'footer,.mz-footer{background:linear-gradient(135deg,'+mix(bg,'#000000',.4)+','+bg+')!important}'
-+'input,select,textarea{background:'+mix(bg,'#000000',.3)+'!important;border-color:'+ln+'!important}'}
+function css(t){return window.MZTheme?MZTheme.css(t):''}
 function apply(t){CUR=t;var st=document.getElementById('mz-theme-css');if(!st){st=document.createElement('style');st.id='mz-theme-css';document.head.appendChild(st)}st.textContent=t?css(t):''}
 function ok(t){return t&&/^#[0-9a-fA-F]{6}$/.test(t.accent||'')&&/^#[0-9a-fA-F]{6}$/.test(t.bg||'')&&lum(t.bg)<.35}
 try{var sv=JSON.parse(localStorage.getItem('mz-theme')||'null');if(ok(sv))apply(sv)}catch(e){}
