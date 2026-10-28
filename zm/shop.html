@@ -575,9 +575,12 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   /* keep the built-in list as a backup, then swap in the sheet when it loads */
   /* the admin product list is the source of truth once it loads */
   function mapRows(rows){return(rows||[]).filter(function(r){return r.status!=='hidden'}).map(function(r){return{cat:r.category||'',name:r.name,price:r.suggested_price==null?'':String(r.suggested_price),status:(r.status||'available')==='available'?'in stock':String(r.status).toLowerCase(),photo:r.photo?(/^(https?:|\/)/.test(r.photo)?r.photo:'/'+r.photo):'',desc:r.description||''}})}
-  function loadLive(){if(!window.MZ||!MZ.rpc)return;MZ.rpc('get_country_catalog',{p_country:MZ.cc}).then(function(rows){
-    var items=mapRows(rows||[]);ALL={};render(items);shelves.hidden=false;var cr=document.getElementById('chipsRow');if(cr)cr.style.display=items.length?'':'none';
-    if(!items.length){empty.innerHTML='Coming soon. Products are being added to this shop. Please check back soon.';empty.style.display='block'}else{empty.style.display='none'}}).catch(function(){render([]);shelves.hidden=false;empty.innerHTML='Coming soon. Products are being added to this shop. Please check back soon.';empty.style.display='block'})}
+  function paint(rows){var items=mapRows(rows||[]);ALL={};render(items);shelves.hidden=false;var cr=document.getElementById('chipsRow');if(cr)cr.style.display=items.length?'':'none';
+    if(!items.length){empty.innerHTML='Coming soon. Products are being added to this shop. Please check back soon.';empty.style.display='block'}else{empty.style.display='none'}}
+  function loadLive(){if(!window.MZ||!MZ.rpc)return;var K='mz-cat-'+MZ.cc,cached=null,tries=0;try{cached=JSON.parse(localStorage.getItem(K)||'null')}catch(e){}
+    if(cached&&cached.length)paint(cached);
+    (function go(){MZ.rpc('get_country_catalog',{p_country:MZ.cc}).then(function(rows){rows=rows||[];if(!rows.length&&tries++<2){setTimeout(go,1200);return}
+      try{localStorage.setItem(K,JSON.stringify(rows))}catch(e){}paint(rows)},function(){if(tries++<2){setTimeout(go,1200);return}if(!(cached&&cached.length))paint([])})})()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadLive);else loadLive();
   if(SHEET_CSV_URL&&window.fetch){
     fetch(SHEET_CSV_URL,{cache:'no-store'}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(tx){var items=fromCSV(tx);if(items.length)render(items)}).catch(function(){});
