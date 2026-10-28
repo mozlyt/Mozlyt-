@@ -191,3 +191,25 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
   }
 })();
+
+/* Price boxes: any <input data-money> adds the thousand commas as you type (12500 -> 12,500). */
+(function () {
+  if (!window.MZ) return;
+  MZ.unc = function (v) { return String(v == null ? '' : v).replace(/,/g, '').trim(); };
+  MZ.comma = function (v) {
+    var s = MZ.unc(v); if (s === '') return '';
+    var m = s.match(/^(\d*)(\.?)(\d{0,2})/); if (!m) return s;
+    var i = m[1].replace(/^0+(?=\d)/, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return i + m[2] + m[3];
+  };
+  document.addEventListener('input', function (e) {
+    var el = e.target; if (!el || !el.matches || !el.matches('input[data-money]')) return;
+    var pos = el.selectionStart, before = el.value, digitsBefore = before.slice(0, pos).replace(/[^\d.]/g, '').length;
+    var f = MZ.comma(before.replace(/[^\d.,]/g, '').replace(/(\..*)\./, '$1'));
+    if (f !== before) {
+      el.value = f; var n = 0, p = 0;
+      for (; p < f.length && n < digitsBefore; p++) if (/[\d.]/.test(f[p])) n++;
+      try { el.setSelectionRange(p, p); } catch (x) {}
+    }
+  });
+})();

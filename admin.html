@@ -394,8 +394,8 @@ form{background:transparent!important;border:0!important;padding:0!important}
         <label>Product name<input id="pfName" maxlength="140" required></label>
         <label>Category<input id="pfCat" maxlength="80" list="pfCats" required placeholder="Choose or type a new one"><datalist id="pfCats"></datalist></label>
         <label>Description (optional)<textarea id="pfDesc" rows="3" maxlength="1000"></textarea></label>
-        <label>Franchise price GH₵ (what franchises pay MOZLYT. Only franchises can see it)<input id="pfW" type="number" min="0" step="0.01" required></label>
-        <label>Suggested retail price GH₵<input id="pfS" type="number" min="0" step="0.01"></label>
+        <label>Franchise price GH₵ (what franchises pay MOZLYT. Only franchises can see it)<input id="pfW" type="text" inputmode="decimal" data-money required></label>
+        <label>Suggested retail price GH₵<input id="pfS" type="text" inputmode="decimal" data-money></label>
         <label>Status<select id="pfSt"><option>available</option><option>sold out</option></select></label>
         <label>Photo (JPG, PNG or WebP, under 5 MB)<input id="pfPhoto" type="file" accept="image/jpeg,image/png,image/webp"></label>
         <div id="pfPrev" class="sub"></div>
@@ -638,7 +638,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   var pfId=null,pfPhoto='';
   function pfOpen(id){pfId=id||null;var p=id?PROD.filter(function(x){return x.id===id})[0]:null;$('#pfTitle').textContent=p?'Edit product':'Add product';
     $('#pfCats').innerHTML=PROD.map(function(x){return x.category}).filter(function(c,i,a){return a.indexOf(c)===i}).map(function(c){return'<option value="'+esc(c)+'">'}).join('');
-    $('#pfName').value=p?p.name:'';$('#pfCat').value=p?p.category:'';$('#pfDesc').value=p&&p.description||'';$('#pfW').value=p&&WH[p.id]!=null?WH[p.id]:'';$('#pfS').value=p&&p.suggested_price!=null?p.suggested_price:'';$('#pfSt').value=p?p.status:'available';$('#pfPhoto').value='';pfPhoto=p&&p.photo||'';
+    $('#pfName').value=p?p.name:'';$('#pfCat').value=p?p.category:'';$('#pfDesc').value=p&&p.description||'';$('#pfW').value=p&&WH[p.id]!=null?MZ.comma(WH[p.id]):'';$('#pfS').value=p&&p.suggested_price!=null?MZ.comma(p.suggested_price):'';$('#pfSt').value=p?p.status:'available';$('#pfPhoto').value='';pfPhoto=p&&p.photo||'';
     $('#pfPrev').innerHTML=pfPhoto?'Current photo:<br><img alt="" src="'+esc(pfPhoto)+'" style="max-width:140px;border-radius:8px;margin-top:4px">':'No photo yet.';
     $('#pForm').hidden=false;$('#pForm').scrollIntoView({behavior:'smooth',block:'start'})}
   $('#pAdd').onclick=function(){pfOpen(null)};$('#pfCancel').onclick=function(){$('#pForm').hidden=true};
@@ -646,8 +646,8 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     if(f&&f.size>5242880){flash('Photo must be under 5 MB');return}
     busy(b,true,'Saving...');
     var up=f?MZ.upload('product-photos','p'+Date.now()+'.'+(f.type==='image/png'?'png':f.type==='image/webp'?'webp':'jpg'),f).then(function(path){return MZ.publicUrl('product-photos',path)}):Promise.resolve(pfPhoto||null);
-    up.then(function(url){var row={name:$('#pfName').value.trim(),category:$('#pfCat').value.trim(),description:$('#pfDesc').value.trim()||null,suggested_price:$('#pfS').value===''?null:Number($('#pfS').value),status:$('#pfSt').value,photo:url};
-      return(pfId?MZ.update('products','id=eq.'+pfId,row).then(function(r){PROD=PROD.map(function(p){return p.id===pfId?r[0]:p});return pfId}):MZ.insert('products',row,true).then(function(r){PROD.push(r[0]);return r[0].id})).then(function(pid){return setWh(pid,$('#pfW').value)})}).then(function(){$('#pForm').hidden=true;prods();flash('Product saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+    up.then(function(url){var row={name:$('#pfName').value.trim(),category:$('#pfCat').value.trim(),description:$('#pfDesc').value.trim()||null,suggested_price:MZ.unc($('#pfS').value)===''?null:Number(MZ.unc($('#pfS').value)),status:$('#pfSt').value,photo:url};
+      return(pfId?MZ.update('products','id=eq.'+pfId,row).then(function(r){PROD=PROD.map(function(p){return p.id===pfId?r[0]:p});return pfId}):MZ.insert('products',row,true).then(function(r){PROD.push(r[0]);return r[0].id})).then(function(pid){return setWh(pid,MZ.unc($('#pfW').value))})}).then(function(){$('#pForm').hidden=true;prods();flash('Product saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
 
   /* ----- training editor ----- */
   var TC=null,TL=[],tcCur=null;
