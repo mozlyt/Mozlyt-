@@ -482,7 +482,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function loadNews(){MZ.q('announcements','select=*&order=pinned.desc,created_at.desc&limit=6').then(function(a){
       a=(a||[]).filter(function(x){return!x.country||x.country===ME.franchise_country}).slice(0,4);
       $('#newsBox').innerHTML=a.map(function(x){return'<div class="newsit"><div class="nh"><span class="ntag'+(x.pinned?' pin':'')+'">'+esc(x.pinned?'Pinned':(x.label||'News'))+'</span><small>'+ago(x.created_at)+'</small></div><b>'+esc(x.title)+'</b><span>'+esc(x.body||'')+'</span></div>'}).join('')||'<div class="empty">No news yet. Updates from MOZLYT will appear here.</div>'},function(){$('#newsBox').innerHTML='<div class="empty">No news yet. Updates from MOZLYT will appear here.</div>'})}
-  function poll(){if(!ME||!frLive()||document.hidden||$('#pane-over').hidden)return;
+  function poll(){if(!ME||!frLive()||document.hidden)return;
     Promise.all([MZ.q('profiles','select=id,full_name,store_name,store_slug,phone,email,sub_expires_at,plan,tier,training_paid,status,created_at&franchise_id=eq.'+ME.id+'&order=created_at.desc'),MZ.q('subscription_payments','select=*&franchise_id=eq.'+ME.id+'&order=created_at.desc&limit=200')]).then(function(r){
       var changed=(r[0]||[]).length!==FR.rec.length||(r[1]||[]).length!==FR.pays.length||JSON.stringify((r[1]||[]).map(function(x){return x.status}))!==JSON.stringify(FR.pays.map(function(x){return x.status}));
       FR.rec=r[0]||[];FR.pays=r[1]||[];drawLive();if(changed){$('#frN').textContent=FR.rec.length;$('#frP').textContent=FR.pays.filter(function(x){return x.status==='pending'}).length}},function(){})}
@@ -655,7 +655,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   var h=MZ.takeHash();view();if(h&&h.error)note(aNote,'err',h.error);
   if(MZ.loggedIn())boot();
-  PTIMER=setInterval(poll,20000);
+  PTIMER=setInterval(poll,20000);document.addEventListener('visibilitychange',function(){if(!document.hidden)poll()});
 })();
 </script>
 
