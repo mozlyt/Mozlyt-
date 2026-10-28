@@ -569,7 +569,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   function sellerName(id){var s=SELL.filter(function(x){return x.id===id})[0];return s?s.store_name:'(deleted seller)'}
   function orderRow(o){var wa=o.customer_phone?'https://wa.me/'+MZ.phoneIntl(o.customer_phone):'';
-    return'<div class="it" data-id="'+o.id+'"><div class="h"><b>Order #'+o.id+' &middot; '+esc(o.customer_name||'Customer')+'</b><select>'+OS.map(function(s){return'<option'+(s===o.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select></div>'+
+    return'<div class="it" data-id="'+o.id+'"><div class="h"><b>Order #'+o.id+' &middot; '+esc(o.customer_name||'Customer')+(o.paid?' <span class="tag ok">Paid online</span>':'')+'</b><select>'+OS.map(function(s){return'<option'+(s===o.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select></div>'+
       '<div>'+esc((o.items||[]).map(function(i){return(i.qty||1)+' x '+i.name}).join(', '))+'</div>'+
       '<div class="m">'+MZ.when(o.created_at)+' &middot; '+(o.seller_id?'Store: '+esc(sellerName(o.seller_id)):'MOZLYT shop')+(o.total!=null?' &middot; <b>'+MZ.money(o.total)+'</b>':'')+(o.address?' &middot; '+esc(o.address):'')+'</div>'+
       '<div class="m">'+(wa?'<a target="_blank" rel="noopener" href="'+wa+'">'+esc(o.customer_phone)+'</a>':'')+(o.customer_email?' &middot; '+esc(o.customer_email):'')+'</div>'+(o.notes?'<div class="m">Note: '+esc(o.notes)+'</div>':'')+'</div>'}
