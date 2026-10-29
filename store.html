@@ -271,7 +271,7 @@ body.has-list .wa-float{bottom:84px}
 </head>
 <body>
 
-<header class="sh"><div class="wrap sbar"><a class="sname" id="sName" href="#">Store</a><button type="button" class="cartbtn" id="cartBtn">Cart <b id="cartN">0</b></button></div></header>
+<header class="sh"><div class="wrap sbar"><a class="sname" id="sName" href="#">Store</a><span style="display:flex;gap:8px;align-items:center"><button type="button" class="cartbtn acc" id="accBtn">Account</button><button type="button" class="cartbtn" id="cartBtn">Cart <b id="cartN">0</b></button></span></div></header>
 <main class="dash" style="padding-top:18px"><div class="wrap">
 <div id="state" class="empty">Loading store...</div>
 <section id="shop" hidden>
@@ -291,7 +291,7 @@ body.has-list .wa-float{bottom:84px}
   <form id="fOrder" class="f">
     <label>Your name<input id="oName" required maxlength="80" autocomplete="name"></label>
     <label>Phone / WhatsApp<input id="oPhone" type="tel" required maxlength="20" autocomplete="tel"></label>
-    <label>Delivery address or area<input id="oAddr" maxlength="200" autocomplete="street-address" placeholder="e.g. East Legon, near the mall"></label>
+    <label>Delivery address or area<input id="oAddr" maxlength="200" autocomplete="street-address" list="savedAddr" placeholder="e.g. East Legon, near the mall"></label><datalist id="savedAddr"></datalist>
     <label>Note (optional)<textarea id="oNote" rows="2" maxlength="300"></textarea></label>
     <div id="oNoteBox"></div>
     <button class="btn primary" type="button" id="payNow" hidden style="width:100%;justify-content:center">Pay now with card or Mobile Money</button>
@@ -299,6 +299,12 @@ body.has-list .wa-float{bottom:84px}
     <button class="btn primary" type="submit" id="waBtn">Place order</button>
   </form>
   <div id="done" hidden></div>
+</div></div>
+
+<div class="drawer" id="accDrawer" hidden role="dialog" aria-modal="true"><div class="dbg" id="accBg"></div><div class="dpanel">
+  <div class="top2" style="margin:0 0 10px"><h3 style="margin:0" id="accTitle">Your account</h3><button class="b2 ghost" id="accClose" type="button">Close</button></div>
+  <div id="accBody"></div>
+  <a id="accHelp" class="btn" target="_blank" rel="noopener" hidden style="width:100%;justify-content:center;margin-top:16px;background:#E8F5EE;color:#14663f;border:1.5px solid #9fd3b6;font-weight:700;text-decoration:none">Need help? Chat with the shop on WhatsApp</a>
 </div></div>
 
 <style>
@@ -312,6 +318,12 @@ body.has-list .wa-float{bottom:84px}
 .sh{background:#0E2A47;color:#fff;position:sticky;top:0;z-index:20}.sbar{display:flex;justify-content:space-between;align-items:center;padding-top:12px;padding-bottom:12px}
 .ccb{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;background:#F2B134;color:#0E2A47;font:700 13px system-ui,sans-serif;vertical-align:middle}.sname{color:#fff;font:700 20px Georgia,serif;text-decoration:none}.cartbtn{background:#F2B134;color:#0E2A47;border:0;border-radius:99px;padding:9px 16px;font:700 14.5px inherit;font-family:inherit;cursor:pointer}
 .cartbtn b{background:#0E2A47;color:#fff;border-radius:99px;padding:1px 8px;margin-left:4px}
+.cartbtn.acc{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atabs{display:flex;gap:6px;margin:0 0 12px}.atabs button{flex:1;padding:9px 6px;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;font:600 14px inherit;font-family:inherit;cursor:pointer}.atabs button.on{background:#0E2A47;color:#fff;border-color:#0E2A47}
+.alink{background:none;border:0;color:var(--green-d);font:600 14px inherit;font-family:inherit;text-decoration:underline;cursor:pointer;padding:6px 0}
+.aord{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;display:grid;gap:6px;color:var(--ink)}.aord .m{color:#4b5a52;font-size:13.5px}.aord .h{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.aord form.f{background:none;border:0;padding:0;box-shadow:none}
+.aord .acts{display:flex;gap:8px;flex-wrap:wrap}.aord .acts .b2,.aord .acts a{font-size:13.5px;padding:8px 12px;text-decoration:none}
 .pc .price{font:700 18px Georgia,serif;color:var(--ink)}
 #grid.grid3{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 #grid .pc .b{padding:7px;gap:4px}#grid .pc h4{font-size:12px;line-height:1.25}#grid .pc .price{font-size:13.5px}#grid .pc .b2{width:100%;padding:7px 4px;font-size:12px}
@@ -350,7 +362,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       if(s.inactive){var w=String(s.whatsapp||'').replace(/\D/g,'');if(w.charAt(0)==='0')w='233'+w.slice(1);$('#state').innerHTML='<b>'+esc(s.store_name)+'</b> is temporarily closed.<br>'+(w?'<a class="b2" style="display:inline-block;margin-top:12px;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/'+w+'">Message the seller on WhatsApp</a>':'Please check back soon.');MZ.setCountry(s.franchise_country);document.title=s.store_name+' | MOZLYT';return}
       STORE=s;slug=sl;try{var SO=s.social||{},NM={instagram:'Instagram',facebook:'Facebook',tiktok:'TikTok',x:'X',youtube:'YouTube',snapchat:'Snapchat',website:'Website'},sh='';Object.keys(NM).forEach(function(k){var u=String(SO[k]||'');if(/^https:\/\/[^\s"'<>]+$/.test(u))sh+='<a href="'+u.replace(/&/g,'&amp;')+'" target="_blank" rel="noopener nofollow" style="display:inline-block;padding:7px 14px;border:1.5px solid #cdd6e2;border-radius:999px;font-size:14px;font-weight:600;color:var(--green-d);text-decoration:none;background:#fff">'+NM[k]+'</a>'});if(sh){document.getElementById('socRow').innerHTML=sh;document.getElementById('soc').style.display='block'}}catch(e){}try{CART=JSON.parse(localStorage.getItem(KEY+slug)||'{}')}catch(e){CART={}}
       document.title=s.store_name+' | MOZLYT';MZ.pixels(s.meta_pixel,s.tiktok_pixel);MZ.track('ViewContent',{});$('#sName').textContent=s.store_name;$('#h1').textContent=s.store_name;if(s.franchise_country){var cc=String(s.franchise_country).toUpperCase();$('#sName').innerHTML='<img src="img/logo.png" alt="" width="30" height="30" style="border-radius:8px;vertical-align:middle;margin-right:8px">MOZ<span style="color:#5FD3A1">LYT</span><span class="ccb">'+esc(cc)+'</span>';$('#fnote').innerHTML='<b>'+esc(s.store_name)+'</b> is part of <a href="https://mozlyt.com/" style="color:var(--green-d);text-decoration:underline">MOZLYT</a>. ';}
-      show('state',false);show('shop',true);if(s.locked&&!document.getElementById('lockN')){var ln=document.createElement('div');ln.id='lockN';ln.style.cssText='background:#FFF4D6;color:#0E2A47;border:1px solid #F2B134;border-radius:12px;padding:12px 14px;margin:10px 0 14px;font-size:15px;line-height:1.5';ln.innerHTML='<b>Opening soon.</b> You can look at the products now. Prices and orders start as soon as this MOZLYT branch is ready.';var h1=$('#h1');if(h1&&h1.parentNode)h1.parentNode.insertBefore(ln,h1.nextSibling)}cats();draw();cartDraw();payCheck();if(!payOpen())payReturn();
+      show('state',false);show('shop',true);if(s.locked&&!document.getElementById('lockN')){var ln=document.createElement('div');ln.id='lockN';ln.style.cssText='background:#FFF4D6;color:#0E2A47;border:1px solid #F2B134;border-radius:12px;padding:12px 14px;margin:10px 0 14px;font-size:15px;line-height:1.5';ln.innerHTML='<b>Opening soon.</b> You can look at the products now. Prices and orders start as soon as this MOZLYT branch is ready.';var h1=$('#h1');if(h1&&h1.parentNode)h1.parentNode.insertBefore(ln,h1.nextSibling)}cats();draw();cartDraw();payCheck();accFetch();if(!payOpen())payReturn();
     },function(er){fail(er.message)})}
   function fail(t){$('#state').textContent=t}
   /* a seller's own domain: look the store up from the web address */
@@ -402,18 +414,86 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var tries=0;(function go(){MZ.fn('store-pay',{action:'verify',reference:ref}).then(function(r){
       if(r&&r.ok&&r.status==='paid'){CART={};save();show('fOrder',false);$('#clines').innerHTML='';$('#ctotal').textContent='';
         var w=STORE&&STORE.whatsapp?'<a class="btn primary" style="width:100%;justify-content:center;margin-top:10px" target="_blank" rel="noopener" href="https://wa.me/'+MZ.phoneIntl(STORE.whatsapp)+'?text='+encodeURIComponent('Hello '+STORE.store_name+', I just paid online for order #'+r.order_id+' (ref '+ref+').')+'">Message the seller on WhatsApp</a>':'';
-        $('#done').innerHTML='<div class="msg ok"><b>Payment received. Order #'+esc(String(r.order_id))+'.</b> The seller will contact you about delivery.</div>'+w;MZ.track('Purchase',{});return}
+        $('#done').innerHTML='<div class="msg ok"><b>Payment received. Order #'+esc(String(r.order_id))+'.</b> The seller will contact you about delivery.</div>'+w;MZ.track('Purchase',{});saveOffer({id:r.order_id,phone:'',name:'',ref:ref});return}
       if(r&&(r.status==='pending'||r.status==='ongoing'||r.status==='processing'||r.status==='abandoned'||!r.status)&&tries++<4){setTimeout(go,3000);return}
       $('#done').innerHTML='<div class="msg err">'+esc((r&&r.error)||'We could not confirm the payment yet.')+' If money left your account, message the seller with this reference: <b>'+esc(ref)+'</b></div>'}
     ,function(){$('#done').innerHTML='<div class="msg err">We could not check the payment. If money left your account, message the seller with this reference: <b>'+esc(ref)+'</b></div>'})})()}
+
+  /* ---------- customer account: belongs to this shop only ---------- */
+  var ACC=null,AT='orders',AM='in',PEND=null;
+  var ST={'new':'Received',confirmed:'Confirmed',paid:'Paid',delivered:'Delivered',cancelled:'Cancelled'};
+  function waLink(t){return STORE&&STORE.whatsapp?'https://wa.me/'+MZ.phoneIntl(STORE.whatsapp)+'?text='+encodeURIComponent(t):''}
+  function firstName(n){return String(n||'').trim().split(/\s+/)[0]||''}
+  function accLabel(){var b=$('#accBtn');if(b)b.textContent=ACC&&ACC.joined?(firstName(ACC.name)||'My account'):'Account'}
+  function accPrefill(){if(!ACC||!ACC.joined)return;var ad=ACC.addresses||[];
+    if(!$('#oName').value)$('#oName').value=ACC.name||'';if(!$('#oPhone').value)$('#oPhone').value=ACC.phone||'';if(!$('#oAddr').value&&ad[0])$('#oAddr').value=ad[0];
+    $('#savedAddr').innerHTML=ad.map(function(x){return'<option value="'+esc(x)+'">'}).join('')}
+  function accFetch(){if(!MZ.loggedIn()){ACC=null;accLabel();return Promise.resolve(null)}
+    return MZ.rpc('get_my_account',{p_slug:slug}).then(function(a){ACC=a;accLabel();accPrefill();return a},function(){ACC=null;accLabel();return null})}
+  function accOpen(){var h=$('#accHelp'),l=waLink('Hello '+(STORE?STORE.store_name:'')+', I need help.');h.hidden=!l;if(l)h.href=l;show('accDrawer',true);
+    if(MZ.loggedIn()){$('#accBody').innerHTML='<div class="empty">Loading...</div>';accFetch().then(accShow)}else accShow()}
+  function accShow(){if(!MZ.loggedIn()||!ACC)authView();else if(!ACC.joined)joinView();else mainView()}
+  function aNote(t,ty){note($('#aNote'),ty||'err',t)}
+  function authView(){var b=$('#accBody'),sn=esc(STORE?STORE.store_name:'this shop');$('#accTitle').textContent=AM==='up'?'Create your account':AM==='forgot'?'Reset password':'Sign in';
+    if(AM==='forgot'){b.innerHTML='<form id="aF" class="f"><p class="sub" style="margin:0 0 8px">Enter your email and we will send you a link to set a new password. After that, come back here and sign in.</p><label>Email<input id="aE" type="email" required autocomplete="email"></label><button class="btn primary" type="submit">Send the link</button></form><div id="aNote"></div><button class="alink" type="button" id="aBack">Back to sign in</button>';
+      $('#aBack').onclick=function(){AM='in';authView()};
+      $('#aF').onsubmit=function(e){e.preventDefault();var bt=$('button[type=submit]',this);busy(bt,true,'Sending...');MZ.recover($('#aE').value.trim()).then(function(){aNote('If that email has an account, a link is on its way. Check your inbox and spam.','ok')},function(er){aNote(er.message)}).then(function(){busy(bt,false)})};return}
+    if(AM==='up'){b.innerHTML='<p class="sub" style="margin:0 0 10px">Free. Keep your orders in one place and your delivery address ready for next time. This account is only for '+sn+'.</p><form id="aF" class="f"><label>Your name<input id="aN" required maxlength="80" autocomplete="name"></label><label>Phone / WhatsApp<input id="aP" type="tel" required maxlength="20" autocomplete="tel"></label><label>Email<input id="aE" type="email" required autocomplete="email"></label><label>Password (8 or more characters)<input id="aW" type="password" required minlength="8" autocomplete="new-password"></label><button class="btn primary" type="submit">Create my account</button></form><div id="aNote"></div><button class="alink" type="button" id="aSw">I already have an account</button>';
+      pwEye();$('#aSw').onclick=function(){AM='in';authView()};
+      $('#aF').onsubmit=function(e){e.preventDefault();var bt=$('button[type=submit]',this),nm=$('#aN').value.trim(),ph=$('#aP').value.trim();busy(bt,true,'Creating...');
+        MZ.signUp($('#aE').value.trim(),$('#aW').value,{kind:'customer',full_name:nm,phone:ph},'store.html').then(function(r){
+          if(!r||!r.confirmed){aNote('That email already has an account. Please sign in instead.');AM='in';setTimeout(authView,1800);return}
+          return afterAuth(nm,ph)}).catch(function(er){aNote(er.message)}).then(function(){busy(bt,false)})};return}
+    b.innerHTML='<form id="aF" class="f"><label>Email<input id="aE" type="email" required autocomplete="email"></label><label>Password<input id="aW" type="password" required autocomplete="current-password"></label><button class="btn primary" type="submit">Sign in</button></form><div id="aNote"></div><div style="display:flex;justify-content:space-between;flex-wrap:wrap"><button class="alink" type="button" id="aSw">Create a free account</button><button class="alink" type="button" id="aFg">Forgot password?</button></div>';
+    pwEye();$('#aSw').onclick=function(){AM='up';authView()};$('#aFg').onclick=function(){AM='forgot';authView()};
+    $('#aF').onsubmit=function(e){e.preventDefault();var bt=$('button[type=submit]',this);busy(bt,true,'Signing in...');
+      MZ.signIn($('#aE').value.trim(),$('#aW').value).then(function(){return afterAuth('','')}).catch(function(er){aNote(er.message)}).then(function(){busy(bt,false)})}}
+  function afterAuth(nm,ph){var p=PEND;PEND=null;
+    var c=p?MZ.rpc('claim_order',{p_slug:slug,p_order_id:p.id,p_phone:p.phone||ph||'',p_ref:p.ref||''}).catch(function(){}):Promise.resolve();
+    return c.then(function(){return nm||ph?MZ.rpc('join_shop',{p_slug:slug,p_name:nm,p_phone:ph}):null}).then(accFetch).then(accShow)}
+  function joinView(){var u=MZ.user()||{};$('#accTitle').textContent='Join '+(STORE?STORE.store_name:'this shop');
+    $('#accBody').innerHTML='<p class="sub" style="margin:0 0 10px">You are signed in as <b>'+esc(u.email||ACC.email||'')+'</b>. Add your details to start keeping your orders here.</p><form id="aF" class="f"><label>Your name<input id="aN" required maxlength="80" autocomplete="name"></label><label>Phone / WhatsApp<input id="aP" type="tel" required maxlength="20" autocomplete="tel"></label><button class="btn primary" type="submit">Join this shop</button></form><div id="aNote"></div><button class="alink" type="button" id="aOut">Not you? Sign out</button>';
+    $('#aOut').onclick=accOut;
+    $('#aF').onsubmit=function(e){e.preventDefault();var bt=$('button[type=submit]',this);busy(bt,true,'Saving...');MZ.rpc('join_shop',{p_slug:slug,p_name:$('#aN').value.trim(),p_phone:$('#aP').value.trim()}).then(accFetch).then(accShow).catch(function(er){aNote(er.message)}).then(function(){busy(bt,false)})}}
+  function accOut(){MZ.signOut().then(function(){ACC=null;AM='in';accLabel();$('#savedAddr').innerHTML='';authView()})}
+  function itemsTxt(o){return(o.items||[]).map(function(i){return esc((i.qty||1)+' x '+i.name)}).join(', ')}
+  function mainView(){var a=ACC;$('#accTitle').textContent='Hi, '+(firstName(a.name)||'there');
+    $('#accBody').innerHTML='<div class="atabs"><button type="button" data-a="orders">My orders</button><button type="button" data-a="me">My details</button><button type="button" data-a="help">Help</button></div><div id="aPane"></div>';
+    $$('#accBody .atabs button').forEach(function(b){b.classList.toggle('on',b.dataset.a===AT);b.onclick=function(){AT=b.dataset.a;mainView()}});
+    var p=$('#aPane');
+    if(AT==='orders'){p.innerHTML=(a.orders||[]).map(function(o){return'<div class="aord"><div class="h"><b>Order #'+o.id+'</b><span class="tag'+(o.status==='cancelled'?' bad':o.status==='new'?' warn':'')+'">'+esc(ST[o.status]||o.status||'Received')+'</span></div><div class="m">'+MZ.when(o.created_at)+(o.paid?' &middot; Paid online':'')+'</div><div>'+itemsTxt(o)+'</div>'+(o.total!=null?'<div><b>'+MZ.money(o.total)+'</b></div>':'')+'<div class="acts"><button class="b2" type="button" data-b="'+o.id+'">Buy again</button><a class="b2 ghost" target="_blank" rel="noopener" href="'+esc(waLink('Hello '+STORE.store_name+', I have a question about my order #'+o.id+'.'))+'">Ask about this order</a></div></div>'}).join('')||'<div class="empty">No orders yet. When you order from this shop, it will show up here.</div>';
+      $$('#aPane [data-b]').forEach(function(b){b.onclick=function(){var o=(a.orders||[]).filter(function(x){return String(x.id)===b.dataset.b})[0],n=0;if(!o)return;
+        (o.items||[]).forEach(function(i){var pr=prod(i.product_id);if(pr&&!pr.sold_out&&pr.price!=null){CART[pr.id]=(CART[pr.id]||0)+Number(i.qty||1);n++}});
+        if(!n){flash('Those items are not available right now');return}save();show('accDrawer',false);show('done',false);show('drawer',true);flash('Added to your cart')}})}
+    else if(AT==='me'){var ad=(a.addresses||[]).slice(0,5);if(!ad.length)ad=[''];
+      p.innerHTML='<form id="aF" class="f"><label>Name<input id="aN" required maxlength="80" value="'+esc(a.name)+'"></label><label>Phone / WhatsApp<input id="aP" type="tel" required maxlength="20" value="'+esc(a.phone)+'"></label><label>Email<input value="'+esc(a.email||'')+'" disabled></label><div id="aAd"></div><button class="alink" type="button" id="aAdd">+ Add another address</button><button class="btn primary" type="submit">Save my details</button></form><div id="aNote"></div><button class="alink" type="button" id="aOut">Sign out</button>';
+      var drawAd=function(){$('#aAd').innerHTML=ad.map(function(x,i){return'<label>Delivery address '+(i+1)+'<input class="aad" maxlength="200" placeholder="e.g. East Legon, near the mall" value="'+esc(x)+'"></label>'}).join('');$('#aAdd').hidden=ad.length>=5;$$('.aad').forEach(function(inp,i){inp.oninput=function(){ad[i]=inp.value}})};drawAd();
+      $('#aAdd').onclick=function(){ad.push('');drawAd();var l=$$('.aad');l[l.length-1].focus()};$('#aOut').onclick=accOut;
+      $('#aF').onsubmit=function(e){e.preventDefault();var bt=$('button[type=submit]',this);busy(bt,true,'Saving...');
+        MZ.rpc('save_my_account',{p_slug:slug,p_name:$('#aN').value.trim(),p_phone:$('#aP').value.trim(),p_addresses:ad.filter(function(x){return String(x).trim()})}).then(accFetch).then(function(){flash('Saved');mainView()}).catch(function(er){aNote(er.message)}).then(function(){busy(bt,false)})}}
+    else{var l=waLink('Hello '+STORE.store_name+', I need help.');
+      p.innerHTML='<div class="aord"><b>Talk to '+esc(STORE.store_name)+'</b><div class="m">Questions about an order, delivery or a product? Message the shop owner directly on WhatsApp.</div>'+(l?'<a class="btn primary" style="justify-content:center;text-decoration:none" target="_blank" rel="noopener" href="'+esc(l)+'">Chat on WhatsApp</a>':'<div class="m">This shop has no WhatsApp number yet.</div>')+'</div>'}}
+  $('#accBtn').onclick=accOpen;$('#accBg').onclick=$('#accClose').onclick=function(){show('accDrawer',false)};
+
+  /* after an order: offer to keep it in an account (or save it straight away when signed in) */
+  function saveOffer(ctx){var host=$('#done');if(!host)return;var old=$('#saveBox');if(old)old.remove();var box=document.createElement('div');box.id='saveBox';box.style.marginTop='12px';host.appendChild(box);
+    var okMsg=function(){box.innerHTML='<div class="msg ok">Saved to your account. You can see this order any time under <b>Account</b>.</div>'};
+    if(MZ.loggedIn()){MZ.rpc('claim_order',{p_slug:slug,p_order_id:ctx.id,p_phone:ctx.phone||'',p_ref:ctx.ref||''}).catch(function(){}).then(function(){return MZ.rpc('join_shop',{p_slug:slug,p_name:ctx.name||'',p_phone:ctx.phone||''})}).then(accFetch).then(function(a){if(a&&a.joined)okMsg();else box.innerHTML=''},function(){box.innerHTML=''});return}
+    box.innerHTML='<div class="aord"><b>Save this order to an account</b><div class="m">Free. Track your orders and keep your delivery address ready for next time.</div><form id="svF" class="f"><label>Your name<input id="svN" required maxlength="80" value="'+esc(ctx.name||'')+'"></label><label>Email<input id="svE" type="email" required autocomplete="email"></label><label>Password (8 or more characters)<input id="svP" type="password" required minlength="8" autocomplete="new-password"></label><button class="btn primary" type="submit">Create my account</button></form><div id="svNote"></div><button class="alink" type="button" id="svIn">I already have an account</button></div>';pwEye();
+    $('#svIn').onclick=function(){PEND={id:ctx.id,phone:ctx.phone,ref:ctx.ref};AM='in';show('drawer',false);accOpen()};
+    $('#svF').onsubmit=function(e){e.preventDefault();var bt=$('button[type=submit]',this),nm=$('#svN').value.trim();busy(bt,true,'Creating...');
+      MZ.signUp($('#svE').value.trim(),$('#svP').value,{kind:'customer',full_name:nm,phone:ctx.phone||''},'store.html').then(function(r){
+        if(!r||!r.confirmed){note($('#svNote'),'err','That email already has an account. Tap "I already have an account" below.');return}
+        PEND={id:ctx.id,phone:ctx.phone,ref:ctx.ref};return afterAuth(nm,ctx.phone||'').then(function(){show('accDrawer',false);okMsg()})}).catch(function(er){note($('#svNote'),'err',er.message)}).then(function(){busy(bt,false)})}}
 
   $('#fOrder').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this),L=lines();if(!L.length)return;
     busy(b,true,'Sending...');note($('#oNoteBox'),'','');
     MZ.rpc('place_store_order',{p_slug:slug,p_name:$('#oName').value.trim(),p_phone:$('#oPhone').value.trim(),p_address:$('#oAddr').value.trim(),p_notes:$('#oNote').value.trim(),p_items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(id){
       var txt='Hello '+STORE.store_name+', I just placed order #'+id+':\n'+L.map(function(l){return l.q+' x '+l.p.name+' ('+MZ.money(l.p.price*l.q)+')'}).join('\n')+'\nTotal: '+MZ.money(total())+'\nName: '+$('#oName').value.trim()+'\nDelivery: '+($('#oAddr').value.trim()||'to be agreed');
       var url='https://wa.me/'+MZ.phoneIntl(STORE.whatsapp)+'?text='+encodeURIComponent(txt);
+      var svName=$('#oName').value.trim(),svPhone=$('#oPhone').value.trim();
       MZ.track('Purchase',{value:total()});CART={};save();show('fOrder',false);$('#clines').innerHTML='';$('#ctotal').textContent='';
-      $('#done').innerHTML='<div class="msg ok"><b>Order #'+id+' received.</b> The seller will confirm with you shortly.</div><a class="btn primary" style="width:100%;justify-content:center" target="_blank" rel="noopener" href="'+url+'">Send the details on WhatsApp</a>';show('done',true);
+      $('#done').innerHTML='<div class="msg ok"><b>Order #'+id+' received.</b> The seller will confirm with you shortly.</div><a class="btn primary" style="width:100%;justify-content:center" target="_blank" rel="noopener" href="'+url+'">Send the details on WhatsApp</a>';show('done',true);saveOffer({id:id,phone:svPhone,name:svName,ref:''});
     },function(er){note($('#oNoteBox'),'err',/not available/i.test(er.message)?'One of the items is no longer available. Please remove it and try again.':er.message)}).then(function(){busy(b,false)})};
 })();
 </script>

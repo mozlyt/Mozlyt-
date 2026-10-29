@@ -465,7 +465,7 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
   <div class="card2 mystore" id="myStoreCard"><div class="ms-h"><b>My store</b><code id="storeUrl" hidden></code></div>
     <div class="pills"><a class="pill2" id="openUrl" target="_blank" rel="noopener">Visit store</a><button class="pill2" type="button" id="cpUrl">Copy link</button><a class="pill2" id="shareUrl" target="_blank" rel="noopener">Share on WhatsApp</a></div></div>
   <div class="tabs" id="dtabs">
-    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
+    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="cust">Customers</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
   </div>
 
   <div id="pane-over">
@@ -487,10 +487,16 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
   <div id="pane-learn" hidden><div id="learnBox"></div></div>
 
   <div id="pane-ord" hidden><div class="lst" id="ordList"></div></div>
+  <div id="pane-cust" hidden>
+    <p class="sub" style="margin:0 0 12px">Everyone who orders from your shop is saved here automatically. These customers belong to you only. Nobody else can see them.</p>
+    <div class="stats" id="custStats"></div>
+    <div class="tools" style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px"><input id="custQ" type="search" placeholder="Search name, phone or email" style="flex:1;min-width:180px"><button class="b2 ghost" type="button" id="custCsv">Download list (CSV)</button></div>
+    <div class="lst" id="custList"></div>
+  </div>
 
   <div id="pane-more" hidden>
     <div class="mgroup"><div class="mhead">Your store</div>
-      <button class="mrow" type="button" data-go="sub">Subscription</button><button class="mrow" type="button" data-go="set">Store settings</button><button class="mrow" type="button" data-go="acc">Account</button><button class="mrow" type="button" data-go="fr" id="moreFr" style="display:none">Franchise dashboard</button></div>
+      <button class="mrow" type="button" data-go="cust">My customers</button><button class="mrow" type="button" data-go="sub">Subscription</button><button class="mrow" type="button" data-go="set">Store settings</button><button class="mrow" type="button" data-go="acc">Account</button><button class="mrow" type="button" data-go="fr" id="moreFr" style="display:none">Franchise dashboard</button></div>
     <div class="mgroup"><a class="mrow" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20need%20help%20with%20my%20seller%20account" target="_blank" rel="noopener">Get help on WhatsApp</a><button class="mrow" type="button" id="moreOut">Log out</button></div>
   </div>
 
@@ -740,11 +746,11 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#ppYes').onclick=function(){close();var sb=$('[data-t=sub]');if(sb)sb.click();else go('sub');try{window.scrollTo(0,0)}catch(e){}};
   }
   /* ----- tabs ----- */
-  var PANES=['over','prod','ord','learn','sub','set','acc','fr','more'];
+  var PANES=['over','prod','ord','cust','learn','sub','set','acc','fr','more'];
   function flag(k,set){var key='mz-f-'+(ME?ME.id:'x')+'-'+k;try{if(set){localStorage.setItem(key,'1');return true}return localStorage.getItem(key)==='1'}catch(e){return false}}
   function go(t){if(t==='fr'){location.href='franchise.html';return}PANES.forEach(function(x){show('pane-'+x,x===t)});$$('#dtabs button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});
     var bt=['over','prod','ord','learn'].indexOf(t)>-1?t:'more';$$('#bnav button').forEach(function(b){b.classList.toggle('on',b.dataset.t===bt)});
-    if(t==='learn'){flag('learn',true);loadTrain()}if(t==='fr')loadFr();try{window.scrollTo(0,0)}catch(e){}}
+    if(t==='learn'){flag('learn',true);loadTrain()}if(t==='cust')loadCust();if(t==='fr')loadFr();try{window.scrollTo(0,0)}catch(e){}}
   $$('#dtabs button,#bnav button').forEach(function(b){b.onclick=function(){go(b.dataset.t)}});
   $$('#pane-more [data-go]').forEach(function(b){b.onclick=function(){go(b.dataset.go)}});
   $('#moreOut').onclick=function(){$('#btnOut').click()};
@@ -778,7 +784,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function storeUrl(){return(ME.custom_domain&&false?('https://'+ME.custom_domain+'/'):MZ.siteUrl+'store.html?s='+ME.store_slug)}
   function isTrainee(){return !!(ME&&ME.account_type==='trainee'&&!ME.franchise)}
   function applyMode(){var t=isTrainee();
-    $$('#dtabs [data-t=over],#dtabs [data-t=prod],#dtabs [data-t=ord],#dtabs [data-t=set],#bnav [data-t=over],#bnav [data-t=prod],#bnav [data-t=ord],#pane-more [data-go=set]').forEach(function(b){b.style.display=t?'none':''});var ms=$('#myStoreCard');if(ms)ms.style.display=t?'none':''}
+    $$('#dtabs [data-t=over],#dtabs [data-t=prod],#dtabs [data-t=ord],#dtabs [data-t=cust],#dtabs [data-t=set],#bnav [data-t=over],#bnav [data-t=prod],#bnav [data-t=ord],#pane-more [data-go=set],#pane-more [data-go=cust]').forEach(function(b){b.style.display=t?'none':''});var ms=$('#myStoreCard');if(ms)ms.style.display=t?'none':''}
   function paint(){
     applyMode();
     ['#tabFr','#moreFr'].forEach(function(q){var e=$(q);if(e)e.style.display=ME.franchise?'':'none'});
@@ -926,6 +932,29 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       '<div>'+esc(sumLines(o))+'</div><div class="m">'+MZ.when(o.created_at)+(o.total!=null?' &middot; <b>'+MZ.money(o.total)+'</b>':'')+(o.address?' &middot; '+esc(o.address):'')+'</div>'+(o.notes?'<div class="m">Note: '+esc(o.notes)+'</div>':'')+
       (wa?'<div><a class="b2 ghost" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="'+wa+'">WhatsApp '+esc(o.customer_phone)+'</a>'+(!o.paid&&o.total>0&&ME.franchise_id?' <button class="b2" type="button" data-pl="'+o.id+'" data-ph="'+esc(o.customer_phone||'')+'" data-nm="'+esc(o.customer_name||'')+'" data-tt="'+esc(MZ.money(o.total))+'">Send payment link</button>':'')+'</div>':'')+'</div>'}
   function bindOrders(root){$$('.it select',root).forEach(function(s){s.onchange=function(){var id=Number(s.closest('.it').dataset.id),v=s.value;MZ.update('orders','id=eq.'+id,{status:v}).then(function(){ORDERS.forEach(function(o){if(o.id===id)o.status=v});flash('Order updated');drawOver()},function(er){flash(er.message)})}})}
+
+  /* ----- my customers (private to this shop) ----- */
+  var CUST=[],CUSTLOAD=false;
+  function loadCust(){var l=$('#custList');if(!CUSTLOAD)l.innerHTML='<div class="empty">Loading...</div>';
+    MZ.rpc('my_customers').then(function(r){CUST=r||[];CUSTLOAD=true;drawCust()},function(er){l.innerHTML='<div class="empty">'+esc(er.message)+'</div>'})}
+  function custWa(c){return c.phone?'https://wa.me/'+MZ.phoneIntl(c.phone)+'?text='+encodeURIComponent('Hello '+(c.name||'')+', this is '+(ME.store_name||'your seller')+'.'):''}
+  function drawCust(){var q=($('#custQ').value||'').toLowerCase().trim(),L=CUST.filter(function(c){return!q||(String(c.name||'')+' '+String(c.phone||'')+' '+String(c.email||'')).toLowerCase().indexOf(q)>-1});
+    var tot=CUST.reduce(function(s,c){return s+Number(c.spent||0)},0),rep=CUST.filter(function(c){return c.orders>1}).length,acc=CUST.filter(function(c){return c.has_account}).length;
+    $('#custStats').innerHTML='<div class="stat"><b>'+CUST.length+'</b><span>Customers</span></div><div class="stat"><b>'+rep+'</b><span>Ordered more than once</span></div><div class="stat"><b>'+acc+'</b><span>With an account</span></div><div class="stat"><b>'+MZ.money(tot)+'</b><span>Paid or delivered</span></div>';
+    $('#custList').innerHTML=L.map(function(c){var w=custWa(c);return'<div class="it" data-c="'+esc(c.id)+'"><div class="h"><b>'+esc(c.name||'Customer')+(c.has_account?' <span class="tag">Has account</span>':'')+'</b><span class="m">'+c.orders+' order'+(c.orders===1?'':'s')+' &middot; <b>'+MZ.money(c.spent||0)+'</b></span></div>'+
+      '<div class="m">'+(c.phone?esc(c.phone):'No phone')+(c.email?' &middot; '+esc(c.email):'')+(c.address?' &middot; '+esc(c.address):'')+'</div>'+
+      '<div class="m">'+(c.last_order_at?'Last order '+MZ.when(c.last_order_at):'Joined '+MZ.when(c.created_at))+'</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">'+(w?'<a class="b2" style="text-decoration:none" target="_blank" rel="noopener" href="'+esc(w)+'">WhatsApp</a>':'')+'<button class="b2 ghost" type="button" data-co="'+esc(c.id)+'">Orders</button></div>'+
+      '<div class="cord" hidden></div>'+
+      '<label class="m" style="display:grid;gap:4px">Your private note<textarea rows="2" maxlength="500" data-cn="'+esc(c.id)+'" placeholder="e.g. likes the large size, pays on delivery">'+esc(c.note||'')+'</textarea></label></div>'}).join('')||'<div class="empty">'+(CUST.length?'No customer matches.':'No customers yet. They appear here after their first order.')+'</div>'}
+  document.addEventListener('input',function(e){if(e.target&&e.target.id==='custQ')drawCust()});
+  document.addEventListener('change',function(e){var t=e.target;if(!t||!t.dataset||!t.dataset.cn)return;MZ.rpc('set_customer_note',{p_id:t.dataset.cn,p_note:t.value}).then(function(){CUST.forEach(function(c){if(c.id===t.dataset.cn)c.note=t.value});flash('Note saved')},function(er){flash(er.message)})});
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-co]');if(!b)return;var box=b.closest('.it').querySelector('.cord');
+    if(!box.hidden){box.hidden=true;return}box.hidden=false;box.innerHTML='<div class="m">Loading...</div>';
+    MZ.rpc('customer_orders',{p_id:b.dataset.co}).then(function(r){box.innerHTML=(r||[]).map(function(o){return'<div class="m" style="padding:6px 0;border-top:1px solid #e5ebe7">#'+o.id+' &middot; '+MZ.when(o.created_at)+' &middot; '+esc(sumLines(o))+' &middot; <b>'+MZ.money(o.total||0)+'</b> &middot; '+esc(o.status||'')+(o.paid?' (paid online)':'')+'</div>'}).join('')||'<div class="m">No orders.</div>'},function(er){box.innerHTML='<div class="m">'+esc(er.message)+'</div>'})});
+  document.addEventListener('click',function(e){if(!e.target||e.target.id!=='custCsv')return;
+    var q=function(v){return'"'+String(v==null?'':v).replace(/"/g,'""')+'"'},rows=[['Name','Phone','Email','Address','Orders','Paid or delivered total','Last order','Has account','Note']].concat(CUST.map(function(c){return[c.name,c.phone,c.email,c.address,c.orders,c.spent,c.last_order_at||'',c.has_account?'yes':'no',c.note]}));
+    var blob=new Blob(['﻿'+rows.map(function(r){return r.map(q).join(',')}).join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-customers.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)});
 
   /* ----- payment link for a WhatsApp order ----- */
   document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-pl]');if(!b)return;e.preventDefault();
