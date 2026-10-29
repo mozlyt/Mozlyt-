@@ -598,7 +598,7 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
 </div></main>
 
 <script>window.MZ_NO_COUNTRY_THEME=1</script><script src="js/mz-theme.js"></script>
-<div id="themeBox" hidden style="position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:16px"><div class="card2" style="max-width:460px;width:100%;max-height:92vh;overflow:auto"><h3 style="margin:0 0 4px">Your colors</h3><p class="sub" style="margin-bottom:12px">Choose the colors of your dashboard. Only you see them.</p>
+<div id="themeBox" hidden style="position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:16px"><div class="card2" style="max-width:460px;width:100%;max-height:92vh;overflow:auto"><h3 style="margin:0 0 4px">Your colors</h3><p class="sub" style="margin-bottom:12px">Choose your colors. The main color and bar color also apply to your shop, so customers see them too.</p>
 <div id="thPrev" style="border-radius:14px;padding:14px;margin-bottom:14px;border:1px solid rgba(128,128,128,.4)"></div>
 <b style="font-size:14px">Main color</b><div id="thAcc" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px"></div>
 <label class="sub" style="display:flex;align-items:center;gap:8px;font-size:13.5px">Or pick your own <input type="color" id="thCustom" style="width:44px;height:32px;padding:0;border:0"></label>
@@ -633,7 +633,8 @@ document.addEventListener('input',function(e){if(e.target&&e.target.id==='thCust
 function set(v){T=v;apply();draw()}
 function show(on){var bx=document.getElementById('themeBox');bx.hidden=!on;bx.style.display=on?'flex':'none'}
 function out(){var o={};if(RAW&&RAW.site)o.site=RAW.site;o.dash=T;return T?o:(RAW&&RAW.site?{site:RAW.site,dash:null}:null)}
-function save(){var v=out();try{if(window.MZ&&MZ.user())MZ.update('profiles','id=eq.'+MZ.user().id,{franchise_theme:v}).catch(function(){})}catch(e){}try{localStorage.setItem('mz-seller-theme',JSON.stringify(T))}catch(e){}}
+function save(){var v=out();try{if(window.MZ&&MZ.user())MZ.update('profiles','id=eq.'+MZ.user().id,{franchise_theme:v}).catch(function(){})}catch(e){}try{localStorage.setItem('mz-seller-theme',JSON.stringify(T))}catch(e){}
+ try{if(window.MZ&&MZ.user()){var sv=null;if(T&&okc(T)){sv={btn:T.accent.toLowerCase()};if(/^#[0-9a-fA-F]{6}$/.test(T.bar||''))sv.bar=T.bar.toLowerCase();if(lum(T.bg)>.5)sv.bg=T.bg.toLowerCase()}MZ.rpc('set_my_shop_theme',{p_theme:sv}).then(function(){if(window.__scReload)window.__scReload()}).catch(function(){})}}catch(e){}}
 document.addEventListener('click',function(e){var t=e.target;
  if(t.id==='btnTheme'){SAVED=T;show(true);draw()}
  else if(t.id==='thClose'){T=SAVED;apply();show(false)}
@@ -666,6 +667,7 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
   if(e.target.id==='scReset'){clearTimeout(tm);T={};draw();saveNow(null,'Done. Your shop is back to the MOZLYT colors.')}});
 document.addEventListener('input',function(e){if(e.target.id==='scBarC'){T.bar=e.target.value;draw();later()}if(e.target.id==='scBtnC'){T.btn=e.target.value;draw();later()}});
 function load(n){try{if(window.MZ&&MZ.user()){MZ.q('profiles','select=shop_theme,store_slug&id=eq.'+MZ.user().id).then(function(r){var t=r&&r[0]&&r[0].shop_theme;T={};if(t&&ok(t.bar))T.bar=t.bar;if(t&&ok(t.btn))T.btn=t.btn;if(t&&ok(t.bg))T.bg=t.bg;var o=$('scOpen');if(o&&r&&r[0]&&r[0].store_slug)o.href='store.html?s='+encodeURIComponent(r[0].store_slug);SAVED=JSON.parse(JSON.stringify(T));draw()}).catch(function(){draw()})}else if(n<12)setTimeout(function(){load(n+1)},700);else draw()}catch(e){draw()}}
+window.__scReload=function(){load(0)};
 setTimeout(function(){load(0)},900);
 })();
 </script>
