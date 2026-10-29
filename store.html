@@ -291,8 +291,10 @@ body.has-list .wa-float{bottom:84px}
   <form id="fOrder" class="f">
     <label>Your name<input id="oName" required maxlength="80" autocomplete="name"></label>
     <label>Phone / WhatsApp<input id="oPhone" type="tel" required maxlength="20" autocomplete="tel"></label>
+    <label>Email (optional)<input id="oEmail" type="email" maxlength="120" autocomplete="email"></label>
     <label>Delivery address or area<input id="oAddr" maxlength="200" autocomplete="street-address" list="savedAddr" placeholder="e.g. East Legon, near the mall"></label><datalist id="savedAddr"></datalist>
     <label>Note (optional)<textarea id="oNote" rows="2" maxlength="300"></textarea></label>
+    <label class="mk"><input type="checkbox" id="oOffers"><span>Send me offers and updates from this shop. I can stop any time.</span></label>
     <div id="oNoteBox"></div>
     <button class="btn primary" type="button" id="payNow" hidden style="width:100%;justify-content:center">Pay now with card or Mobile Money</button>
     <div id="payOr" hidden style="text-align:center;color:#5b6b62;font-size:14px;margin:2px 0">or, if you do not have a card</div>
@@ -319,6 +321,7 @@ body.has-list .wa-float{bottom:84px}
 .ccb{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;background:#F2B134;color:#0E2A47;font:700 13px system-ui,sans-serif;vertical-align:middle}.sname{color:#fff;font:700 20px Georgia,serif;text-decoration:none}.cartbtn{background:#F2B134;color:#0E2A47;border:0;border-radius:99px;padding:9px 16px;font:700 14.5px inherit;font-family:inherit;cursor:pointer}
 .cartbtn b{background:#0E2A47;color:#fff;border-radius:99px;padding:1px 8px;margin-left:4px}
 .b2.out{background:#fff;color:var(--green-d);border:2px solid var(--green);padding:8px 14px}
+.mk{display:flex!important;gap:10px;align-items:flex-start;font-size:14px;color:#5b6b62;line-height:1.4}.mk input{width:auto!important;margin-top:3px}
 .listbar{position:fixed;left:12px;right:12px;bottom:12px;z-index:45;background:#0E2A47;color:#fff;border-radius:14px;padding:10px 12px 10px 16px;display:none;align-items:center;gap:12px;box-shadow:0 12px 30px rgba(14,42,71,.35);max-width:640px;margin:0 auto}
 .listbar.show{display:flex}.listbar span{flex:1;font-size:14px}.listbar button{background:transparent;border:0;color:#B9C7D6;font-size:13px;text-decoration:underline;cursor:pointer;padding:6px;font-family:inherit}
 .listbar .lbuy{background:#25D366;color:#073B1F;text-decoration:none;font-weight:700;font-size:14px;padding:10px 18px;border-radius:10px}
@@ -369,7 +372,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       if(s.inactive){var w=String(s.whatsapp||'').replace(/\D/g,'');if(w.charAt(0)==='0')w='233'+w.slice(1);$('#state').innerHTML='<b>'+esc(s.store_name)+'</b> is temporarily closed.<br>'+(w?'<a class="b2" style="display:inline-block;margin-top:12px;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/'+w+'">Message the seller on WhatsApp</a>':'Please check back soon.');MZ.setCountry(s.franchise_country);document.title=s.store_name+' | MOZLYT';return}
       STORE=s;slug=sl;try{applyShopTheme(s.theme);localStorage.setItem('mz-sth-'+sl,JSON.stringify(s.theme||null))}catch(e){}try{var SO=s.social||{},NM={instagram:'Instagram',facebook:'Facebook',tiktok:'TikTok',x:'X',youtube:'YouTube',snapchat:'Snapchat',website:'Website'},sh='';Object.keys(NM).forEach(function(k){var u=String(SO[k]||'');if(/^https:\/\/[^\s"'<>]+$/.test(u))sh+='<a href="'+u.replace(/&/g,'&amp;')+'" target="_blank" rel="noopener nofollow" style="display:inline-block;padding:7px 14px;border:1.5px solid #cdd6e2;border-radius:999px;font-size:14px;font-weight:600;color:var(--green-d);text-decoration:none;background:#fff">'+NM[k]+'</a>'});if(sh){document.getElementById('socRow').innerHTML=sh;document.getElementById('soc').style.display='block'}}catch(e){}try{CART=JSON.parse(localStorage.getItem(KEY+slug)||'{}')}catch(e){CART={}}
       document.title=s.store_name+' | MOZLYT';MZ.pixels(s.meta_pixel,s.tiktok_pixel);MZ.track('ViewContent',{});$('#sName').textContent=s.store_name;$('#h1').textContent=s.store_name;if(s.franchise_country){var cc=String(s.franchise_country).toUpperCase();$('#sName').innerHTML='<img src="img/logo.png" alt="" width="30" height="30" style="border-radius:8px;vertical-align:middle;margin-right:8px">MOZ<span style="color:#5FD3A1">LYT</span><span class="ccb">'+esc(cc)+'</span>';$('#fnote').innerHTML='<b>'+esc(s.store_name)+'</b> is part of <a href="https://mozlyt.com/" style="color:var(--green-d);text-decoration:underline">MOZLYT</a>. ';}
-      show('state',false);show('shop',true);if(s.locked&&!document.getElementById('lockN')){var ln=document.createElement('div');ln.id='lockN';ln.style.cssText='background:#FFF4D6;color:#0E2A47;border:1px solid #F2B134;border-radius:12px;padding:12px 14px;margin:10px 0 14px;font-size:15px;line-height:1.5';ln.innerHTML='<b>Opening soon.</b> You can look at the products now. Prices and orders start as soon as this MOZLYT branch is ready.';var h1=$('#h1');if(h1&&h1.parentNode)h1.parentNode.insertBefore(ln,h1.nextSibling)}try{seoApply(s)}catch(e){}cats();draw();cartDraw();payCheck();accFetch();if(location.hash==='#account'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}accOpen()}if(!payOpen())payReturn();
+      show('state',false);show('shop',true);if(s.locked&&!document.getElementById('lockN')){var ln=document.createElement('div');ln.id='lockN';ln.style.cssText='background:#FFF4D6;color:#0E2A47;border:1px solid #F2B134;border-radius:12px;padding:12px 14px;margin:10px 0 14px;font-size:15px;line-height:1.5';ln.innerHTML='<b>Opening soon.</b> You can look at the products now. Prices and orders start as soon as this MOZLYT branch is ready.';var h1=$('#h1');if(h1&&h1.parentNode)h1.parentNode.insertBefore(ln,h1.nextSibling)}try{seoApply(s)}catch(e){}try{crmInit()}catch(e){}cats();draw();cartDraw();payCheck();accFetch();if(location.hash==='#account'){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}accOpen()}if(!payOpen())payReturn();
     },function(er){fail(er.message)})}
   function fail(t){$('#state').textContent=t}
   /* the shop owner's own colors (top bar and buttons) */
@@ -414,7 +417,7 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   $('#px').onclick=$('#pbg').onclick=function(){$('#pmod').hidden=true};document.addEventListener('keydown',function(e){if(e.key==='Escape')$('#pmod').hidden=true});
   $('#q').addEventListener('input',draw);$('#cat').addEventListener('change',draw);
 
-  function save(){try{localStorage.setItem(KEY+slug,JSON.stringify(CART))}catch(e){}cartDraw();if(STORE)draw()}
+  function save(){try{localStorage.setItem(KEY+slug,JSON.stringify(CART))}catch(e){}cartDraw();if(STORE){draw();touchSoon()}}
   function prod(id){return STORE.products.filter(function(p){return String(p.id)===String(id)})[0]}
   function lines(){return Object.keys(CART).map(function(id){var p=prod(id);return p?{p:p,q:CART[id]}:null}).filter(Boolean)}
   function total(){return lines().reduce(function(s,l){return s+l.p.price*l.q},0)}
@@ -460,6 +463,14 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   function waLink(t){return STORE&&STORE.whatsapp?'https://wa.me/'+MZ.phoneIntl(STORE.whatsapp)+'?text='+encodeURIComponent(t):''}
   function firstName(n){return String(n||'').trim().split(/\s+/)[0]||''}
   function accLabel(){var b=$('#accBtn');if(b)b.textContent=ACC&&ACC.joined?(firstName(ACC.name)||'My account'):'Account'}
+  var TT=null;
+  function lineItems(){return lines().map(function(l){return{product_id:String(l.p.id),name:l.p.name,qty:l.q,price:l.p.price}})}
+  function touchBase(){var g=function(i){var e=$(i);return e?String(e.value||'').trim():''};return{p_slug:slug,p_name:g('#oName'),p_phone:g('#oPhone'),p_email:g('#oEmail')}}
+  function touchNow(){var b=touchBase();if(!(b.p_phone.replace(/\D/g,'').length>=9)&&!/^\S+@\S+\.\S+$/.test(b.p_email))return;b.p_items=lineItems();b.p_marketing=null;MZ.rpc('shop_touch',b).catch(function(){})}
+  function touchSoon(){clearTimeout(TT);TT=setTimeout(touchNow,1800)}
+  function consentSend(){var c=$('#oOffers');if(!c||!c.checked)return;var b=touchBase();b.p_items=null;b.p_marketing=true;MZ.rpc('shop_touch',b).catch(function(){})}
+  function crmInit(){['#oName','#oPhone','#oEmail'].forEach(function(i){var e=$(i);if(e)e.addEventListener('input',touchSoon)});var f=$('#fOrder');if(f)f.addEventListener('submit',consentSend);var pn=$('#payNow');if(pn)pn.addEventListener('click',consentSend);
+    var u=new URLSearchParams(location.search).get('unsub')||'';if(/^[0-9a-f-]{36}$/i.test(u)){MZ.rpc('unsubscribe',{p_token:u}).then(function(){flash('Done. You will not get offers from this shop any more.')},function(){})}}
   function accPrefill(){if(!ACC||!ACC.joined)return;var ad=ACC.addresses||[];
     if(!$('#oName').value)$('#oName').value=ACC.name||'';if(!$('#oPhone').value)$('#oPhone').value=ACC.phone||'';if(!$('#oAddr').value&&ad[0])$('#oAddr').value=ad[0];
     $('#savedAddr').innerHTML=ad.map(function(x){return'<option value="'+esc(x)+'">'}).join('')}
@@ -501,9 +512,9 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
         (o.items||[]).forEach(function(i){var pr=prod(i.product_id);if(pr&&!pr.sold_out&&pr.price!=null){CART[pr.id]=(CART[pr.id]||0)+Number(i.qty||1);n++}});
         if(!n){flash('Those items are not available right now');return}save();show('accDrawer',false);show('done',false);show('drawer',true);flash('Added to your cart')}})}
     else if(AT==='me'){var ad=(a.addresses||[]).slice(0,5);if(!ad.length)ad=[''];
-      p.innerHTML='<form id="aF" class="f"><label>Name<input id="aN" required maxlength="80" value="'+esc(a.name)+'"></label><label>Phone / WhatsApp<input id="aP" type="tel" required maxlength="20" value="'+esc(a.phone)+'"></label><label>Email<input value="'+esc(a.email||'')+'" disabled></label><div id="aAd"></div><button class="alink" type="button" id="aAdd">+ Add another address</button><button class="btn primary" type="submit">Save my details</button></form><div id="aNote"></div><button class="alink" type="button" id="aOut">Sign out</button>';
+      p.innerHTML='<form id="aF" class="f"><label>Name<input id="aN" required maxlength="80" value="'+esc(a.name)+'"></label><label>Phone / WhatsApp<input id="aP" type="tel" required maxlength="20" value="'+esc(a.phone)+'"></label><label>Email<input value="'+esc(a.email||'')+'" disabled></label><div id="aAd"></div><label class="mk"><input type="checkbox" id="aMk"'+(a.marketing_ok?' checked':'')+'><span>Send me offers and updates from this shop</span></label><button class="alink" type="button" id="aAdd">+ Add another address</button><button class="btn primary" type="submit">Save my details</button></form><div id="aNote"></div><button class="alink" type="button" id="aOut">Sign out</button>';
       var drawAd=function(){$('#aAd').innerHTML=ad.map(function(x,i){return'<label>Delivery address '+(i+1)+'<input class="aad" maxlength="200" placeholder="e.g. East Legon, near the mall" value="'+esc(x)+'"></label>'}).join('');$('#aAdd').hidden=ad.length>=5;$$('.aad').forEach(function(inp,i){inp.oninput=function(){ad[i]=inp.value}})};drawAd();
-      $('#aAdd').onclick=function(){ad.push('');drawAd();var l=$$('.aad');l[l.length-1].focus()};$('#aOut').onclick=accOut;
+      $('#aMk').onchange=function(){var v=this.checked;MZ.rpc('set_my_marketing',{p_slug:slug,p_ok:v}).then(function(){if(ACC)ACC.marketing_ok=v;flash(v?'You will get offers from this shop':'You will not get offers any more')},function(er){flash(er.message)})};$('#aAdd').onclick=function(){ad.push('');drawAd();var l=$$('.aad');l[l.length-1].focus()};$('#aOut').onclick=accOut;
       $('#aF').onsubmit=function(e){e.preventDefault();var bt=$('button[type=submit]',this);busy(bt,true,'Saving...');
         MZ.rpc('save_my_account',{p_slug:slug,p_name:$('#aN').value.trim(),p_phone:$('#aP').value.trim(),p_addresses:ad.filter(function(x){return String(x).trim()})}).then(accFetch).then(function(){flash('Saved');mainView()}).catch(function(er){aNote(er.message)}).then(function(){busy(bt,false)})}}
     else{var l=waLink('Hello '+STORE.store_name+', I need help.');

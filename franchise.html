@@ -411,6 +411,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
   <div id="pane-ord" hidden><div class="tools"><select id="of"><option value="">All statuses</option></select></div><div class="lst" id="frOrd"></div></div>
   <div id="pane-cust" hidden>
     <p class="sub" style="margin:0 0 12px">People who order from your own MOZLYT shop are saved here automatically. Your sellers' customers belong to those sellers and are not shown here.</p>
+    <div id="crmTop"></div>
     <div class="stats" id="custStats"></div>
     <div class="tools" style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px"><input id="custQ" type="search" placeholder="Search name, phone or email" style="flex:1;min-width:180px"><button class="b2 ghost" type="button" id="custCsv">Download list (CSV)</button></div>
     <div class="lst" id="custList"></div>
@@ -448,6 +449,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
 <div style="display:flex;gap:8px;flex-wrap:wrap;position:sticky;bottom:-20px;padding:12px 0 4px;background:inherit"><button class="b2" id="thSave" type="button">Save both</button><button class="b2 ghost" id="thReset" type="button">Back to MOZLYT colors</button><button class="b2 ghost" id="thClose" type="button">Close</button></div><div id="thMsg" class="sub" style="margin-top:8px"></div></div></div>
 </div></main>
 <script src="js/mz-api.js"></script>
+<script src="js/mz-crm.js"></script>
 <script>
 
 var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
@@ -476,18 +478,18 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#fLogin').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Logging in...');MZ.signIn($('#lEmail').value.trim(),$('#lPass').value).then(boot,function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
   /* ----- my customers (private to this shop) ----- */
   var CUST=[],CUSTLOAD=false;
-  function loadCust(){var l=$('#custList');if(!CUSTLOAD)l.innerHTML='<div class="empty">Loading...</div>';
+  function loadCust(){if(window.MZCRM){MZCRM.attach({reload:loadCust,redraw:drawCust});MZCRM.load()}var l=$('#custList');if(!CUSTLOAD)l.innerHTML='<div class="empty">Loading...</div>';
     MZ.rpc('my_customers').then(function(r){CUST=r||[];CUSTLOAD=true;drawCust()},function(er){l.innerHTML='<div class="empty">'+esc(er.message)+'</div>'})}
   function sumLines(o){return(o.items||[]).map(function(i){return(i.qty||1)+' x '+i.name}).join(', ')}
   function custWa(c){return c.phone?'https://wa.me/'+MZ.phoneIntl(c.phone)+'?text='+encodeURIComponent('Hello '+(c.name||'')+', this is '+(ME.store_name||'your seller')+'.'):''}
-  function drawCust(){var q=($('#custQ').value||'').toLowerCase().trim(),L=CUST.filter(function(c){return!q||(String(c.name||'')+' '+String(c.phone||'')+' '+String(c.email||'')).toLowerCase().indexOf(q)>-1});
+  function drawCust(){if(window.MZCRM)MZCRM.paint(CUST);var q=($('#custQ').value||'').toLowerCase().trim(),L=CUST.filter(function(c){return!q||(String(c.name||'')+' '+String(c.phone||'')+' '+String(c.email||'')).toLowerCase().indexOf(q)>-1});if(window.MZCRM)L=MZCRM.filter(L);
     var tot=CUST.reduce(function(s,c){return s+Number(c.spent||0)},0),rep=CUST.filter(function(c){return c.orders>1}).length,acc=CUST.filter(function(c){return c.has_account}).length;
     $('#custStats').innerHTML='<div class="stat"><b>'+CUST.length+'</b><span>Customers</span></div><div class="stat"><b>'+rep+'</b><span>Ordered more than once</span></div><div class="stat"><b>'+acc+'</b><span>With an account</span></div><div class="stat"><b>'+MZ.money(tot)+'</b><span>Paid or delivered</span></div>';
     $('#custList').innerHTML=L.map(function(c){var w=custWa(c);return'<div class="it" data-c="'+esc(c.id)+'"><div class="h"><b>'+esc(c.name||'Customer')+(c.has_account?' <span class="tag">Has account</span>':'')+'</b><span class="m">'+c.orders+' order'+(c.orders===1?'':'s')+' &middot; <b>'+MZ.money(c.spent||0)+'</b></span></div>'+
       '<div class="m">'+(c.phone?esc(c.phone):'No phone')+(c.email?' &middot; '+esc(c.email):'')+(c.address?' &middot; '+esc(c.address):'')+'</div>'+
       '<div class="m">'+(c.last_order_at?'Last order '+MZ.when(c.last_order_at):'Joined '+MZ.when(c.created_at))+'</div>'+
       '<div style="display:flex;gap:8px;flex-wrap:wrap">'+(w?'<a class="b2" style="text-decoration:none" target="_blank" rel="noopener" href="'+esc(w)+'">WhatsApp</a>':'')+'<button class="b2 ghost" type="button" data-co="'+esc(c.id)+'">Orders</button></div>'+
-      '<div class="cord" hidden></div>'+
+      (window.MZCRM?MZCRM.extra(c):'')+'<div class="cord" hidden></div>'+
       '<label class="m" style="display:grid;gap:4px">Your private note<textarea rows="2" maxlength="500" data-cn="'+esc(c.id)+'" placeholder="e.g. likes the large size, pays on delivery">'+esc(c.note||'')+'</textarea></label></div>'}).join('')||'<div class="empty">'+(CUST.length?'No customer matches.':'No customers yet. They appear here after their first order.')+'</div>'}
   document.addEventListener('input',function(e){if(e.target&&e.target.id==='custQ')drawCust()});
   document.addEventListener('change',function(e){var t=e.target;if(!t||!t.dataset||!t.dataset.cn)return;MZ.rpc('set_customer_note',{p_id:t.dataset.cn,p_note:t.value}).then(function(){CUST.forEach(function(c){if(c.id===t.dataset.cn)c.note=t.value});flash('Note saved')},function(er){flash(er.message)})});
