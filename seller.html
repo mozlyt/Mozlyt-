@@ -526,6 +526,16 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
       <form id="fDom" class="f"><label>Your domain<input id="eDom" placeholder="www.amawellness.com" autocapitalize="none"><small>Leave empty if you do not have one.</small></label>
       <button class="btn primary" type="submit">Connect domain</button></form>
       <div id="domInfo" style="margin-top:14px"></div></div>
+    <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Social accounts (optional)</h3>
+      <p class="sub" style="margin-bottom:12px">Show your social pages in the footer of your shop so visitors can follow you. Paste the full link or just your username. Leave a box empty to hide it.</p>
+      <form id="fSoc" class="f"><label>Instagram<input id="eSoc_instagram" placeholder="@yourname" autocapitalize="none"></label>
+      <label>Facebook<input id="eSoc_facebook" placeholder="yourpage or full link" autocapitalize="none"></label>
+      <label>TikTok<input id="eSoc_tiktok" placeholder="@yourname" autocapitalize="none"></label>
+      <label>X (Twitter)<input id="eSoc_x" placeholder="@yourname" autocapitalize="none"></label>
+      <label>YouTube<input id="eSoc_youtube" placeholder="@yourchannel or full link" autocapitalize="none"></label>
+      <label>Snapchat<input id="eSoc_snapchat" placeholder="yourname" autocapitalize="none"></label>
+      <label>Your website<input id="eSoc_website" placeholder="www.example.com" autocapitalize="none"></label>
+      <button class="btn primary" type="submit">Save social accounts</button></form></div>
     <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Ad tracking (optional)</h3><div id="lockPix"></div>
       <p class="sub" style="margin-bottom:12px">Running Facebook, Instagram or TikTok ads? Paste your Pixel ID and your store will report visits, add-to-cart and orders to your ad account. Get the ID from Meta Events Manager or TikTok Ads Manager (Events, Web Events).</p>
       <form id="fPix" class="f"><label>Facebook / Instagram Pixel ID<input id="ePx1" inputmode="numeric" placeholder="e.g. 123456789012345" autocapitalize="none"></label>
@@ -751,7 +761,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#hello').textContent=isTrainee()?'Your training':(ME.store_name||'Your store');$('#subline').textContent='Welcome, '+(ME.full_name||(isTrainee()?'trainee':'seller'))+'.';
     var u=storeUrl();$('#storeUrl').textContent=u;$('#openUrl').href=u;$('#cpUrl').onclick=function(){copy(u);flag('shared',true);drawOver()};$('#shareUrl').onclick=function(){flag('shared',true)};
     $('#shareUrl').href='https://wa.me/?text='+encodeURIComponent('Shop with me on my MOZLYT store: '+u);
-    $('#eStore').value=ME.store_name||'';$('#ePhone').value=ME.phone||'';$('#eDom').value=ME.custom_domain||'';$('#ePx1').value=ME.meta_pixel_id||'';$('#ePx2').value=ME.tiktok_pixel_id||'';$('#accEmail').textContent=ME.email||'';domInfo()}
+    $('#eStore').value=ME.store_name||'';$('#ePhone').value=ME.phone||'';$('#eDom').value=ME.custom_domain||'';$('#ePx1').value=ME.meta_pixel_id||'';$('#ePx2').value=ME.tiktok_pixel_id||'';var SL=ME.social_links||{};['instagram','facebook','tiktok','x','youtube','snapchat','website'].forEach(function(k){var e=$('#eSoc_'+k);if(e)e.value=SL[k]||''});$('#accEmail').textContent=ME.email||'';domInfo()}
   function drawAll(){drawOver();drawProducts();drawOrders();drawSub();if(TR)drawTrain()}
 
   /* ----- subscription ----- */
@@ -1015,6 +1025,9 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     else{
       el.innerHTML='<div class="msg info"><b>'+esc(d)+'</b> is saved but not connected yet. Press Connect domain above to start.</div>'+rm}
     var r=$('#domRm');if(r)r.onclick=function(){if(!confirm('Remove this domain from your store?'))return;busy(r,true,'Removing...');MZ.fn('domain-connect',{action:'remove'}).then(function(){return reloadMe()}).then(function(){flash('Domain removed')}).then(function(){busy(r,false)})}}
+  $('#fSoc').onsubmit=function(e){e.preventDefault();var o={};['instagram','facebook','tiktok','x','youtube','snapchat','website'].forEach(function(k){o[k]=$('#eSoc_'+k).value.trim()});
+    var b=$('button',this);busy(b,true,'Saving...');
+    MZ.rpc('set_my_social',{p_links:o}).then(function(r){ME.social_links=r||{};['instagram','facebook','tiktok','x','youtube','snapchat','website'].forEach(function(k){$('#eSoc_'+k).value=(r||{})[k]||''});flash('Social accounts saved. They now show in your shop footer.')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
   $('#fPix').onsubmit=function(e){e.preventDefault();var a=$('#ePx1').value.trim(),c=$('#ePx2').value.trim();
     if(a&&!/^[0-9]{8,20}$/.test(a)){flash('The Facebook Pixel ID is numbers only, about 15 digits');return}
     if(c&&!/^[A-Za-z0-9]{8,32}$/.test(c)){flash('The TikTok Pixel ID is letters and numbers only');return}
