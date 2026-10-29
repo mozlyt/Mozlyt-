@@ -511,7 +511,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
     if(f!==''||row.length){row.push(f);r.push(row)}return r}
   function fromCSV(tx){var r=parseCSV(tx);if(!r.length)return[];var h=r.shift().map(function(x){return x.toLowerCase().replace(/[^a-z]/g,'')}),ix=function(n){return h.indexOf(n)};
     return r.map(function(x){return{cat:(x[ix('category')]||'').trim(),name:(x[ix('name')]||'').trim(),price:(x[ix('price')]||'').trim(),status:(x[ix('status')]||'').trim().toLowerCase(),photo:(x[ix('photo')]||'').trim(),desc:''}}).filter(function(p){return p.name&&p.status!=='hidden'})}
-  function priceText(p){if(!p)return 'Price on request';return /^[\d.,\s]+$/.test(p)?'GH₵ '+p.trim():p}
+  function priceText(p){if(!p)return 'Price on request';if(/^[\d.,\s]+$/.test(p)){var n=parseFloat(String(p).replace(/[,\s]/g,''));return 'GH₵ '+(isNaN(n)?p.trim():n.toLocaleString('en-US',{maximumFractionDigits:2}))}return p}
   function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'more'}
   function catFor(v){var l=v.toLowerCase(),i,c;for(i=0;i<CATS.length;i++){c=CATS[i];if(l==c.id||l==c.title.toLowerCase()||c.title.toLowerCase().indexOf(l)===0&&l.length>3||(l.indexOf(c.id)===0&&l.length<=c.id.length+3))return c}return null}
   function render(items){
