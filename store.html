@@ -271,7 +271,7 @@ body.has-list .wa-float{bottom:84px}
 </head>
 <body>
 
-<header class="sh"><div class="wrap sbar"><a class="sname" id="sName" href="#">Store</a><span style="display:flex;gap:8px;align-items:center"><button type="button" class="cartbtn acc" id="accBtn">Account</button><button type="button" class="cartbtn" id="cartBtn">Cart <b id="cartN">0</b></button></span></div></header>
+<header class="sh"><div class="wrap sbar"><a class="sname" id="sName" href="#">Store</a><span style="display:flex;gap:8px;align-items:center"><button type="button" class="cartbtn acc" id="accBtn">Account</button><button type="button" class="cartbtn" id="cartBtn">List <b id="cartN">0</b></button></span></div></header>
 <main class="dash" style="padding-top:18px"><div class="wrap">
 <div id="state" class="empty">Loading store...</div>
 <section id="shop" hidden>
@@ -284,8 +284,9 @@ body.has-list .wa-float{bottom:84px}
 </div></main>
 
 <div class="pmod" id="pmod" hidden role="dialog" aria-modal="true"><div class="pbg" id="pbg"></div><div class="pbox"><button type="button" class="px" id="px" aria-label="Close">&times;</button><div class="pimg" id="pimg"></div><div class="pbody"><h3 id="pname"></h3><div class="price" id="pprice"></div><p id="pdesc"></p><div id="pact"></div></div></div></div>
+<div class="listbar" id="listbar"><span><b id="lcount">0</b> in your list</span><button type="button" id="lclear">Clear</button><button type="button" class="lbuy" id="lbuy">Buy</button></div>
 <div class="drawer" id="drawer" hidden><div class="dbg" id="dbg"></div><div class="dpanel">
-  <div class="top2" style="margin:0 0 10px"><h3 style="margin:0">Your cart</h3><button class="b2 ghost" id="dclose" type="button">Close</button></div>
+  <div class="top2" style="margin:0 0 10px"><h3 style="margin:0">Your list</h3><button class="b2 ghost" id="dclose" type="button">Close</button></div>
   <div id="clines"></div><div id="ctotal" style="font-weight:700;margin:10px 0"></div>
   <form id="fOrder" class="f">
     <label>Your name<input id="oName" required maxlength="80" autocomplete="name"></label>
@@ -317,6 +318,12 @@ body.has-list .wa-float{bottom:84px}
 .sh{background:#0E2A47;color:#fff;position:sticky;top:0;z-index:20}.sbar{display:flex;justify-content:space-between;align-items:center;padding-top:12px;padding-bottom:12px}
 .ccb{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;background:#F2B134;color:#0E2A47;font:700 13px system-ui,sans-serif;vertical-align:middle}.sname{color:#fff;font:700 20px Georgia,serif;text-decoration:none}.cartbtn{background:#F2B134;color:#0E2A47;border:0;border-radius:99px;padding:9px 16px;font:700 14.5px inherit;font-family:inherit;cursor:pointer}
 .cartbtn b{background:#0E2A47;color:#fff;border-radius:99px;padding:1px 8px;margin-left:4px}
+.b2.out{background:#fff;color:var(--green-d);border:2px solid var(--green);padding:8px 14px}
+.listbar{position:fixed;left:12px;right:12px;bottom:12px;z-index:45;background:#0E2A47;color:#fff;border-radius:14px;padding:10px 12px 10px 16px;display:none;align-items:center;gap:12px;box-shadow:0 12px 30px rgba(14,42,71,.35);max-width:640px;margin:0 auto}
+.listbar.show{display:flex}.listbar span{flex:1;font-size:14px}.listbar button{background:transparent;border:0;color:#B9C7D6;font-size:13px;text-decoration:underline;cursor:pointer;padding:6px;font-family:inherit}
+.listbar .lbuy{background:#25D366;color:#073B1F;text-decoration:none;font-weight:700;font-size:14px;padding:10px 18px;border-radius:10px}
+body.has-list{padding-bottom:84px}
+body.has-list .toast{bottom:88px}
 .cartbtn.acc{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .atabs{display:flex;gap:6px;margin:0 0 12px}.atabs button{flex:1;padding:9px 6px;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;font-weight:600;font-size:14px;font-family:inherit;cursor:pointer}.atabs button.on{background:#0E2A47;color:#fff;border-color:#0E2A47}
 .alink{background:none;border:0;color:var(--green-d);font-weight:600;font-size:14px;font-family:inherit;text-decoration:underline;cursor:pointer;padding:6px 0}
@@ -370,23 +377,24 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function cats(){var c=['All categories'].concat(STORE.products.map(function(p){return p.category}).filter(function(x,i,a){return a.indexOf(x)===i}));$('#cat').innerHTML=c.map(function(x){return'<option>'+esc(x)+'</option>'}).join('')}
   function draw(){var q=$('#q').value.toLowerCase().trim(),c=$('#cat').value;
     var list=STORE.products.filter(function(p){return(c==='All categories'||p.category===c)&&(!q||p.name.toLowerCase().indexOf(q)>-1)});
-    $('#grid').innerHTML=list.map(function(p){return'<div class="pc"><div class="ph" data-v="'+p.id+'">'+(p.photo?'<img loading="lazy" decoding="async" alt="'+esc(p.name)+'" src="'+esc(WP(p.photo))+'" data-o="'+esc(p.photo)+'" onerror="if(this.dataset.o&&this.src.indexOf(this.dataset.o)<0){this.src=this.dataset.o}">':'Photo coming soon')+'</div><div class="b"><h4 data-v="'+p.id+'">'+esc(p.name)+'</h4><div class="price">'+(p.price==null?'<small>Price coming soon</small>':MZ.money(p.price))+'</div>'+(p.sold_out?'<span class="tag bad">Sold out</span>':(p.price==null?'':'<button class="b2" data-id="'+p.id+'">Add to cart</button>'))+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">'+(STORE.products.length?'No products match.':'Coming soon. This shop is getting ready. Please check back soon.')+'</div>';
-    $$('#grid [data-id]').forEach(function(b){b.onclick=function(){addCart(b.dataset.id)}});
+    $('#grid').innerHTML=list.map(function(p){return'<div class="pc"><div class="ph" data-v="'+p.id+'">'+(p.photo?'<img loading="lazy" decoding="async" alt="'+esc(p.name)+'" src="'+esc(WP(p.photo))+'" data-o="'+esc(p.photo)+'" onerror="if(this.dataset.o&&this.src.indexOf(this.dataset.o)<0){this.src=this.dataset.o}">':'Photo coming soon')+'</div><div class="b"><h4 data-v="'+p.id+'">'+esc(p.name)+'</h4><div class="price">'+(p.price==null?'<small>Price coming soon</small>':MZ.money(p.price))+'</div>'+(p.sold_out?'<span class="tag bad">Sold out</span>':(p.price==null?'':'<button class="b2 out" data-id="'+p.id+'">'+(CART[p.id]>0?'Added \u2713':'Add to list')+'</button>'+(PAY?'<button class="b2" data-pay="'+p.id+'">Pay now</button>':'')))+'</div></div>'}).join('')||'<div class="empty" style="grid-column:1/-1">'+(STORE.products.length?'No products match.':'Coming soon. This shop is getting ready. Please check back soon.')+'</div>';
+    $$('#grid [data-id]').forEach(function(b){b.onclick=function(){var id=b.dataset.id;if(CART[id]>0){delete CART[id];flash('Removed from your list');save()}else addCart(id)}});
+    $$('#grid [data-pay]').forEach(function(b){b.onclick=function(){payNowItem(b.dataset.pay)}});
     $$('#grid [data-v]').forEach(function(b){b.onclick=function(){openProd(b.dataset.v)}});
   }
-  function addCart(id){CART[id]=(CART[id]||0)+1;save();flash('Added to cart');var pp=prod(id);MZ.track('AddToCart',{value:pp?pp.price:0,name:pp?pp.name:''})}
+  function addCart(id){CART[id]=(CART[id]||0)+1;save();flash('Added to your list');var pp=prod(id);MZ.track('AddToCart',{value:pp?pp.price:0,name:pp?pp.name:''})}
   function WP(u){return /^img\/p\/[^?]+\.jpg$/.test(u||'')?u.slice(0,-4)+'.webp':u}
   function openProd(id){var p=prod(id);if(!p)return;$('#pimg').innerHTML=p.photo?'<img alt="'+esc(p.name)+'" src="'+esc(WP(p.photo))+'" data-o="'+esc(p.photo)+'" onerror="if(this.dataset.o&&this.src.indexOf(this.dataset.o)<0){this.src=this.dataset.o}">':'<span style="color:#5b6b62;padding:40px">Photo coming soon</span>';$('#pname').textContent=p.name;$('#pprice').textContent=p.price==null?'Price coming soon':MZ.money(p.price);$('#pdesc').textContent=p.description||'No description yet.';
-    $('#pact').innerHTML=p.sold_out?'<span class="tag bad">Sold out</span>':'<button class="btn primary" type="button" id="pAdd" style="width:100%">Add to cart</button>';var a=$('#pAdd');if(a)a.onclick=function(){addCart(id);$('#pmod').hidden=true};$('#pmod').hidden=false}
+    $('#pact').innerHTML=p.sold_out?'<span class="tag bad">Sold out</span>':'<button class="btn primary" type="button" id="pAdd" style="width:100%">Add to list</button>'+(PAY?'<button class="btn" type="button" id="pPay" style="width:100%;background:#fff;color:var(--green-d);border-color:var(--green)">Pay now</button>':'');var a=$('#pAdd');if(a)a.onclick=function(){addCart(id);$('#pmod').hidden=true};var pp2=$('#pPay');if(pp2)pp2.onclick=function(){$('#pmod').hidden=true;payNowItem(id)};$('#pmod').hidden=false}
   $('#px').onclick=$('#pbg').onclick=function(){$('#pmod').hidden=true};document.addEventListener('keydown',function(e){if(e.key==='Escape')$('#pmod').hidden=true});
   $('#q').addEventListener('input',draw);$('#cat').addEventListener('change',draw);
 
-  function save(){try{localStorage.setItem(KEY+slug,JSON.stringify(CART))}catch(e){}cartDraw()}
+  function save(){try{localStorage.setItem(KEY+slug,JSON.stringify(CART))}catch(e){}cartDraw();if(STORE)draw()}
   function prod(id){return STORE.products.filter(function(p){return String(p.id)===String(id)})[0]}
   function lines(){return Object.keys(CART).map(function(id){var p=prod(id);return p?{p:p,q:CART[id]}:null}).filter(Boolean)}
   function total(){return lines().reduce(function(s,l){return s+l.p.price*l.q},0)}
-  function cartDraw(){var L=lines();$('#cartN').textContent=L.reduce(function(s,l){return s+l.q},0);
-    $('#clines').innerHTML=L.map(function(l){return'<div class="cl"><span>'+esc(l.p.name)+'<br><small>'+MZ.money(l.p.price)+'</small></span><span class="q"><button data-d="'+l.p.id+'" aria-label="Less">&minus;</button>'+l.q+'<button data-u="'+l.p.id+'" aria-label="More">+</button></span></div>'}).join('')||'<div class="empty">Your cart is empty.</div>';
+  function cartDraw(){var L=lines();$('#cartN').textContent=L.reduce(function(s,l){return s+l.q},0);var lb=$('#listbar');if(lb){lb.classList.toggle('show',L.length>0);document.body.classList.toggle('has-list',L.length>0);$('#lcount').textContent=L.reduce(function(s,l){return s+l.q},0)}
+    $('#clines').innerHTML=L.map(function(l){return'<div class="cl"><span>'+esc(l.p.name)+'<br><small>'+MZ.money(l.p.price)+'</small></span><span class="q"><button data-d="'+l.p.id+'" aria-label="Less">&minus;</button>'+l.q+'<button data-u="'+l.p.id+'" aria-label="More">+</button></span></div>'}).join('')||'<div class="empty">Your list is empty.</div>';
     $('#ctotal').textContent=L.length?'Total: '+MZ.money(total()):'';$('#fOrder').hidden=!L.length;
     $$('#clines [data-d]').forEach(function(b){b.onclick=function(){var id=b.dataset.d;CART[id]--;if(CART[id]<=0)delete CART[id];save()}});$$('#clines [data-u]').forEach(function(b){b.onclick=function(){CART[b.dataset.u]++;save()}})}
   $('#cartBtn').onclick=function(){show('done',false);show('drawer',true)};$('#dbg').onclick=$('#dclose').onclick=function(){show('drawer',false)};
@@ -394,7 +402,10 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   /* online payment (card / Mobile Money) */
   var PAY=false;
-  function payCheck(){MZ.rpc('store_pay_ready',{p_slug:slug}).then(function(r){PAY=r===true;$('#payNow').hidden=!PAY;$('#payOr').hidden=!PAY;$('#waBtn').textContent=PAY?'Order on WhatsApp instead':'Place order'},function(){})}
+  function payNowItem(id){if(!(CART[id]>0)){CART[id]=1;MZ.track('AddToCart',{value:(prod(id)||{}).price||0,name:(prod(id)||{}).name||''})}save();show('done',false);show('drawer',true);var f=$('#oName');if(f)setTimeout(function(){try{f.focus()}catch(e){}},50)}
+  $('#lbuy').onclick=function(){show('done',false);show('drawer',true)};
+  $('#lclear').onclick=function(){CART={};save();flash('List cleared')};
+  function payCheck(){MZ.rpc('store_pay_ready',{p_slug:slug}).then(function(r){PAY=r===true;draw();$('#payNow').hidden=!PAY;$('#payOr').hidden=!PAY;$('#waBtn').textContent=PAY?'Order on WhatsApp instead':'Place order'},function(){})}
   $('#payNow').onclick=function(){var f=$('#fOrder'),b=this,L=lines();if(!L.length)return;if(!f.reportValidity())return;
     busy(b,true,'Opening payment...');note($('#oNoteBox'),'','');
     MZ.fn('store-pay',{action:'init',slug:slug,name:$('#oName').value.trim(),phone:$('#oPhone').value.trim(),address:$('#oAddr').value.trim(),notes:$('#oNote').value.trim(),items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(r){
