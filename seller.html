@@ -1051,7 +1051,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
         '<div class="card2" style="margin-top:10px"><b>Add this record where you bought the domain</b><div style="margin-top:8px;line-height:1.9">Type: <b>CNAME</b><br>Name (Host): <b>'+esc(nm)+'</b> <button class="b2 ghost" type="button" data-cp="'+esc(nm)+'">Copy</button><br>Value (Points to): <b>shops.mozlyt.com</b> <button class="b2 ghost" type="button" data-cp="shops.mozlyt.com">Copy</button></div>'+
         '<p class="sub" style="margin:10px 0 0;font-size:14px">If the domain seller already has a record with the same name, change it instead of adding another. Some sellers do not allow a CNAME on the main domain (no www). In that case use <b>www.</b> in front, for example www.'+esc(d.replace(/^www\./,''))+'.</p>'+
         '<p class="sub" style="margin:8px 0 0;font-size:14px">It usually takes a few minutes, and can take up to a few hours. This page checks by itself.</p></div>'+
-        (ME.domain_note?'<div class="m" style="margin-top:8px;font-size:13px;color:var(--mute)">'+esc(ME.domain_note)+'</div>':'')+
+        (ME.domain_note?'<div class="m" style="margin-top:8px;font-size:14px;line-height:1.5;color:#e8edf3;font-weight:600">'+esc(ME.domain_note)+'</div>':'')+
         '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn primary" type="button" id="domCheck">Check now</button></div>'+rm;
       $$('#domInfo [data-cp]').forEach(function(c){c.onclick=function(){copy(c.dataset.cp)}});
       var ck=$('#domCheck');if(ck)ck.onclick=function(){domCheck(true)};
