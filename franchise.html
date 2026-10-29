@@ -490,7 +490,17 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
 
   function frRow(x,act){var u=FR.rec.filter(function(y){return y.id===x.seller_id})[0]||{};
     return'<div class="it"><div class="h"><b>'+esc(u.full_name||u.store_name||'Recruit')+' &middot; '+(x.kind==='training'?'Training: '+esc(itemName(x.item)):cap(x.tier||'standard')+' '+(x.plan==='yearly'?'yearly':'monthly'))+' &middot; '+MZ.money(x.amount)+'</b>'+(act?'':'<span class="tag '+(x.status==='confirmed'?'':'bad')+'">'+x.status+'</span>')+'</div><div class="m">Ref <b>'+esc(x.reference)+'</b> &middot; '+esc(u.phone||'')+' &middot; '+MZ.when(x.created_at)+'</div>'+(act?'<div style="display:flex;gap:8px;margin-top:8px"><button class="b2" data-fok="'+x.id+'" type="button">Confirm</button><button class="b2 red" data-fno="'+x.id+'" type="button">Reject</button></div>':'')+'</div>'}
-  function ordRow(o){var u=FR.rec.filter(function(y){return y.id===o.seller_id})[0]||{};return'<div class="it"><div class="h"><b>Order #'+o.id+' &middot; '+esc(o.customer_name||'Customer')+'</b><span>'+(o.paid?'<span class="tag ok">Paid online</span> ':'')+'<span class="tag">'+esc(o.status||'')+'</span></span></div><div class="m">'+esc(o.seller_id===ME.id?'Your shop':(u.store_name||u.full_name||'Recruit'))+' &middot; '+MZ.when(o.created_at)+(o.total!=null?' &middot; <b>'+MZ.money(o.total)+'</b>':'')+'</div></div>'}
+
+  /* ----- payment link for a WhatsApp order ----- */
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-pl]');if(!b)return;e.preventDefault();
+    var id=Number(b.dataset.pl),ph=b.dataset.ph||'',nm=b.dataset.nm||'',tt=b.dataset.tt||'';busy(b,true,'Making link...');
+    MZ.fn('store-pay',{action:'link',order_id:id}).then(function(r){
+      if(!r||!r.ok){flash((r&&r.error)||'Could not make the link');return}
+      var msg='Hello '+nm+', here is your secure payment link for order #'+id+(tt?' ('+tt+')':'')+'. You can pay with card or Mobile Money: '+r.link;
+      if(ph){window.open('https://wa.me/'+MZ.phoneIntl(ph)+'?text='+encodeURIComponent(msg),'_blank')}
+      else{try{navigator.clipboard.writeText(r.link);flash('Payment link copied')}catch(x){prompt('Copy this payment link',r.link)}}
+    },function(er){flash(er.message)}).then(function(){busy(b,false)})});
+  function ordRow(o){var u=FR.rec.filter(function(y){return y.id===o.seller_id})[0]||{};return'<div class="it"><div class="h"><b>Order #'+o.id+' &middot; '+esc(o.customer_name||'Customer')+'</b><span>'+(o.paid?'<span class="tag ok">Paid online</span> ':'')+'<span class="tag">'+esc(o.status||'')+'</span></span></div><div class="m">'+esc(o.seller_id===ME.id?'Your shop':(u.store_name||u.full_name||'Recruit'))+' &middot; '+MZ.when(o.created_at)+(o.total!=null?' &middot; <b>'+MZ.money(o.total)+'</b>':'')+'</div>'+(!o.paid&&o.seller_id===ME.id&&o.total>0?'<div style="margin-top:6px"><button class="b2" type="button" data-pl="'+o.id+'" data-ph="'+esc(o.customer_phone||'')+'" data-nm="'+esc(o.customer_name||'')+'" data-tt="'+esc(MZ.money(o.total))+'">Send payment link</button></div>':'')+'</div>'}
   function orders(){var f=$('#of').value;$('#frOrd').innerHTML=FR.ord.filter(function(o){return!f||o.status===f}).map(ordRow).join('')||'<div class="empty">No orders yet.</div>'}
   $('#of').onchange=orders;
   $('#prodCat').onchange=function(){drawProd()};
