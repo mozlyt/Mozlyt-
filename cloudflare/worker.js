@@ -13,6 +13,9 @@ export default {
     // MOZLYT's own addresses are never rewritten
     if (host === 'mozlyt.com' || host.endsWith('.mozlyt.com')) return fetch(request);
 
+    // certificate checks (Let's Encrypt / Cloudflare) must reach Cloudflare untouched, never be redirected
+    if (url.pathname.startsWith('/.well-known/')) return fetch(request);
+
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       return new Response('Method not allowed', { status: 405 });
     }
