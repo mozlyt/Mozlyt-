@@ -596,6 +596,8 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
 <label class="sub" style="display:flex;align-items:center;gap:8px;font-size:13.5px">Or pick your own <input type="color" id="thCustom" style="width:44px;height:32px;padding:0;border:0"></label>
 <b style="font-size:14px;display:block;margin-top:14px">Background</b><div id="thBg" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px"></div>
 <label class="sub" style="display:flex;align-items:center;gap:8px;font-size:13.5px">Or pick your own <input type="color" id="thCustomBg" style="width:44px;height:32px;padding:0;border:0"></label>
+<b style="font-size:14px;display:block;margin-top:14px">Bar color</b><div class="sub" style="font-size:13px">The menu bar: the tabs on a computer, the bottom bar on a phone.</div><div id="thBar" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px"></div>
+<label class="sub" style="display:flex;align-items:center;gap:8px;font-size:13.5px">Or pick your own <input type="color" id="thCustomBar" style="width:44px;height:32px;padding:0;border:0"></label>
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px"><button class="b2" id="thSave" type="button">Save</button><button class="b2 ghost" id="thReset" type="button">Back to MOZLYT colors</button><button class="b2 ghost" id="thClose" type="button">Close</button></div></div></div>
 <script>
 (function(){
@@ -607,13 +609,19 @@ function okc(t){return t&&/^#[0-9a-fA-F]{6}$/.test(t.accent||'')&&/^#[0-9a-fA-F]
 function dashOf(raw){if(!raw)return null;if(raw.site||raw.dash)return okc(raw.dash)?raw.dash:null;return okc(raw)?raw:null}
 function apply(){var st=document.getElementById('mz-theme-css');if(!st){st=document.createElement('style');st.id='mz-theme-css';document.head.appendChild(st)}st.textContent=okc(T)?MZTheme.css(T):''}
 function cur(){return T||DEF}
-function prev(){var c=cur(),L=lum(c.bg)>.5,ink=L?'#10233f':'#fff',bt=lum(c.accent)>.62?'#05070a':'#fff',el=document.getElementById('thPrev');el.style.background=c.bg;el.style.color=ink;el.innerHTML='<b>Your dashboard</b><div style="margin:6px 0 10px;font-size:13px;opacity:.8">This is how it will look.</div><span style="display:inline-block;padding:9px 16px;border-radius:10px;background:'+c.accent+';color:'+bt+';font-weight:700;font-size:14px">Button</span> <span style="color:'+c.accent+';font-weight:700;margin-left:10px;font-size:14px">A link</span>'}
+function prev(){var c=cur(),L=lum(c.bg)>.5,ink=L?'#10233f':'#fff',bt=lum(c.accent)>.62?'#05070a':'#fff',el=document.getElementById('thPrev');el.style.background=c.bg;el.style.color=ink;el.innerHTML='<b>Your dashboard</b><div style="margin:6px 0 10px;font-size:13px;opacity:.8">This is how it will look.</div><span style="display:inline-block;padding:9px 16px;border-radius:10px;background:'+c.accent+';color:'+bt+';font-weight:700;font-size:14px">Button</span> <span style="color:'+c.accent+';font-weight:700;margin-left:10px;font-size:14px">A link</span>';barPrev(el,c)}
 function draw(){var c=cur(),$=function(i){return document.getElementById(i)};
 $('thAcc').innerHTML=ACC.map(function(x){return'<button type="button" data-a="'+x+'" aria-label="'+x+'" style="width:34px;height:34px;border-radius:50%;border:'+(c.accent.toLowerCase()===x.toLowerCase()?'3px solid #888':'2px solid rgba(128,128,128,.5)')+';background:'+x+';cursor:pointer"></button>'}).join('');
 $('thBg').innerHTML=BG.map(function(b){return'<button type="button" data-b="'+b[1]+'" style="padding:8px 12px;border-radius:10px;border:'+(c.bg.toLowerCase()===b[1]?'2px solid #888':'1px solid rgba(128,128,128,.5)')+';background:'+b[1]+';color:'+(lum(b[1])>.5?'#10233f':'#fff')+'!important;font-size:13px;cursor:pointer">'+b[0]+'</button>'}).join('');
 $('thCustom').value=c.accent;$('thCustomBg').value=c.bg;
-[].forEach.call(document.querySelectorAll('#thAcc [data-a]'),function(b){b.onclick=function(){set({accent:b.dataset.a,bg:cur().bg})}});
-[].forEach.call(document.querySelectorAll('#thBg [data-b]'),function(b){b.onclick=function(){set({accent:cur().accent,bg:b.dataset.b})}});prev()}
+[].forEach.call(document.querySelectorAll('#thAcc [data-a]'),function(b){b.onclick=function(){set({accent:b.dataset.a,bg:cur().bg,bar:cur().bar})}});
+[].forEach.call(document.querySelectorAll('#thBg [data-b]'),function(b){b.onclick=function(){set({accent:cur().accent,bg:b.dataset.b,bar:cur().bar})}});barDraw();prev()}
+var BARC=['#05070a','#0a1220','#0b1b3a','#15171b','#1e2530','#1F9D6B','#065F46','#0F766E','#1D4ED8','#4C1D95','#831843','#7F1D1D','#B45309','#F2B134','#E5E7EB','#FFFFFF'];
+function barDraw(){var c=cur(),el=document.getElementById('thBar');if(!el)return;el.innerHTML='<button type="button" data-r="" style="padding:8px 12px;border-radius:10px;border:'+(!c.bar?'2px solid #888':'1px solid rgba(128,128,128,.5)')+';background:transparent;font-size:13px;cursor:pointer;color:inherit">Default</button>'+BARC.map(function(x){return'<button type="button" data-r="'+x+'" aria-label="Bar color '+x+'" style="width:34px;height:34px;border-radius:50%;border:'+(c.bar&&c.bar.toLowerCase()===x.toLowerCase()?'3px solid #888':'2px solid rgba(128,128,128,.5)')+';background:'+x+';cursor:pointer"></button>'}).join('');
+var cb=document.getElementById('thCustomBar');if(cb)cb.value=c.bar||c.bg;
+[].forEach.call(el.querySelectorAll('[data-r]'),function(b){b.onclick=function(){var v=b.dataset.r;set({accent:cur().accent,bg:cur().bg,bar:v||undefined})}})}
+function barPrev(el,c){if(!c.bar)return;var tx=lum(c.bar)>.6?'#10233f':'#fff';el.innerHTML+='<div style="margin-top:10px;padding:9px 12px;border-radius:10px;background:'+c.bar+';color:'+tx+';font-size:13px;font-weight:600">Menu bar: Overview &middot; Orders &middot; Account</div>'}
+document.addEventListener('input',function(e){if(e.target&&e.target.id==='thCustomBar')set({accent:cur().accent,bg:cur().bg,bar:e.target.value})});
 function set(v){T=v;apply();draw()}
 function show(on){var bx=document.getElementById('themeBox');bx.hidden=!on;bx.style.display=on?'flex':'none'}
 function out(){var o={};if(RAW&&RAW.site)o.site=RAW.site;o.dash=T;return T?o:(RAW&&RAW.site?{site:RAW.site,dash:null}:null)}
@@ -623,7 +631,7 @@ document.addEventListener('click',function(e){var t=e.target;
  else if(t.id==='thClose'){T=SAVED;apply();show(false)}
  else if(t.id==='thReset'){T=null;apply();save();SAVED=null;show(false)}
  else if(t.id==='thSave'){SAVED=T;save();show(false)}});
-document.addEventListener('input',function(e){if(e.target.id==='thCustom')set({accent:e.target.value,bg:cur().bg});if(e.target.id==='thCustomBg')set({accent:cur().accent,bg:e.target.value})});
+document.addEventListener('input',function(e){if(e.target.id==='thCustom')set({accent:e.target.value,bg:cur().bg,bar:cur().bar});if(e.target.id==='thCustomBg')set({accent:cur().accent,bg:e.target.value,bar:cur().bar})});
 try{var l=JSON.parse(localStorage.getItem('mz-seller-theme')||'null');if(okc(l)){T=l;apply()}}catch(e){}
 function load(n){try{if(window.MZ&&MZ.user()){MZ.q('profiles','select=franchise_theme&id=eq.'+MZ.user().id).then(function(r){RAW=r&&r[0]&&r[0].franchise_theme;T=dashOf(RAW);apply();try{localStorage.setItem('mz-seller-theme',JSON.stringify(T))}catch(x){}}).catch(function(){})}else if(n<12)setTimeout(function(){load(n+1)},700)}catch(e){}}
 setTimeout(function(){load(0)},800);
