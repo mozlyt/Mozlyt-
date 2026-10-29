@@ -270,6 +270,13 @@ footer{padding:28px 0;font-size:13px;color:var(--mute);text-align:center}
 .mz-open .mz-burger span:nth-child(2){opacity:0}
 .mz-open .mz-burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 @media(prefers-reduced-motion:reduce){.mz-burger span{transition:none}}
+.mz-end{display:flex;align-items:center;gap:8px}
+.mz-ib{position:relative;width:40px;height:40px;border:1px solid #DCE4DE;border-radius:10px;background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;text-decoration:none}
+.mz-ib:hover{border-color:#1F9D6B;background:#F3FAF6}
+.mz-ib b{position:absolute;top:-7px;right:-7px;min-width:18px;height:18px;border-radius:99px;background:#F2B134;color:#0E2A47;font:700 11px/18px system-ui,sans-serif;text-align:center;padding:0 4px}
+.mz-ib b[hidden]{display:none}
+@media(min-width:901px){.mz-bar .mz-nav{margin-left:auto}}
+@media(max-width:900px){.mz-end{margin-left:auto}}
 @media(max-width:900px){
   .mz-burger{display:flex}
   .mz-nav{display:none;position:absolute;left:0;right:0;top:64px;background:#fff;border-bottom:1px solid #DCE4DE;flex-direction:column;align-items:stretch;gap:0;padding:6px 20px 20px;box-shadow:0 16px 30px rgba(14,42,71,.12);font-size:16px}
@@ -345,7 +352,11 @@ body.has-list .wa-float{bottom:84px}
       <a href="/seller.html" class="mz-login">Seller login</a>
       <span class="mz-ctas"><a class="mz-btn mz-primary" href="/gh/#services">Book a service</a><a class="mz-btn mz-gold" href="/gh/career.html">Take a career with us</a><a class="mz-btn mz-primary" href="/provider.html">Work with us</a></span>
     </nav>
-    <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
+    <span class="mz-end">
+      <button class="mz-ib" id="mzCart" type="button" aria-label="Your list and checkout" title="Your list"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0E2A47" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.4l2 10.2a1.6 1.6 0 0 0 1.6 1.3h8.1a1.6 1.6 0 0 0 1.6-1.2L20.5 8H6.1"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg><b id="mzCartN" hidden>0</b></button>
+      <a class="mz-ib" id="mzAcct" href="/store.html?s=mozlyt-gh#account" aria-label="My account" title="My account"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0E2A47" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c.8-3.8 3.8-5.8 7.5-5.8s6.7 2 7.5 5.8"/></svg></a>
+      <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
+    </span>
   </div>
 </header>
 
@@ -498,8 +509,8 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   function msg(){return "Hello MOZLYT, I would like prices and availability for:\n"+list.map(function(n,i){return (i+1)+". "+n}).join("\n")+"\n\nMy area: "}
   function payTotal(){var b=document.getElementById('shipPay'),n=document.getElementById('shipPayNote');if(!b)return;var t=0,ok=list.length>0;list.forEach(function(nm){var o=ALL[nm],pr=o&&o.p?o.p.price:'';var a=/^[\d.,\s]+$/.test(pr||'')?parseFloat(String(pr).replace(/[,\s]/g,'')):0;if(a>0)t+=a;else ok=false});
     if(ok&&t>0){t=Math.round(t*100)/100;b.style.display='block';n.style.display='block';b.textContent='Checkout - '+priceText(String(t));b.href='/pay.html?amount='+encodeURIComponent(t)+'&item='+encodeURIComponent(list.join(', ').slice(0,110))}else{b.style.display='none';n.style.display='none'}}
-  function refresh(){cnt.textContent=list.length;bar.classList.toggle('show',list.length>0);document.body.classList.toggle('has-list',list.length>0);var L=list.map(function(n,i){return (i+1)+'. '+n}).join('\n');var y=document.getElementById('shipYes'),no=document.getElementById('shipNo');if(y){y.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, I would like to buy and I request shipment for:\n'+L+'\n\nMy delivery area: ');no.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, please send me the price and availability for:\n'+L)}}
-  (function(){var sb=document.getElementById('sbox');send.addEventListener('click',function(e){e.preventDefault();try{payTotal()}catch(x){}sb.classList.add('show')});sb.addEventListener('click',function(e){if(e.target===sb||e.target.id==='shipX'||e.target.id==='shipYes'||e.target.id==='shipPay'||e.target.id==='shipNo')sb.classList.remove('show')})})();
+  function refresh(){cnt.textContent=list.length;var cb=document.getElementById('mzCartN');if(cb){cb.textContent=list.length;cb.hidden=!list.length}bar.classList.toggle('show',list.length>0);document.body.classList.toggle('has-list',list.length>0);var L=list.map(function(n,i){return (i+1)+'. '+n}).join('\n');var y=document.getElementById('shipYes'),no=document.getElementById('shipNo');if(y){y.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, I would like to buy and I request shipment for:\n'+L+'\n\nMy delivery area: ');no.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, please send me the price and availability for:\n'+L)}}
+  (function(){var sb=document.getElementById('sbox');send.addEventListener('click',function(e){e.preventDefault();try{payTotal()}catch(x){}sb.classList.add('show')});var mc=document.getElementById('mzCart');if(mc)mc.addEventListener('click',function(){if(!list.length){say('Your list is empty. Tap Add to list on a product.');return}try{payTotal()}catch(x){}sb.classList.add('show')});sb.addEventListener('click',function(e){if(e.target===sb||e.target.id==='shipX'||e.target.id==='shipYes'||e.target.id==='shipPay'||e.target.id==='shipNo')sb.classList.remove('show')})})();
   function setBtn(b,on){b.classList.toggle('done',on);b.textContent=on?'Added ✓':'Add to list'}
   function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
   function icon(id){var s=document.createElementNS(NS,'svg');s.setAttribute('class','i');var u=document.createElementNS(NS,'use');u.setAttribute('href','#'+id);s.appendChild(u);return s}
