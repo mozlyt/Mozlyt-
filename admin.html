@@ -315,6 +315,49 @@ form{background:transparent!important;border:0!important;padding:0!important}
 .mgroup,.mhead{background:#0a0e13!important;border-color:#1f2a36!important}
 .miss>input,.miss>select,.miss>textarea{background:#2a1210!important}
 </style>
+<style id="mz-pt">
+.ptCard{padding:0!important;overflow:hidden;margin-bottom:6px}
+.ptHead{padding:20px 22px 14px;border-bottom:1px solid #1f2a36}
+.ptWrap{overflow-x:auto}
+table.pt{width:100%;border-collapse:collapse;font-size:15px}
+table.pt th{text-align:left;font:700 11.5px/1 inherit;letter-spacing:.09em;text-transform:uppercase;color:#7f93a8!important;padding:13px 22px;background:rgba(255,255,255,.03);border-bottom:1px solid #1f2a36}
+table.pt td{padding:16px 22px;border-bottom:1px solid #17212b;vertical-align:middle}
+table.pt tr.pr:hover td{background:rgba(95,224,165,.05)}
+table.pt tr.grp td{padding:11px 22px;background:#0d141b;color:#5fe0a5;font:700 12px/1 inherit;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #1f2a36}
+table.pt .ra{text-align:right}
+table.pt td.nm b{display:block;font-size:16px;color:#fff}
+table.pt td.nm small{display:block;margin-top:3px;color:#7f93a8}
+table.pt td.in{color:#b9c7d6;min-width:280px;max-width:420px;line-height:1.45}
+table.pt th{white-space:nowrap}
+table.pt td.nm{min-width:170px}
+table.pt td.pc .m{white-space:normal;max-width:360px;line-height:1.4}
+table.pt td.pc{white-space:nowrap;min-width:190px}
+table.pt td.pc b{font-size:17px;color:#5fe0a5}
+table.pt td.pc span{color:#7f93a8;font-size:13px}
+table.pt td.pc div+div{margin-top:3px}
+table.pt .act{display:inline-flex;gap:8px}
+table.pt .pbtn{border:1.5px solid #2a3a4b;background:transparent;color:#e8edf3;border-radius:999px;padding:8px 18px;font:700 13.5px/1 inherit;cursor:pointer}
+table.pt .pbtn:hover{border-color:#5fe0a5;color:#5fe0a5}
+table.pt .pbtn.go{background:#1F9D6B;border-color:#1F9D6B;color:#fff}
+table.pt .pbtn.go:hover{background:#26b57d;color:#fff}
+table.pt tr.ed td{background:#0b1218;padding:18px 22px}
+table.pt .edg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:14px}
+table.pt .edg label{display:grid;gap:6px;font-size:13px;color:#9fb0c3}
+table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-sizing:border-box}
+@media(max-width:700px){
+ table.pt thead{display:none}
+ table.pt,table.pt tbody,table.pt tr,table.pt td{display:block;width:100%;box-sizing:border-box}
+ table.pt tr.pr{padding:14px 18px;border-bottom:1px solid #17212b}
+ table.pt td{border:0;padding:3px 0}
+ table.pt td.ra,table.pt td.ac{text-align:left;margin-top:10px}
+ table.pt tr.grp td{padding:11px 18px}
+ table.pt tr.ed td{padding:16px 18px}
+ table.pt td.in{max-width:none;min-width:0}
+ table.pt td.pc{white-space:normal;min-width:0}
+ table.pt td.nm{min-width:0}
+}
+</style>
+
 <style>.frc{width:100%;text-align:left}.frc>small{display:block;color:var(--mute);font-size:13px;line-height:1.5;margin-top:8px}.frc .frlbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:16px 0 8px}.frc .frg{display:grid;grid-template-columns:1fr 1fr;gap:8px}.frc .frg .b2{width:100%;margin:0;padding:12px 8px;font-size:14.5px;border-radius:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.frc .frg .full{grid-column:1/-1}.frc .warnb{color:#F2B134!important;border-color:rgba(242,177,52,.45)!important}.frc .dangerb{color:#ff7a6b!important;border-color:rgba(255,122,107,.45)!important}.tbl.stack td[data-l="Franchise"]{display:block;text-align:left}.tbl.stack td[data-l="Franchise"]::before{display:block;margin-bottom:10px}.tbl.stack td[data-l="Subscription"]{display:block;text-align:left}.tbl.stack td[data-l="Subscription"]::before{display:block;margin-bottom:8px}.subd{color:var(--mute);margin-left:6px}.sdb{display:block;width:100%;margin-top:10px;padding:11px;border-radius:12px}</style><style>.fa-step{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.fa-t{font-size:12.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--mute);font-weight:700;margin-bottom:8px}.fa-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fa-row .b2{width:100%;text-align:center;margin:0}.fa-row .fa-ok{grid-column:1/-1;padding:14px 16px;font-size:16px;font-weight:700}.fa-row .fa-ok+.b2{grid-column:1/-1}.fa-row .fa-ok[disabled]{opacity:.4;cursor:not-allowed;box-shadow:none}@media(min-width:700px){.fa-row{max-width:520px}}.frg .b2{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.2;padding-left:8px;padding-right:8px}@media(min-width:861px){.tbl .frg{grid-template-columns:1fr}}</style></head>
 <body>
 <header class="mz-header" id="mzHeader">
@@ -367,7 +410,9 @@ form{background:transparent!important;border:0!important;padding:0!important}
   </div>
   <div id="pane-subs" hidden>
     <div class="stats" id="subStats"></div>
-    <div class="card2"><h3 style="margin:0 0 6px">Plan prices</h3>
+    <div class="card2 ptCard"><div class="ptHead"><div><h3 style="margin:0">Subscription plans and prices</h3><p class="sub" style="margin:4px 0 0">Everything customers pay MOZLYT, in one list. Press Edit on a row to change it.</p></div></div>
+      <div class="ptWrap"><table class="pt"><thead><tr><th>Plan</th><th>What it includes</th><th>Price</th><th class="ra">Actions</th></tr></thead><tbody id="ptBody"><tr><td colspan="4" class="m">Loading...</td></tr></tbody></table></div></div>
+    <div class="card2" style="display:none"><h3 style="margin:0 0 6px">Plan prices</h3>
       <p class="sub" style="margin-bottom:12px">Sellers pay these amounts to keep their store open. New sellers get a free trial first (set 0 to turn it off).</p>
       <form id="fBill" class="f"><p class="sub" style="margin:0"><b>Standard</b> (store link) &middot; <b>Plus</b> (adds ad tracking) &middot; <b>Premium</b> (adds custom address)</p>
       <label>Standard, monthly (GH&#8373;)<input id="bM" type="number" min="0" step="1" required></label><label>Standard, yearly (GH&#8373;)<input id="bY" type="number" min="0" step="1" required></label>
@@ -625,13 +670,57 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function payRow(x,act){var s=SELL.filter(function(y){return y.id===x.seller_id})[0]||{};return'<div class="it"><div class="h"><b>'+esc(s.store_name||'Seller')+' &middot; '+(x.kind==='franchise'?'FRANCHISE platform fee, '+(x.plan==='yearly'?'yearly':'monthly')+' (documents already approved)':x.kind==='training'?'training: '+(x.item==='pro'?'Pro (everything)':x.item&&x.item.indexOf('skill:')===0?x.item.slice(6):'Basic')+' (one-time)':(x.tier||'standard')+' '+(x.plan==='yearly'?'yearly':'monthly'))+' &middot; '+MZ.money(x.amount)+'</b>'+(act?'':'<span class="tag '+(x.status==='confirmed'?'':'bad')+'">'+x.status+'</span>')+'</div><div class="m">Ref <b>'+esc(x.reference)+'</b> &middot; '+esc(s.phone||'')+' &middot; '+MZ.when(x.created_at)+'</div>'+(act?'<div style="display:flex;gap:8px"><button class="b2" data-ok="'+x.id+'" type="button">Confirm and activate</button><button class="b2 red" data-no="'+x.id+'" type="button">Reject</button></div>':'')+'</div>'}
   function subs(){
     (function(){var ids={};PAYS.forEach(function(x){if(x.status==='confirmed')ids[x.seller_id]=1});$('#subStats').innerHTML='<div class="stat"><b>'+Object.keys(ids).length+'</b><span>People who subscribed</span></div>'})();
-    [['bM','monthly_price'],['bY','yearly_price'],['bPM','plus_monthly'],['bPY','plus_yearly'],['bRM','premium_monthly'],['bRY','premium_yearly'],['bTr','training_price'],['bTp','training_pro_price'],['bFr','franchise_price'],['bFrY','franchise_yearly_price'],['bFrC','franchise_commission_pct'],['bFrF','franchise_commission_flat'],['bFrCap','franchise_commission_cap']].forEach(function(x){$('#'+x[0]).value=BILL[x[1]]!=null?BILL[x[1]]:''});$('#skP').innerHTML=SKN.map(function(k){return'<label>'+k[1]+' (GH&#8373;)<input type="number" min="0" step="1" data-sk="'+k[0]+'" value="'+(SKP[k[0]]!=null?SKP[k[0]]:100)+'"></label>'}).join('');$('#bFrFrom').value=BILL.commission_from||'seller';$('#bT').value=BILL.trial_days!=null?BILL.trial_days:'';$('#bI').value=BILL.pay_instructions||'';
+    [['bM','monthly_price'],['bY','yearly_price'],['bPM','plus_monthly'],['bPY','plus_yearly'],['bRM','premium_monthly'],['bRY','premium_yearly'],['bTr','training_price'],['bTp','training_pro_price'],['bFr','franchise_price'],['bFrY','franchise_yearly_price'],['bFrC','franchise_commission_pct'],['bFrF','franchise_commission_flat'],['bFrCap','franchise_commission_cap']].forEach(function(x){$('#'+x[0]).value=BILL[x[1]]!=null?BILL[x[1]]:''});$('#skP').innerHTML=SKN.map(function(k){return'<label>'+k[1]+' (GH&#8373;)<input type="number" min="0" step="1" data-sk="'+k[0]+'" value="'+(SKP[k[0]]!=null?SKP[k[0]]:100)+'"></label>'}).join('');$('#bFrFrom').value=BILL.commission_from||'seller';$('#bT').value=BILL.trial_days!=null?BILL.trial_days:'';$('#bI').value=BILL.pay_instructions||'';drawPlans();
     $('#payPend').innerHTML=PAYS.filter(function(x){return x.status==='pending'}).map(function(x){return payRow(x,true)}).join('')||'<div class="empty">Nothing waiting.</div>';
     $('#payDone').innerHTML=PAYS.filter(function(x){return x.status!=='pending'}).slice(0,30).map(function(x){return payRow(x,false)}).join('')||'<div class="empty">No payments yet.</div>';
     $$('#payPend [data-ok]').forEach(function(b){b.onclick=function(){b.disabled=true;MZ.rpc('admin_confirm_payment',{p_id:Number(b.dataset.ok)}).then(function(){return Promise.all([MZ.q('subscription_payments','select=*&order=created_at.desc&limit=200'),MZ.q('profiles','select=*&order=created_at.desc')])}).then(function(r){PAYS=r[0];SELL=r[1];flash('Store activated');subs();sellers()},function(er){flash(er.message);b.disabled=false})}});
     $$('#payPend [data-no]').forEach(function(b){b.onclick=function(){if(!confirm('Reject this payment?'))return;MZ.rpc('admin_reject_payment',{p_id:Number(b.dataset.no)}).then(function(){PAYS.forEach(function(x){if(String(x.id)===b.dataset.no)x.status='rejected'});subs()},function(er){flash(er.message)})}})}
+
+  /* ----- subscription plans table ----- */
+  function drawPlans(){var tb=$('#ptBody');if(!tb)return;
+    function v(id){var e=$('#'+id);return e?e.value:''}
+    function g(n){return'GH&#8373;'+Number(n||0).toLocaleString('en-US',{maximumFractionDigits:2})}
+    function per(a,b){return'<div><b>'+g(a)+'</b> <span>/ month</span></div>'+(b!==''&&b!=null&&Number(b)>0?'<div><b>'+g(b)+'</b> <span>/ year</span></div>':'')}
+    function one(a){return Number(a)>0?'<div><b>'+g(a)+'</b> <span>one-time</span></div>':'<div><b>Free</b></div>'}
+    var sk=$$('#skP input'),skv=sk.map(function(i){return Number(i.value)||0}),skp=skv.length?(Math.min.apply(null,skv)===Math.max.apply(null,skv)?'<div><b>'+g(skv[0])+'</b> <span>per skill, one-time</span></div>':'<div><b>'+g(Math.min.apply(null,skv))+' to '+g(Math.max.apply(null,skv))+'</b> <span>per skill, one-time</span></div>'):'<div class="m">Not set</div>';
+    var cp=Number(v('bFrC'))||0,cf=Number(v('bFrF'))||0,cc=Number(v('bFrCap'))||0,cfrom=v('bFrFrom'),parts=[];if(cp)parts.push(cp+'%');if(cf)parts.push(g(cf)+' flat');
+    var cs=parts.length?'<div><b>'+parts.join(' + ')+'</b></div>'+(cc?'<div><span>max '+g(cc)+' per payment</span></div>':'')+'<div><span>paid by '+(cfrom==='franchise'?'the franchise':cfrom==='both'?'seller and franchise':'the seller')+'</span></div>':'<div><b>Off</b> <span>no commission</span></div>';
+    var R=[['grp','Seller store plans'],
+      ['std','Standard','Store link, unlimited products and orders, business training lessons',per(v('bM'),v('bY'))],
+      ['plus','Plus','Everything in Standard, plus ad tracking for Facebook, Instagram and TikTok',per(v('bPM'),v('bPY'))],
+      ['prem','Premium','Everything in Plus, plus your own custom address and one free skill',per(v('bRM'),v('bRY'))],
+      ['grp','Training (paid once by the learner)'],
+      ['trb','Basic','Business training lessons',one(v('bTr'))],
+      ['trp','Pro','All business lessons and every skill',one(v('bTp'))],
+      ['skl','Skill training','One chosen skill, for example massage or beauty',skp],
+      ['grp','Franchise'],
+      ['fr','Franchise platform fee','What a franchise owner pays MOZLYT to keep a branch open',per(v('bFr'),v('bFrY'))],
+      ['com','Online payment commission','Taken from every card and Mobile Money sale in a shop',cs],
+      ['grp','Other settings'],
+      ['tri','Free trial','Days a new seller can use the store before paying','<div><b>'+(Number(v('bT'))||0)+' days</b></div>'],
+      ['pay','Payment instructions','Shown to sellers when they pay by hand','<div class="m">'+esc((v('bI')||'Not set').slice(0,70))+(v('bI').length>70?'...':'')+'</div>']];
+    tb.innerHTML=R.map(function(r){if(r[0]==='grp')return'<tr class="grp"><td colspan="4">'+r[1]+'</td></tr>';
+      return'<tr class="pr" data-k="'+r[0]+'"><td class="nm"><b>'+r[1]+'</b></td><td class="in">'+r[2]+'</td><td class="pc">'+r[3]+'</td><td class="ra ac"><span class="act"><button class="pbtn" type="button" data-ed="'+r[0]+'">Edit</button></span></td></tr>'}).join('')}
+  var PT_F={std:[['bM','Monthly price (GH&#8373;)'],['bY','Yearly price (GH&#8373;)']],plus:[['bPM','Monthly price (GH&#8373;)'],['bPY','Yearly price (GH&#8373;)']],prem:[['bRM','Monthly price (GH&#8373;)'],['bRY','Yearly price (GH&#8373;)']],trb:[['bTr','One-time price (GH&#8373;, 0 = free)']],trp:[['bTp','One-time price (GH&#8373;)']],fr:[['bFr','Per month (GH&#8373;)'],['bFrY','Per year (GH&#8373;, leave empty if none)']],com:[['bFrC','Percentage of each payment (%)'],['bFrF','Flat amount on each payment (GH&#8373;)'],['bFrCap','Never take more than (GH&#8373;, 0 = no ceiling)'],['bFrFrom','Who pays the commission']],tri:[['bT','Free trial days (0 = no trial)']],pay:[['bI','Payment instructions']]};
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#ptBody [data-ed],#ptBody [data-ptc],#ptBody [data-pts]');if(!b)return;
+    var old=$('#ptBody tr.ed');if(b.dataset.ptc!==undefined){if(old)old.remove();return}
+    if(b.dataset.pts!==undefined){var row=b.closest('tr.ed'),k=row.dataset.k;
+      if(k==='skl'){$$('input[data-pk]',row).forEach(function(i){var t=$('#skP input[data-sk="'+i.dataset.pk+'"]');if(t)t.value=i.value})}
+      else $$('[data-bind]',row).forEach(function(i){var t=$('#'+i.dataset.bind);if(t)t.value=i.value});
+      busy(b,true,'Saving...');var f=$('#fBill');
+      var done=function(){busy(b,false);drawPlans()};var sb=$('button[type=submit]',f);
+      if(f.reportValidity&&!f.reportValidity()){busy(b,false);flash('Please check the numbers');return}
+      var obs=new MutationObserver(function(){if(!sb.disabled){obs.disconnect();done()}});obs.observe(sb,{attributes:true,attributeFilter:['disabled']});
+      f.dispatchEvent(new Event('submit',{cancelable:true}));return}
+    var k=b.dataset.ed;if(old)old.remove();var tr=b.closest('tr'),h='';
+    if(k==='skl'){h=$$('#skP input').map(function(i){var nm=(SKN.filter(function(x){return x[0]===i.dataset.sk})[0]||[i.dataset.sk,i.dataset.sk])[1];return'<label>'+nm+' (GH&#8373;)<input type="number" min="0" step="1" data-pk="'+i.dataset.sk+'" value="'+esc(i.value)+'"></label>'}).join('')}
+    else h=(PT_F[k]||[]).map(function(f){var t=$('#'+f[0]),val=t?t.value:'';
+      if(f[0]==='bFrFrom')return'<label>'+f[1]+'<select data-bind="bFrFrom"><option value="seller"'+(val==='seller'?' selected':'')+'>The seller (from their profit first)</option><option value="franchise"'+(val==='franchise'?' selected':'')+'>The franchise</option><option value="both"'+(val==='both'?' selected':'')+'>Both, shared equally</option></select></label>';
+      if(f[0]==='bI')return'<label style="grid-column:1/-1">'+f[1]+'<textarea data-bind="bI" rows="3" maxlength="600">'+esc(val)+'</textarea></label>';
+      return'<label>'+f[1]+'<input type="number" min="0" step="'+(f[0]==='bFrC'?'0.1':f[0]==='bFrF'||f[0]==='bFrCap'?'0.5':'1')+'" data-bind="'+f[0]+'" value="'+esc(val)+'"></label>'}).join('');
+    tr.insertAdjacentHTML('afterend','<tr class="ed" data-k="'+k+'"><td colspan="4"><div class="edg">'+h+'</div><div class="act"><button class="pbtn go" type="button" data-pts>Save</button><button class="pbtn" type="button" data-ptc>Cancel</button></div></td></tr>')});
   $('#fBill').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this);busy(b,true,'Saving...');
-    MZ.update('billing_settings','id=eq.1',{monthly_price:Number($('#bM').value),yearly_price:Number($('#bY').value),plus_monthly:Number($('#bPM').value),plus_yearly:Number($('#bPY').value),premium_monthly:Number($('#bRM').value),premium_yearly:Number($('#bRY').value),training_price:Number($('#bTr').value),training_pro_price:Number($('#bTp').value),franchise_price:Number($('#bFr').value),franchise_yearly_price:$('#bFrY').value===''?null:Number($('#bFrY').value),franchise_commission_pct:Math.min(100,Math.max(0,Number($('#bFrC').value)||0)),franchise_commission_flat:Math.max(0,Number($('#bFrF').value)||0),franchise_commission_cap:Math.max(0,Number($('#bFrCap').value)||0),commission_from:$('#bFrFrom').value,trial_days:Math.round(Number($('#bT').value)),pay_instructions:$('#bI').value.trim(),updated_at:new Date().toISOString()}).then(function(r){BILL=r[0]||BILL;var rows=$$('#skP input').map(function(i){return{skill:i.dataset.sk,price:Number(i.value)||0}});return MZ.upsert('skill_prices',rows,'skill').then(function(){rows.forEach(function(x){SKP[x.skill]=x.price});flash('Prices saved')})},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+    MZ.update('billing_settings','id=eq.1',{monthly_price:Number($('#bM').value),yearly_price:Number($('#bY').value),plus_monthly:Number($('#bPM').value),plus_yearly:Number($('#bPY').value),premium_monthly:Number($('#bRM').value),premium_yearly:Number($('#bRY').value),training_price:Number($('#bTr').value),training_pro_price:Number($('#bTp').value),franchise_price:Number($('#bFr').value),franchise_yearly_price:$('#bFrY').value===''?null:Number($('#bFrY').value),franchise_commission_pct:Math.min(100,Math.max(0,Number($('#bFrC').value)||0)),franchise_commission_flat:Math.max(0,Number($('#bFrF').value)||0),franchise_commission_cap:Math.max(0,Number($('#bFrCap').value)||0),commission_from:$('#bFrFrom').value,trial_days:Math.round(Number($('#bT').value)),pay_instructions:$('#bI').value.trim(),updated_at:new Date().toISOString()}).then(function(r){BILL=r[0]||BILL;var rows=$$('#skP input').map(function(i){return{skill:i.dataset.sk,price:Number(i.value)||0}});return MZ.upsert('skill_prices',rows,'skill').then(function(){rows.forEach(function(x){SKP[x.skill]=x.price});flash('Prices saved');drawPlans()})},function(er){flash(er.message)}).then(function(){busy(b,false)})};
 
   function prods(){var cats=['All categories'].concat(PROD.map(function(p){return p.category}).filter(function(c,i,a){return a.indexOf(c)===i}));var sel=$('#pcat'),cur=sel.value||'All categories';sel.innerHTML=cats.map(function(c){return'<option'+(c===cur?' selected':'')+'>'+esc(c)+'</option>'}).join('');
     var q=$('#pq').value.toLowerCase().trim();
