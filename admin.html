@@ -315,26 +315,49 @@ form{background:transparent!important;border:0!important;padding:0!important}
 .mgroup,.mhead{background:#0a0e13!important;border-color:#1f2a36!important}
 .miss>input,.miss>select,.miss>textarea{background:#2a1210!important}
 </style>
+<style id="mz-contrast">
+/* money and labels must always be easy to read: no pale text on white, no white text on white */
+.pc,.plan,.pathc,.skt,.oc,.lsn,.mrow,.pill2,.newsit{background:linear-gradient(145deg,#111820,#0a0e13)!important;border-color:#26323f!important;color:#f1f5f9!important}
+.pc .ph{background:#0d141b!important;color:#9fb0c3!important}
+.pc h4,.pc b,.plan b,.pathc b,.skt b,.oc b,.lsn b,.mrow b,.newsit b{color:#fff!important;font-weight:800}
+.pc .w,.pc .m,.plan .m,.plan span,.pathc .m,.pathc span,.skt .m,.skt span,.newsit .m,.oc .m{color:#b4c2d1!important}
+.plan.on,.pathc.on{border-color:#34c78d!important;box-shadow:0 0 0 2px rgba(52,199,141,.35)}
+.pc.on{border-color:#34c78d!important}
+.lockbox{background:#2b2308!important;border-color:#6b5614!important;color:#ffe9a8!important}
+.lockbox b,.lockbox strong{color:#ffd978!important}
+.msg b,.msg strong,.lvOrder b,.lvAlert b{color:inherit!important}
+.msg.err{background:#3d1612!important;color:#ffc2b8!important}
+.msg.ok{background:#12331f!important;color:#8cf5c0!important}
+.msg.info{background:#3a2c0b!important;color:#ffdd8c!important}
+.lvOrder{background:#3a2c0b!important;color:#ffdd8c!important}
+.lvAlert{background:#3d1612!important;color:#ffc2b8!important}
+.lvrow.fresh,.it.unread{background:#12331f!important}
+#appPop .ap-card,#appPop .ap-card h1,#appPop .ap-card h2,#appPop .ap-card h3,#appPop .ap-card b,#appPop .ap-card strong,#appPop .ap-card p{color:#0E2A47!important}
+/* amounts and key figures: bold and bright */
+.stat b{font-weight:800}
+.tag{font-weight:800;letter-spacing:.01em}
+</style>
+
 <style id="mz-pt">
 .ptCard{padding:0!important;overflow:hidden;margin-bottom:6px}
 .ptHead{padding:20px 22px 14px;border-bottom:1px solid #1f2a36}
 .ptWrap{overflow-x:auto}
 table.pt{width:100%;border-collapse:collapse;font-size:15px}
-table.pt th{text-align:left;font:700 11.5px/1 inherit;letter-spacing:.09em;text-transform:uppercase;color:#7f93a8!important;padding:13px 22px;background:rgba(255,255,255,.03);border-bottom:1px solid #1f2a36}
+table.pt th{text-align:left;font:800 12px/1 inherit;letter-spacing:.09em;text-transform:uppercase;color:#b4c2d1!important;padding:13px 22px;background:rgba(255,255,255,.03);border-bottom:1px solid #1f2a36}
 table.pt td{padding:16px 22px;border-bottom:1px solid #17212b;vertical-align:middle}
 table.pt tr.pr:hover td{background:rgba(95,224,165,.05)}
 table.pt tr.grp td{padding:11px 22px;background:#0d141b;color:#5fe0a5;font:700 12px/1 inherit;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid #1f2a36}
 table.pt .ra{text-align:right}
 table.pt td.nm b{display:block;font-size:16px;color:#fff}
-table.pt td.nm small{display:block;margin-top:3px;color:#7f93a8}
-table.pt td.in{color:#b9c7d6;min-width:280px;max-width:420px;line-height:1.45}
+table.pt td.nm small{display:block;margin-top:3px;color:#b4c2d1}
+table.pt td.in{color:#d3dde8;min-width:280px;max-width:420px;line-height:1.45}
 table.pt th{white-space:nowrap}
 table.pt td.nm{min-width:170px}
-table.pt td.pc .m{white-space:normal;max-width:360px;line-height:1.4}
-table.pt td.pc{white-space:nowrap;min-width:190px}
-table.pt td.pc b{font-size:17px;color:#5fe0a5}
-table.pt td.pc span{color:#7f93a8;font-size:13px}
-table.pt td.pc div+div{margin-top:3px}
+table.pt td.pp .m{white-space:normal;max-width:360px;line-height:1.45;color:#e8edf3!important;font-weight:600}
+table.pt td.pp{white-space:nowrap;min-width:190px}
+table.pt td.pp b{font-size:18px;font-weight:800;color:#fff}
+table.pt td.pp span{color:#b4c2d1;font-size:13.5px;font-weight:600}
+table.pt td.pp div+div{margin-top:3px}
 table.pt .act{display:inline-flex;gap:8px}
 table.pt .pbtn{border:1.5px solid #2a3a4b;background:transparent;color:#e8edf3;border-radius:999px;padding:8px 18px;font:700 13.5px/1 inherit;cursor:pointer}
 table.pt .pbtn:hover{border-color:#5fe0a5;color:#5fe0a5}
@@ -353,7 +376,7 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
  table.pt tr.grp td{padding:11px 18px}
  table.pt tr.ed td{padding:16px 18px}
  table.pt td.in{max-width:none;min-width:0}
- table.pt td.pc{white-space:normal;min-width:0}
+ table.pt td.pp{white-space:normal;min-width:0}
  table.pt td.nm{min-width:0}
 }
 </style>
@@ -700,7 +723,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       ['tri','Free trial','Days a new seller can use the store before paying','<div><b>'+(Number(v('bT'))||0)+' days</b></div>'],
       ['pay','Payment instructions','Shown to sellers when they pay by hand','<div class="m">'+esc((v('bI')||'Not set').slice(0,70))+(v('bI').length>70?'...':'')+'</div>']];
     tb.innerHTML=R.map(function(r){if(r[0]==='grp')return'<tr class="grp"><td colspan="4">'+r[1]+'</td></tr>';
-      return'<tr class="pr" data-k="'+r[0]+'"><td class="nm"><b>'+r[1]+'</b></td><td class="in">'+r[2]+'</td><td class="pc">'+r[3]+'</td><td class="ra ac"><span class="act"><button class="pbtn" type="button" data-ed="'+r[0]+'">Edit</button></span></td></tr>'}).join('')}
+      return'<tr class="pr" data-k="'+r[0]+'"><td class="nm"><b>'+r[1]+'</b></td><td class="in">'+r[2]+'</td><td class="pp">'+r[3]+'</td><td class="ra ac"><span class="act"><button class="pbtn" type="button" data-ed="'+r[0]+'">Edit</button></span></td></tr>'}).join('')}
   var PT_F={std:[['bM','Monthly price (GH&#8373;)'],['bY','Yearly price (GH&#8373;)']],plus:[['bPM','Monthly price (GH&#8373;)'],['bPY','Yearly price (GH&#8373;)']],prem:[['bRM','Monthly price (GH&#8373;)'],['bRY','Yearly price (GH&#8373;)']],trb:[['bTr','One-time price (GH&#8373;, 0 = free)']],trp:[['bTp','One-time price (GH&#8373;)']],fr:[['bFr','Per month (GH&#8373;)'],['bFrY','Per year (GH&#8373;, leave empty if none)']],com:[['bFrC','Percentage of each payment (%)'],['bFrF','Flat amount on each payment (GH&#8373;)'],['bFrCap','Never take more than (GH&#8373;, 0 = no ceiling)'],['bFrFrom','Who pays the commission']],tri:[['bT','Free trial days (0 = no trial)']],pay:[['bI','Payment instructions']]};
   document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#ptBody [data-ed],#ptBody [data-ptc],#ptBody [data-pts]');if(!b)return;
     var old=$('#ptBody tr.ed');if(b.dataset.ptc!==undefined){if(old)old.remove();return}
