@@ -98,7 +98,7 @@ html.mz-ready .mz-header{animation:mzIn .8s both}
     document.body.appendChild(s);
     function done(){if(fin)return;fin=1;s.classList.add('out');ready();setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s)},800)}
     s.addEventListener('click',done);
-    setTimeout(done,3300);
+    setTimeout(done,2300);
   }
   if(document.body)build();else document.addEventListener('DOMContentLoaded',build);
   setTimeout(function(){if(!fin){d.classList.remove('mz-sp');var s=document.getElementById('mzs');if(s&&s.parentNode)s.parentNode.removeChild(s)}},6000);
