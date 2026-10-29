@@ -546,6 +546,13 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
   </div>
 
   <div id="pane-set" hidden>
+    <div class="card2" id="shopColors"><h3 style="margin:0 0 4px">Your shop colors</h3><p class="sub" style="margin:0 0 12px">Choose the colors your customers see in your shop: the top bar and the buttons.</p>
+      <div id="scPrev" style="border-radius:14px;overflow:hidden;border:1px solid rgba(128,128,128,.4);margin-bottom:14px"></div>
+      <b style="font-size:14px">Bar color</b><span class="sub" style="font-size:13px"> (the strip at the top of your shop)</span><div id="scBar" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 8px"></div>
+      <label class="sub" style="display:flex;align-items:center;gap:8px;font-size:13.5px">Or pick your own <input type="color" id="scBarC" value="#0E2A47" style="width:44px;height:32px;padding:0;border:0"></label>
+      <b style="font-size:14px;display:block;margin-top:14px">Button color</b><span class="sub" style="font-size:13px"> (Add to list, Pay now, List)</span><div id="scBtn" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 8px"></div>
+      <label class="sub" style="display:flex;align-items:center;gap:8px;font-size:13.5px">Or pick your own <input type="color" id="scBtnC" value="#1F9D6B" style="width:44px;height:32px;padding:0;border:0"></label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px"><button class="b2" id="scSave" type="button">Save shop colors</button><button class="b2 ghost" id="scReset" type="button">Back to MOZLYT colors</button></div><div id="scMsg" class="sub" style="margin-top:8px"></div></div>
     <div class="card2"><form id="fSet" class="f">
       <label>Store name<input id="eStore" maxlength="60" required></label>
       <label>WhatsApp number for orders<input id="ePhone" type="tel" maxlength="20" required></label>
@@ -635,6 +642,29 @@ document.addEventListener('input',function(e){if(e.target.id==='thCustom')set({a
 try{var l=JSON.parse(localStorage.getItem('mz-seller-theme')||'null');if(okc(l)){T=l;apply()}}catch(e){}
 function load(n){try{if(window.MZ&&MZ.user()){MZ.q('profiles','select=franchise_theme&id=eq.'+MZ.user().id).then(function(r){RAW=r&&r[0]&&r[0].franchise_theme;T=dashOf(RAW);apply();try{localStorage.setItem('mz-seller-theme',JSON.stringify(T))}catch(x){}}).catch(function(){})}else if(n<12)setTimeout(function(){load(n+1)},700)}catch(e){}}
 setTimeout(function(){load(0)},800);
+})();
+</script>
+<script>
+/* shop colors: what customers see in the shop (top bar and buttons) */
+(function(){
+var BARS=['#0E2A47','#05070a','#0a1220','#15171b','#1e2530','#065F46','#0F766E','#1D4ED8','#4C1D95','#831843','#7F1D1D','#B45309','#F2B134','#E5E7EB','#FFFFFF'],
+    BTNS=['#1F9D6B','#10B981','#22C55E','#14B8A6','#0EA5E9','#2563EB','#6366F1','#8B5CF6','#D946EF','#EC4899','#EF4444','#F97316','#F59E0B','#F2B134','#111827','#D4AF37'],
+    DB='#0E2A47',DT='#1F9D6B',T={},SAVED={},ok=function(h){return /^#[0-9a-fA-F]{6}$/.test(h||'')};
+function lum(h){var c=h.replace('#','');return(.299*parseInt(c.substr(0,2),16)+.587*parseInt(c.substr(2,2),16)+.114*parseInt(c.substr(4,2),16))/255}
+function $(i){return document.getElementById(i)}
+function prev(){var bar=ok(T.bar)?T.bar:DB,btn=ok(T.btn)?T.btn:DT,tx=lum(bar)>.6?'#10233f':'#fff',bt=lum(btn)>.62?'#05070a':'#fff',out=lum(btn)>.6?'#555':btn;
+$('scPrev').innerHTML='<div style="background:'+bar+';color:'+tx+';padding:12px 14px;display:flex;justify-content:space-between;align-items:center"><b style="font:700 18px Georgia,serif">Your shop</b><span style="background:'+btn+';color:'+bt+';padding:7px 14px;border-radius:99px;font-weight:700;font-size:13.5px">List 2</span></div><div style="background:#f6f8f5;padding:12px 14px;display:flex;gap:8px"><span style="flex:1;text-align:center;padding:8px;border-radius:9px;border:2px solid '+btn+';color:'+out+';font-weight:700;font-size:13.5px;background:#fff">Add to list</span><span style="flex:1;text-align:center;padding:8px;border-radius:9px;background:'+btn+';color:'+bt+';font-weight:700;font-size:13.5px">Pay now</span></div>'}
+function sw(id,list,key,cur,def){var el=$(id);el.innerHTML='<button type="button" data-k="'+key+'" data-v="" style="padding:8px 12px;border-radius:10px;border:'+(!ok(cur)?'2px solid #888':'1px solid rgba(128,128,128,.5)')+';background:transparent;font-size:13px;cursor:pointer;color:inherit">Default</button>'+list.map(function(x){return'<button type="button" data-k="'+key+'" data-v="'+x+'" aria-label="'+x+'" style="width:34px;height:34px;border-radius:50%;border:'+(ok(cur)&&cur.toLowerCase()===x.toLowerCase()?'3px solid #888':'2px solid rgba(128,128,128,.5)')+';background:'+x+';cursor:pointer"></button>'}).join('')}
+function draw(){sw('scBar',BARS,'bar',T.bar);sw('scBtn',BTNS,'btn',T.btn);$('scBarC').value=ok(T.bar)?T.bar:DB;$('scBtnC').value=ok(T.btn)?T.btn:DT;prev()}
+function msg(t){$('scMsg').textContent=t||''}
+function saveNow(v,done){MZ.rpc('set_my_shop_theme',{p_theme:v}).then(function(){SAVED=JSON.parse(JSON.stringify(v||{}));msg(done)},function(er){msg(er.message)})}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#shopColors [data-k]');
+ if(b){var v=b.dataset.v;if(v)T[b.dataset.k]=v;else delete T[b.dataset.k];draw();msg('');return}
+ if(e.target.id==='scSave'){saveNow(T,'Saved. Your shop now uses these colors.')}
+ if(e.target.id==='scReset'){T={};draw();saveNow(null,'Back to the MOZLYT colors.')}});
+document.addEventListener('input',function(e){if(e.target.id==='scBarC'){T.bar=e.target.value;draw()}if(e.target.id==='scBtnC'){T.btn=e.target.value;draw()}});
+function load(n){try{if(window.MZ&&MZ.user()){MZ.q('profiles','select=shop_theme&id=eq.'+MZ.user().id).then(function(r){var t=r&&r[0]&&r[0].shop_theme;T={};if(t&&ok(t.bar))T.bar=t.bar;if(t&&ok(t.btn))T.btn=t.btn;SAVED=JSON.parse(JSON.stringify(T));draw()}).catch(function(){draw()})}else if(n<12)setTimeout(function(){load(n+1)},700);else draw()}catch(e){draw()}}
+setTimeout(function(){load(0)},900);
 })();
 </script>
 <script src="js/mz-api.js"></script>
