@@ -385,8 +385,8 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
       <label>Password<input type="password" id="sPass" autocomplete="new-password" minlength="8" required><small>At least 8 characters.</small></label>
       <div id="franBox" class="f" hidden>
         <div class="card2" style="margin:0"><b style="font-size:18px">MOZLYT Franchise</b>
-          <p class="sub" style="margin:6px 0 10px">A franchise is your own MOZLYT branch. After you create your account, we ask you to upload the documents below and agree to the franchise terms. Nothing is charged now.</p><b style="display:block;margin:8px 0 4px">What you will need to upload</b><ul class="sub" style="margin:0 0 12px;padding-left:18px;display:grid;gap:4px"><li>Your ID card (Ghana Card, passport or driver's licence), photo or PDF</li><li>Your certificate (business management or marketing, or a business registration), photo or PDF</li></ul><b style="display:block;margin:8px 0 4px">What you get</b><ul class="sub" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Your own dashboard, under MOZLYT</li><li>Recruit sellers and trainees with your own link</li><li>Their payments come to you, not to MOZLYT</li><li>Set the prices your recruits pay and sell at</li><li>Pause or activate your recruits if payment is late</li><li>The full shop, every lesson and every skill</li><li>Best wholesale prices from MOZLYT</li><li>You pay MOZLYT only the agreed amount, monthly or yearly</li></ul></div>
-        <small><b>How it works.</b> 1. Create your account. 2. Upload your ID and certificate and agree to the terms. 3. Wait to be approved. 4. We email you a link to pay the platform fee. 5. Pay the product deposit and we ship your products. 6. Your dashboard opens: set your prices and start selling.</small>
+          <p class="sub" style="margin:6px 0 10px">A franchise is your own MOZLYT branch. After you create your account, we ask you to upload the documents below and agree to the franchise terms. Nothing is charged now.</p><b style="display:block;margin:8px 0 4px">What you will need to upload</b><ul class="sub" style="margin:0 0 12px;padding-left:18px;display:grid;gap:4px"><li><b>Required:</b> your ID card (Ghana Card, passport or driver's licence), photo or PDF</li><li><i>Optional:</i> your certificate (business management, marketing or a business registration), photo or PDF</li></ul><b style="display:block;margin:8px 0 4px">What you get</b><ul class="sub" style="margin:0;padding-left:18px;display:grid;gap:4px"><li>Your own dashboard, under MOZLYT</li><li>Recruit sellers and trainees with your own link</li><li>Their payments come to you, not to MOZLYT</li><li>Set the prices your recruits pay and sell at</li><li>Pause or activate your recruits if payment is late</li><li>The full shop, every lesson and every skill</li><li>Best wholesale prices from MOZLYT</li><li>You pay MOZLYT only the agreed amount, monthly or yearly</li></ul></div>
+        <small><b>How it works.</b> 1. Create your account. 2. Upload your ID (a certificate is optional) and agree to the terms. 3. Wait to be approved. 4. We email you a link to pay the platform fee. 5. Pay the product deposit and we ship your products. 6. Your dashboard opens: set your prices and start selling.</small>
       </div>
       <p class="sub" style="margin:0;font-size:14px"><span id="kindNote">Start with a free trial. After that, keep your store open with a monthly or yearly plan.</span></p><button class="btn primary" type="submit" id="subBtn">Create my account</button>
       <small>By signing up you agree to sell honestly and deliver what customers order.</small>
@@ -409,7 +409,7 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
 <!-- ========== DASHBOARD ========== -->
 <section id="franView" class="authcard" hidden>
   <h1>Franchise application</h1>
-  <p class="sub" id="faSub">A franchise is not like opening a shop. Before you get franchise access, MOZLYT must check who you are and that you are qualified to run a branch. <b>If your certificate reads management or marketing, your franchise dashboard opens at once with 7 days free.</b> Any other certificate is checked by MOZLYT within about 2 working days.</p>
+  <p class="sub" id="faSub">A franchise is not like opening a shop. Before you get franchise access, MOZLYT must check who you are. <b>Your ID card is required.</b> A management or marketing certificate is optional, but it helps us approve you faster. MOZLYT checks every application within about 2 working days.</p>
   <div id="faDone" class="card2" hidden></div>
   <form id="fFa" class="form" novalidate>
     <label>Email<input id="faEmail" readonly></label>
@@ -418,13 +418,13 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
     <label>City or town (optional)<input id="faLoc" maxlength="120" placeholder="e.g. Lagos"></label>
     <label>Tell us about yourself and your plan (optional)<textarea id="faMsg" rows="3" maxlength="800"></textarea></label>
     <label>Your ID card (Ghana Card, passport or driver's licence) - photo or PDF<input id="faId" type="file" accept="image/*,application/pdf"></label>
-    <label>Certificate type<select id="faCertType"><option value="">Choose the type of certificate</option><option value="management">Management or business administration</option><option value="marketing">Marketing or communications</option><option value="other">Other (we will check it)</option></select></label>
-    <label>Your certificate to run as a manager (a genuine business registration, or a certificate showing you can manage a branch) - photo or PDF<input id="faCert" type="file" accept="image/*,application/pdf"></label>
+    <label>Certificate type (optional)<select id="faCertType"><option value="">No certificate</option><option value="management">Management or business administration</option><option value="marketing">Marketing or communications</option><option value="other">Other (we will check it)</option></select></label>
+    <label>Your certificate (optional) - management, marketing or a business registration - photo or PDF<input id="faCert" type="file" accept="image/*,application/pdf"></label>
     <div class="card2" style="margin:0"><b>MOZLYT franchise terms</b>
       <ol class="sub" style="margin:8px 0 0;padding-left:18px;display:grid;gap:6px">
         <li>I will follow the rules, policies and prices of MOZLYT, and I will not do anything that stands against them.</li>
         <li>I will promote the beliefs and mission of MOZLYT, and I will not harm its name.</li>
-        <li>Everything I submit is true. The ID and certificate are mine.</li>
+        <li>Everything I submit is true. My ID (and my certificate, if I add one) are mine.</li>
         <li>MOZLYT may check my documents, and may pause or end my franchise if I break these terms.</li>
         <li>After approval I pay the platform fee (<span id="faFee">GH&#8373;1,000 a month</span>) on time, or my branch is paused.</li>
         <li>MOZLYT keeps my documents private and uses them only to verify me. I understand they are read by an automated AI checker, and a person at MOZLYT may also review them.</li></ol>
@@ -656,17 +656,16 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function sendFran(e){e.preventDefault();var b=$('button[type=submit]',this),n=$('#faNote'),id=$('#faId').files[0],ce=$('#faCert').files[0];note(n,'','');
     if(!$('#faCountry').value){note(n,'err','Please select your country.');return}
     if($('#faPhone').value.replace(/\D/g,'').length<9){note(n,'err','Please enter a valid WhatsApp number.');return}
-    if(!id||!ce){note(n,'err','Please upload your ID card and your certificate.');return}
-    if(!$('#faCertType').value){note(n,'err','Please choose your certificate type.');return}
-    if(id.size>8388608||ce.size>8388608){note(n,'err','Each file must be under 8 MB.');return}
+    if(!id){note(n,'err','Please upload your ID card.');return}
+    if(id.size>8388608||(ce&&ce.size>8388608)){note(n,'err','Each file must be under 8 MB.');return}
     if(!$('#faAgree').checked){note(n,'err','Please tick the box to agree to the terms.');return}
     busy(b,true,'Sending your documents...');var u=MZ.user().id,t=Date.now();
     var ext=function(f){var m=(f.name.match(/\.([a-z0-9]{2,5})$/i)||[])[1];return m?m.toLowerCase():'jpg'};
-    Promise.resolve().then(function(){return Promise.all([MZ.upload('franchise-docs',u+'/id-'+t+'.'+ext(id),id),MZ.upload('franchise-docs',u+'/cert-'+t+'.'+ext(ce),ce)])}).then(function(p){
-      return MZ.rpc('submit_franchise_application_v3',{p_name:ME.full_name||'',p_phone:$('#faPhone').value.replace(/[^\d+]/g,''),p_location:$('#faLoc').value.trim(),p_country:$('#faCountry').value,p_message:$('#faMsg').value.trim(),p_id_path:p[0],p_cert_path:p[1],p_terms:true,p_cert_type:$('#faCertType').value})}).then(function(id){
+    Promise.resolve().then(function(){return Promise.all([MZ.upload('franchise-docs',u+'/id-'+t+'.'+ext(id),id),ce?MZ.upload('franchise-docs',u+'/cert-'+t+'.'+ext(ce),ce):Promise.resolve('')])}).then(function(p){
+      return MZ.rpc('submit_franchise_application_v3',{p_name:ME.full_name||'',p_phone:$('#faPhone').value.replace(/[^\d+]/g,''),p_location:$('#faLoc').value.trim(),p_country:$('#faCountry').value,p_message:$('#faMsg').value.trim(),p_id_path:p[0],p_cert_path:p[1]||'',p_terms:true,p_cert_type:ce?($('#faCertType').value||'other'):''})}).then(function(id){
       b.textContent='Checking your documents...';
       return MZ.fn('review-franchise',{application_id:id}).catch(function(){return {auto:false}})}).then(function(r){if(r&&r.auto){try{localStorage.removeItem('mz-fran')}catch(x){}location.replace('franchise.html');return}showFran()},function(er){note(n,'err',er.message)}).then(function(){busy(b,false)})}
-  function faCheck(){var miss=[],ids=[];function m(t,id){miss.push(t);ids.push(id)}if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)m('your WhatsApp number','faPhone');if(!$('#faCountry').value)m('your country','faCountry');if(!$('#faId').files[0])m('your ID card','faId');if(!$('#faCertType').value)m('the certificate type','faCertType');if(!$('#faCert').files[0])m('your certificate','faCert');if(!$('#faAgree').checked)m('agreeing to the terms','faAgree');
+  function faCheck(){var miss=[],ids=[];function m(t,id){miss.push(t);ids.push(id)}if(!$('#faPhone').value||$('#faPhone').value.replace(/\D/g,'').length<9)m('your WhatsApp number','faPhone');if(!$('#faCountry').value)m('your country','faCountry');if(!$('#faId').files[0])m('your ID card','faId');if(!$('#faAgree').checked)m('agreeing to the terms','faAgree');
     markMiss(ids);$('#faBtn').disabled=miss.length>0;$('#faNeed').textContent=miss.length?'Still needed: '+miss.join(', ')+'.':'Everything is ready.';$('#faNeed').style.color=miss.length?'#b3261e':'#14663f'}
   ['faPhone','faCountry','faId','faCert','faAgree','faCertType'].forEach(function(i){var e=$('#'+i);e.addEventListener('input',faCheck);e.addEventListener('change',faCheck)});
   $('#faCountry').innerHTML='<option value="">Select your country</option>'+MZC.map(function(k){return'<option value="'+k.c+'">'+esc(k.n)+'</option>'}).join('');
@@ -686,7 +685,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function setKind(k){KIND=k;$$('input[name=kind]').forEach(function(i){i.checked=i.value===k});$('#kShop').classList.toggle('on',k==='shop');$('#kTrain').classList.toggle('on',k==='trainee');$('#kFran').classList.toggle('on',k==='franchise');
     var fr=k==='franchise';$('#franBox').hidden=!fr;$('#subBtn').textContent=fr?'Sign up as a franchise':k==='trainee'?'Sign up for training':'Create my account';
     $('#shopFields').hidden=true;$('#phHint').hidden=k!=='shop';$('#sStore').required=false;$('#sSlug').required=false;
-    $('#kindNote').textContent=fr?'Next step: upload your ID and certificate and agree to the terms.':k==='trainee'?'You will get your own training dashboard. Choose your lessons and pay once. You can add a shop later.':'Start with a free trial. After that, keep your store open with a monthly or yearly plan.'}
+    $('#kindNote').textContent=fr?'Next step: upload your ID (certificate optional) and agree to the terms.':k==='trainee'?'You will get your own training dashboard. Choose your lessons and pay once. You can add a shop later.':'Start with a free trial. After that, keep your store open with a monthly or yearly plan.'}
   $$('input[name=kind]').forEach(function(i){i.onchange=function(){setKind(i.value)}});
   function pickName(){return PICK.indexOf('tier:')===0?cap(PICK.slice(5))+' shop plan':PICK==='basic'?'Business lessons (Basic)':PICK==='pro'?'Pro: everything':PICK.indexOf('skill:')===0?skName(PICK.slice(6)):''}
   try{var qk=new URLSearchParams(location.search).get('kind');if(qk==='trainee'||qk==='shop'||qk==='franchise'){try{if(qk==='franchise')localStorage.setItem('mz-fran','1');else localStorage.removeItem('mz-fran')}catch(e){}setKind(qk);WANT=true;$('#kindPick').hidden=true;
