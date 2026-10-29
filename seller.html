@@ -521,9 +521,9 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
       <label>WhatsApp number for orders<input id="ePhone" type="tel" maxlength="20" required></label>
       <button class="btn primary" type="submit">Save</button></form></div>
     <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Your own domain (optional)</h3><div id="lockDom"></div>
-      <p class="sub" style="margin-bottom:12px">Buy a domain from any seller, for example Namecheap, GoDaddy, Wix, Hostinger or a Ghana registrar. Then add it here and follow the three steps below.</p>
+      <p class="sub" style="margin-bottom:12px">Buy a domain from any seller, for example Namecheap, GoDaddy, Wix, Hostinger or a Ghana registrar. Type it here, then add the one DNS record we show you. Your store opens on your domain by itself.</p>
       <form id="fDom" class="f"><label>Your domain<input id="eDom" placeholder="www.amawellness.com" autocapitalize="none"><small>Leave empty if you do not have one.</small></label>
-      <button class="btn primary" type="submit">Save domain</button></form>
+      <button class="btn primary" type="submit">Connect domain</button></form>
       <div id="domInfo" style="margin-top:14px"></div></div>
     <div class="card2" style="margin-top:16px"><h3 style="margin:0 0 6px">Ad tracking (optional)</h3><div id="lockPix"></div>
       <p class="sub" style="margin-bottom:12px">Running Facebook, Instagram or TikTok ads? Paste your Pixel ID and your store will report visits, add-to-cart and orders to your ad account. Get the ID from Meta Events Manager or TikTok Ads Manager (Events, Web Events).</p>
@@ -985,19 +985,41 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#fSet').onsubmit=function(e){e.preventDefault();var b=$('button',this);busy(b,true,'Saving...');
     MZ.update('profiles','id=eq.'+ME.id,{store_name:$('#eStore').value.trim(),phone:$('#ePhone').value.replace(/[^\d+]/g,'')}).then(function(r){ME=r[0]||ME;paint();flash('Saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
   $('#fDom').onsubmit=function(e){e.preventDefault();var raw=$('#eDom').value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
-    if(raw&&!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(raw)){flash('That does not look like a domain, for example www.amawellness.com');return}
-    var b=$('button',this);busy(b,true,'Saving...');
-    MZ.update('profiles','id=eq.'+ME.id,{custom_domain:raw||null}).then(function(r){ME=r[0]||ME;paint();flash(raw?'Domain saved':'Domain removed')},function(er){flash(/duplicate|unique/i.test(er.message)?'That domain is already used by another store.':er.message)}).then(function(){busy(b,false)})};
+    if(!raw){flash('Type your domain first, for example www.amawellness.com');return}
+    if(!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(raw)){flash('That does not look like a domain, for example www.amawellness.com');return}
+    var b=$('button',this);busy(b,true,'Connecting...');
+    MZ.fn('domain-connect',{action:'add',domain:raw}).then(function(r){
+      if(r&&r.ok){return reloadMe().then(function(){flash('Domain added. Now add the DNS record below.')})}
+      flash((r&&r.error)||'Could not connect the domain. Please try again.')},function(){flash('Could not reach the server. Please try again.')}).then(function(){busy(b,false)})};
+  function reloadMe(){return MZ.q('profiles','select=*&id=eq.'+ME.id).then(function(x){if(x&&x[0]){ME=x[0]}paint()})}
+  var DTIMER=null;
+  function dnsName(d){var l=d.split('.');if(l[0]==='www')return'www';var sl=['com','co','org','net','gov','edu','ac'];var n=l.length;if(n>=3&&!(n===3&&l[n-1].length===2&&sl.indexOf(l[n-2])>-1))return l.slice(0,n-(l[n-1].length===2&&sl.indexOf(l[n-2])>-1?3:2)).join('.');return'@'}
+  function domCheck(manual){var btn=manual?$('#domCheck'):null;if(btn)busy(btn,true,'Checking...');
+    return MZ.fn('domain-connect',{action:'check'}).then(function(r){if(r&&r.ok){return reloadMe().then(function(){if(manual)flash(r.status==='active'?'Your domain is live':'Not connected yet. Check the DNS record and try again in a few minutes.')})}if(manual)flash((r&&r.error)||'Could not check right now.')},function(){if(manual)flash('Could not reach the server.')}).then(function(){if(btn)busy(btn,false)})}
+  function domInfo(){var d=ME.custom_domain,el=$('#domInfo');clearInterval(DTIMER);DTIMER=null;
+    if(!d){el.innerHTML='<div class="m" style="color:var(--mute);font-size:14px">No domain yet. Your store works at the link above. You can add your own domain at any time.</div>';return}
+    var rm='<button class="b2 ghost" type="button" id="domRm" style="margin-top:10px">Remove this domain</button>';
+    if(ME.domain_status==='active'){
+      el.innerHTML='<div class="msg ok"><b>Your store is live on <a href="https://'+esc(d)+'" target="_blank" rel="noopener">'+esc(d)+'</a>.</b></div>'+rm}
+    else if(ME.domain_status==='pending'){
+      var nm=dnsName(d);
+      el.innerHTML='<div class="msg info"><b>'+esc(d)+'</b> is added. It goes live when this DNS record is in place.</div>'+
+        '<div class="card2" style="margin-top:10px"><b>Add this record where you bought the domain</b><div style="margin-top:8px;line-height:1.9">Type: <b>CNAME</b><br>Name (Host): <b>'+esc(nm)+'</b> <button class="b2 ghost" type="button" data-cp="'+esc(nm)+'">Copy</button><br>Value (Points to): <b>shops.mozlyt.com</b> <button class="b2 ghost" type="button" data-cp="shops.mozlyt.com">Copy</button></div>'+
+        '<p class="sub" style="margin:10px 0 0;font-size:14px">If the domain seller already has a record with the same name, change it instead of adding another. Some sellers do not allow a CNAME on the main domain (no www). In that case use <b>www.</b> in front, for example www.'+esc(d.replace(/^www\./,''))+'.</p>'+
+        '<p class="sub" style="margin:8px 0 0;font-size:14px">It usually takes a few minutes, and can take up to a few hours. This page checks by itself.</p></div>'+
+        (ME.domain_note?'<div class="m" style="margin-top:8px;font-size:13px;color:var(--mute)">'+esc(ME.domain_note)+'</div>':'')+
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn primary" type="button" id="domCheck">Check now</button></div>'+rm;
+      $$('#domInfo [data-cp]').forEach(function(c){c.onclick=function(){copy(c.dataset.cp)}});
+      var ck=$('#domCheck');if(ck)ck.onclick=function(){domCheck(true)};
+      DTIMER=setInterval(function(){if(!document.hidden)domCheck(false)},20000)}
+    else{
+      el.innerHTML='<div class="msg info"><b>'+esc(d)+'</b> is saved but not connected yet. Press Connect domain above to start.</div>'+rm}
+    var r=$('#domRm');if(r)r.onclick=function(){if(!confirm('Remove this domain from your store?'))return;busy(r,true,'Removing...');MZ.fn('domain-connect',{action:'remove'}).then(function(){return reloadMe()}).then(function(){flash('Domain removed')}).then(function(){busy(r,false)})}}
   $('#fPix').onsubmit=function(e){e.preventDefault();var a=$('#ePx1').value.trim(),c=$('#ePx2').value.trim();
     if(a&&!/^[0-9]{8,20}$/.test(a)){flash('The Facebook Pixel ID is numbers only, about 15 digits');return}
     if(c&&!/^[A-Za-z0-9]{8,32}$/.test(c)){flash('The TikTok Pixel ID is letters and numbers only');return}
     var b=$('button',this);busy(b,true,'Saving...');
     MZ.update('profiles','id=eq.'+ME.id,{meta_pixel_id:a||null,tiktok_pixel_id:c||null}).then(function(r){ME=r[0]||ME;flash('Tracking saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
-  function domInfo(){var d=ME.custom_domain,el=$('#domInfo');
-    if(!d){el.innerHTML='<div class="m" style="color:var(--mute);font-size:14px">No domain yet. Your store works at the link above. You can add your own domain at any time.</div>';return}
-    el.innerHTML='<div class="msg info"><b>'+esc(d)+'</b> is saved. Custom domains are switched on by MOZLYT. Message us on WhatsApp and we will connect it for you.</div>'+
-      '<ol class="steps3"><li data-n="1"><b>Buy the domain</b> from any domain seller.</li><li data-n="2"><b>Save it here</b> exactly as you will use it, for example '+esc(d)+'.</li><li data-n="3"><b>Tell MOZLYT</b> on WhatsApp. We give you two DNS records to add at your domain seller, then your store opens on your domain.</li></ol>'}
-
   /* ----- account ----- */
   $('#fPw').onsubmit=function(e){e.preventDefault();var b=$('button',this);busy(b,true,'Saving...');MZ.updatePassword($('#npw').value).then(function(){flash('Password changed');$('#npw').value=''},function(er){flash(er.message)}).then(function(){busy(b,false)})};
 
