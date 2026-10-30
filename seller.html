@@ -1122,11 +1122,14 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     else if(ME.domain_status==='pending'){
       var nm=dnsName(d);
       el.innerHTML='<div class="msg info"><b>'+esc(d)+'</b> is added. It goes live when this DNS record is in place.</div>'+
-        '<div class="card2" style="margin-top:10px"><b>Add this record where you bought the domain</b><div style="margin-top:8px;line-height:1.9">Type: <b>CNAME</b><br>Name (Host): <b>'+esc(nm)+'</b> <button class="b2 ghost" type="button" data-cp="'+esc(nm)+'">Copy</button><br>Value (Points to): <b>shops.mozlyt.com</b> <button class="b2 ghost" type="button" data-cp="shops.mozlyt.com">Copy</button></div>'+
+        '<div class="card2" style="margin-top:10px"><b>Step 1: add this record where you bought the domain</b><div style="margin-top:8px;line-height:1.9">Type: <b>CNAME</b><br>Name (Host): <b>'+esc(nm)+'</b> <button class="b2 ghost" type="button" data-cp="'+esc(nm)+'">Copy</button><br>Value (Points to): <b>shops.mozlyt.com</b> <button class="b2 ghost" type="button" data-cp="shops.mozlyt.com">Copy</button></div>'+
         '<p class="sub" style="margin:10px 0 0;font-size:14px">If the domain seller already has a record with the same name, change it instead of adding another. Some sellers do not allow a CNAME on the main domain (no www). In that case use <b>www.</b> in front, for example www.'+esc(d.replace(/^www\./,''))+'.</p>'+
         '<p class="sub" style="margin:8px 0 0;font-size:14px">It usually takes a few minutes, and can take up to a few hours. This page checks by itself.</p></div>'+
+        (ME.domain_txt_name&&ME.domain_txt_value?(function(){var root=nm==='@'?d:d.slice(nm.length+1),tn=ME.domain_txt_name,h=tn.slice(-(root.length+1))==='.'+root?tn.slice(0,-(root.length+1)):tn;
+          return '<div class="card2" style="margin-top:10px"><b>Step 2: add this second record (it proves the domain is yours, for the secure padlock)</b><div style="margin-top:8px;line-height:1.9">Type: <b>TXT</b><br>Name (Host): <b style="word-break:break-all">'+esc(h)+'</b> <button class="b2 ghost" type="button" data-cp="'+esc(h)+'">Copy</button><br>Value: <b style="word-break:break-all">'+esc(ME.domain_txt_value)+'</b> <button class="b2 ghost" type="button" data-cp="'+esc(ME.domain_txt_value)+'">Copy</button></div><p class="sub" style="margin:10px 0 0;font-size:14px">Keep both records. Then press Check now.</p></div>'})():'')+
         (ME.domain_note?'<div class="m" style="margin-top:8px;font-size:14px;line-height:1.5;color:#e8edf3;font-weight:600">'+esc(ME.domain_note)+'</div>':'')+
         '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn primary" type="button" id="domCheck">Check now</button></div>'+rm;
+      if(!ME.domain_txt_value&&!window.__txtTried){window.__txtTried=1;setTimeout(function(){domCheck(false)},300)}
       $$('#domInfo [data-cp]').forEach(function(c){c.onclick=function(){copy(c.dataset.cp)}});
       var ck=$('#domCheck');if(ck)ck.onclick=function(){domCheck(true)};
       DTIMER=setInterval(function(){if(!document.hidden)domCheck(false)},20000)}
