@@ -417,7 +417,7 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
 <section id="dashView" hidden>
   <div class="top2"><div><h1>MOZLYT admin</h1><p class="sub" id="who"></p></div><div style="display:flex;gap:8px"><button class="b2 ghost" id="btnAlert" type="button">Turn on alerts</button><button class="b2 ghost" id="btnTheme" type="button">Colors and background</button><button class="b2 ghost" id="btnOut" type="button">Log out</button></div></div>
   <div id="dNote"></div>
-  <style>@media(max-width:820px){#dtabs{display:flex!important;position:sticky;top:0;z-index:40;background:var(--bg,#f5f7f4);padding:8px 0}}</style><div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="book" type="button">Bookings</button><button data-t="ord" type="button">Orders</button><button data-t="sell" type="button">Sellers</button><button data-t="ana" type="button" id="tabAna">Analytics</button><button data-t="fr" type="button" id="tabFr">Franchises</button><button data-t="fapp" type="button" id="tabFapp">Franchise requests</button><button data-t="papp" type="button" id="tabPapp">Work with us</button><button data-t="subs" type="button">Subscriptions</button><button data-t="prod" type="button">Products</button><button data-t="train" type="button">Training</button><button data-t="mkt" type="button">Marketing</button><button data-t="news" type="button">News</button><button data-t="cty" type="button">Countries</button><button data-t="set" type="button">Ad tracking</button></div>
+  <style>@media(max-width:820px){#dtabs{display:flex!important;position:sticky;top:0;z-index:40;background:var(--bg,#f5f7f4);padding:8px 0}}</style><div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="book" type="button">Bookings</button><button data-t="ord" type="button">Orders</button><button data-t="sell" type="button">Sellers</button><button data-t="ana" type="button" id="tabAna">Analytics</button><button data-t="fr" type="button" id="tabFr">Franchises</button><button data-t="fapp" type="button" id="tabFapp">Franchise requests</button><button data-t="papp" type="button" id="tabPapp">Work with us</button><button data-t="subs" type="button">Subscriptions</button><button data-t="ledger" type="button">Payment records</button><button data-t="prod" type="button">Products</button><button data-t="train" type="button">Training</button><button data-t="mkt" type="button">Marketing</button><button data-t="news" type="button">News</button><button data-t="cty" type="button">Countries</button><button data-t="set" type="button">Ad tracking</button></div>
 
   <div id="pane-over"><div class="stats" id="stats"></div><h3 style="margin:18px 0 10px">Newest bookings</h3><div class="lst" id="ovBook"></div><h3 style="margin:22px 0 10px">Newest orders</h3><div class="lst" id="ovOrd"></div></div>
   <div id="pane-book" hidden><div class="stats" id="bookStats"></div><div class="tools"><select id="bf"><option value="">All statuses</option><option>new</option><option>confirmed</option><option>done</option><option>cancelled</option></select></div><div class="lst" id="bookList"></div></div>
@@ -432,6 +432,7 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
     <div class="tools"><select id="tcSel"></select><button class="b2" id="tcNew" type="button">New course</button></div>
     <div id="tcBox"></div>
   </div>
+  <div id="pane-ledger" hidden></div>
   <div id="pane-subs" hidden>
     <div class="stats" id="subStats"></div>
     <div class="card2 ptCard"><div class="ptHead"><div><h3 style="margin:0">Subscription plans and prices</h3><p class="sub" style="margin:4px 0 0">Everything customers pay MOZLYT, in one list. Press Edit on a row to change it.</p></div></div>
@@ -527,6 +528,7 @@ try{var l=JSON.parse(localStorage.getItem('mz-admin-theme')||'null');if(okc(l)){
 })();
 </script>
 <script src="js/mz-api.js"></script>
+<script src="js/mz-ledger.js"></script>
 <script>
 
 var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
@@ -552,7 +554,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:'MOZLYT admin'}).then(function(r){if(r.confirmed)boot();else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(aNote,'ok','We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in.')}},function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();MZ.recover($('#fEmail').value.trim()).then(function(){note(aNote,'ok','If that email has an account, a reset link is on its way.')},function(er){note(aNote,'err',er.message)})};
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){show('dashView',false);show('authView',true);view('fLogin')})};
-  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','book','ord','sell','ana','fr','fapp','papp','subs','prod','train','mkt','news','cty','set'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='train')loadTrain();if(b.dataset.t==='fr')stkLoad();if(b.dataset.t==='mkt')loadMk();if(b.dataset.t==='news'){loadNews();loadSubs();loadStories()}if(b.dataset.t==='cty')loadCP();try{window.scrollTo(0,0)}catch(e){}}});
+  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','book','ord','sell','ana','fr','fapp','papp','subs','ledger','prod','train','mkt','news','cty','set'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='ledger'&&window.MZLedger)MZLedger.mount('#pane-ledger',{rpc:'admin_ledger',title:'Payment records',note:'Every payment that came in and every payment that went out, with a running balance. Only completed payments are counted in the totals.'});if(b.dataset.t==='train')loadTrain();if(b.dataset.t==='fr')stkLoad();if(b.dataset.t==='mkt')loadMk();if(b.dataset.t==='news'){loadNews();loadSubs();loadStories()}if(b.dataset.t==='cty')loadCP();try{window.scrollTo(0,0)}catch(e){}}});
 
 
   var NEWS_OK=false;
