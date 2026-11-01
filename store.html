@@ -271,7 +271,7 @@ body.has-list .wa-float{bottom:84px}
 </head>
 <body>
 
-<header class="sh"><div class="wrap sbar"><a class="sname" id="sName" href="#">Store</a><span style="display:flex;gap:8px;align-items:center"><button type="button" class="cartbtn acc" id="accBtn">Account</button><button type="button" class="cartbtn" id="cartBtn">List <b id="cartN">0</b></button></span></div></header>
+<header class="sh"><div class="wrap sbar"><a class="sname" id="sName" href="#">Store</a><span style="display:flex;gap:8px;align-items:center"><button type="button" class="cartbtn acc ic" id="accBtn" aria-label="Account" title="Account"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></button><button type="button" class="cartbtn ic" id="cartBtn" aria-label="Your list" title="Your list"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><b id="cartN">0</b></button></span></div></header>
 <main class="dash" style="padding-top:18px"><div class="wrap">
 <div id="state" class="empty">Loading store...</div>
 <section id="shop" hidden>
@@ -320,6 +320,7 @@ body.has-list .wa-float{bottom:84px}
 .sh{background:#0E2A47;color:#fff;position:sticky;top:0;z-index:20}.sbar{display:flex;justify-content:space-between;align-items:center;padding-top:12px;padding-bottom:12px}
 .ccb{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;background:#F2B134;color:#0E2A47;font:700 13px system-ui,sans-serif;vertical-align:middle}.sname{color:#fff;font:700 20px Georgia,serif;text-decoration:none}.cartbtn{background:#F2B134;color:#0E2A47;border:0;border-radius:99px;padding:9px 16px;font:700 14.5px inherit;font-family:inherit;cursor:pointer}
 .cartbtn b{background:#0E2A47;color:#fff;border-radius:99px;padding:1px 8px;margin-left:4px}
+.cartbtn.ic{position:relative;width:44px;height:44px;padding:0;display:inline-flex;align-items:center;justify-content:center;max-width:none}.cartbtn.ic svg{display:block}.cartbtn.ic b{position:absolute;top:-5px;right:-5px;margin:0;padding:1px 6px;font-size:11.5px;line-height:16px;min-width:18px;text-align:center;border:2px solid #fff}
 .b2.out{background:#fff;color:var(--green-d);border:2px solid var(--green);padding:8px 14px}
 .mk{display:flex!important;gap:10px;align-items:flex-start;font-size:14px;color:#5b6b62;line-height:1.4}.mk input{width:auto!important;margin-top:3px}
 .listbar{position:fixed;left:12px;right:12px;bottom:12px;z-index:45;background:#0E2A47;color:#fff;border-radius:14px;padding:10px 12px 10px 16px;display:none;align-items:center;gap:12px;box-shadow:0 12px 30px rgba(14,42,71,.35);max-width:640px;margin:0 auto}
@@ -462,7 +463,7 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   var ST={'new':'Received',confirmed:'Confirmed',paid:'Paid',delivered:'Delivered',cancelled:'Cancelled'};
   function waLink(t){return STORE&&STORE.whatsapp?'https://wa.me/'+MZ.phoneIntl(STORE.whatsapp)+'?text='+encodeURIComponent(t):''}
   function firstName(n){return String(n||'').trim().split(/\s+/)[0]||''}
-  function accLabel(){var b=$('#accBtn');if(b)b.textContent=ACC&&ACC.joined?(firstName(ACC.name)||'My account'):'Account'}
+  function accLabel(){var b=$('#accBtn');if(b){var t=ACC&&ACC.joined?(firstName(ACC.name)||'My account'):'Account';b.setAttribute('aria-label',t);b.title=t}}
   var TT=null;
   function lineItems(){return lines().map(function(l){return{product_id:String(l.p.id),name:l.p.name,qty:l.q,price:l.p.price}})}
   function touchBase(){var g=function(i){var e=$(i);return e?String(e.value||'').trim():''};return{p_slug:slug,p_name:g('#oName'),p_phone:g('#oPhone'),p_email:g('#oEmail')}}
