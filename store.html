@@ -401,7 +401,12 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
     var st=document.createElement('style');st.id='shop-theme';st.textContent=css;document.head.appendChild(st)}
 
   /* a seller's own domain: look the store up from the web address */
-  if(!slug&&!/(^|\.)mozlyt\.com$|github\.io$|^localhost$/.test(location.hostname)){MZ.rpc('resolve_domain',{p_host:location.hostname.replace(/^www\./,'')}).then(function(r){return r||MZ.rpc('resolve_domain',{p_host:location.hostname})}).then(function(r){start(r)},function(){start('')})}else start(slug);
+  if(!slug&&!/(^|\.)mozlyt\.com$|github\.io$|^localhost$/.test(location.hostname)){
+    /* remember which shop this domain belongs to, so repeat visits skip the lookup and start at once */
+    var DK='mz-dom-'+location.hostname,cached='';try{cached=localStorage.getItem(DK)||''}catch(e){}
+    var look=function(){return MZ.rpc('resolve_domain',{p_host:location.hostname.replace(/^www\./,'')}).then(function(r){return r||MZ.rpc('resolve_domain',{p_host:location.hostname})}).then(function(r){try{if(r)localStorage.setItem(DK,r);else localStorage.removeItem(DK)}catch(e){}return r})};
+    if(cached){try{var qs2=JSON.parse(localStorage.getItem('mz-sth-'+cached)||'null');if(qs2)setTimeout(function(){try{applyShopTheme(qs2)}catch(e){}},0)}catch(e){}start(cached);look().catch(function(){})}
+    else look().then(function(r){start(r)},function(){start('')})}else start(slug);
 
   function cats(){var c=['All categories'].concat(STORE.products.map(function(p){return p.category}).filter(function(x,i,a){return a.indexOf(x)===i}));$('#cat').innerHTML=c.map(function(x){return'<option>'+esc(x)+'</option>'}).join('')}
   function draw(){var q=$('#q').value.toLowerCase().trim(),c=$('#cat').value;

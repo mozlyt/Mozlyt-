@@ -29,13 +29,19 @@ export default {
 
     // keep the store link working if someone adds ?s=... themselves, otherwise the page uses the domain
     const target = ORIGIN + path + (path === '/store.html' ? url.search : '');
+    // keep copies at Cloudflare so most visits never travel to the origin: a few minutes for pages and code, a day for pictures
+    const isHtml = path === '/store.html';
+    const isCode = /\.(js|css|json|webmanifest)$/i.test(path);
+    const ttl = path === '/sw.js' ? 0 : isHtml ? 120 : isCode ? 300 : 86400;
     const res = await fetch(target, {
       method: request.method,
       headers: { accept: request.headers.get('accept') || '*/*', 'accept-language': request.headers.get('accept-language') || '' },
       redirect: 'follow',
+      cf: ttl ? { cacheEverything: true, cacheTtl: ttl, cacheTtlByStatus: { '200-299': ttl, '404': 10, '500-599': 0 } } : { cacheEverything: false },
     });
     const out = new Response(res.body, res);
     out.headers.set('x-mozlyt-domain', host);
+    if (res.ok && ttl) out.headers.set('cache-control', 'public, max-age=' + Math.min(ttl, 300) + ', stale-while-revalidate=86400');
     return out;
   },
 };
