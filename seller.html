@@ -466,7 +466,7 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
   <div class="card2 mystore" id="myStoreCard"><div class="ms-h"><b>My store</b><code id="storeUrl" hidden></code></div>
     <div class="pills"><a class="pill2" id="openUrl" target="_blank" rel="noopener">Visit store</a><button class="pill2" type="button" id="cpUrl">Copy link</button><a class="pill2" id="shareUrl" target="_blank" rel="noopener">Share on WhatsApp</a></div></div>
   <div class="tabs" id="dtabs">
-    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="cust">Customers</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
+    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="cust">Customers</button><button type="button" data-t="money">Payment records</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
   </div>
 
   <div id="pane-over">
@@ -496,9 +496,10 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
     <div class="lst" id="custList"></div>
   </div>
 
+  <div id="pane-money" hidden></div>
   <div id="pane-more" hidden>
     <div class="mgroup"><div class="mhead">Your store</div>
-      <button class="mrow" type="button" data-go="cust">My customers</button><button class="mrow" type="button" data-go="sub">Subscription</button><button class="mrow" type="button" data-go="set">Store settings</button><button class="mrow" type="button" data-go="acc">Account</button><button class="mrow" type="button" data-go="fr" id="moreFr" style="display:none">Franchise dashboard</button></div>
+      <button class="mrow" type="button" data-go="cust">My customers</button><button class="mrow" type="button" data-go="money">Payment records</button><button class="mrow" type="button" data-go="sub">Subscription</button><button class="mrow" type="button" data-go="set">Store settings</button><button class="mrow" type="button" data-go="acc">Account</button><button class="mrow" type="button" data-go="fr" id="moreFr" style="display:none">Franchise dashboard</button></div>
     <div class="mgroup"><a class="mrow" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20need%20help%20with%20my%20seller%20account" target="_blank" rel="noopener">Get help on WhatsApp</a><button class="mrow" type="button" id="moreOut">Log out</button></div>
   </div>
 
@@ -675,6 +676,7 @@ setTimeout(function(){load(0)},900);
 </script>
 <script src="js/mz-api.js"></script>
 <script src="js/mz-crm.js"></script>
+<script src="js/mz-ledger.js"></script>
 <script src="js/mz-pay.js"></script>
 <script>
 
@@ -791,11 +793,11 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#ppYes').onclick=function(){close();var sb=$('[data-t=sub]');if(sb)sb.click();else go('sub');try{window.scrollTo(0,0)}catch(e){}};
   }
   /* ----- tabs ----- */
-  var PANES=['over','prod','ord','cust','learn','sub','set','acc','fr','more'];
+  var PANES=['over','prod','ord','cust','money','learn','sub','set','acc','fr','more'];
   function flag(k,set){var key='mz-f-'+(ME?ME.id:'x')+'-'+k;try{if(set){localStorage.setItem(key,'1');return true}return localStorage.getItem(key)==='1'}catch(e){return false}}
   function go(t){if(t==='fr'){location.href='franchise.html';return}PANES.forEach(function(x){show('pane-'+x,x===t)});$$('#dtabs button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});
     var bt=['over','prod','ord','learn'].indexOf(t)>-1?t:'more';$$('#bnav button').forEach(function(b){b.classList.toggle('on',b.dataset.t===bt)});
-    if(t==='learn'){flag('learn',true);loadTrain()}if(t==='cust')loadCust();if(t==='fr')loadFr();try{window.scrollTo(0,0)}catch(e){}}
+    if(t==='learn'){flag('learn',true);loadTrain()}if(t==='cust')loadCust();if(t==='money'&&window.MZLedger)MZLedger.mount('#pane-money',{rpc:'seller_ledger',title:'Payment records',note:'Every payment from your customers, what went to your franchise and to MOZLYT, and what you keep, with a running balance. Only completed payments are counted. Orders where the customer paid you directly (cash or your own MoMo) are not listed here.',k:{inNote:'paid by your customers',out:'',outNote:'franchise share, fees and subscriptions',net:'Your balance',netNote:'money in minus money out'}});if(t==='fr')loadFr();try{window.scrollTo(0,0)}catch(e){}}
   $$('#dtabs button,#bnav button').forEach(function(b){b.onclick=function(){go(b.dataset.t)}});
   $$('#pane-more [data-go]').forEach(function(b){b.onclick=function(){go(b.dataset.go)}});
   $('#moreOut').onclick=function(){$('#btnOut').click()};

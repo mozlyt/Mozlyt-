@@ -38,6 +38,7 @@
     var host = typeof sel === 'string' ? document.querySelector(sel) : sel;
     if (!host) return;
     if (!document.getElementById('lg-css')) { var st = document.createElement('style'); st.id = 'lg-css'; st.textContent = CSS; document.head.appendChild(st) }
+    var K = opt.k || {};
     var S = { rows: null, per: 'all', dir: '', cat: '', q: '' };
     host.classList.add('lg');
     host.innerHTML = '<div class="lg-empty">Loading payment records...</div>';
@@ -81,9 +82,9 @@
         '<select data-lg="dir"><option value="">Money in and out</option><option value="in">Money in only</option><option value="out">Money out only</option></select>' +
         '<select data-lg="cat"><option value="">All types</option>' + Object.keys(cats).sort().map(function (c) { return '<option>' + esc(c) + '</option>' }).join('') + '</select>' +
         '<input data-lg="q" type="search" placeholder="Search name or reference" value="' + esc(S.q) + '"></div>';
-      h += '<div class="lg-cards"><div class="lg-c" style="--k:var(--in)"><span>Money in</span><b style="color:var(--in)">' + fmt(tin) + '</b><small>received</small></div>' +
-        '<div class="lg-c" style="--k:var(--out)"><span>Money out</span><b style="color:var(--out)">' + fmt(tout) + '</b><small>paid to franchises and sellers</small></div>' +
-        '<div class="lg-c" style="--k:#0E2A47"><span>Left with MOZLYT</span><b>' + fmt(net) + '</b><small>money in minus money out</small></div>' +
+      h += '<div class="lg-cards"><div class="lg-c" style="--k:var(--in)"><span>Money in</span><b style="color:var(--in)">' + fmt(tin) + '</b><small>' + esc(K.inNote || 'received') + '</small></div>' +
+        '<div class="lg-c" style="--k:var(--out)"><span>Money out</span><b style="color:var(--out)">' + fmt(tout) + '</b><small>' + esc(K.outNote || 'paid to franchises and sellers') + '</small></div>' +
+        '<div class="lg-c" style="--k:#0E2A47"><span>' + esc(K.net || 'Left with MOZLYT') + '</span><b>' + fmt(net) + '</b><small>' + esc(K.netNote || 'money in minus money out') + '</small></div>' +
         '<div class="lg-c" style="--k:#d97706"><span>Still waiting</span><b>' + fmt(wait) + '</b><small>not counted yet &middot; ' + n + ' payments counted</small></div></div>';
       var bk = Object.keys(by).sort();
       if (bk.length) {
@@ -123,7 +124,7 @@
       w.document.write('<!doctype html><meta charset="utf-8"><title>Payment records</title><style>body{font:14px Arial,sans-serif;color:#10233f;margin:24px}h1{margin:0 0 4px;font-size:22px}p{margin:0 0 14px;color:#555}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:7px 9px;text-align:left;vertical-align:top;font-size:12.5px}th{background:#f1f4f2}.n{text-align:right;white-space:nowrap}.i{color:#15803d}.o{color:#b91c1c}tfoot td{font-weight:700;background:#f1f4f2}</style>' +
         '<h1>' + esc((o && o.title) || 'Payment records') + '</h1><p>Printed ' + esc(dt(new Date())) + '. Only completed payments are counted in the totals.</p><table><thead><tr><th>Date</th><th>Details</th><th>Status</th><th class="n">Money in</th><th class="n">Money out</th></tr></thead><tbody>' +
         rows.map(function (r) { return '<tr><td>' + esc(dt(r.at)) + '</td><td><b>' + esc(r.party) + '</b> &middot; ' + esc(r.cat) + '<br>' + esc(r.descr) + (r.ref ? ' &middot; ' + esc(r.ref) : '') + '</td><td>' + esc(stat(r)[1]) + '</td><td class="n i">' + (r.dir === 'in' ? fmt(r.amount) : '') + '</td><td class="n o">' + (r.dir === 'out' ? fmt(r.amount) : '') + '</td></tr>' }).join('') +
-        '</tbody><tfoot><tr><td colspan="3">Total (completed payments)</td><td class="n">' + fmt(t.tin || 0) + '</td><td class="n">' + fmt(t.tout || 0) + '</td></tr><tr><td colspan="3">Left with MOZLYT</td><td class="n" colspan="2">' + fmt(t.net || 0) + '</td></tr></tfoot></table>');
+        '</tbody><tfoot><tr><td colspan="3">Total (completed payments)</td><td class="n">' + fmt(t.tin || 0) + '</td><td class="n">' + fmt(t.tout || 0) + '</td></tr><tr><td colspan="3">' + esc((o && o.k && o.k.net) || 'Left with MOZLYT') + '</td><td class="n" colspan="2">' + fmt(t.net || 0) + '</td></tr></tfoot></table>');
       w.document.close(); setTimeout(function () { try { w.print() } catch (e) { } }, 400);
     }
     function load() {
