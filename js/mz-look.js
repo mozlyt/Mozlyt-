@@ -6,6 +6,7 @@
     big: { n: 'Big photos', d: 'Two larger products across', bar: '#0E2A47', bg: '#f6f8f5', cd: '#fff', ln: '#dce4de', ac: '#1F9D6B', cols: 2 },
     list: { n: 'List', d: 'One product per row, photo on the left', bar: '#0E2A47', bg: '#f6f8f5', cd: '#fff', ln: '#dce4de', ac: '#1F9D6B', cols: 1 },
     rugged: { n: 'Rugged', d: 'Charcoal and orange, strong and bold', bar: '#111214', bg: '#1a1b1d', cd: '#232427', ln: '#3a3b3f', ac: '#ea580c', cols: 2 },
+    white: { n: 'Clean white', d: 'White behind the bar and footer, products as they are', bar: '#fff', bg: '#f6f8f5', cd: '#fff', ln: '#dce4de', ac: '#1F9D6B', cols: 3 },
     lux: { n: 'Premium black', d: 'Black and gold, for a high-end look', bar: '#000', bg: '#0b0b0c', cd: '#151517', ln: '#2c2c30', ac: '#d4a84b', cols: 2 },
     snow: { n: 'Premium white', d: 'Clean white with black, sharp and minimal', bar: '#fff', bg: '#fff', cd: '#fff', ln: '#e3e3e3', ac: '#111', cols: 2 }
   };
@@ -22,20 +23,20 @@
   function mount(sel, opt) {
     var host = typeof sel === 'string' ? document.querySelector(sel) : sel; if (!host) return;
     opt = opt || {};
-    var ids = opt.franchise ? ['lux', 'snow', 'rugged', 'big', 'classic'] : ['classic', 'big', 'list', 'rugged'];
+    var ids = opt.franchise ? ['white', 'lux', 'snow', 'rugged', 'big', 'classic'] : ['classic', 'big', 'list', 'rugged'];
     if (!document.getElementById('lk-css')) { var st = document.createElement('style'); st.id = 'lk-css'; st.textContent = CSS; document.head.appendChild(st) }
     var cur = null, msg = '';
     function draw() {
-      host.innerHTML = '<h3 style="margin:0 0 4px">Shop theme</h3><p class="sub" style="margin:0">A theme changes the background and how your products are arranged. ' + (opt.franchise ? 'Your franchise shop has its own premium looks.' : '') + ' Choosing one sets its colours. You can still change the colours afterwards.</p><div class="lk-g">' +
+      host.innerHTML = '<h3 style="margin:0 0 4px">Shop theme</h3><p class="sub" style="margin:0">A theme changes the background and how your products are arranged. ' + (opt.franchise ? 'Franchise shops also have premium black and white looks.' : '') + ' Choosing one sets its colours. You can still change the colours afterwards.</p><div class="lk-g">' +
         ids.map(function (id) { var t = TH[id]; return '<button type="button" class="lk-t' + (cur === id ? ' on' : '') + '" data-lk="' + id + '" aria-pressed="' + (cur === id) + '">' + prev(t) + '<b>' + esc(t.n) + '</b><span class="d">' + esc(t.d) + '</span></button>' }).join('') +
         '</div><div class="sub" id="lkMsg" style="font-size:13.5px">' + esc(msg) + '</div>';
     }
     function load(n) {
-      if (!(window.MZ && MZ.user && MZ.user())) { if (n < 12) setTimeout(function () { load(n + 1) }, 700); else { cur = opt.franchise ? 'lux' : 'classic'; draw() } return }
+      if (!(window.MZ && MZ.user && MZ.user())) { if (n < 12) setTimeout(function () { load(n + 1) }, 700); else { cur = opt.franchise ? 'white' : 'classic'; draw() } return }
       MZ.q('profiles', 'select=shop_theme,store_slug&id=eq.' + MZ.user().id).then(function (r) {
         var t = r && r[0] && r[0].shop_theme, lk = t && t.look;
-        cur = ids.indexOf(lk) > -1 ? lk : (opt.franchise ? 'lux' : 'classic'); host._slug = r && r[0] && r[0].store_slug; draw();
-      }, function () { cur = opt.franchise ? 'lux' : 'classic'; draw() });
+        cur = ids.indexOf(lk) > -1 ? lk : (opt.franchise ? 'white' : 'classic'); host._slug = r && r[0] && r[0].store_slug; draw();
+      }, function () { cur = opt.franchise ? 'white' : 'classic'; draw() });
     }
     host.addEventListener('click', function (e) {
       var b = e.target.closest && e.target.closest('[data-lk]'); if (!b) return;
