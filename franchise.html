@@ -427,6 +427,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
     <h3 style="margin:0 0 10px">Waiting for you</h3><div class="lst" id="frPend"></div>
     <h3 style="margin:22px 0 10px">Recent payments</h3><div class="lst" id="frDone"></div></div>
   <div id="pane-set" hidden>
+    <div class="card2" id="shopLook" style="margin-bottom:16px"></div>
     <p class="sub" style="margin-bottom:14px">Your company details and how you get paid. Only you can see and change this page.</p>
     <div class="card2" style="margin-bottom:16px"><h3 style="margin:0 0 6px">Company details</h3><p class="sub" style="margin-bottom:10px">Your own business information. It is kept on your account and is not shown to customers.</p>
       <form id="fCo" class="f"><label>Registered company name<input id="coLegal" maxlength="120" autocomplete="organization"></label><label>Trading name (the name your customers know)<input id="coTrade" maxlength="120"></label>
@@ -468,6 +469,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
 <script src="js/mz-api.js"></script>
 <script src="js/mz-crm.js"></script>
 <script src="js/mz-ledger.js"></script>
+<script src="js/mz-look.js"></script>
 <script>
 
 var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
@@ -601,7 +603,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
         busy(b,true,'Saving...');MZ.fn('franchise-payout',{action:'save',bank_code:o.value,bank_name:o.options[o.selectedIndex].dataset.n||'',account_number:$('#poNum').value}).then(function(j){
           if(j&&j.ok){flash('Payout account saved');window.PO_DONE=0;drawPayout()}else{n.innerHTML='<div class="msg err" style="margin-top:10px">'+esc((j&&j.error)||'Could not save. Please try again.')+'</div>'}},function(){n.innerHTML='<div class="msg err" style="margin-top:10px">Could not reach the server. Please try again.</div>'}).then(function(){busy(b,false)})}})}
   var CO={};
-  function loadSet(){if(!window.PO_DONE){window.PO_DONE=1;drawPayout()}
+  function loadSet(){if(window.MZLook&&!window.__lkDone){window.__lkDone=1;MZLook.mount('#shopLook',{franchise:true})}if(!window.PO_DONE){window.PO_DONE=1;drawPayout()}
     var fp=$('#frPay');if(fp&&!fp.value)fp.value=ME.franchise_pay_info||'';
     MZ.rpc('get_my_company').then(function(c){CO=c||{};var P=CO.pay_info||{},set=function(i,v){var e=$(i);if(e)e.value=v||''};
       set('#coLegal',CO.legal_name);set('#coTrade',CO.trading_name||ME.store_name);set('#coReg',CO.reg_no);set('#coTin',CO.tin);set('#coAddr',CO.address);set('#coCity',CO.city);set('#coPhone',CO.phone||ME.phone);set('#coEmail',CO.email||ME.email);set('#coWeb',CO.website);

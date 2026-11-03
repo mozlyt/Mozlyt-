@@ -549,6 +549,7 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
   </div>
 
   <div id="pane-set" hidden>
+    <div class="card2" id="shopLook"></div>
     <div class="card2" id="shopColors"><h3 style="margin:0 0 4px">Your shop colors</h3><p class="sub" style="margin:0 0 12px">Choose the colors your customers see in your shop: the top bar and the buttons.</p>
       <div id="scPrev" style="border-radius:14px;overflow:hidden;border:1px solid rgba(128,128,128,.4);margin-bottom:14px"></div>
       <b style="font-size:14px">Bar color</b><span class="sub" style="font-size:13px"> (the strip at the top of your shop)</span><div id="scBar" style="display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 8px"></div>
@@ -677,6 +678,7 @@ setTimeout(function(){load(0)},900);
 <script src="js/mz-api.js"></script>
 <script src="js/mz-crm.js"></script>
 <script src="js/mz-ledger.js"></script>
+<script src="js/mz-look.js"></script>
 <script src="js/mz-pay.js"></script>
 <script>
 
@@ -797,7 +799,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function flag(k,set){var key='mz-f-'+(ME?ME.id:'x')+'-'+k;try{if(set){localStorage.setItem(key,'1');return true}return localStorage.getItem(key)==='1'}catch(e){return false}}
   function go(t){if(t==='fr'){location.href='franchise.html';return}PANES.forEach(function(x){show('pane-'+x,x===t)});$$('#dtabs button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});
     var bt=['over','prod','ord','learn'].indexOf(t)>-1?t:'more';$$('#bnav button').forEach(function(b){b.classList.toggle('on',b.dataset.t===bt)});
-    if(t==='learn'){flag('learn',true);loadTrain()}if(t==='cust')loadCust();if(t==='money'&&window.MZLedger)MZLedger.mount('#pane-money',{rpc:'seller_ledger',title:'Payment records',note:'Every payment from your customers, what went to your franchise and to MOZLYT, and what you keep, with a running balance. Only completed payments are counted. Orders where the customer paid you directly (cash or your own MoMo) are not listed here.',k:{inNote:'paid by your customers',out:'',outNote:'franchise share, fees and subscriptions',net:'Your balance',netNote:'money in minus money out'}});if(t==='fr')loadFr();try{window.scrollTo(0,0)}catch(e){}}
+    if(t==='learn'){flag('learn',true);loadTrain()}if(t==='set'&&window.MZLook&&!window.__lkDone){window.__lkDone=1;MZLook.mount('#shopLook',{franchise:false})}if(t==='cust')loadCust();if(t==='money'&&window.MZLedger)MZLedger.mount('#pane-money',{rpc:'seller_ledger',title:'Payment records',note:'Every payment from your customers, what went to your franchise and to MOZLYT, and what you keep, with a running balance. Only completed payments are counted. Orders where the customer paid you directly (cash or your own MoMo) are not listed here.',k:{inNote:'paid by your customers',out:'',outNote:'franchise share, fees and subscriptions',net:'Your balance',netNote:'money in minus money out'}});if(t==='fr')loadFr();try{window.scrollTo(0,0)}catch(e){}}
   $$('#dtabs button,#bnav button').forEach(function(b){b.onclick=function(){go(b.dataset.t)}});
   $$('#pane-more [data-go]').forEach(function(b){b.onclick=function(){go(b.dataset.go)}});
   $('#moreOut').onclick=function(){$('#btnOut').click()};
