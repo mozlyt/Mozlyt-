@@ -417,7 +417,7 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
 <section id="dashView" hidden>
   <div class="top2"><div><h1>MOZLYT admin</h1><p class="sub" id="who"></p></div><div style="display:flex;gap:8px"><button class="b2 ghost" id="btnAlert" type="button">Turn on alerts</button><button class="b2 ghost" id="btnTheme" type="button">Colors and background</button><button class="b2 ghost" id="btnOut" type="button">Log out</button></div></div>
   <div id="dNote"></div>
-  <style>@media(max-width:820px){#dtabs{display:flex!important;position:sticky;top:0;z-index:40;background:var(--bg,#f5f7f4);padding:8px 0}}</style><div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="book" type="button">Bookings</button><button data-t="ord" type="button">Orders</button><button data-t="sell" type="button">Sellers</button><button data-t="ana" type="button" id="tabAna">Analytics</button><button data-t="fr" type="button" id="tabFr">Franchises</button><button data-t="fapp" type="button" id="tabFapp">Franchise requests</button><button data-t="papp" type="button" id="tabPapp">Work with us</button><button data-t="subs" type="button">Subscriptions</button><button data-t="ledger" type="button">Payment records</button><button data-t="prod" type="button">Products</button><button data-t="train" type="button">Training</button><button data-t="mkt" type="button">Marketing</button><button data-t="news" type="button">News</button><button data-t="cty" type="button">Countries</button><button data-t="set" type="button">Ad tracking</button></div>
+  <style>@media(max-width:820px){#dtabs{display:flex!important;position:sticky;top:0;z-index:40;background:var(--bg,#f5f7f4);padding:8px 0}}</style><div class="tabs" id="dtabs"><button data-t="over" class="on" type="button">Overview</button><button data-t="book" type="button">Bookings</button><button data-t="ord" type="button">Orders</button><button data-t="sell" type="button">Sellers</button><button data-t="ana" type="button" id="tabAna">Analytics</button><button data-t="fr" type="button" id="tabFr">Franchises</button><button data-t="fapp" type="button" id="tabFapp">Franchise requests</button><button data-t="papp" type="button" id="tabPapp">Work with us</button><button data-t="subs" type="button">Subscriptions</button><button data-t="ledger" type="button">Payment records</button><button data-t="prod" type="button">Products</button><button data-t="src" type="button">Product sourcing</button><button data-t="train" type="button">Training</button><button data-t="mkt" type="button">Marketing</button><button data-t="news" type="button">News</button><button data-t="cty" type="button">Countries</button><button data-t="set" type="button">Ad tracking</button></div>
 
   <div id="pane-over"><div class="stats" id="stats"></div><h3 style="margin:18px 0 10px">Newest bookings</h3><div class="lst" id="ovBook"></div><h3 style="margin:22px 0 10px">Newest orders</h3><div class="lst" id="ovOrd"></div></div>
   <div id="pane-book" hidden><div class="stats" id="bookStats"></div><div class="tools"><select id="bf"><option value="">All statuses</option><option>new</option><option>confirmed</option><option>done</option><option>cancelled</option></select></div><div class="lst" id="bookList"></div></div>
@@ -427,6 +427,34 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
   <div id="pane-sell" hidden><div class="stats" id="sellStats"></div><p class="sub" style="margin-top:12px">Every person who signed up as a seller, in any franchise. See where they come from under Analytics.</p><div hidden><div class="scroll"><table class="tbl stack" id="sellTbl"></table></div></div></div>
   <div id="pane-papp" hidden><div class="stats" id="pappStats"></div><p class="sub" style="margin-bottom:12px">People who want to work with MOZLYT and handle services (therapists, trainers and so on). Open their ID and certificate, tick the services they are qualified for, then approve. Approved providers get a dashboard and are told when a client books one of their services. Reply within 2 working days.</p><div class="lst" id="pappList"></div></div>
   <div id="pane-fr" hidden><p class="sub" style="margin-bottom:12px">Franchise partners. Steps: 1 request approved, 2 Mark paid when the platform fee is paid, 3 Mark shipped when the products are on their way. Franchises can restock from the main shop at any time. Active means the franchise is open. Not active means it is closed.</p><div class="card2" style="margin-bottom:14px"><h3 style="margin:0 0 8px">Stock orders from franchises</h3><div id="stkList"><div class="empty">Loading...</div></div></div><div class="scroll"><table class="tbl stack" id="frTbl"></table></div></div>
+  <div id="pane-src" hidden>
+    <p class="sub">Collect products from suppliers (AliExpress, Alibaba) as <b>drafts</b>. Nothing reaches your shops until you press <b>Publish</b>. Set your category, your prices and the description first.</p>
+    <div class="card2" id="srAli"><h3 style="margin:0 0 6px">Search AliExpress</h3><div class="sub" id="srAliNote">Checking the connection...</div>
+      <div class="tools" id="srAliTools" hidden><input id="srQ" type="search" placeholder="Search, for example: massage gun"><button class="btn primary" id="srGo" type="button">Search</button></div><div id="srRes" class="lst"></div></div>
+    <div class="tools" style="margin-top:14px"><button class="btn primary" id="srAdd" type="button">+ Add a product by hand</button><select id="srFilter"><option value="draft">Drafts</option><option value="published">Published</option><option value="rejected">Rejected</option><option value="all">All</option></select></div>
+    <div class="card2" id="srForm" hidden><h3 id="srfT" style="margin:0 0 8px">Product draft</h3>
+      <form id="fSrc" class="f">
+        <label>Product name<input id="sfName" maxlength="140" required></label>
+        <label>Category<input id="sfCat" maxlength="80" list="pfCats" placeholder="Choose or type a new one"></label>
+        <label>Description and features<textarea id="sfDesc" rows="6" maxlength="3000" placeholder="What it is, what it does, size, power, what is in the box. Write it in your own words."></textarea></label>
+        <label>Photo links (one per line, the first one is the main photo)<textarea id="sfImgs" rows="3" placeholder="https://..."></textarea></label>
+        <label>Or upload photos (JPG, PNG or WebP, under 5 MB each)<input id="sfFiles" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
+        <label>Supplier link (optional)<input id="sfUrl" type="url" placeholder="https://www.aliexpress.com/item/..."></label>
+        <div class="card2" style="background:transparent"><b>Price helper</b><div class="sub" style="margin:4px 0 8px">Supplier cost plus shipping, turned into cedis. These are suggestions, you decide the final prices.</div>
+          <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <label>Supplier price $<input id="sfSp" type="text" inputmode="decimal"></label>
+            <label>Shipping per item $<input id="sfSh" type="text" inputmode="decimal"></label>
+            <label>Other costs $ (tax, packing)<input id="sfOt" type="text" inputmode="decimal"></label>
+            <label>Dollar rate (GH₵ for $1)<input id="sfFx" type="text" inputmode="decimal" placeholder="today's rate"></label>
+            <label>Franchise margin %<input id="sfM1" type="text" inputmode="decimal" value="30"></label>
+            <label>Retail margin % on top<input id="sfM2" type="text" inputmode="decimal" value="40"></label></div>
+          <div id="sfCalc" class="sub" style="margin-top:8px"></div></div>
+        <label>Franchise price GH₵ (what franchises pay MOZLYT)<input id="sfW" type="text" inputmode="decimal" data-money></label>
+        <label>Suggested retail price GH₵<input id="sfS" type="text" inputmode="decimal" data-money></label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="submit" id="sfSave">Save draft</button><button class="btn primary" type="button" id="sfPub">Save and publish</button><button class="btn" type="button" id="sfCancel">Cancel</button></div>
+      </form></div>
+    <div id="srList" class="lst" style="margin-top:12px"></div>
+  </div>
   <div id="pane-train" hidden>
     <p class="sub">Create courses and lessons for your trainees. Only published courses are visible to sellers. Videos: paste a YouTube link.</p>
     <div class="tools"><select id="tcSel"></select><button class="b2" id="tcNew" type="button">New course</button></div>
@@ -554,7 +582,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.signUp($('#sEmail').value.trim(),$('#sPass').value,{full_name:'MOZLYT admin'}).then(function(r){if(r.confirmed)boot();else{view('fLogin');$('#lEmail').value=$('#sEmail').value;note(aNote,'ok','We sent a confirmation link to '+$('#sEmail').value.trim()+'. Open it, then log in.')}},function(er){note(aNote,'err',er.message)}).then(function(){busy(b,false)})};
   $('#fForgot').onsubmit=function(e){e.preventDefault();MZ.recover($('#fEmail').value.trim()).then(function(){note(aNote,'ok','If that email has an account, a reset link is on its way.')},function(er){note(aNote,'err',er.message)})};
   $('#btnOut').onclick=function(){MZ.signOut().then(function(){show('dashView',false);show('authView',true);view('fLogin')})};
-  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','book','ord','sell','ana','fr','fapp','papp','subs','ledger','prod','train','mkt','news','cty','set'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='ledger'&&window.MZLedger)MZLedger.mount('#pane-ledger',{rpc:'admin_ledger',title:'Payment records',note:'Every payment that came in and every payment that went out, with a running balance. Only completed payments are counted in the totals.'});if(b.dataset.t==='train')loadTrain();if(b.dataset.t==='fr')stkLoad();if(b.dataset.t==='mkt')loadMk();if(b.dataset.t==='news'){loadNews();loadSubs();loadStories()}if(b.dataset.t==='cty')loadCP();try{window.scrollTo(0,0)}catch(e){}}});
+  $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});['over','book','ord','sell','ana','fr','fapp','papp','subs','ledger','prod','src','train','mkt','news','cty','set'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='ledger'&&window.MZLedger)MZLedger.mount('#pane-ledger',{rpc:'admin_ledger',title:'Payment records',note:'Every payment that came in and every payment that went out, with a running balance. Only completed payments are counted in the totals.'});if(b.dataset.t==='src')srcLoad();if(b.dataset.t==='train')loadTrain();if(b.dataset.t==='fr')stkLoad();if(b.dataset.t==='mkt')loadMk();if(b.dataset.t==='news'){loadNews();loadSubs();loadStories()}if(b.dataset.t==='cty')loadCP();try{window.scrollTo(0,0)}catch(e){}}});
 
 
   var NEWS_OK=false;
@@ -814,6 +842,59 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var up=f?MZ.upload('product-photos','p'+Date.now()+'.'+(f.type==='image/png'?'png':f.type==='image/webp'?'webp':'jpg'),f).then(function(path){return MZ.publicUrl('product-photos',path)}):Promise.resolve(pfPhoto||null);
     up.then(function(url){var row={name:$('#pfName').value.trim(),category:$('#pfCat').value.trim(),description:$('#pfDesc').value.trim()||null,suggested_price:MZ.unc($('#pfS').value)===''?null:Number(MZ.unc($('#pfS').value)),status:$('#pfSt').value,photo:url};
       return(pfId?MZ.update('products','id=eq.'+pfId,row).then(function(r){PROD=PROD.map(function(p){return p.id===pfId?r[0]:p});return pfId}):MZ.insert('products',row,true).then(function(r){PROD.push(r[0]);return r[0].id})).then(function(pid){return setWh(pid,MZ.unc($('#pfW').value))})}).then(function(){$('#pForm').hidden=true;prods();flash('Product saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+
+
+  /* ----- product sourcing: drafts from suppliers, published only when you say so ----- */
+  var SD=null,sfId=null,sfImgs=[],sfSrc={};
+  function srLoad(){return MZ.q('product_drafts','select=*&order=created_at.desc').then(function(r){SD=r;srDraw()},function(er){flash(er.message)})}
+  function srLoadAll(){if(!PROD.length&&typeof prodLoad==='function'){try{prodLoad()}catch(e){}}srLoad();srAliCheck()}
+  function srDraw(){var f=$('#srFilter').value,rows=(SD||[]).filter(function(d){return f==='all'||d.status===f});
+    $('#srList').innerHTML=rows.map(function(d){var im=(d.images||[])[0];
+      return'<div class="it" data-id="'+d.id+'"><div style="display:flex;gap:12px;align-items:flex-start">'+(im?'<img alt="" src="'+esc(im)+'" style="width:64px;height:64px;object-fit:cover;border-radius:8px;flex:none">':'<div style="width:64px;height:64px;border-radius:8px;background:rgba(128,128,128,.2);flex:none"></div>')+
+      '<div style="min-width:0;flex:1"><b>'+esc(d.title)+'</b><div class="m">'+esc(d.category||'No category yet')+' · '+(d.supplier_price!=null?'$'+esc(d.supplier_price)+' from supplier':'no supplier price')+' · '+(d.wholesale_price!=null?'franchise GH₵ '+esc(d.wholesale_price):'no franchise price')+' · '+esc(d.status)+(d.source&&d.source!=='manual'?' · '+esc(d.source):'')+'</div></div></div>'+
+      (d.status==='published'?'':'<div class="h" style="margin-top:8px"><button class="btn" data-a="e" type="button">Edit</button><button class="btn primary" data-a="p" type="button">Publish</button>'+(d.status==='rejected'?'':'<button class="btn" data-a="r" type="button">Reject</button>')+'<button class="btn" data-a="d" type="button">Delete</button></div>')+'</div>'}).join('')||'<div class="empty">No '+(f==='all'?'':f+' ')+'products here yet.</div>';
+    $$('#srList .it').forEach(function(el){var id=Number(el.dataset.id),d=SD.filter(function(x){return x.id===id})[0];
+      var g=function(a){return $('[data-a='+a+']',el)};
+      if(g('e'))g('e').onclick=function(){sfOpen(d)};
+      if(g('p'))g('p').onclick=function(){sfOpen(d,true)};
+      if(g('r'))g('r').onclick=function(){MZ.update('product_drafts','id=eq.'+id,{status:'rejected',updated_at:new Date().toISOString()}).then(function(){srLoad()},function(er){flash(er.message)})};
+      if(g('d'))g('d').onclick=function(){if(!confirm('Delete this draft?'))return;MZ.remove('product_drafts','id=eq.'+id).then(function(){srLoad()},function(er){flash(er.message)})}})}
+  $('#srFilter').onchange=srDraw;
+  function num(v){v=String(v==null?'':v).replace(/,/g,'').trim();return v===''||isNaN(Number(v))?null:Number(v)}
+  function sfCalc(){var sp=num($('#sfSp').value),sh=num($('#sfSh').value)||0,ot=num($('#sfOt').value)||0,fx=num($('#sfFx').value),m1=num($('#sfM1').value)||0,m2=num($('#sfM2').value)||0,box=$('#sfCalc');
+    try{if(fx)localStorage.setItem('mz-fx',String(fx))}catch(e){}
+    if(sp==null||!fx){box.textContent='Enter the supplier price and today\'s dollar rate to see suggested prices.';return}
+    var cost=(sp+sh+ot)*fx,w=cost*(1+m1/100),r=w*(1+m2/100);
+    box.innerHTML='Landed cost about <b>GH₵ '+cost.toFixed(2)+'</b>. Suggested franchise price <b>GH₵ '+w.toFixed(2)+'</b>, suggested retail <b>GH₵ '+r.toFixed(2)+'</b>. <button class="btn" type="button" id="sfUse">Use these prices</button>';
+    $('#sfUse').onclick=function(){$('#sfW').value=MZ.comma(Math.ceil(w));$('#sfS').value=MZ.comma(Math.ceil(r))}}
+  ['sfSp','sfSh','sfOt','sfFx','sfM1','sfM2'].forEach(function(i){$('#'+i).oninput=sfCalc});
+  function sfOpen(d,pub){sfId=d&&d.id||null;sfSrc=d&&d.source_id?{source:d.source,source_id:d.source_id}:{};
+    $('#srfT').textContent=d?'Edit draft':'Add a product by hand';
+    $('#pfCats').innerHTML=PROD.map(function(x){return x.category}).concat((SD||[]).map(function(x){return x.category})).filter(function(c,i,a){return c&&a.indexOf(c)===i}).map(function(c){return'<option value="'+esc(c)+'">'}).join('');
+    $('#sfName').value=d?d.title:'';$('#sfCat').value=d&&d.category||'';$('#sfDesc').value=d&&d.description||'';$('#sfImgs').value=d?(d.images||[]).join('\n'):'';$('#sfFiles').value='';$('#sfUrl').value=d&&d.source_url||'';
+    $('#sfSp').value=d&&d.supplier_price!=null?d.supplier_price:'';$('#sfSh').value=d&&d.ship_cost!=null?d.ship_cost:'';$('#sfOt').value=d&&d.other_cost!=null?d.other_cost:'';
+    var fx='';try{fx=localStorage.getItem('mz-fx')||''}catch(e){}$('#sfFx').value=fx;
+    $('#sfW').value=d&&d.wholesale_price!=null?MZ.comma(d.wholesale_price):'';$('#sfS').value=d&&d.suggested_price!=null?MZ.comma(d.suggested_price):'';
+    sfCalc();$('#srForm').hidden=false;$('#srForm').scrollIntoView({behavior:'smooth',block:'start'})}
+  $('#srAdd').onclick=function(){sfOpen(null)};$('#sfCancel').onclick=function(){$('#srForm').hidden=true};
+  function sfCollect(){var files=$('#sfFiles').files,list=[].slice.call(files);
+    for(var i=0;i<list.length;i++){if(list[i].size>5242880)return Promise.reject(new Error('Each photo must be under 5 MB'))}
+    var links=$('#sfImgs').value.split(/\n+/).map(function(x){return x.trim()}).filter(function(x){return/^https:\/\//i.test(x)});
+    return Promise.all(list.map(function(f,i){return MZ.upload('product-photos','s'+Date.now()+'-'+i+'.'+(f.type==='image/png'?'png':f.type==='image/webp'?'webp':'jpg'),f).then(function(path){return MZ.publicUrl('product-photos',path)})})).then(function(ups){return links.concat(ups)})}
+  function sfSaveDraft(){var name=$('#sfName').value.trim();if(!name)return Promise.reject(new Error('Give the product a name'));
+    return sfCollect().then(function(imgs){var row={title:name,category:$('#sfCat').value.trim()||null,description:$('#sfDesc').value.trim()||null,images:imgs,source_url:$('#sfUrl').value.trim()||null,supplier_price:num($('#sfSp').value),ship_cost:num($('#sfSh').value),other_cost:num($('#sfOt').value),wholesale_price:num($('#sfW').value),suggested_price:num($('#sfS').value),updated_at:new Date().toISOString()};
+      if(sfSrc.source_id){row.source=sfSrc.source;row.source_id=sfSrc.source_id}
+      return sfId?MZ.update('product_drafts','id=eq.'+sfId,row).then(function(r){return r[0]}):MZ.insert('product_drafts',row,true).then(function(r){return r[0]})})}
+  $('#fSrc').onsubmit=function(e){e.preventDefault();var b=$('#sfSave');busy(b,true,'Saving...');sfSaveDraft().then(function(){$('#srForm').hidden=true;srLoad();flash('Draft saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+  function srPublish(d){if(!d.category){return Promise.reject(new Error('Choose a category first'))}if(d.wholesale_price==null){return Promise.reject(new Error('Set the franchise price first'))}
+    if(!(d.images||[]).length&&!confirm('This product has no photo. Publish anyway?'))return Promise.reject(new Error('Add a photo first'));
+    var row={name:d.title,category:d.category,description:d.description||null,suggested_price:d.suggested_price,status:'available',photo:(d.images||[])[0]||null};
+    return MZ.insert('products',row,true).then(function(r){var p=r[0];PROD.push(p);return setWh(p.id,d.wholesale_price).then(function(){return MZ.update('product_drafts','id=eq.'+d.id,{status:'published',product_id:p.id,updated_at:new Date().toISOString()})})}).then(function(){prods()})}
+  $('#sfPub').onclick=function(){var b=this;busy(b,true,'Publishing...');sfSaveDraft().then(function(d){return srPublish(d)}).then(function(){$('#srForm').hidden=true;srLoad();flash('Published. It is now in your product list.')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+  /* AliExpress search (needs the keys saved in Supabase, see the note shown on the page) */
+  function srAliCheck(){MZ.fn('aliexpress',{action:'status'}).then(function(r){if(r&&r.configured){$('#srAliNote').textContent='Connected. Search for products to add as drafts.';$('#srAliTools').hidden=false}else{$('#srAliNote').textContent='Not connected yet. Once your AliExpress app is approved, save the App Key and App Secret in Supabase and this search turns on. Until then, add products by hand below.';$('#srAliTools').hidden=true}},function(){$('#srAliNote').textContent='Not connected yet. Once your AliExpress app is approved, save the App Key and App Secret in Supabase and this search turns on. Until then, add products by hand below.';$('#srAliTools').hidden=true})}
+  $('#srGo').onclick=function(){var q=$('#srQ').value.trim();if(!q)return;var b=this;busy(b,true,'Searching...');MZ.fn('aliexpress',{action:'search',q:q}).then(function(r){var items=(r&&r.items)||[];$('#srRes').innerHTML=items.map(function(it,i){return'<div class="it"><div style="display:flex;gap:12px"><img alt="" src="'+esc(it.image||'')+'" style="width:64px;height:64px;object-fit:cover;border-radius:8px;flex:none"><div style="min-width:0;flex:1"><b>'+esc(it.title)+'</b><div class="m">'+(it.price?'$'+esc(it.price):'')+(it.rating?' · rating '+esc(it.rating):'')+(it.orders?' · '+esc(it.orders)+' sold':'')+'</div></div></div><div class="h" style="margin-top:8px"><button class="btn primary" data-i="'+i+'" type="button">Add to drafts</button></div></div>'}).join('')||'<div class="empty">No products found.</div>';
+      $$('#srRes [data-i]').forEach(function(bt){bt.onclick=function(){var it=items[Number(bt.dataset.i)];busy(bt,true,'Adding...');MZ.insert('product_drafts',{source:'aliexpress',source_id:String(it.id),source_url:it.url||null,title:it.title,description:it.description||null,images:(it.images&&it.images.length?it.images:[it.image]).filter(Boolean),supplier_price:it.price?Number(it.price):null},true).then(function(){flash('Added to drafts');srLoad()},function(er){flash(er.message)}).then(function(){busy(bt,false)})}})},function(er){flash(er.message||'Search failed')}).then(function(){busy(b,false)})};
 
   /* ----- training editor ----- */
   var TC=null,TL=[],tcCur=null;
