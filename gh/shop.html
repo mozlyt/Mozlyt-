@@ -332,6 +332,13 @@ body.has-list .wa-float{bottom:84px}
 .mz-footer,.mz-part{display:none!important}
 .card.lz,.row.lzr,.row.cf{display:none!important}
 #lzs{height:1px}
+.grid.hs{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;padding-bottom:4px}
+.grid.hs::-webkit-scrollbar{display:none}
+.grid.hs>.card{flex:0 0 calc((100% - 36px)/4);min-width:0}
+.hsb{display:none;border:1px solid var(--line);background:#fff;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:20px;line-height:1;color:var(--green-d)}
+@media(min-width:821px){.hsb{display:inline-grid;place-items:center}.row-h{flex-wrap:wrap}}
+@media(max-width:820px){.grid.hs{gap:8px}.grid.hs>.card{flex:0 0 42%}}
+@media(max-width:600px){.grid.hs .card h3{font-size:13px}.grid.hs .price{font-size:13px}.grid.hs .add,.grid.hs .paynow{font-size:12.5px}}
 .chip.on{background:var(--green);border-color:var(--green);color:#fff}
 .bnav2,.csheet{display:none}
 @media(max-width:820px){
@@ -627,11 +634,20 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
       r.style.display=any?'':'none';shown+=any});
     empty.style.display=shown?'none':'block'});
   /* category tabs and endless scrolling: products appear a few at a time as you scroll */
-  var REV=8,lzs=document.getElementById('lzs'),CUR='';
-  function lzApply(){var j=0;shelves.querySelectorAll('.row').forEach(function(r){var cf=r.classList.contains('cf'),any=false;if(!cf){r.querySelectorAll('.card').forEach(function(c){var h=j>=REV;c.classList.toggle('lz',h);if(!h)any=true;j++})}r.classList.toggle('lzr',!cf&&!any)});return j}
-  function lzFill(){if(!lzs||shelves.hidden)return;var tot=lzApply(),n=0;while(REV<tot&&n++<60&&lzs.getBoundingClientRect().top<window.innerHeight+500){REV+=8;tot=lzApply()}}
+  var REV=2,lzs=document.getElementById('lzs'),CUR='';
+  function hsInit(r){if(r.dataset.hs)return;var g=r.querySelector('.grid');if(!g)return;r.dataset.hs='1';g.classList.add('hs');
+    var vis=function(){return[].filter.call(g.children,function(c){return c.style.display!=='none'})},cw=function(){var v=vis();return v.length?v[0].getBoundingClientRect().width+12:0},busy=false;
+    function loopable(){var w=cw();return w>0&&vis().length*w>g.clientWidth*1.4}
+    var hb=r.querySelector('.row-h');if(hb){[['\u2039',-1],['\u203A',1]].forEach(function(x){var b=el('button','hsb',x[0]);b.type='button';b.setAttribute('aria-label',x[1]<0?'Scroll left':'Scroll right');b.onclick=function(){g.scrollBy({left:x[1]*g.clientWidth*.8,behavior:'smooth'})};hb.appendChild(b)})}
+    g.addEventListener('scroll',function(){if(busy||!loopable())return;var w=cw(),v=vis();busy=true;
+      if(g.scrollLeft<w){var l=v[v.length-1];g.insertBefore(l,g.firstChild);g.scrollLeft+=w}
+      else if(g.scrollLeft+g.clientWidth>g.scrollWidth-w){var f=v[0];g.appendChild(f);g.scrollLeft-=w}
+      busy=false},{passive:true});
+    requestAnimationFrame(function(){if(loopable()){var v=vis();g.insertBefore(v[v.length-1],g.firstChild);g.scrollLeft=cw()}})}
+  function lzApply(){var j=0;shelves.querySelectorAll('.row').forEach(function(r){if(r.classList.contains('cf')){r.classList.remove('lzr');return}var h=j>=REV;r.classList.toggle('lzr',h);if(!h)hsInit(r);j++});return j}
+  function lzFill(){if(!lzs||shelves.hidden)return;var tot=lzApply(),n=0;while(REV<tot&&n++<30&&lzs.getBoundingClientRect().top<window.innerHeight+500){REV+=1;tot=lzApply()}}
   function catMark(){shelves.querySelectorAll('.row').forEach(function(r){r.classList.toggle('cf',!!CUR&&r.id!==CUR)});chips.querySelectorAll('.chip').forEach(function(x){x.classList.toggle('on',(x.dataset.c||'')===CUR)})}
-  function setCat(id){CUR=id;catMark();REV=8;lzFill();var y=shelves.getBoundingClientRect().top+window.pageYOffset-130;if(y<window.pageYOffset)window.scrollTo({top:Math.max(0,y),behavior:'smooth'})}
+  function setCat(id){CUR=id;catMark();REV=2;lzFill();var y=shelves.getBoundingClientRect().top+window.pageYOffset-130;if(y<window.pageYOffset)window.scrollTo({top:Math.max(0,y),behavior:'smooth'})}
   var lzT=0;function lzSoon(){if(lzT)return;lzT=setTimeout(function(){lzT=0;lzFill()},80)}
   window.addEventListener('scroll',lzSoon,{passive:true});window.addEventListener('resize',lzSoon);
   q.addEventListener('input',function(){lzFill()});
@@ -663,7 +679,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   /* keep the built-in list as a backup, then swap in the sheet when it loads */
   /* the admin product list is the source of truth once it loads */
   function mapRows(rows){return(rows||[]).filter(function(r){return r.status!=='hidden'}).map(function(r){return{cat:r.category||'',name:r.name,price:r.suggested_price==null?'':String(r.suggested_price),status:(r.status||'available')==='available'?'in stock':String(r.status).toLowerCase(),photo:r.photo?(/^(https?:|\/)/.test(r.photo)?r.photo:'/'+r.photo):'',desc:r.description||'',photos:(r.photos||[]).map(function(u){return/^(https?:|\/)/.test(u)?u:'/'+u}),video:r.video_url||''}})}
-  function paint(rows){var items=mapRows(rows||[]);ALL={};render(items);shelves.hidden=false;REV=8;lzFill();var cr=document.getElementById('chipsRow');if(cr)cr.style.display=items.length?'':'none';
+  function paint(rows){var items=mapRows(rows||[]);ALL={};render(items);shelves.hidden=false;REV=2;lzFill();var cr=document.getElementById('chipsRow');if(cr)cr.style.display=items.length?'':'none';
     if(!items.length){empty.innerHTML='Coming soon. Products are being added to this shop. Please check back soon.';empty.style.display='block'}else{empty.style.display='none'}}
   function loadLive(){if(!window.MZ||!MZ.rpc)return;var K='mz-cat-'+MZ.cc,cached=null,tries=0;try{cached=JSON.parse(localStorage.getItem(K)||'null')}catch(e){}
     if(cached&&cached.length)paint(cached);
