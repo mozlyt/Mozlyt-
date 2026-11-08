@@ -150,7 +150,7 @@
           (n >= 0 ? '<div class="mza-trk">' + bar + '</div><div class="mza-trkl" style="font-size:11px">' + lab + '</div>' : '') +
           '<div>' + (b.providers && b.providers.length ? 'Provider' + (b.providers.length > 1 ? 's' : '') + ': <b>' + esc(b.providers.join(', ')) + '</b><br>' : '') + (b.price != null ? 'Price: <b>' + MZ.money(b.price) + '</b>' : '<span class="m">Price: MOZLYT will confirm the price with you</span>') + '</div>' +
           '<div style="margin-top:8px"><button type="button" class="mza-btn sm ghost" data-ask="' + b.id + '">Contact support about this booking</button></div></div>';
-      }).join('') || '<div class="mza-empty"><b>' + (BK && BK.length ? 'Nothing in this list' : 'No bookings yet') + '</b><br>Your service requests and appointments will appear here. Once you book a service, you can follow its progress.<br><a class="mza-btn" style="margin-top:12px;display:inline-flex" href="/gh/services.html">Explore services</a></div>';
+      }).join('') || '<div class="mza-empty"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#8a97a8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;margin:0 auto 8px"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M4 10h16M9 14h.01M12 14h.01M15 14h.01M9 17h.01M12 17h.01"/></svg><b>' + (BK && BK.length ? 'Nothing in this list' : 'No bookings yet') + '</b><br>Your service requests and appointments will appear here. Once you book a service, you can follow its progress.<br><a class="mza-btn" style="margin-top:12px;display:inline-flex" href="/gh/services.html">Explore services</a></div>';
       $$('#mzaBL [data-ask]').forEach(function (b) { b.onclick = function () { AT = 'help'; HS = 'chat'; CREF = 'Booking #' + b.dataset.ask; mainView(); }; });
     };
     if (BK) draw();
@@ -159,9 +159,15 @@
   function helpView(p) {
     if (HS === 'chat') { chatView(p); return; }
     var l = wa('Hello ' + cfg.name + ', I need help.');
-    p.innerHTML = '<div class="mza-card"><b>How can we help you?</b><div class="m">Choose how you would like to contact the MOZLYT support team.</div></div>' +
-      '<div class="mza-card"><b>Live chat</b><div class="m">Chat with support directly on MOZLYT. Your messages stay in your account so you can come back to them.</div><button class="mza-btn" type="button" id="mzaLC">Start live chat<span id="mzaUn"></span></button></div>' +
-      '<div class="mza-card"><b>WhatsApp support</b><div class="m">Continue the conversation on WhatsApp.</div>' + (l ? '<a class="mza-btn wa" target="_blank" rel="noopener" href="' + esc(l) + '">Chat on WhatsApp</a>' : '') + '</div>';
+    var IC = { chat: '<path d="M4 5h16v11H9l-5 4z"/>', wa: '<path d="M4 20l1.3-4.2A8 8 0 1 1 8.4 19z"/>', sms: '<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/>', mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>' };
+    var row = function (k, id, href, t, d) { var tag = href ? 'a' : 'button', at = href ? ' href="' + esc(href) + '"' + (/^https/.test(href) ? ' target="_blank" rel="noopener"' : '') : ' type="button"';
+      return '<' + tag + ' class="mza-hr"' + at + (id ? ' id="' + id + '"' : '') + '><span class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + IC[k] + '</svg></span><span class="tx"><b>' + t + '</b><span>' + d + '</span></span><span class="ch">&rsaquo;</span></' + tag + '>'; };
+    p.innerHTML = '<style>.mza-hr{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid #DCE4DE;border-radius:14px;padding:12px;margin-bottom:10px;color:#0E2A47;text-decoration:none;font:inherit;cursor:pointer;min-height:64px}.mza-hr .ic{flex:none;width:44px;height:44px;border-radius:12px;background:#E6F5EE;color:#157650;display:flex;align-items:center;justify-content:center}.mza-hr .tx{flex:1}.mza-hr b{display:block;font-size:16px}.mza-hr .tx span{display:block;font-size:13px;color:#4a5b73}.mza-hr .ch{font-size:26px;color:#8a97a8}</style>' +
+      '<div class="mza-card"><b>How can we help you?</b><div class="m">Choose how you would like to contact the MOZLYT support team.</div></div>' +
+      row('chat', 'mzaLC', '', 'Live chat<span id="mzaUn"></span>', 'Chat with support directly on MOZLYT.') +
+      (l ? row('wa', '', l, 'WhatsApp support', 'Continue the conversation on WhatsApp.') : '') +
+      row('sms', '', 'sms:+233538729743', 'Text message (SMS)', 'Send a normal text from your phone.') +
+      row('mail', '', 'mailto:Info@mozlyt.com', 'Email', 'Info@mozlyt.com');
     $('#mzaLC').onclick = function () { HS = 'chat'; mainView(); };
     MZ.rpc('my_support_unread', {}).then(function (n) { if (n > 0 && $('#mzaUn')) $('#mzaUn').textContent = ' - ' + n + ' new'; }, function () { });
   }
