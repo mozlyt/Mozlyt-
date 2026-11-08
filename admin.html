@@ -435,6 +435,8 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
     <div class="card2" id="srAllBox" hidden><h3 style="margin:0 0 6px">Publish all drafts</h3>
       <div class="sub" id="srAllSum" style="margin-bottom:8px"></div>
       <div class="g2" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px" id="srAllFx"></div>
+      <label style="display:block;margin-top:10px">Safety buffer % added to today's market rate (banks sell dollars for a little more)<input style="width:100%;min-width:0" id="paBuf" type="text" inputmode="decimal" value="3"></label>
+      <div class="sub" id="paFxNote" style="margin-top:6px"></div>
       <div class="g2" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px">
         <label>Shipping per item (supplier currency)<input style="width:100%;min-width:0" id="paSh" type="text" inputmode="decimal" value="0"></label>
         <label>Other costs per item<input style="width:100%;min-width:0" id="paOt" type="text" inputmode="decimal" value="0"></label>
@@ -893,7 +895,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#sfUse').onclick=function(){$('#sfW').value=MZ.comma(Math.ceil(w));$('#sfS').value=MZ.comma(Math.ceil(r))}}
   ['sfSp','sfSh','sfOt','sfFx','sfM1','sfM2'].forEach(function(i){$('#'+i).oninput=sfCalc});
   var CURN={USD:'dollar',CNY:'yuan',EUR:'euro',GBP:'pound'};
-  function sfCurSet(c,keepFx){$('#sfCur').value=c;$('#sfFxL').textContent='Rate (GH₵ for 1 '+CURN[c]+')';if(!keepFx){var fx='';try{fx=localStorage.getItem('mz-fx-'+c)||(c==='USD'?localStorage.getItem('mz-fx'):'')||''}catch(e){}$('#sfFx').value=fx}}
+  function sfCurSet(c,keepFx){$('#sfCur').value=c;$('#sfFxL').textContent='Rate (GH₵ for 1 '+CURN[c]+')';if(!keepFx){var fx='';try{fx=localStorage.getItem('mz-fx-'+c)||(c==='USD'?localStorage.getItem('mz-fx'):'')||''}catch(e){}$('#sfFx').value=fx;fxLive().then(function(r){if(r&&r.per&&r.per[c]&&$('#sfCur').value===c){$('#sfFx').value=(r.per[c]*1.03).toFixed(2);sfCalc()}})}}
   $('#sfCur').onchange=function(){sfCurSet(this.value);sfCalc()};
   function sfOpen(d,pub){sfId=d&&d.id||null;sfSrc=d&&d.source_id?{source:d.source,source_id:d.source_id}:{};
     $('#srfT').textContent=d?'Edit draft':'Add a product by hand';
@@ -918,6 +920,10 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var row={name:d.title,category:d.category,description:d.description||null,suggested_price:d.suggested_price,status:'available',photo:(d.images||[])[0]||null,photos:(d.images||[]).slice(1,6),video_url:d.video_url||null};
     return MZ.insert('products',row,true).then(function(r){var p=r[0];PROD.push(p);return setWh(p.id,d.wholesale_price).then(function(){return MZ.update('product_drafts','id=eq.'+d.id,{status:'published',product_id:p.id,updated_at:new Date().toISOString()})})}).then(function(){prods()})}
   $('#sfPub').onclick=function(){var b=this;busy(b,true,'Publishing...');sfSaveDraft().then(function(d){return srPublish(d)}).then(function(){$('#srForm').hidden=true;srLoad();flash('Published. It is now in your product list.')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+  var FXL=null,FXP=null;
+  function fxLive(){if(FXL)return Promise.resolve(FXL);if(FXP)return FXP;FXP=MZ.fn('fx-rates',{}).then(function(r){FXP=null;if(r&&r.ok&&r.per){FXL=r;setTimeout(function(){FXL=null},3600000);return r}return null},function(){FXP=null;return null});return FXP}
+  function fxBuf(){var v=num($('#paBuf')?$('#paBuf').value:'');return v==null?3:v}
+  function fxFill(i,buf){return fxLive().then(function(r){if(!r||!r.per||!r.per[i.dataset.fx])return false;i.value=(r.per[i.dataset.fx]*(1+buf/100)).toFixed(2);i.dataset.auto='1';return r})}
   /* publish all drafts: prices filled from the supplier price where missing */
   var CURS={USD:'dollar',CNY:'yuan',EUR:'euro',GBP:'pound'};
   function paList(){return(SD||[]).filter(function(d){return d.status==='draft'})}
@@ -925,7 +931,9 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var L=paList();if(!L.length){flash('There are no drafts to publish');return}
     var cur={};L.forEach(function(d){if(d.wholesale_price==null&&d.supplier_price!=null)cur[d.supplier_currency||'USD']=1});
     $('#srAllFx').innerHTML=Object.keys(cur).map(function(c){var v='';try{v=localStorage.getItem('mz-fx-'+c)||(c==='USD'?localStorage.getItem('mz-fx'):'')||''}catch(e){}return'<label>Rate: GH₵ for 1 '+CURS[c]+'<input style="width:100%;min-width:0" data-fx="'+c+'" type="text" inputmode="decimal" value="'+esc(v)+'"></label>'}).join('');
-    $('#srAllSum').textContent=L.length+' draft'+(L.length>1?'s':'')+' found. Check the rates and margins, then publish.';$('#paProg').textContent='';$('#srAllBox').hidden=false;$('#srAllBox').scrollIntoView({behavior:'smooth',block:'start'})};
+    $('#srAllSum').textContent=L.length+' draft'+(L.length>1?'s':'')+' found. Check the rates and margins, then publish.';$('#paProg').textContent='';$('#paFxNote').textContent='Looking up today\'s rates...';$$('#srAllFx [data-fx]').forEach(function(i){i.oninput=function(){delete i.dataset.auto}});
+    var all=$$('#srAllFx [data-fx]');Promise.all(all.map(function(i){return fxFill(i,fxBuf())})).then(function(rs){var r=rs.filter(Boolean)[0];$('#paFxNote').innerHTML=r?'Rates filled in from today\'s market ('+esc(r.updated||'')+') plus your buffer. You can still change them. <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener" style="color:inherit">Rates By Exchange Rate API</a>':'Could not get today\'s rates. Type them in.'});$('#srAllBox').hidden=false;$('#srAllBox').scrollIntoView({behavior:'smooth',block:'start'})};
+  $('#paBuf').oninput=function(){var b=fxBuf();$$('#srAllFx [data-fx][data-auto]').forEach(function(i){fxFill(i,b)})};
   $('#paCancel').onclick=function(){$('#srAllBox').hidden=true};
   $('#paGo').onclick=function(){var b=this,fx={},bad=false;$$('#srAllFx [data-fx]').forEach(function(i){var v=num(i.value);if(!v)bad=true;fx[i.dataset.fx]=v;try{if(v)localStorage.setItem('mz-fx-'+i.dataset.fx,String(v))}catch(e){}});
     if(bad){flash('Enter the exchange rate for each currency');return}
