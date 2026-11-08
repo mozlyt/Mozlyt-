@@ -73,7 +73,7 @@
     var F = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.4l-.5 3.5h-2.9v8.4A12 12 0 0 0 24 12z"/></svg>';
     var A = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9s-1.9-.9-3.1-.8a4.6 4.6 0 0 0-3.9 2.4c-1.7 2.9-.4 7.2 1.2 9.5.8 1.2 1.7 2.4 3 2.4s1.7-.8 3.1-.8 1.9.8 3.1.8 2.1-1.2 2.9-2.3c.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.5-1-2.5-3.9zM14 5.5c.7-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.9-1 3 1.1.1 2.1-.5 2.8-1.4z"/></svg>';
     var txt = AM === 'up' ? 'Sign up with ' : 'Continue with ';
-    d.innerHTML = '<div class="or">or</div>' + [['google', 'Google', G], ['facebook', 'Facebook', F], ['apple', 'Apple', A]].map(function (x) { return '<button type="button" class="mza-sb" data-p="' + x[0] + '">' + x[2] + '<span>' + txt + x[1] + '</span></button>'; }).join('') + '<div id="mzaSocN" class="mza-sub" style="margin-top:6px"></div>';
+    d.innerHTML = '<div class="or">or</div>' + [['google', 'Google', G]].map(function (x) { return '<button type="button" class="mza-sb" data-p="' + x[0] + '">' + x[2] + '<span>' + txt + x[1] + '</span></button>'; }).join('') + '<div id="mzaSocN" class="mza-sub" style="margin-top:6px"></div>';
     b.appendChild(d);
     $$('.mza-sb', d).forEach(function (x) { x.onclick = function () { $('#mzaSocN').textContent = 'Opening ' + x.dataset.p + '...'; MZ.oauth(x.dataset.p); }; });
   }
