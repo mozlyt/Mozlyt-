@@ -189,13 +189,15 @@ section .sub{color:var(--mute);max-width:60ch;margin-bottom:12px}
 
 /* tap a service to see its kinds */
 .card.hasK{cursor:pointer}
-.seeK{display:inline-block;margin-top:8px;font-size:13.5px;font-weight:700;color:#157650}
+.seeK{display:inline-block;margin-top:10px;padding:8px 14px;border-radius:99px;background:#E4F4EC;border:1.5px solid #157650;font-size:14px;font-weight:700;color:#0F5E3F}
 .thumb.nophoto{height:150px;margin:12px 12px 4px}
 .thumb.nophoto{border-radius:14px}
 .thumb.nophoto svg{width:54px;height:54px}
-.ks{position:fixed;inset:0;z-index:99999;display:none;background:rgba(14,42,71,.55);align-items:flex-end;justify-content:center}
+.ks{position:fixed;inset:0;z-index:99999;display:none;background:rgba(14,42,71,.6);align-items:stretch;justify-content:center}
 .ks.open{display:flex}
-.ks-p{background:var(--white);width:100%;max-width:1100px;border-radius:20px 20px 0 0;padding:18px 16px 24px;max-height:92vh;overflow:auto;overscroll-behavior:contain}
+.ks-p{background:var(--white);width:100%;max-width:1200px;height:100%;border-radius:0;padding:16px 14px 22px;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column}
+.ks-g{margin:auto 0}
+.ks-s{margin-bottom:6px}
 .ks-h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .ks-h h3{font-size:22px;flex:1}
 .ks-x,.ks-a button{border:1px solid var(--line);background:#fff;border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:22px;line-height:1;color:var(--green-d)}
@@ -207,9 +209,12 @@ section .sub{color:var(--mute);max-width:60ch;margin-bottom:12px}
 .ks .thumb.ph.shp{aspect-ratio:4/3!important;height:auto}
 .ks .thumb.ph.shp img{position:absolute;inset:0;width:100%;height:100%}
 .ks .shp.rv{opacity:1;transform:none}.ks .shp.rv img{transform:none;animation:none}
-@media(min-width:821px){.ks{align-items:center}.ks-p{border-radius:20px;padding:22px}.ks-a{display:flex}}
+@media(min-width:821px){.ks{padding:3vh 3vw}.ks-p{border-radius:20px;padding:22px 26px}.ks-a{display:flex}}
 @media(min-width:821px) and (max-width:1050px){.ks-g>.card{flex-basis:calc((100% - 14px)/2)}}
-@media(max-width:820px){.ks-g>.card{flex:0 0 82%}.ks-g{gap:12px}}
+@media(max-width:820px){.ks .thumb.ph.shp{aspect-ratio:1/1!important}.ks-g>.card{flex:0 0 86%}.ks-g{gap:12px}.ks-h h3{font-size:21px}.ks-g .cbody h4{font-size:21px}.ks-g .cbody p{font-size:15.5px}}
+.ks-g .cbody p{flex:0 0 auto;margin-bottom:6px}
+.ks-g .crow{margin-top:auto;padding-top:10px}
+.ks-g .btn{padding:12px 22px;font-size:16px}
 
 /* how */
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:26px}
