@@ -636,6 +636,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
     var b=e.target.closest&&e.target.closest('.add');if(!b||b.disabled)return;
     var name=b.parentNode.querySelector('h3').textContent,i=list.indexOf(name);
     if(i>-1){list.splice(i,1);setBtn(b,false);say(name+' removed')}else{list.push(name);setBtn(b,true);say(name+' added to your list')}
+    shelves.querySelectorAll('.card').forEach(function(c){if(c!==b.parentNode&&c.querySelector('h3').textContent===name){var ab=c.querySelector('.add');if(ab&&!ab.disabled)setBtn(ab,list.indexOf(name)>-1)}});
     refresh()});
   document.getElementById('lclear').addEventListener('click',function(){list=[];shelves.querySelectorAll('.add:not([disabled])').forEach(function(b){setBtn(b,false)});refresh()});
   q.addEventListener('input',function(){
@@ -651,6 +652,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   var REV=2,lzs=document.getElementById('lzs'),CUR='';
   function hsInit(r){if(r.dataset.hs)return;var g=r.querySelector('.grid');if(!g)return;r.dataset.hs='1';g.classList.add('hs');
     var vis=function(){return[].filter.call(g.children,function(c){return c.style.display!=='none'})},cw=function(){var v=vis();return v.length?v[0].getBoundingClientRect().width+12:0},busy=false;
+    (function(){var v=vis(),w=cw(),need=g.clientWidth*2.6+2*w;if(!w||!g.clientWidth||v.length*w<=g.clientWidth+4||v.length*w>=need)return;var n=0;while(g.children.length*w<need&&n++<40){v.forEach(function(c){var k=c.cloneNode(true);k.dataset.clone='1';g.appendChild(k)})}})();
     function loopable(){var w=cw();return w>0&&vis().length*w>g.clientWidth*1.4}
     var hb=r.querySelector('.row-h');if(hb){[['\u2039',-1],['\u203A',1]].forEach(function(x){var b=el('button','hsb',x[0]);b.type='button';b.setAttribute('aria-label',x[1]<0?'Scroll left':'Scroll right');b.onclick=function(){g.scrollBy({left:x[1]*g.clientWidth*.8,behavior:'smooth'})};hb.appendChild(b)})}
     g.addEventListener('scroll',function(){if(busy||!loopable())return;var w=cw(),v=vis();busy=true;
