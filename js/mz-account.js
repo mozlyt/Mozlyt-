@@ -3,7 +3,7 @@
    to a page that already has its own look. It never changes the page itself or how people buy.
    Use: MZAccount.init({slug:'mozlyt-gh', name:'MOZLYT', whatsapp:'233538729743', button:'#mzAcct'}) */
 (function () {
-  var cfg = null, ACC = null, AT = 'orders', AM = 'in', built = false;
+  var cfg = null, ACC = null, AT = 'orders', AM = 'in', built = false, BK = null, BF = 'all', HS = 'menu', CREF = '', chatT = null;
   var ST = { 'new': 'Received', confirmed: 'Confirmed', paid: 'Paid', delivered: 'Delivered', cancelled: 'Cancelled' };
   function $(s, r) { return (r || document).querySelector(s); }
   function $$(s, r) { return [].slice.call((r || document).querySelectorAll(s)); }
@@ -21,6 +21,7 @@
       '.mza-bg{position:absolute;inset:0;background:rgba(9,26,46,.5)}.mza-p{position:absolute;right:0;top:0;bottom:0;width:min(440px,100%);background:#fff;padding:18px;overflow-y:auto;box-shadow:-10px 0 40px rgba(0,0,0,.2)}' +
       '.mza-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 12px}.mza-top h3{margin:0;font:700 20px Georgia,serif}' +
       '.mza button,.mza a{font-family:inherit}.mza-x{border:1px solid #DCE4DE;background:#fff;border-radius:10px;padding:9px 14px;font-weight:600;font-size:14px;cursor:pointer;color:#0E2A47}' +
+      '.mza-tabs button{font-size:13px!important;padding:9px 2px!important}.mza-chat{height:300px;overflow-y:auto;border:1px solid #DCE4DE;border-radius:12px;padding:10px;margin:8px 0;display:flex;flex-direction:column;gap:8px;background:#F5F7F4}.mza-b{max-width:82%;padding:9px 12px;border-radius:14px;font-size:14.5px;line-height:1.4;word-break:break-word}.mza-b small{display:block;margin-top:3px;font-size:11.5px;opacity:.7}.mza-b.u{align-self:flex-end;background:#1F9D6B;color:#fff}.mza-b.a{align-self:flex-start;background:#fff;border:1px solid #DCE4DE;color:#0E2A47}' +
       '.mza-sub{margin:0 0 12px;color:#4b5a6a;font-size:14.5px;line-height:1.5}' +
       '.mza label{display:grid;gap:5px;font-weight:600;font-size:14px;margin:0 0 12px}.mza input{padding:12px;border:1.5px solid #cfd8d2;border-radius:10px;font-size:16px;width:100%;box-sizing:border-box;color:#0E2A47;background:#fff}.mza input:disabled{background:#f1f4f2;color:#5b6b62}' +
       '.mza input:focus{outline:none;border-color:#1F9D6B;box-shadow:0 0 0 3px rgba(31,157,107,.15)}' +
@@ -103,8 +104,9 @@
   }
   function mainView() {
     var a = ACC, b = $('#mzaBody'); $('#mzaTitle').textContent = 'Hi, ' + (first(a.name) || 'there');
-    b.innerHTML = '<div class="mza-tabs"><button type="button" data-a="orders">My orders</button><button type="button" data-a="me">My details</button><button type="button" data-a="help">Help</button></div><div id="mzaPane"></div>';
-    $$('.mza-tabs button', b).forEach(function (x) { x.classList.toggle('on', x.dataset.a === AT); x.onclick = function () { AT = x.dataset.a; mainView(); }; });
+    b.innerHTML = '<div class="mza-tabs"><button type="button" data-a="orders">My orders</button><button type="button" data-a="book">My bookings</button><button type="button" data-a="me">My details</button><button type="button" data-a="help">Help</button></div><div id="mzaPane"></div>';
+    $$('.mza-tabs button', b).forEach(function (x) { x.classList.toggle('on', x.dataset.a === AT); x.onclick = function () { AT = x.dataset.a; HS = 'menu'; CREF = ''; mainView(); }; });
+    clearInterval(chatT);
     var p = $('#mzaPane');
     if (AT === 'orders') {
       p.innerHTML = (a.orders || []).map(function (o) {
@@ -113,6 +115,8 @@
           '<div>' + (o.items || []).map(function (i) { return esc((i.qty || 1) + ' x ' + i.name); }).join(', ') + '</div>' + (o.total != null ? '<div><b>' + MZ.money(o.total) + '</b></div>' : '') +
           '<div><a class="mza-btn sm ghost" style="display:inline-flex" target="_blank" rel="noopener" href="' + esc(wa('Hello ' + cfg.name + ', I have a question about my order #' + o.id + '.')) + '">Ask about this order</a></div></div>';
       }).join('') || '<div class="mza-empty">No orders here yet. Orders you place with us will show up here so you can follow them.</div>';
+    } else if (AT === 'book') {
+      bookView(p);
     } else if (AT === 'me') {
       var ad = (a.addresses || []).slice(0, 5); if (!ad.length) ad = [''];
       p.innerHTML = '<form id="mzaF"><label>Name<input id="mzaN" required maxlength="80" value="' + esc(a.name) + '"></label><label>Phone / WhatsApp<input id="mzaP" type="tel" required maxlength="20" value="' + esc(a.phone) + '"></label><label>Email<input value="' + esc(a.email || '') + '" disabled></label><div id="mzaAd"></div><label style="display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.4"><input type="checkbox" id="mzaMk" style="width:auto;margin-top:3px"'+(a.marketing_ok?' checked':'')+'><span>Send me offers and updates from this shop</span></label><button class="mza-link" type="button" id="mzaAdd">+ Add another address</button><button class="mza-btn" type="submit">Save my details</button></form><div id="mzaNote" style="margin-top:10px"></div><button class="mza-link" type="button" id="mzaOut">Sign out</button>';
@@ -121,9 +125,51 @@
       $('#mzaF').onsubmit = function (e) { e.preventDefault(); var bt = $('button[type=submit]', this); busy(bt, true, 'Saving...');
         MZ.rpc('save_my_account', { p_slug: cfg.slug, p_name: $('#mzaN').value.trim(), p_phone: $('#mzaP').value.trim(), p_addresses: ad.filter(function (x) { return String(x).trim(); }) }).then(fetchAcc).then(function () { toast('Saved'); mainView(); }).catch(function (er) { note(er.message); }).then(function () { busy(bt, false); }); };
     } else {
-      var l = wa('Hello ' + cfg.name + ', I need help.');
-      p.innerHTML = '<div class="mza-card"><b>Talk to ' + esc(cfg.name) + '</b><div class="m">Questions about an order, delivery or a product? Message us directly on WhatsApp.</div>' + (l ? '<a class="mza-btn" target="_blank" rel="noopener" href="' + esc(l) + '">Chat on WhatsApp</a>' : '') + '</div>';
+      helpView(p);
     }
+  }
+  var BST = { pending: ['Pending', ' warn'], confirmed: ['Confirmed', ''], travel: ['Provider on the way', ''], arrived: ['Provider arrived', ''], finished: ['Service done', ''], completed: ['Completed', ''], cancelled: ['Cancelled', ' bad'] };
+  var BSTEP = { pending: 0, confirmed: 1, travel: 2, arrived: 3, finished: 4, completed: 4, cancelled: -1 };
+  function bookView(p) {
+    p.innerHTML = '<p class="mza-sub">Your service requests and appointments. Product orders are under My orders.</p><div class="mza-tabs" id="mzaBF"></div><div id="mzaBL"><div class="mza-empty">Loading...</div></div>';
+    var draw = function () {
+      var F = [['all', 'All'], ['pending', 'Pending'], ['confirmed', 'Confirmed'], ['completed', 'Completed']];
+      $('#mzaBF').innerHTML = F.map(function (f) { return '<button type="button" data-f="' + f[0] + '" class="' + (BF === f[0] ? 'on' : '') + '">' + f[1] + '</button>'; }).join('');
+      $$('#mzaBF button').forEach(function (b) { b.onclick = function () { BF = b.dataset.f; draw(); }; });
+      var list = (BK || []).filter(function (b) { return BF === 'all' || (BF === 'pending' && b.state === 'pending') || (BF === 'confirmed' && ['confirmed', 'travel', 'arrived', 'finished'].indexOf(b.state) > -1) || (BF === 'completed' && b.state === 'completed'); });
+      $('#mzaBL').innerHTML = list.map(function (b) {
+        var st = BST[b.state] || BST.pending, n = BSTEP[b.state], L = ['Requested', 'Confirmed', 'On the way', 'Arrived', 'Done'], bar = '', lab = '';
+        if (n >= 0) for (var i = 0; i < 5; i++) { bar += (i ? '<i class="' + (i <= n ? 'on' : '') + '"></i>' : '') + '<b class="' + (i <= n ? 'on' : '') + '"></b>'; lab += '<span class="' + (i === n ? 'on' : '') + '">' + L[i] + '</span>'; }
+        return '<div class="mza-card"><div class="h"><b>' + esc(b.service) + '</b><span class="mza-tag' + st[1] + '">' + esc(st[0]) + '</span></div>' +
+          '<div class="m">Booking #' + b.id + ' &middot; ' + (b.date ? esc(b.date) : 'Date flexible') + ', ' + esc(b.slot || 'any time') + '<br>' + esc([b.place, b.area].filter(Boolean).join(', ')) + '</div>' +
+          (n >= 0 ? '<div class="mza-trk">' + bar + '</div><div class="mza-trkl" style="font-size:11px">' + lab + '</div>' : '') +
+          '<div>' + (b.providers && b.providers.length ? 'Provider' + (b.providers.length > 1 ? 's' : '') + ': <b>' + esc(b.providers.join(', ')) + '</b><br>' : '') + (b.price != null ? 'Price: <b>' + MZ.money(b.price) + '</b>' : '<span class="m">Price: MOZLYT will confirm the price with you</span>') + '</div>' +
+          '<div style="margin-top:8px"><button type="button" class="mza-btn sm ghost" data-ask="' + b.id + '">Contact support about this booking</button></div></div>';
+      }).join('') || '<div class="mza-empty"><b>' + (BK && BK.length ? 'Nothing in this list' : 'No bookings yet') + '</b><br>Your service requests and appointments will appear here. Once you book a service, you can follow its progress.<br><a class="mza-btn" style="margin-top:12px;display:inline-flex" href="/gh/services.html">Explore services</a></div>';
+      $$('#mzaBL [data-ask]').forEach(function (b) { b.onclick = function () { AT = 'help'; HS = 'chat'; CREF = 'Booking #' + b.dataset.ask; mainView(); }; });
+    };
+    if (BK) draw();
+    MZ.rpc('my_bookings', {}).then(function (r) { BK = r || []; draw(); }, function () { BK = BK || []; draw(); });
+  }
+  function helpView(p) {
+    if (HS === 'chat') { chatView(p); return; }
+    var l = wa('Hello ' + cfg.name + ', I need help.');
+    p.innerHTML = '<div class="mza-card"><b>How can we help you?</b><div class="m">Choose how you would like to contact the MOZLYT support team.</div></div>' +
+      '<div class="mza-card"><b>Live chat</b><div class="m">Chat with support directly on MOZLYT. Your messages stay in your account so you can come back to them.</div><button class="mza-btn" type="button" id="mzaLC">Start live chat<span id="mzaUn"></span></button></div>' +
+      '<div class="mza-card"><b>WhatsApp support</b><div class="m">Continue the conversation on WhatsApp.</div>' + (l ? '<a class="mza-btn wa" target="_blank" rel="noopener" href="' + esc(l) + '">Chat on WhatsApp</a>' : '') + '</div>';
+    $('#mzaLC').onclick = function () { HS = 'chat'; mainView(); };
+    MZ.rpc('my_support_unread', {}).then(function (n) { if (n > 0 && $('#mzaUn')) $('#mzaUn').textContent = ' - ' + n + ' new'; }, function () { });
+  }
+  function chatView(p) {
+    p.innerHTML = '<button class="mza-link" type="button" id="mzaCB">&larr; Back</button><div class="mza-chat" id="mzaCM"><div class="mza-empty">Loading...</div></div>' + (CREF ? '<div class="mza-sub" style="margin:6px 0">About: <b>' + esc(CREF) + '</b></div>' : '') + '<form id="mzaCF" style="display:flex;gap:8px"><input id="mzaCI" maxlength="1000" placeholder="Write your message" required style="flex:1"><button class="mza-btn" type="submit" style="width:auto;padding:10px 16px">Send</button></form><div id="mzaNote" style="margin-top:8px"></div><div class="mza-sub" style="margin-top:8px">We usually reply within a few hours. For something urgent, use WhatsApp.</div>';
+    $('#mzaCB').onclick = function () { HS = 'menu'; CREF = ''; mainView(); };
+    var load = function () { MZ.rpc('my_support_messages', {}).then(function (r) {
+      var box = $('#mzaCM'); if (!box) return; var atEnd = box.scrollTop + box.clientHeight >= box.scrollHeight - 40;
+      box.innerHTML = (r || []).map(function (m) { return '<div class="mza-b ' + (m.from_admin ? 'a' : 'u') + '"><div>' + esc(m.body) + '</div><small>' + (m.ref ? esc(m.ref) + ' &middot; ' : '') + MZ.when(m.created_at) + '</small></div>'; }).join('') || '<div class="mza-empty">Say hello. A MOZLYT team member will reply here.</div>';
+      if (atEnd || !box.dataset.s) { box.scrollTop = box.scrollHeight; box.dataset.s = '1'; } }, function () { }); };
+    load(); clearInterval(chatT); chatT = setInterval(function () { if ($('#mzaCM') && !$('#mza').hidden) load(); else clearInterval(chatT); }, 8000);
+    $('#mzaCF').onsubmit = function (e) { e.preventDefault(); var i = $('#mzaCI'), bt = $('button[type=submit]', this), v = i.value.trim(); if (!v) return; busy(bt, true, 'Sending...');
+      MZ.rpc('send_support_message', { p_body: v, p_ref: CREF || null }).then(function () { i.value = ''; CREF = ''; note(''); load(); }, function (er) { note(er.message); }).then(function () { busy(bt, false); }); };
   }
   window.MZAccount = {
     open: function () { if (cfg) open(); },
