@@ -97,6 +97,22 @@ textarea{min-height:110px;resize:vertical}
 .note{font-size:12.5px;color:var(--mute);padding:18px 0 4px}
 body:has(#dashView:not([hidden])) footer.mz-footer,body:has(#dashView:not([hidden])) .mz-ft{display:none!important}
 body:has(#dashView:not([hidden])) .dash{padding-bottom:40px}
+
+#dtabs .ngrp{display:contents}#dtabs .ngl{display:none}#dtabs button svg{display:none}
+@media(min-width:901px){
+#dashView{display:grid;grid-template-columns:250px minmax(0,1fr);gap:0 24px;align-items:start}
+#dashView>*{grid-column:2}#dashView>.top2,#dashView>#dashNote,#dashView>#subNote,#dashView>#myStoreCard{grid-column:1/-1}
+#dashView>#dtabs{grid-column:1;grid-row:5/span 40;position:sticky;top:96px}
+html body #dashView>#dtabs .ngrp{display:block;padding:12px 0 6px;border-top:1px solid #fff}html body #dashView>#dtabs .ngrp:first-child{border-top:0}
+html body #dtabs .ngl{display:block;font:600 11.5px/1 inherit;font-family:inherit;letter-spacing:.04em;text-transform:uppercase;color:#fff;margin:8px 0 6px}
+html body #dashView>#dtabs{background:#000!important;border:1px solid #222!important;border-radius:22px!important;padding:8px 18px 14px!important;gap:0!important;flex-direction:column!important;overflow:visible!important}
+html body #dashView>#dtabs button{display:flex!important;align-items:center;gap:16px;width:100%;min-height:50px;padding:0 2px!important;border:0!important;border-radius:10px;background:transparent!important;color:#fff!important;font:500 16px inherit!important;font-family:inherit!important;text-align:left;box-shadow:none!important}
+html body #dashView>#dtabs button svg{display:block;width:22px;height:22px;flex:0 0 22px;stroke:#9a9a9a;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+html body #dashView>#dtabs button.on{background:#1b1b1b!important;color:#fff!important;padding:0 10px!important}html body #dashView>#dtabs button.on svg{stroke:#fff}
+html body #dashView>#dtabs button:hover{background:#141414!important}}
+html,html body,html body .dash,html body main,html body .top,html body .top2,html body [class*="hero"],html body #dashView{background:#000!important}
+html body .card2,html body .stat,html body .it,html body .mgroup{background:#000!important;border-color:#222!important;color:#fff}
+html body .stat span,html body .sub,html body small{color:#9a9a9a!important}
 </style>
 <style id="mz-shared">
 .mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
@@ -463,13 +479,11 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
   <p class="sub"><a href="#" id="faSkip">Continue to my training dashboard instead</a> &middot; <a href="#" id="faOut">Log out</a></p>
 </section>
 <section id="dashView" hidden>
-  <div class="top2"><div><h1 id="hello">Your store</h1><p class="sub" id="subline"></p></div><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="b2 ghost" id="btnTheme" type="button">Colors and background</button><button class="b2 ghost" id="btnOut" type="button">Log out</button></span></div>
+  <div class="top2"><div><h1 id="hello">Your store</h1><p class="sub" id="subline"></p></div><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="b2 ghost logRound" id="btnOut" type="button" aria-label="Log out" title="Log out"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v9"/><path d="M6.4 6.6a8 8 0 1 0 11.2 0"/></svg></button></span></div>
   <div id="dashNote"></div><div id="subNote"></div>
   <div class="card2 mystore" id="myStoreCard"><div class="ms-h"><b>My store</b><code id="storeUrl" hidden></code></div>
     <div class="pills"><a class="pill2" id="openUrl" target="_blank" rel="noopener">Visit store</a><button class="pill2" type="button" id="cpUrl">Copy link</button><a class="pill2" id="shareUrl" target="_blank" rel="noopener">Share on WhatsApp</a></div></div>
-  <div class="tabs" id="dtabs">
-    <button type="button" data-t="over" class="on">Overview</button><button type="button" data-t="prod">My products</button><button type="button" data-t="ord">Orders</button><button type="button" data-t="cust">Customers</button><button type="button" data-t="money">Payment records</button><button type="button" data-t="learn">Training</button><button type="button" data-t="sub">Subscription</button><button type="button" data-t="set">Store settings</button><button type="button" data-t="acc">Account</button>
-  </div>
+  <div class="tabs" id="dtabs"><div class="ngrp"><span class="ngl">Business</span><button type="button" data-t="over" class="on"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Overview</span></button><button type="button" data-t="prod"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg><span>My products</span></button><button type="button" data-t="ord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span>Orders</span></button><button type="button" data-t="cust"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16 5a3 3 0 0 1 0 6M18 14.8c2 .6 3 2.3 3 5.2"/></svg><span>Customers</span></button></div><div class="ngrp"><span class="ngl">Money</span><button type="button" data-t="money"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 12h6"/></svg><span>Payment records</span></button><button type="button" data-t="sub"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M7 15h4"/></svg><span>Subscription</span></button></div><div class="ngrp"><span class="ngl">Growth</span><button type="button" data-t="learn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h13M9 8h6"/></svg><span>Training</span></button></div><div class="ngrp"><span class="ngl">Store</span><button type="button" data-t="set"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg><span>Store settings</span></button><button type="button" data-t="acc"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg><span>Account</span></button></div></div>
 
   <div id="pane-over">
     <div class="card2 prog" id="progCard"><div class="ring" id="ring"><b id="ringN">0%</b></div><div><h3>Get started</h3><p class="sub" id="progSub"></p><button type="button" class="linkbtn" id="progTog" style="padding:4px 0;font-size:14px">Show all steps</button></div><ul class="chk" id="chk"></ul></div>
@@ -589,6 +603,8 @@ html body .mz-nav .mz-btn{display:block;text-align:center;margin-top:12px;paddin
 
   <div id="pane-acc" hidden>
     <div class="card2" style="margin-bottom:16px"><b>Logged in as</b><br><span id="accEmail"></span></div>
+    <div class="card2" style="margin-bottom:16px"><h3 style="margin:0 0 6px">Colors and background</h3><p class="sub" style="margin-bottom:10px">Change how your dashboard looks.</p><button class="b2 ghost" id="btnTheme" type="button">Change</button></div>
+    <div class="card2" style="margin-bottom:16px"><h3 style="margin:0 0 6px">Help and policies</h3><p class="sub" style="margin-bottom:10px"><a href="terms.html" target="_blank" rel="noopener">Terms</a> &middot; <a href="privacy.html" target="_blank" rel="noopener">Privacy</a></p></div>
     <div class="card2"><h3 style="margin:0 0 10px">Change password</h3><form id="fPw" class="f"><label>New password<input type="password" id="npw" minlength="8" autocomplete="new-password" required></label><button class="btn primary" type="submit">Change password</button></form></div>
   </div>
 
