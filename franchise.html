@@ -135,6 +135,8 @@ html body .lvrow{border-top:1px solid #222!important}
 html body .ngrp+.ngrp:last-of-type{}
 .setr{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 0;border-top:1px solid #222}.setr:first-child{border-top:0}
 .setr b{display:block;font-size:15px}.setr small{display:block;color:#9a9a9a;font-size:12.5px;word-break:break-all}.setr span{display:flex;gap:8px;flex-wrap:wrap}
+body:has(#dashView:not([hidden])) footer.mz-footer,body:has(#dashView:not([hidden])) .mz-ft{display:none!important}
+body:has(#dashView:not([hidden])) .dash{padding-bottom:40px}
 </style>
 <style id="mz-shared">
 .mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
@@ -473,7 +475,8 @@ form{background:transparent!important;border:0!important;padding:0!important}
       <div class="setr"><div><b>Visit my site</b><small>Open your public franchise site.</small></div><span><a class="b2" id="stSite" target="_blank" rel="noopener" style="text-decoration:none">Open</a></span></div>
       <div class="setr"><div><b>Download the app</b><small>Open this dashboard from your phone like an app.</small></div><span><button class="b2" type="button" id="stInst">Install</button></span></div>
       <div class="setr"><div><b>Need help?</b><small>Technical issues go straight to MOZLYT.</small></div><span><a class="b2" href="https://wa.me/233538729743" target="_blank" rel="noopener" style="text-decoration:none">Message support</a></span></div>
-      <div class="setr"><div><b>Log out</b><small>Sign out of this dashboard.</small></div><span><button class="b2 red" type="button" id="stOut">Log out</button></span></div></div></div>
+      <div class="setr"><div><b>Terms and privacy</b><small>Policies that apply to your account.</small></div><span><a class="b2" href="terms.html" target="_blank" rel="noopener" style="text-decoration:none">Terms</a><a class="b2" href="privacy.html" target="_blank" rel="noopener" style="text-decoration:none">Privacy</a></span></div>
+   <div class="setr"><div><b>Log out</b><small>Sign out of this dashboard.</small></div><span><button class="b2 red" type="button" id="stOut">Log out</button></span></div></div></div>
     <div class="card2" id="shopLook" style="margin-bottom:16px"></div>
     <p class="sub" style="margin-bottom:14px">Your company details and how you get paid. Only you can see and change this page.</p>
     <div class="card2" style="margin-bottom:16px"><h3 style="margin:0 0 6px">Company details</h3><p class="sub" style="margin-bottom:10px">Your own business information. It is kept on your account and is not shown to customers.</p>

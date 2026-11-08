@@ -120,6 +120,8 @@ html body .stat span,html body .sub,html body small{color:#9a9a9a!important}
 }
 .lvh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}.lvh b{font-size:16px}.livedot{display:inline-flex;align-items:center;gap:6px;background:#0f2a1f;color:#5FD3A1;font:700 12px inherit;padding:2px 10px;border-radius:99px;vertical-align:middle}.livedot i{width:8px;height:8px;border-radius:50%;background:#1F9E6E}
 .lvrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 4px;border-top:1px solid #222}.lvx{flex:1;min-width:0;font-size:14.5px}.lvw{color:#9a9a9a;font-size:13px;white-space:nowrap}
+body:has(#dashView:not([hidden])) footer.mz-footer,body:has(#dashView:not([hidden])) .mz-ft{display:none!important}
+body:has(#dashView:not([hidden])) .dash{padding-bottom:40px}
 </style>
 <style id="mz-shared">
 .mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
@@ -462,6 +464,7 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
    <div class="setr"><div><b>Alerts</b><small>Pop-up and sound for new activity.</small></div><span><button class="b2 ghost" id="cfAlert" type="button">Open alerts</button></span></div>
    <div class="setr"><div><b>Ad tracking</b><small>MOZLYT advertising and tracking codes.</small></div><span><button class="b2 ghost" id="cfAds" type="button">Open</button></span></div>
    <div class="setr"><div><b>Visit the site</b><small>Open mozlyt.com.</small></div><span><a class="b2" href="index.html" target="_blank" rel="noopener" style="text-decoration:none">Open</a></span></div>
+   <div class="setr"><div><b>Terms and privacy</b><small>Policies that apply to your account.</small></div><span><a class="b2" href="terms.html" target="_blank" rel="noopener" style="text-decoration:none">Terms</a><a class="b2" href="privacy.html" target="_blank" rel="noopener" style="text-decoration:none">Privacy</a></span></div>
    <div class="setr"><div><b>Log out</b><small id="cfWho"></small></div><span><button class="b2 red" id="cfOut" type="button">Log out</button></span></div></div></div></div>
   <div id="pane-book" hidden><div class="stats" id="bookStats"></div><div class="tools"><select id="bf"><option value="">All statuses</option><option>new</option><option>confirmed</option><option>done</option><option>cancelled</option></select></div><div class="lst" id="bookList"></div></div>
   <div id="pane-ord" hidden><div class="tools"><select id="of"><option value="">All orders</option><option value="main">MOZLYT shop</option><option value="sellers">Seller stores</option></select><select id="os"><option value="">All statuses</option><option>new</option><option>confirmed</option><option>paid</option><option>delivered</option><option>cancelled</option></select></div><div class="lst" id="ordList"></div></div>

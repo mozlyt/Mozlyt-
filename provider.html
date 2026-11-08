@@ -98,6 +98,8 @@ textarea{min-height:110px;resize:vertical}
 .pv-act{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#000;border:1px solid #222;border-radius:16px;padding:14px 18px;margin:0 0 14px}.pv-act b{display:block;font-size:17px}.pv-act span{display:block;font-size:13px;color:#9a9a9a}
 .pv-act button{flex:0 0 auto;width:64px;height:36px;border-radius:99px;border:1px solid #444!important;background:#2a2a2a!important;padding:0!important;position:relative;cursor:pointer;transition:background .2s}.pv-act button i{position:absolute;top:3px;left:3px;width:28px;height:28px;border-radius:50%;background:#fff;transition:transform .2s}
 .pv-act.on{border-color:#1F9D6B}.pv-act.on b{color:#34c78d}.pv-act.on button{background:#1F9D6B!important;border-color:#1F9D6B!important}.pv-act.on button i{transform:translateX(28px)}
+body:has(#dashView:not([hidden])) footer.mz-footer,body:has(#dashView:not([hidden])) .mz-ft{display:none!important}
+body:has(#dashView:not([hidden])) .dash{padding-bottom:40px}
 </style>
 <style id="mz-shared">
 .mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
@@ -424,7 +426,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
 
   <div id="pane-earn" hidden><div class="card2"><h3 style="margin:0 0 6px">Earnings</h3><div class="pv-st" style="margin-bottom:10px"><b id="erTot">GH&#8373;0</b><span>Total earned</span></div><p class="sub" id="erPct" style="margin:0 0 10px"></p><div class="lst" id="erList"><div class="empty">Completed jobs will appear here once MOZLYT confirms the payment.</div></div><a class="b2" style="text-decoration:none;display:inline-block;margin-top:10px" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20have%20a%20question%20about%20my%20earnings." target="_blank" rel="noopener">Ask about earnings</a></div></div>
 
-  <div id="pane-prof" hidden><div class="card2"><h3 style="margin:0 0 10px">Provider details</h3><dl class="pv-dl" id="pvDetails"></dl><p class="sub" style="margin:12px 0 0">To change your details, message MOZLYT and we will update them for you.</p></div></div>
+  <div id="pane-prof" hidden><div class="card2"><h3 style="margin:0 0 10px">Provider details</h3><dl class="pv-dl" id="pvDetails"></dl><p class="sub" style="margin:12px 0 0"><a href="terms.html" target="_blank" rel="noopener">Terms</a> &middot; <a href="privacy.html" target="_blank" rel="noopener">Privacy</a></p><p class="sub" style="margin:12px 0 0">To change your details, message MOZLYT and we will update them for you.</p></div></div>
 
   <div id="pane-help" hidden><div class="card2"><h3 style="margin:0 0 6px">Help &amp; support</h3><p class="sub" style="margin:0 0 10px">Contact MOZLYT for help with your bookings, services or account.</p><a class="b2" style="text-decoration:none;display:inline-block" href="https://wa.me/233538729743" target="_blank" rel="noopener">WhatsApp 053 872 9743</a> <a class="b2 ghost" style="text-decoration:none;display:inline-block" href="mailto:Info@mozlyt.com">Info@mozlyt.com</a></div></div>
 </section>
