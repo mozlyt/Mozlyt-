@@ -943,7 +943,8 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       ['skl','Skill training','One chosen skill, for example massage or beauty',skp],
       ['grp','Franchise'],
       ['fr','Franchise platform fee','What a franchise owner pays MOZLYT to keep a branch open',per(v('bFr'),v('bFrY'))],
-      ['com','Online payment commission','Taken from every card and Mobile Money sale in a shop',cs],
+      ['grp','Online payment commission'],
+      ['com','Commission on online sales','Taken from every card and Mobile Money sale in a shop',cs],
       ['grp','Other settings'],
       ['tri','Free trial','Days a new seller can use the store before paying','<div><b>'+(Number(v('bT'))||0)+' days</b></div>'],
       ['pay','Payment instructions','Shown to sellers when they pay by hand','<div class="m">'+esc((v('bI')||'Not set').slice(0,70))+(v('bI').length>70?'...':'')+'</div>']];
