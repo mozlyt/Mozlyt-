@@ -360,6 +360,14 @@ body.has-list .wa-float{bottom:84px}
  #csList button{display:block;width:100%;text-align:left;border:0;border-top:1px solid #e3e8e3;background:none;padding:14px 4px;font:600 16px system-ui,sans-serif;color:var(--ink);cursor:pointer}
  #csList button.on{color:var(--green-d)}
 }
+
+.hows{margin:34px auto 14px}.hows h2{margin:0 0 4px;font-size:clamp(22px,3.4vw,28px)}.howsub{margin:0 0 12px;color:var(--mute,#5b6b62)}
+.howrow{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:2px 2px 8px;-webkit-overflow-scrolling:touch}.howrow::-webkit-scrollbar{display:none}
+.how{flex:0 0 78%;max-width:320px;scroll-snap-align:start;background:#fff;border:1px solid var(--line,#dfe8e2);border-radius:16px;padding:18px 16px;display:flex;flex-direction:column;gap:6px}
+.how h3{margin:0;font-size:18px}.how p{margin:0;color:var(--mute,#5b6b62);line-height:1.5}
+.hn{width:34px;height:34px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:700}
+.how.cta{background:#0E2A47;border-color:#0E2A47;color:#fff;justify-content:center}.how.cta p{color:#DCE6F1}.how.cta .btn{margin-top:8px;text-align:center;justify-content:center}
+@media(min-width:821px){.how{flex-basis:calc((100% - 36px)/4);max-width:none}}
 </style>
 
 </head>
@@ -477,10 +485,16 @@ body.has-list .wa-float{bottom:84px}
   <div id="lzs" aria-hidden="true"></div>
   <div class="empty" id="empty">No products match your search. <a href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20looking%20for%20a%20product.%20" target="_blank" rel="noopener" style="color:var(--green-d);font-weight:700">Ask us on WhatsApp</a></div>
 </main>
-<section class="wrap" style="margin:34px auto 10px">
-  <div style="background:#fff;border:1px solid var(--line,#dfe8e2);border-radius:18px;padding:22px 20px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
-    <div style="max-width:60ch"><h2 style="margin:0 0 6px;font-size:22px">Want to sell these products yourself?</h2><p style="margin:0;color:var(--mute,#5b6b62)">Open your own MOZLYT online shop. Buy at wholesale prices, set your own selling price and keep the difference. Your first 7 days are free.</p></div>
-    <a class="btn gold" href="/seller.html?kind=shop" style="white-space:nowrap">Take a shop</a>
+<section class="wrap hows" aria-labelledby="howT">
+  <h2 id="howT">Want to sell these products yourself?</h2>
+  <p class="howsub">Swipe to see how to get your own MOZLYT shop.</p>
+  <div class="howrow" id="howRow">
+    <div class="how"><span class="hn">1</span><h3>Open your shop</h3><p>Sign up and choose a name for your shop. Your first 7 days are free.</p></div>
+    <div class="how"><span class="hn">2</span><h3>Choose your products</h3><p>Pick the products you want to sell from the MOZLYT range, at wholesale prices.</p></div>
+    <div class="how"><span class="hn">3</span><h3>Set your prices</h3><p>You decide what customers pay. You keep the difference between your price and the wholesale price.</p></div>
+    <div class="how"><span class="hn">4</span><h3>Share your shop link</h3><p>Your shop gets its own link to share on WhatsApp, Instagram and anywhere else. You can also connect your own domain name.</p></div>
+    <div class="how"><span class="hn">5</span><h3>Get orders and track your money</h3><p>Customers order on WhatsApp or pay online, and your dashboard shows your sales and your money.</p></div>
+    <div class="how cta"><h3>Ready to start?</h3><p>Open your shop today. The first 7 days are free.</p><a class="btn gold" href="/seller.html?kind=shop">Take a shop</a></div>
   </div>
 </section>
 
