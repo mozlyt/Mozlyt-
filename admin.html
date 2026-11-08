@@ -439,7 +439,7 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
         <label>Description and features<textarea id="sfDesc" rows="6" maxlength="3000" placeholder="What it is, what it does, size, power, what is in the box. Write it in your own words."></textarea></label>
         <label>Photo links (one per line, the first one is the main photo)<textarea id="sfImgs" rows="3" placeholder="https://..."></textarea></label>
         <label>Or upload photos (JPG, PNG or WebP, under 5 MB each)<input id="sfFiles" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
-        <label>Video link (YouTube or Vimeo, optional)<input id="sfVid" type="url" maxlength="300" placeholder="https://www.youtube.com/watch?v=..."></label>
+        <label>Video link (YouTube, Vimeo or an .mp4 file, optional)<input id="sfVid" type="url" maxlength="300" placeholder="https://www.youtube.com/watch?v=..."></label>
         <div class="sub">Up to 6 photos are kept: the first is the main photo, the next five show in the gallery.</div>
         <label>Supplier link (optional)<input id="sfUrl" type="url" placeholder="https://www.aliexpress.com/item/..."></label>
         <div class="card2" style="background:transparent"><b>Price helper</b><div class="sub" style="margin:4px 0 8px">Supplier cost plus shipping, turned into cedis. These are suggestions, you decide the final prices.</div>
@@ -507,7 +507,7 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
         <div id="pfPrev" class="sub"></div>
         <label>More photos (up to 5 extra, so 6 in all)<input id="pfMore" type="file" multiple accept="image/jpeg,image/png,image/webp"></label>
         <div id="pfMoreList" class="sub"></div>
-        <label>Video link (YouTube or Vimeo, optional)<input id="pfVideo" type="url" maxlength="300" placeholder="https://www.youtube.com/watch?v=..."></label>
+        <label>Video link (YouTube, Vimeo or an .mp4 file, optional)<input id="pfVideo" type="url" maxlength="300" placeholder="https://www.youtube.com/watch?v=..."></label>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit" id="pfSave">Save product</button><button class="btn" type="button" id="pfCancel">Cancel</button></div>
       </form></div>
     <div class="scroll"><table class="tbl" id="prodTbl"></table></div>
@@ -850,7 +850,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var more=[].slice.call($('#pfMore').files),vid=$('#pfVideo').value.trim();
     if(pfExtra.length+more.length>5){flash('You can have 5 extra photos at most (6 in all). Remove some first.');return}
     for(var k=0;k<more.length;k++){if(more[k].size>5242880){flash('Each photo must be under 5 MB');return}}
-    if(vid&&!/^https:\/\/(www\.|m\.)?(youtube\.com|youtu\.be|vimeo\.com|player\.vimeo\.com)\//i.test(vid)){flash('The video link must be a YouTube or Vimeo link');return}
+    if(vid&&!(/^https:\/\/(www\.|m\.)?(youtube\.com|youtu\.be|vimeo\.com|player\.vimeo\.com)\//i.test(vid)||/^https:\/\/[^\s"'<>]+\.(mp4|webm|mov|m4v)(\?[^\s"'<>]*)?$/i.test(vid))){flash('The video link must be a YouTube or Vimeo link, or a direct video file (.mp4)');return}
     busy(b,true,'Saving...');
     var ext=function(t){return t==='image/png'?'png':t==='image/webp'?'webp':'jpg'};
     var up=f?MZ.upload('product-photos','p'+Date.now()+'.'+ext(f.type),f).then(function(path){return MZ.publicUrl('product-photos',path)}):Promise.resolve(pfPhoto||null);
@@ -916,7 +916,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     MZ.fn(fn,{action:'status'}).then(function(r){if(r&&r.configured){$('#srAliNote').textContent='Connected to '+SRC_NAME[k]+'. Search for products to add as drafts.';$('#srAliTools').hidden=false}else off()},off)}
   $('#srSrc').onchange=srAliCheck;
   $('#srGo').onclick=function(){var q=$('#srQ').value.trim();if(!q)return;var src=$('#srSrc').value,fn=SRC_FN[src];if(!fn){flash('That supplier is not connected yet.');return}var b=this;busy(b,true,'Searching...');MZ.fn(fn,{action:'search',q:q}).then(function(r){var items=(r&&r.items)||[];$('#srRes').innerHTML=items.map(function(it,i){return'<div class="it"><div style="display:flex;gap:12px"><img alt="" src="'+esc(it.image||'')+'" style="width:64px;height:64px;object-fit:cover;border-radius:8px;flex:none"><div style="min-width:0;flex:1"><b>'+esc(it.title)+'</b><div class="m">'+(it.price?'$'+esc(it.price):'')+(it.rating?' · rating '+esc(it.rating):'')+(it.orders?' · '+esc(it.orders)+' sold':'')+'</div></div></div><div class="h" style="margin-top:8px"><button class="btn primary" data-i="'+i+'" type="button">Add to drafts</button></div></div>'}).join('')||'<div class="empty">No products found.</div>';
-      $$('#srRes [data-i]').forEach(function(bt){bt.onclick=function(){var it=items[Number(bt.dataset.i)];busy(bt,true,'Adding...');(src==='cj'?MZ.fn(fn,{action:'detail',id:it.id}).then(function(d){return Object.assign({},it,(d&&d.item)||{})},function(){return it}):Promise.resolve(it)).then(function(it){return MZ.insert('product_drafts',{source:src,source_id:String(it.id),source_url:it.url||null,title:it.title,description:it.description||null,images:(it.images&&it.images.length?it.images:[it.image]).filter(Boolean).slice(0,6),supplier_currency:'USD',supplier_price:it.price?Number(it.price):null},true)}).then(function(){flash('Added to drafts');srLoad()},function(er){flash(er.message)}).then(function(){busy(bt,false)})}})},function(er){flash(er.message||'Search failed')}).then(function(){busy(b,false)})};
+      $$('#srRes [data-i]').forEach(function(bt){bt.onclick=function(){var it=items[Number(bt.dataset.i)];busy(bt,true,'Adding...');(src==='cj'?MZ.fn(fn,{action:'detail',id:it.id}).then(function(d){return Object.assign({},it,(d&&d.item)||{})},function(){return it}):Promise.resolve(it)).then(function(it){return MZ.insert('product_drafts',{source:src,source_id:String(it.id),source_url:it.url||null,title:it.title,description:it.description||null,images:(it.images&&it.images.length?it.images:[it.image]).filter(Boolean).slice(0,6),video_url:it.video||null,supplier_currency:'USD',supplier_price:it.price?Number(it.price):null},true)}).then(function(){flash('Added to drafts');srLoad()},function(er){flash(er.message)}).then(function(){busy(bt,false)})}})},function(er){flash(er.message||'Search failed')}).then(function(){busy(b,false)})};
 
   /* ----- training editor ----- */
   var TC=null,TL=[],tcCur=null;

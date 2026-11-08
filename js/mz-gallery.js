@@ -14,12 +14,13 @@
     if (m) return 'https://player.vimeo.com/video/' + m[1] + '?autoplay=1';
     return '';
   }
+  function isFile(u) { return /^https:\/\/[^\s"'<>]+\.(mp4|webm|mov|m4v)(\?[^\s"'<>]*)?$/i.test(String(u || '')) }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] }) }
   function render(box, o) {
     if (!document.getElementById('mzg-css')) { var st = document.createElement('style'); st.id = 'mzg-css'; st.textContent = CSS; document.head.appendChild(st) }
     var src = o.src || function (u) { return u };
-    var ph = (o.photos || []).filter(Boolean).slice(0, 6), vid = embed(o.video), items = ph.map(function (u) { return { t: 'i', u: u } });
-    if (vid) items.push({ t: 'v', u: vid });
+    var ph = (o.photos || []).filter(Boolean).slice(0, 6), vid = embed(o.video), vf = !vid && isFile(o.video) ? String(o.video) : '', items = ph.map(function (u) { return { t: 'i', u: u } });
+    if (vid) items.push({ t: 'v', u: vid }); else if (vf) items.push({ t: 'f', u: vf });
     box.innerHTML = '';
     if (!items.length) { box.innerHTML = '<span style="color:#5b6b62;padding:40px;display:block;text-align:center">Photo coming soon</span>'; return }
     var w = document.createElement('div'); w.className = 'mzg';
@@ -28,7 +29,7 @@
     function show(i) {
       cur = (i + items.length) % items.length; var it = items[cur];
       stage.querySelectorAll('.mzg-n').forEach(function (b) { b.remove() });
-      stage.innerHTML = it.t === 'v' ? '<iframe src="' + esc(it.u) + '" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Product video"></iframe>' :
+      stage.innerHTML = it.t === 'f' ? '<video controls autoplay playsinline preload="metadata" style="width:100%;max-height:60vh;background:#000;display:block" src="' + esc(it.u) + '"></video>' : it.t === 'v' ? '<iframe src="' + esc(it.u) + '" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Product video"></iframe>' :
         '<img alt="' + esc(o.alt || '') + '" src="' + esc(src(it.u)) + '" data-o="' + esc(it.u) + '" onerror="if(this.dataset.o&&this.src.indexOf(this.dataset.o)<0){this.src=this.dataset.o}">';
       if (items.length > 1) {
         var p = document.createElement('button'), n = document.createElement('button');
@@ -40,8 +41,8 @@
     if (items.length > 1) {
       strip.className = 'mzg-t';
       items.forEach(function (it, i) {
-        var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', it.t === 'v' ? 'Play video' : 'Photo ' + (i + 1));
-        b.innerHTML = it.t === 'v' ? '<span class="vd">▶</span>' : '<img alt="" loading="lazy" src="' + esc(src(it.u)) + '" data-o="' + esc(it.u) + '" onerror="if(this.dataset.o&&this.src.indexOf(this.dataset.o)<0){this.src=this.dataset.o}">';
+        var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', it.t !== 'i' ? 'Play video' : 'Photo ' + (i + 1));
+        b.innerHTML = it.t !== 'i' ? '<span class="vd">▶</span>' : '<img alt="" loading="lazy" src="' + esc(src(it.u)) + '" data-o="' + esc(it.u) + '" onerror="if(this.dataset.o&&this.src.indexOf(this.dataset.o)<0){this.src=this.dataset.o}">';
         b.onclick = function () { show(i) }; strip.appendChild(b);
       });
       w.appendChild(strip);
