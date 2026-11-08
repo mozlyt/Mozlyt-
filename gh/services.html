@@ -427,7 +427,7 @@ button[data-svc].added{background:#E6F5EE;color:var(--green-d);border:1px solid 
 .bnav2,.csheet{display:none}
 .csg{display:none}
 @media(max-width:820px){
- body{padding-bottom:72px}.ctiles{display:none}.scb{display:none!important}.sc-bar{bottom:78px}.wa-float{display:none!important}body.sc-has .sc-toast{bottom:84px}
+ body{padding-bottom:72px}.scb{display:none!important}.sc-bar{bottom:78px}.wa-float{display:none!important}body.sc-has .sc-toast{bottom:84px}
  .bnav2{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:80;background:#fff;border-top:1px solid #e3e8e3;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
  .bnav2 button,.bnav2 a{border:0;background:none;display:grid;gap:2px;justify-items:center;padding:4px 0;font:600 11.5px system-ui,sans-serif;color:#5b6b62;cursor:pointer;text-decoration:none;position:relative}
  .bnav2 svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
@@ -452,6 +452,7 @@ button[data-svc].added{background:#E6F5EE;color:var(--green-d);border:1px solid 
 .cdd .cr button{display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;border:0;border-top:1px solid #eef2ee;background:none;padding:11px 14px;cursor:pointer;font:600 15px system-ui,sans-serif;color:var(--ink)}
 .cdd .cr button:first-child{border-top:0}.cdd .cr small{font-weight:500;color:var(--mute);font-size:12.5px}
 .cdd .cr p{margin:0;padding:14px;color:var(--mute);font-size:14px}
+.gsrch{display:block;margin:18px 0 4px}.gsrch .cdd{margin:0}.svcnav{display:none!important}
 </style>
 </head>
 <body>
@@ -789,34 +790,36 @@ var LIM=6;
 function jump(cat,n){var card=[].filter.call(cat.querySelectorAll('.card'),function(c){var h=c.querySelector('h4');return h&&h.textContent===n})[0];if(!card)return;
  card.classList.remove('xm');card.scrollIntoView({behavior:'smooth',block:'center'});card.classList.add('flash');setTimeout(function(){card.classList.remove('flash')},1600);
  if(kindsFor(n))setTimeout(function(){open(card)},450);else if(window.MZSC)window.MZSC.add(n)}
-function dd(){[].forEach.call(document.querySelectorAll('#services .cat'),function(cat){var h=cat.querySelector('.cat-h');if(!h)return;var old=cat.querySelector('.cdd');if(old)old.remove();
- var sv=[].map.call(cat.querySelectorAll('.card h4'),function(x){return x.textContent});if(!sv.length)return;
- var items=[];sv.forEach(function(n){items.push({v:n,t:n,s:'Any kind'});(kindsFor(n)||[]).forEach(function(k){items.push({v:n+': '+k[0],t:k[0],s:n})})});
+function sbox(sv,ph){var items=[];sv.forEach(function(n){items.push({v:n,t:n,s:'Any kind'});(kindsFor(n)||[]).forEach(function(k){items.push({v:n+': '+k[0],t:k[0],s:n})})});
  var w=document.createElement('div');w.className='cdd';
- w.innerHTML='<div class="cs"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input type="search" placeholder="Search a service or kind\u2026" aria-label="Search a service in this category" autocomplete="off"></div><div class="cr" hidden></div>';
+ w.innerHTML='<div class="cs"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input type="search" placeholder="'+ph+'" aria-label="'+ph+'" autocomplete="off"></div><div class="cr" hidden></div>';
  var inp=w.querySelector('input'),R=w.querySelector('.cr');
  function draw(){var q=inp.value.toLowerCase().split(/\s+/).filter(Boolean),m=items.filter(function(x){var h=(x.t+' '+x.s).toLowerCase();return q.every(function(t){return h.indexOf(t)>-1})}).slice(0,40);
   R.innerHTML='';if(!m.length){R.innerHTML='<p>No match. Try another word.</p>'}
   m.forEach(function(x){var b=document.createElement('button');b.type='button';b.innerHTML='<span></span><small></small>';b.firstChild.textContent=x.t;b.lastChild.textContent=x.s;b.onclick=function(){pick(x.v);inp.value='';R.hidden=true;inp.blur()};R.appendChild(b)});R.hidden=false}
  inp.addEventListener('input',draw);inp.addEventListener('focus',draw);
- document.addEventListener('click',function(e){if(!w.contains(e.target))R.hidden=true});
- h.parentNode.insertBefore(w,h.nextSibling)})}
+ document.addEventListener('click',function(e){if(!w.contains(e.target))R.hidden=true});return w}
+function dd(){[].forEach.call(document.querySelectorAll('#services .cat'),function(cat){var h=cat.querySelector('.cat-h');if(!h)return;var old=cat.querySelector('.cdd');if(old)old.remove();
+ var sv=[].map.call(cat.querySelectorAll('.card h4'),function(x){return x.textContent});if(!sv.length)return;
+ h.parentNode.insertBefore(sbox(sv,'Search a service or kind\u2026'),h.nextSibling)});
+ var g=document.getElementById('ctiles');if(g){g.innerHTML='';g.className='gsrch';g.appendChild(sbox([].map.call(document.querySelectorAll('#services .cat .card h4'),function(x){return x.textContent}),'Search all services\u2026'))}}
 function more(){[].forEach.call(document.querySelectorAll('#services .cat'),function(cat){var cs=[].slice.call(cat.querySelectorAll('.grid > .card'));if(cs.length<=LIM)return;
  cs.forEach(function(c,i){if(i>=LIM)c.classList.add('xm')});var g=cs[0].parentNode,b=document.createElement('button');b.type='button';b.className='vmore';b.textContent='View more \u203A ('+(cs.length-LIM)+' more)';
  b.onclick=function(){var ex=g.classList.toggle('open');b.textContent=ex?'Show less \u2039':'View more \u203A ('+(cs.length-LIM)+' more)'};g.parentNode.insertBefore(b,g.nextSibling)})}
 function bnav(){var nv=document.createElement('nav');nv.className='bnav2';nv.id='bn';nv.setAttribute('aria-label','Services');
- nv.innerHTML='<a id="bnHome" href="/gh/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Home</a><button type="button" id="bnCats"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Categories</button><a id="bnChat" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20would%20like%20to%20book%20a%20service." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg>Chat</a><button type="button" id="bnCart"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/></svg><b id="bnCartN" hidden>0</b>Bookings</button><button type="button" id="bnAcct"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c.8-4 3.8-6 7.5-6s6.7 2 7.5 5.8"/></svg>Register</button>';
+ nv.innerHTML='<button type="button" id="bnHome"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Home</button><button type="button" id="bnCats"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Categories</button><a id="bnChat" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20would%20like%20to%20book%20a%20service." target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.5-4.9A8 8 0 1 1 21 12z"/></svg>Chat</a><button type="button" id="bnCart"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 15l2 2 4-4"/></svg><b id="bnCartN" hidden>0</b>Bookings</button><button type="button" id="bnAcct"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c.8-4 3.8-6 7.5-6s6.7 2 7.5 5.8"/></svg>Register</button>';
  var sh=document.createElement('div');sh.className='csheet';sh.hidden=true;sh.innerHTML='<div class="csbg"></div><div class="csbox"><h3>Categories</h3><div id="csList"></div></div>';
  document.body.appendChild(nv);document.body.appendChild(sh);
  var cats=[].slice.call(document.querySelectorAll('#services .cat')),L=sh.querySelector('#csList');
  cats.forEach(function(c){var t=c.querySelector('.cat-h h3').textContent,ic=c.querySelector('.cat-h .ic'),sv=[].slice.call(c.querySelectorAll('.card h4'));
   var d=document.createElement('div');d.className='cg';var h=document.createElement('button');h.type='button';h.className='cgh';h.innerHTML='<span class="cgi">'+(ic?ic.innerHTML:'')+'</span><span>'+t+'</span><i>\u25BE</i>';
   var u=document.createElement('div');u.className='cgl';
-  var all=document.createElement('button');all.type='button';all.textContent='View all '+t.toLowerCase();all.onclick=function(){shut();cats.forEach(function(x){x.hidden=false});var T=document.getElementById('ctiles');if(T)T.querySelector('.ct').click();c.scrollIntoView({behavior:'smooth',block:'start'})};u.appendChild(all);
+  var all=document.createElement('button');all.type='button';all.textContent='Go to '+t.toLowerCase();all.onclick=function(){shut();c.scrollIntoView({behavior:'smooth',block:'start'})};u.appendChild(all);
   sv.forEach(function(x){var b=document.createElement('button');b.type='button';b.textContent=x.textContent;b.onclick=function(){shut();jump(c,x.textContent)};u.appendChild(b)});
   h.onclick=function(){var o=d.classList.toggle('open');if(o)[].forEach.call(L.querySelectorAll('.cg.open'),function(e){if(e!==d)e.classList.remove('open')})};
   d.appendChild(h);d.appendChild(u);L.appendChild(d)});
  function shut(){sh.classList.remove('open');sh.hidden=true}
+ nv.querySelector('#bnHome').onclick=function(){var g=document.querySelector('.gsrch input');if(g)g.value='';window.scrollTo({top:0,behavior:'smooth'})};
  nv.querySelector('#bnCats').onclick=function(){sh.hidden=false;sh.classList.add('open')};
  sh.querySelector('.csbg').onclick=shut;
  nv.querySelector('#bnCart').onclick=function(){window.MZSC&&window.MZSC.show('cart')};
@@ -837,7 +840,7 @@ function photoThumb(url,i){var d=document.createElement('div');d.className='thum
 function setCardPhoto(card,url){var th=card.querySelector('.thumb');if(!th)return;th.parentNode.replaceChild(photoThumb(url,[].indexOf.call(card.parentNode.children,card)),th)}
 function loadDB(){try{if(!window.MZ||!MZ.q)return;Promise.all([MZ.q('service_kinds','select=service,kind,description,photo&active=eq.true&order=service.asc,sort.asc'),MZ.q('service_photos','select=service,photo')]).then(function(r){var K={},any=false;(r[0]||[]).forEach(function(x){(K[x.service]=K[x.service]||[]).push([x.kind,x.description||'',x.photo||'']);any=true});if(any){DBK=K;dd()}(r[1]||[]).forEach(function(x){if(x.photo)DBP[x.service]=x.photo});[].forEach.call(document.querySelectorAll('#services .card'),function(c){var n=c.querySelector('h4');if(n&&DBP[n.textContent])setCardPhoto(c,DBP[n.textContent])})},function(){})}catch(e){}}
 window.addEventListener('load',function(){setTimeout(loadDB,50)});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){wire();dd();more();tiles();bnav()});else{wire();dd();more();tiles();bnav()}})();</script>
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){wire();dd();bnav()});else{wire();dd();bnav()}})();</script>
 <script id="mz-anim-js">(function(){var els=[].slice.call(document.querySelectorAll('.shp'));if(!('IntersectionObserver' in window)||!els.length)return;
 els.forEach(function(e){e.classList.add('rv')});
 var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var e=x.target,i=[].indexOf.call(e.closest('.grid')?e.closest('.grid').children:[e],e.closest('.card')||e);e.style.transitionDelay=(Math.max(i,0)*0.12)+'s';e.classList.add('in');io.unobserve(e)}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
