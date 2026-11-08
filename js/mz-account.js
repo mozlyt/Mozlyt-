@@ -173,9 +173,12 @@
   }
   window.MZAccount = {
     open: function () { if (cfg) open(); },
+    openAuth: function (m) { if (!cfg) return; AM = m === 'up' ? 'up' : 'in'; open(); },
+    openChat: function () { if (!cfg) return; AT = 'help'; HS = 'chat'; CREF = ''; open(); },
     init: function (o) {
       cfg = { slug: o.slug, name: o.name || 'us', whatsapp: o.whatsapp || '' };
       var b = o.button && $(o.button); if (b) b.addEventListener('click', function (e) { e.preventDefault(); open(); });
+      if (location.hash === '#chat') { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { } var gc = function () { if (window.MZ) window.MZAccount.openChat(); else setTimeout(gc, 100); }; gc(); }
       if (location.hash === '#account') { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { } var go = function () { if (window.MZ) open(); else setTimeout(go, 100); }; go(); }
     }
   };

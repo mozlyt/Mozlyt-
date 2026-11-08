@@ -709,7 +709,23 @@ function send(){var d=(document.getElementById('scD')||{}).value||'',t=document.
  var u='https://wa.me/'+WA+'?text='+encodeURIComponent(m),w2=window.open(u,'_blank');if(!w2)location.href=u}
 hb.onclick=function(){show('cart')};bar.querySelector('button').onclick=function(){show('cart')};
 ov.addEventListener('click',function(e){var t=e.target;if(t.id==='scGps'){MZGeo.ask(document.getElementById('scGpsT'),t);return}if(t===ov||t.classList.contains('sc-x'))hide();else if(t.dataset.t){tab=t.dataset.t;draw()}else if(t.dataset.rm!==undefined){L.splice(+t.dataset.rm,1);sv(K,L);count();draw()}else if(t.dataset.clr){S=[];sv(H,S);draw()}else if(t.classList.contains('sc-go'))send()});
-window.MZSC={add:add,show:show,mark:mark};count();
+(function(){var st=document.createElement('style');st.textContent='.bi{position:fixed;inset:0;background:rgba(14,42,71,.55);z-index:450;display:none;align-items:flex-end;justify-content:center}.bi.on{display:flex}.bi-p{background:#fff;width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:18px 16px 20px;max-height:92vh;overflow:auto;color:#0E2A47}@media(min-width:640px){.bi{align-items:center}.bi-p{border-radius:20px}}.bi-h{display:flex;align-items:flex-start;gap:8px}.bi-h h3{margin:0;font-size:21px;flex:1}.bi-x{background:none;border:0;font-size:28px;line-height:1;cursor:pointer;color:#0E2A47}.bi-d{margin:6px 0 4px;font-size:15px;color:#33465f}.bi-m{display:inline-block;background:#E6F5EE;color:#0f5f40;border-radius:99px;padding:3px 10px;font-size:13px;font-weight:600;margin:4px 6px 0 0}.bi h4{margin:14px 0 6px;font-size:15px}.bi ul,.bi ol{margin:0;padding-left:20px;font-size:14.5px;color:#33465f;line-height:1.5}.bi li{margin-bottom:3px}.bi-n{margin:12px 0 0;padding:10px 12px;background:#FFF7E3;border-radius:12px;font-size:13.5px;color:#5a4410}.bi-go{display:block;width:100%;margin-top:14px;background:#157650;color:#fff;border:0;border-radius:12px;padding:14px;font:700 16px inherit;cursor:pointer;min-height:48px}.bi-c{display:block;width:100%;margin-top:6px;background:none;border:0;padding:10px;font:600 15px inherit;color:#0E2A47;cursor:pointer;text-decoration:underline}';document.head.appendChild(st);
+var bi=document.createElement('div');bi.className='bi';bi.setAttribute('role','dialog');bi.setAttribute('aria-modal','true');bi.innerHTML='<div class="bi-p"></div>';document.body.appendChild(bi);var P=bi.firstChild,cur='';
+function desc(v){var d='',m='',pr='';[].forEach.call(document.querySelectorAll('#services .card'),function(c){var h=c.querySelector('h4');if(h&&h.textContent===v){var p=c.querySelector('.cbody>p'),me=c.querySelector('.meta'),pe=c.querySelector('.price');d=p?p.textContent:'';m=me?me.textContent:'';pr=pe?pe.textContent:''}});
+ if(!d&&window.GH_KINDS){for(var k in GH_KINDS){GH_KINDS[k].forEach(function(x){if(x[0]===v){d=x[1];m=m||k}})}}return{d:d,m:m,p:pr}}
+function ready(v){var n=v.toLowerCase(),a=['The address or area where you want the service, and a landmark to help us find you','Your preferred date and time (we confirm what is available)','A phone number we can reach you on'];
+ if(/massage|spa|shiatsu|facial|nail|hair|makeup|groom/.test(n))a.push('A clean, quiet space with room for the therapist or stylist to set up');
+ if(/clean|laundry|repair|plumb|electric|paint/.test(n))a.push('Access to the place, and a short note about the job so the right person comes with the right tools');
+ if(/cater|party|event|serv|setup|office|group|class|fitness|yoga|dance/.test(n))a.push('How many people it is for. Bigger jobs may need a team, and we send enough providers');
+ a.push('Optional: share your location in the next step so we can match the nearest provider');return a}
+function info(v){cur=v;var o=desc(v),h='<div class="bi-h"><h3>'+esc(v)+'</h3><button type="button" class="bi-x" aria-label="Close">&times;</button></div>'+(o.d?'<p class="bi-d">'+esc(o.d)+'</p>':'')+(o.m?'<span class="bi-m">'+esc(o.m)+'</span>':'')+'<span class="bi-m">'+esc(o.p||'Price set after you book')+'</span>';
+ h+='<h4>What to have ready</h4><ul>'+ready(v).map(function(x){return'<li>'+esc(x)+'</li>'}).join('')+'</ul>';
+ h+='<h4>How it works</h4><ol><li>Add the service to your bookings, then send your request.</li><li>We confirm the price and time with you.</li><li>A verified provider near you is sent to you.</li><li>You pay after the service is done.</li></ol>';
+ h+='<div class="bi-n">Sign in to My account to track this booking and chat with our support team about it.</div><button type="button" class="bi-go">Add to my bookings</button><button type="button" class="bi-c">Not now</button>';P.innerHTML=h;bi.classList.add('on');document.body.style.overflow='hidden'}
+function cl(){bi.classList.remove('on');if(!ov.classList.contains('show'))document.body.style.overflow=''}
+bi.addEventListener('click',function(e){var t=e.target;if(t===bi||t.classList.contains('bi-x')||t.classList.contains('bi-c'))cl();else if(t.classList.contains('bi-go')){cl();add(cur)}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&bi.classList.contains('on'))cl()});
+window.MZSC={add:function(v){if(L.indexOf(v)>-1){add(v);return}info(v)},show:show,mark:mark};count()})();
 /* sticky group buttons: highlight the group in view */
 var nav=document.querySelector('.svcnav');
 if(nav){var as=[].slice.call(nav.querySelectorAll('a')),cs=as.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
@@ -844,5 +860,6 @@ document.body.insertBefore(b,document.body.firstChild)}catch(e){}})();
 <script src="/js/mz-lock.js" defer></script>
 <script src="/js/mz-account.js" defer></script>
 <script>document.addEventListener("DOMContentLoaded",function(){setTimeout(function(){if(window.MZAccount)MZAccount.init({slug:"mozlyt-gh",name:"MOZLYT",whatsapp:"233538729743",button:"#mzAcct"})},0)});</script>
+<script src="/js/mz-contact.js" defer></script>
 </body>
 </html>
