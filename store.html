@@ -351,6 +351,7 @@ body.has-list .toast{bottom:88px}
 </style>
 
 <script src="js/mz-api.js"></script>
+<script src="js/mz-gallery.js"></script>
 <script>
 
 var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
@@ -434,7 +435,7 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   }
   function addCart(id){CART[id]=(CART[id]||0)+1;save();flash('Added to your list');var pp=prod(id);MZ.track('AddToCart',{value:pp?pp.price:0,name:pp?pp.name:''})}
   function WP(u){return /^img\/p\/[^?]+\.jpg$/.test(u||'')?u.slice(0,-4)+'.webp':u}
-  function openProd(id){var p=prod(id);if(!p)return;$('#pimg').innerHTML=p.photo?'<img alt="'+esc(p.name)+'" src="'+esc(WP(p.photo))+'" data-o="'+esc(p.photo)+'" onerror="if(this.dataset.o&&this.src.indexOf(this.dataset.o)<0){this.src=this.dataset.o}">':'<span style="color:#5b6b62;padding:40px">Photo coming soon</span>';$('#pname').textContent=p.name;$('#pprice').textContent=p.price==null?'Price coming soon':MZ.money(p.price);$('#pdesc').textContent=p.description||'No description yet.';
+  function openProd(id){var p=prod(id);if(!p)return;MZGallery.render($('#pimg'),{photos:[p.photo].concat(p.photos||[]).filter(Boolean),video:p.video,alt:p.name,src:WP});$('#pname').textContent=p.name;$('#pprice').textContent=p.price==null?'Price coming soon':MZ.money(p.price);$('#pdesc').textContent=p.description||'No description yet.';
     $('#pact').innerHTML=p.sold_out?'<span class="tag bad">Sold out</span>':'<button class="btn primary" type="button" id="pAdd" style="width:100%">Add to list</button>'+(PAY?'<button class="btn" type="button" id="pPay" style="width:100%;background:#fff;color:var(--green-d);border-color:var(--green)">Pay now</button>':'');var a=$('#pAdd');if(a)a.onclick=function(){addCart(id);$('#pmod').hidden=true};var pp2=$('#pPay');if(pp2)pp2.onclick=function(){$('#pmod').hidden=true;payNowItem(id)};$('#pmod').hidden=false}
   $('#px').onclick=$('#pbg').onclick=function(){$('#pmod').hidden=true};document.addEventListener('keydown',function(e){if(e.key==='Escape')$('#pmod').hidden=true});
   $('#q').addEventListener('input',draw);$('#cat').addEventListener('change',draw);

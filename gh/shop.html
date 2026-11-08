@@ -566,7 +566,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   }
   var pm=document.getElementById('pmod');
   function openP(name){var o=ALL[name];if(!o)return;var p=o.p,sold=p.status.indexOf('sold')===0||p.status==='out';
-    var pi=document.getElementById('pimg');pi.textContent='';if(p.photo){var im=el('img');im.src=p.photo;im.alt=p.name;pi.appendChild(im)}else pi.appendChild(icon(o.c.icon));
+    var pi=document.getElementById('pimg');pi.textContent='';if((p.photo||(p.photos&&p.photos.length)||p.video)&&window.MZGallery){MZGallery.render(pi,{photos:[p.photo].concat(p.photos||[]).filter(Boolean),video:p.video,alt:p.name})}else if(p.photo){var im=el('img');im.src=p.photo;im.alt=p.name;pi.appendChild(im)}else pi.appendChild(icon(o.c.icon));
     document.getElementById('pname').textContent=p.name;document.getElementById('pprice').textContent=priceText(p.price);document.getElementById('pdesc').textContent=p.desc||'Message us on WhatsApp for details, sizes and availability.';
     var a=document.getElementById('pact');a.textContent='';
     if(sold){a.appendChild(el('div','price','Sold out'))}else{var ab=el('button','pbtn',list.indexOf(p.name)>-1?'Remove from list':'Add to list');ab.type='button';ab.onclick=function(){var i=list.indexOf(p.name);if(i>-1){list.splice(i,1);say(p.name+' removed')}else{list.push(p.name);say(p.name+' added to your list')}shelves.querySelectorAll('.card').forEach(function(c){if(c.querySelector('h3').textContent===p.name){var bb=c.querySelector('.add');if(bb&&!bb.disabled)setBtn(bb,list.indexOf(p.name)>-1)}});refresh();pm.hidden=true};a.appendChild(ab);
@@ -606,7 +606,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   q.addEventListener('input',function(){if(PHOTO&&q.value){PHOTO=null;pn.hidden=true}},true);
   /* keep the built-in list as a backup, then swap in the sheet when it loads */
   /* the admin product list is the source of truth once it loads */
-  function mapRows(rows){return(rows||[]).filter(function(r){return r.status!=='hidden'}).map(function(r){return{cat:r.category||'',name:r.name,price:r.suggested_price==null?'':String(r.suggested_price),status:(r.status||'available')==='available'?'in stock':String(r.status).toLowerCase(),photo:r.photo?(/^(https?:|\/)/.test(r.photo)?r.photo:'/'+r.photo):'',desc:r.description||''}})}
+  function mapRows(rows){return(rows||[]).filter(function(r){return r.status!=='hidden'}).map(function(r){return{cat:r.category||'',name:r.name,price:r.suggested_price==null?'':String(r.suggested_price),status:(r.status||'available')==='available'?'in stock':String(r.status).toLowerCase(),photo:r.photo?(/^(https?:|\/)/.test(r.photo)?r.photo:'/'+r.photo):'',desc:r.description||'',photos:(r.photos||[]).map(function(u){return/^(https?:|\/)/.test(u)?u:'/'+u}),video:r.video_url||''}})}
   function paint(rows){var items=mapRows(rows||[]);ALL={};render(items);shelves.hidden=false;var cr=document.getElementById('chipsRow');if(cr)cr.style.display=items.length?'':'none';
     if(!items.length){empty.innerHTML='Coming soon. Products are being added to this shop. Please check back soon.';empty.style.display='block'}else{empty.style.display='none'}}
   function loadLive(){if(!window.MZ||!MZ.rpc)return;var K='mz-cat-'+MZ.cc,cached=null,tries=0;try{cached=JSON.parse(localStorage.getItem(K)||'null')}catch(e){}
@@ -620,6 +620,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
 })();
 </script>
 <script src="/js/mz-api.js" defer></script>
+<script src="/js/mz-gallery.js" defer></script>
 <script src="/js/mz-account.js" defer></script>
 <script>document.addEventListener("DOMContentLoaded",function(){if(window.MZAccount)MZAccount.init({slug:"mozlyt-gh",name:"MOZLYT",whatsapp:"233538729743",button:"#mzAcct"})});</script>
 <script id="mz-shared-js">(function(){var h=document.getElementById('mzHeader');if(!h)return;var b=h.querySelector('.mz-burger');
