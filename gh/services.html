@@ -413,6 +413,17 @@ body.sc-has .wa-float{bottom:84px}
 button[data-svc].added{background:#E6F5EE;color:var(--green-d);border:1px solid var(--green)}
 .cdd{display:flex;gap:8px;margin:0 0 14px}.cdd select{flex:1;min-width:0;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;font-size:15px}.cdd .btn{flex:none;white-space:nowrap}@media(max-width:520px){.cdd{flex-direction:column}}
 .scb b[hidden]{display:none}
+.svcnav{display:none!important}
+.ctiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 6px}
+@media(min-width:640px){.ctiles{grid-template-columns:repeat(4,1fr)}}@media(min-width:900px){.ctiles{grid-template-columns:repeat(8,1fr)}}
+.ct{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);cursor:pointer;font:inherit}
+.ct em{font-style:normal;font-size:12.5px;font-weight:600;line-height:1.2;text-align:center}
+.ct .cti{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:#E6F5EE}.ct .cti .ic{width:100%;height:100%;display:grid;place-items:center;border-radius:11px}
+.ct.on{border-color:var(--green);box-shadow:0 0 0 2px var(--green) inset}
+.cat[hidden]{display:none}
+.grid>.card.xm{display:none}.grid.open>.card.xm{display:flex}
+.vmore{display:block;margin:14px auto 0;padding:11px 22px;border-radius:99px;border:1px solid var(--green);background:#fff;color:var(--green-d);font-weight:700;cursor:pointer;font-size:14.5px}
+.card.flash{animation:fl 1.6s}@keyframes fl{0%,60%{box-shadow:0 0 0 3px var(--green)}100%{box-shadow:none}}
 </style>
 </head>
 <body>
@@ -455,7 +466,7 @@ button[data-svc].added{background:#E6F5EE;color:var(--green-d);border:1px solid 
   <div class="wrap">
     <h1 style="font-size:clamp(28px,5vw,40px)">All MOZLYT services</h1>
     <p class="sub">All services are booked and paid for through MOZLYT. Tap a service to swipe through its kinds and choose the one you want.</p>
-    <div class="svcnav" role="navigation" aria-label="Service groups"><a href="#svc-massage">Massage and therapy</a><a href="#svc-fitness">Fitness</a><a href="#svc-nutrition">Nutrition</a><a href="#svc-skincare">Skincare and beauty</a><a href="#svc-fashion">Fashion</a><a href="#svc-food">Food</a><a href="#svc-care">Care at home</a><a href="#svc-home-help">Home help and cleaning</a><a href="#svc-handyman">Handyman and repairs</a><a href="#svc-staff">Household staff and security</a><a href="#svc-transport">Moving, delivery and errands</a><a href="#svc-events">Events and entertainment</a><a href="#svc-learning">Learning and personal growth</a><a href="#svc-family">Family and kids</a><a href="#svc-gifts">Gift packages</a></div>
+    <div class="ctiles" id="ctiles" aria-label="Service categories"></div>
 
     <div class="cat" id="svc-massage">
       <div class="cat-h"><span class="ic c1"><svg class="i"><use href="#leaf"/></svg></span><h3>Massage and therapy</h3><a href="/gh/massage-in-accra.html" style="margin-left:auto;font-size:14px;font-weight:700;color:#157650;text-decoration:underline">Massage in Accra &rarr;</a></div>
@@ -745,15 +756,28 @@ function open(card){var name=card.querySelector('h4').textContent,list=kindsFor(
   r.appendChild(pr);r.appendChild(bt);b.appendChild(h);b.appendChild(p);b.appendChild(r);c.appendChild(b);G.appendChild(c)});
  ks.classList.add('open');document.body.style.overflow='hidden';G.scrollLeft=0;P.scrollTop=0;
  requestAnimationFrame(function(){if(loopable()){G.insertBefore(G.lastElementChild,G.firstChild);G.scrollLeft=cw()}})}
+var LIM=6;
+function jump(cat,n){var card=[].filter.call(cat.querySelectorAll('.card'),function(c){var h=c.querySelector('h4');return h&&h.textContent===n})[0];if(!card)return;
+ card.classList.remove('xm');card.scrollIntoView({behavior:'smooth',block:'center'});card.classList.add('flash');setTimeout(function(){card.classList.remove('flash')},1600);
+ if(kindsFor(n))setTimeout(function(){open(card)},450);else if(window.MZSC)window.MZSC.add(n)}
 function dd(){[].forEach.call(document.querySelectorAll('#services .cat'),function(cat){var h=cat.querySelector('.cat-h');if(!h)return;var old=cat.querySelector('.cdd');if(old)old.remove();
  var sv=[].map.call(cat.querySelectorAll('.card h4'),function(x){return x.textContent});if(!sv.length)return;
- var w=document.createElement('div');w.className='cdd';var se=document.createElement('select');se.setAttribute('aria-label','Choose exactly what you need');
- var o=document.createElement('option');o.value='';o.textContent='Choose a service or kind to book\u2026';se.appendChild(o);
- sv.forEach(function(n){var g=document.createElement('optgroup');g.label=n;var a=document.createElement('option');a.value=n;a.textContent=n+' (any kind)';g.appendChild(a);
-  (kindsFor(n)||[]).forEach(function(k){var p=document.createElement('option');p.value=n+': '+k[0];p.textContent=k[0];g.appendChild(p)});se.appendChild(g)});
- var b=document.createElement('button');b.type='button';b.className='btn primary small';b.textContent='Add to bookings';
- b.onclick=function(){if(!se.value){se.focus();return}pick(se.value);se.selectedIndex=0};
- w.appendChild(se);w.appendChild(b);h.parentNode.insertBefore(w,h.nextSibling)})}
+ var w=document.createElement('div');w.className='cdd';var se=document.createElement('select');se.setAttribute('aria-label','Choose a service in this category');
+ var o=document.createElement('option');o.value='';o.textContent='Choose a service\u2026 ('+sv.length+')';se.appendChild(o);
+ sv.forEach(function(n){var p=document.createElement('option');p.value=n;p.textContent=n;se.appendChild(p)});
+ se.onchange=function(){if(se.value){jump(cat,se.value);se.selectedIndex=0}};
+ w.appendChild(se);h.parentNode.insertBefore(w,h.nextSibling)})}
+function more(){[].forEach.call(document.querySelectorAll('#services .cat'),function(cat){var cs=[].slice.call(cat.querySelectorAll('.grid > .card'));if(cs.length<=LIM)return;
+ cs.forEach(function(c,i){if(i>=LIM)c.classList.add('xm')});var g=cs[0].parentNode,b=document.createElement('button');b.type='button';b.className='vmore';b.textContent='View more \u203A ('+(cs.length-LIM)+' more)';
+ b.onclick=function(){var ex=g.classList.toggle('open');b.textContent=ex?'Show less \u2039':'View more \u203A ('+(cs.length-LIM)+' more)'};g.parentNode.insertBefore(b,g.nextSibling)})}
+function tiles(){var T=document.getElementById('ctiles');if(!T)return;var cats=[].slice.call(document.querySelectorAll('#services .cat'));
+ function mk(label,icon,id){var b=document.createElement('button');b.type='button';b.className='ct';b.dataset.id=id;b.innerHTML='<span class="cti">'+icon+'</span><em>'+label+'</em>';return b}
+ T.appendChild(mk('All services','<svg class="i" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',''));
+ cats.forEach(function(c){var ic=c.querySelector('.cat-h .ic'),t=c.querySelector('.cat-h h3');T.appendChild(mk(t.textContent,ic?ic.innerHTML:'',c.id))});
+ function sel(id){[].forEach.call(T.children,function(b){b.classList.toggle('on',b.dataset.id===id)});cats.forEach(function(c){c.hidden=!!id&&c.id!==id});
+  if(id){var c=document.getElementById(id);if(c)c.scrollIntoView({behavior:'smooth',block:'start'})}}
+ T.addEventListener('click',function(e){var b=e.target.closest('.ct');if(b)sel(b.dataset.id)});
+ var hh=location.hash.slice(1);sel(cats.some(function(c){return c.id===hh})?hh:'');if(!hh)T.children[0].classList.add('on')}
 function wire(){[].forEach.call(document.querySelectorAll('#services .card'),function(c){var n=c.querySelector('h4');if(!n||!kindsFor(n.textContent))return;c.classList.add('hasK');
  var m=c.querySelector('.meta');if(m){var s=document.createElement('div');s.className='seeK';s.textContent='See all kinds \u203A';m.parentNode.insertBefore(s,m.nextSibling)}
  c.addEventListener('click',function(e){if(e.target.closest('button'))return;open(c)})});if(!sel)[].forEach.call(document.querySelectorAll('button[data-svc]'),function(b){b.addEventListener('click',function(){pick(b.getAttribute('data-svc'))})})}
@@ -762,7 +786,7 @@ function photoThumb(url,i){var d=document.createElement('div');d.className='thum
 function setCardPhoto(card,url){var th=card.querySelector('.thumb');if(!th)return;th.parentNode.replaceChild(photoThumb(url,[].indexOf.call(card.parentNode.children,card)),th)}
 function loadDB(){try{if(!window.MZ||!MZ.q)return;Promise.all([MZ.q('service_kinds','select=service,kind,description,photo&active=eq.true&order=service.asc,sort.asc'),MZ.q('service_photos','select=service,photo')]).then(function(r){var K={},any=false;(r[0]||[]).forEach(function(x){(K[x.service]=K[x.service]||[]).push([x.kind,x.description||'',x.photo||'']);any=true});if(any){DBK=K;dd()}(r[1]||[]).forEach(function(x){if(x.photo)DBP[x.service]=x.photo});[].forEach.call(document.querySelectorAll('#services .card'),function(c){var n=c.querySelector('h4');if(n&&DBP[n.textContent])setCardPhoto(c,DBP[n.textContent])})},function(){})}catch(e){}}
 window.addEventListener('load',function(){setTimeout(loadDB,50)});
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){wire();dd()});else{wire();dd()}})();</script>
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){wire();dd();more();tiles()});else{wire();dd();more();tiles()}})();</script>
 <script id="mz-anim-js">(function(){var els=[].slice.call(document.querySelectorAll('.shp'));if(!('IntersectionObserver' in window)||!els.length)return;
 els.forEach(function(e){e.classList.add('rv')});
 var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var e=x.target,i=[].indexOf.call(e.closest('.grid')?e.closest('.grid').children:[e],e.closest('.card')||e);e.style.transitionDelay=(Math.max(i,0)*0.12)+'s';e.classList.add('in');io.unobserve(e)}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
