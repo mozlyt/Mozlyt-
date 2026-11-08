@@ -443,6 +443,15 @@ button[data-svc].added{background:#E6F5EE;color:var(--green-d);border:1px solid 
  .cgl button{display:block;width:100%;text-align:left;border:0;background:none;padding:10px 4px;font:500 15px system-ui,sans-serif;color:var(--ink);border-top:1px dashed #e3e8e3;cursor:pointer}
  .cgl button:first-child{color:var(--green-d);font-weight:700;border-top:0}
 }
+.cdd{display:block!important;position:relative;margin:0 0 14px}
+.cdd .cs{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:0 12px}
+.cdd .cs svg{width:20px;height:20px;flex:none;stroke:var(--green-d);fill:none;stroke-width:1.9;stroke-linecap:round}
+.cdd .cs input{flex:1;min-width:0;border:0;outline:0;background:none;font:inherit;font-size:15.5px;padding:13px 0;color:var(--ink)}
+.cdd:focus-within .cs{border-color:var(--green);box-shadow:0 0 0 2px #CFEBDD}
+.cdd .cr{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;max-height:300px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 10px 28px rgba(10,30,50,.18)}
+.cdd .cr button{display:flex;flex-direction:column;align-items:flex-start;width:100%;text-align:left;border:0;border-top:1px solid #eef2ee;background:none;padding:11px 14px;cursor:pointer;font:600 15px system-ui,sans-serif;color:var(--ink)}
+.cdd .cr button:first-child{border-top:0}.cdd .cr small{font-weight:500;color:var(--mute);font-size:12.5px}
+.cdd .cr p{margin:0;padding:14px;color:var(--mute);font-size:14px}
 </style>
 </head>
 <body>
@@ -782,13 +791,16 @@ function jump(cat,n){var card=[].filter.call(cat.querySelectorAll('.card'),funct
  if(kindsFor(n))setTimeout(function(){open(card)},450);else if(window.MZSC)window.MZSC.add(n)}
 function dd(){[].forEach.call(document.querySelectorAll('#services .cat'),function(cat){var h=cat.querySelector('.cat-h');if(!h)return;var old=cat.querySelector('.cdd');if(old)old.remove();
  var sv=[].map.call(cat.querySelectorAll('.card h4'),function(x){return x.textContent});if(!sv.length)return;
- var w=document.createElement('div');w.className='cdd';var se=document.createElement('select');se.setAttribute('aria-label','Choose exactly what you need');
- var o=document.createElement('option');o.value='';o.textContent='Choose a kind to book\u2026';se.appendChild(o);
- sv.forEach(function(n){var g=document.createElement('optgroup');g.label=n;var a=document.createElement('option');a.value=n;a.textContent=n+' (any kind)';g.appendChild(a);
-  (kindsFor(n)||[]).forEach(function(k){var p=document.createElement('option');p.value=n+': '+k[0];p.textContent=k[0];g.appendChild(p)});se.appendChild(g)});
- var b=document.createElement('button');b.type='button';b.className='btn primary small';b.textContent='Add to bookings';
- b.onclick=function(){if(!se.value){se.focus();return}pick(se.value);se.selectedIndex=0};
- w.appendChild(se);w.appendChild(b);h.parentNode.insertBefore(w,h.nextSibling)})}
+ var items=[];sv.forEach(function(n){items.push({v:n,t:n,s:'Any kind'});(kindsFor(n)||[]).forEach(function(k){items.push({v:n+': '+k[0],t:k[0],s:n})})});
+ var w=document.createElement('div');w.className='cdd';
+ w.innerHTML='<div class="cs"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input type="search" placeholder="Search a service or kind\u2026" aria-label="Search a service in this category" autocomplete="off"></div><div class="cr" hidden></div>';
+ var inp=w.querySelector('input'),R=w.querySelector('.cr');
+ function draw(){var q=inp.value.toLowerCase().split(/\s+/).filter(Boolean),m=items.filter(function(x){var h=(x.t+' '+x.s).toLowerCase();return q.every(function(t){return h.indexOf(t)>-1})}).slice(0,40);
+  R.innerHTML='';if(!m.length){R.innerHTML='<p>No match. Try another word.</p>'}
+  m.forEach(function(x){var b=document.createElement('button');b.type='button';b.innerHTML='<span></span><small></small>';b.firstChild.textContent=x.t;b.lastChild.textContent=x.s;b.onclick=function(){pick(x.v);inp.value='';R.hidden=true;inp.blur()};R.appendChild(b)});R.hidden=false}
+ inp.addEventListener('input',draw);inp.addEventListener('focus',draw);
+ document.addEventListener('click',function(e){if(!w.contains(e.target))R.hidden=true});
+ h.parentNode.insertBefore(w,h.nextSibling)})}
 function more(){[].forEach.call(document.querySelectorAll('#services .cat'),function(cat){var cs=[].slice.call(cat.querySelectorAll('.grid > .card'));if(cs.length<=LIM)return;
  cs.forEach(function(c,i){if(i>=LIM)c.classList.add('xm')});var g=cs[0].parentNode,b=document.createElement('button');b.type='button';b.className='vmore';b.textContent='View more \u203A ('+(cs.length-LIM)+' more)';
  b.onclick=function(){var ex=g.classList.toggle('open');b.textContent=ex?'Show less \u2039':'View more \u203A ('+(cs.length-LIM)+' more)'};g.parentNode.insertBefore(b,g.nextSibling)})}
