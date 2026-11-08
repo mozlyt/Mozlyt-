@@ -104,10 +104,15 @@
   }
   function mainView() {
     var a = ACC, b = $('#mzaBody'); $('#mzaTitle').textContent = 'Hi, ' + (first(a.name) || 'there');
-    b.innerHTML = '<div class="mza-tabs"><button type="button" data-a="orders">My orders</button><button type="button" data-a="book">My bookings</button><button type="button" data-a="me">My details</button><button type="button" data-a="help">Help</button></div><div id="mzaPane"></div>';
+    b.innerHTML = '<div class="mza-tabs"><button type="button" data-a="orders">My orders</button><button type="button" data-a="book">My bookings</button><button type="button" data-a="cart">My cart</button><button type="button" data-a="me">My details</button><button type="button" data-a="help">Help</button></div><div id="mzaPane"></div>';
     $$('.mza-tabs button', b).forEach(function (x) { x.classList.toggle('on', x.dataset.a === AT); x.onclick = function () { AT = x.dataset.a; HS = 'menu'; CREF = ''; mainView(); }; });
     clearInterval(chatT);
     var p = $('#mzaPane');
+    if (AT === 'cart') {
+      var CL = []; try { CL = JSON.parse(localStorage.getItem('mz-gh-list') || '[]'); } catch (e) { }
+      p.innerHTML = CL.length ? '<p class="mza-sub">Products waiting to be checked out.</p>' + CL.map(function (n, i) { return '<div class="mza-card"><b>' + esc(n) + '</b></div>'; }).join('') + '<a class="mza-btn" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="/gh/shop.html#cart">Go to checkout</a>' : '<div class="mza-empty"><b>Your cart is empty</b><br>Products you add to your list in the shop wait here until you check out.</div>';
+      return;
+    }
     if (AT === 'orders') {
       p.innerHTML = (a.orders || []).map(function (o) {
         return '<div class="mza-card"><div class="h"><b>Order #' + o.id + '</b><span class="mza-tag' + (o.status === 'cancelled' ? ' bad' : o.status === 'new' ? ' warn' : '') + '">' + esc(ST[o.status] || o.status || 'Received') + '</span></div>' +

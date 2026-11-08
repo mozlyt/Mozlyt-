@@ -589,7 +589,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   function ghSend(items){if(!window.MZ||!MZ.loggedIn||!MZ.loggedIn())return;var go=function(a){if(a&&a.joined&&a.phone)MZ.rpc('shop_touch',{p_slug:'mozlyt-gh',p_name:a.name||'',p_phone:a.phone,p_email:a.email||'',p_items:items,p_marketing:null}).catch(function(){})};if(GP)go(GP);else MZ.rpc('get_my_account',{p_slug:'mozlyt-gh'}).then(function(a){GP=a;go(a)},function(){})}
   function ghTouch(){if(list.length)GS=1;if(!GS)return;clearTimeout(GT);GT=setTimeout(function(){ghSend(ghItems())},2000)}
   function ghDone(){clearTimeout(GT);GS=0;ghSend([])}
-  function refresh(){try{ghTouch()}catch(x){}cnt.textContent=list.length;var bc=document.getElementById('bnCartN');if(bc){bc.textContent=list.length;bc.hidden=!list.length}var cb=document.getElementById('mzCartN');if(cb){cb.textContent=list.length;cb.hidden=!list.length}bar.classList.toggle('show',list.length>0);document.body.classList.toggle('has-list',list.length>0);var L=list.map(function(n,i){return (i+1)+'. '+n}).join('\n');var y=document.getElementById('shipYes'),no=document.getElementById('shipNo');if(y){y.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, I would like to buy and I request shipment for:\n'+L+'\n\nMy delivery area: ');no.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, please send me the price and availability for:\n'+L)}}
+  function refresh(){try{localStorage.setItem('mz-gh-list',JSON.stringify(list))}catch(x){}try{ghTouch()}catch(x){}cnt.textContent=list.length;var bc=document.getElementById('bnCartN');if(bc){bc.textContent=list.length;bc.hidden=!list.length}var cb=document.getElementById('mzCartN');if(cb){cb.textContent=list.length;cb.hidden=!list.length}bar.classList.toggle('show',list.length>0);document.body.classList.toggle('has-list',list.length>0);var L=list.map(function(n,i){return (i+1)+'. '+n}).join('\n');var y=document.getElementById('shipYes'),no=document.getElementById('shipNo');if(y){y.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, I would like to buy and I request shipment for:\n'+L+'\n\nMy delivery area: ');no.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, please send me the price and availability for:\n'+L)}}
   (function(){var sb=document.getElementById('sbox'),gate=document.getElementById('shipGate'),main=document.getElementById('shipMain'),guest=0;
   function openBox(){try{payTotal()}catch(x){}var need=!guest&&window.MZ&&MZ.loggedIn&&!MZ.loggedIn()&&window.MZAccount;gate.style.display=need?'block':'none';main.style.display=need?'none':'block';sb.classList.add('show')}
   gate.addEventListener('click',function(e){var id=e.target.id;if(id==='gateGuest'){guest=1;openBox()}else if(id==='gateUp'||id==='gateIn'){sb.classList.remove('show');MZAccount.openAuth(id==='gateUp'?'up':'in')}});
@@ -611,6 +611,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'more'}
   function catFor(v){var l=v.toLowerCase(),i,c;for(i=0;i<CATS.length;i++){c=CATS[i];if(l==c.id||l==c.title.toLowerCase()||c.title.toLowerCase().indexOf(l)===0&&l.length>3||(l.indexOf(c.id)===0&&l.length<=c.id.length+3))return c}return null}
   function render(items){
+    if(!list.length&&!window.__rs){window.__rs=1;try{list=JSON.parse(localStorage.getItem('mz-gh-list')||'[]')}catch(x){list=[]}}
     var groups={},order=[],extra=[];
     items.forEach(function(p){var c=catFor(p.cat);if(!c){var id=slug(p.cat||'more');c=extra.filter(function(x){return x.id==id})[0];if(!c){c={id:id,title:p.cat||'More products',tint:'t6',icon:'gift'};extra.push(c)}}
       (groups[c.id]=groups[c.id]||[]).push(p)});
@@ -633,6 +634,8 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
     if(q.value)q.dispatchEvent(new Event('input'));
     if(feedWrap&&feed){feed.textContent='';FQ=[];shelves.appendChild(feedWrap)}
     catMark();lzFill();
+    if(Object.keys(ALL).length)list=list.filter(function(n){return ALL[n]});refresh();
+    if(location.hash==='#cart'&&list.length&&!window.__ck){window.__ck=1;try{history.replaceState(null,'',location.pathname)}catch(x){}var mc2=document.getElementById('mzCart');if(mc2)setTimeout(function(){mc2.click()},300)}
   }
   var pm=document.getElementById('pmod');
   function openP(name){var o=ALL[name];if(!o)return;var p=o.p,sold=p.status.indexOf('sold')===0||p.status==='out';
