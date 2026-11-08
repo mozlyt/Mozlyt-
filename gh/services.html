@@ -695,20 +695,20 @@ function draw(){[].forEach.call(ov.querySelectorAll('.sc-t button'),function(b){
  if(tab==='cart'){
   if(!L.length){B.innerHTML='<div class="sc-e">No services added yet. Tap Book on a service, or choose a kind from its list.</div>';return}
   B.innerHTML=L.map(function(n,i){return'<div class="sc-i"><span>'+esc(n)+'</span><button type="button" data-rm="'+i+'" aria-label="Remove">&times;</button></div>'}).join('')+
-  '<div class="sc-f"><label>Preferred date<input type="date" id="scD"></label><label>Time<select id="scT"><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Flexible</option></select></label><label>Where<select id="scW"><option>At my home</option><option>At my office</option><option>Other</option></select></label><label>Area<input id="scA" placeholder="e.g. East Legon"></label></div><button class="sc-go" type="button">Send booking request on WhatsApp</button>'}
+  '<div class="sc-f"><label>Preferred date<input type="date" id="scD"></label><label>Time<select id="scT"><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Flexible</option></select></label><label>Where<select id="scW"><option>At my home</option><option>At my office</option><option>Other</option></select></label><label>Area<input id="scA" placeholder="e.g. East Legon"></label><label>How many people? (optional)<input id="scG" type="number" min="1" max="500" placeholder="e.g. 20"></label><div style="grid-column:1/-1"><button type="button" id="scGps" style="background:#fff;color:#0E2A47;border:1px solid #DCE4DE;border-radius:12px;padding:10px 14px;font:600 14px inherit;font-family:inherit;cursor:pointer">Use my location</button> <small id="scGpsT" style="color:#5B6B7A">Optional. Used only to send the nearest provider.</small></div></div><button class="sc-go" type="button">Send booking request on WhatsApp</button>'}
  else{
   if(!S.length){B.innerHTML='<div class="sc-e">Nothing sent yet. Requests you send will be listed here.</div>';return}
   B.innerHTML=S.slice().reverse().map(function(x){return'<div class="sc-i"><span>'+esc(x.n)+'<small>Sent '+esc(x.at)+(x.d?' \u00b7 '+esc(x.d):'')+' \u00b7 awaiting confirmation on WhatsApp</small></span></div>'}).join('')+'<button class="sc-go" type="button" data-clr="1" style="background:#fff;color:#B3261E;border:1px solid #DCE4DE;font-size:14px">Clear history</button>'}}
 function show(t){tab=t||tab;draw();ov.classList.add('show');document.body.style.overflow='hidden'}
 function hide(){ov.classList.remove('show');document.body.style.overflow=''}
 function add(v){if(L.indexOf(v)>-1){toast('Already in your bookings');return}L.push(v);sv(K,L);count();toast('Added to your bookings')}
-function send(){var d=(document.getElementById('scD')||{}).value||'',t=document.getElementById('scT').value,w=document.getElementById('scW').value,a=(document.getElementById('scA').value||'').trim();
- var m='Hello MOZLYT, I would like to book:\n'+L.map(function(n,i){return(i+1)+'. '+n}).join('\n')+'\n\nDate: '+(d||'flexible')+'\nTime: '+t+'\nWhere: '+w+'\nArea: '+(a||'-')+'\n\nPlease send me the price and availability.';
- try{if(window.MZ){MZ.track('Lead',{});L.forEach(function(n){MZ.insert('bookings',{service:n,preferred_date:d||null,time_slot:t,place:w,area:a||null,status:'new'}).catch(function(){})})}}catch(x){}
+function send(){var d=(document.getElementById('scD')||{}).value||'',t=document.getElementById('scT').value,w=document.getElementById('scW').value,a=(document.getElementById('scA').value||'').trim(),g=parseInt((document.getElementById('scG')||{}).value,10)||null;
+ var m='Hello MOZLYT, I would like to book:\n'+L.map(function(n,i){return(i+1)+'. '+n}).join('\n')+'\n\nDate: '+(d||'flexible')+'\nTime: '+t+'\nWhere: '+w+'\nArea: '+(a||'-')+(g?'\nPeople to serve: '+g:'')+(window.MZGeo&&MZGeo.link()?'\nMy location: '+MZGeo.link():'')+'\n\nPlease send me the price and availability.';
+ try{if(window.MZ){MZ.track('Lead',{});L.forEach(function(n){MZ.insert('bookings',Object.assign({service:n,preferred_date:d||null,time_slot:t,place:w,area:a||null,guests:g,status:'new'},window.MZGeo?MZGeo.fields():{})).catch(function(){})})}}catch(x){}
  var at=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'});L.forEach(function(n){S.push({n:n,at:at,d:d})});sv(H,S);L=[];sv(K,L);count();tab='sent';draw();
  var u='https://wa.me/'+WA+'?text='+encodeURIComponent(m),w2=window.open(u,'_blank');if(!w2)location.href=u}
 hb.onclick=function(){show('cart')};bar.querySelector('button').onclick=function(){show('cart')};
-ov.addEventListener('click',function(e){var t=e.target;if(t===ov||t.classList.contains('sc-x'))hide();else if(t.dataset.t){tab=t.dataset.t;draw()}else if(t.dataset.rm!==undefined){L.splice(+t.dataset.rm,1);sv(K,L);count();draw()}else if(t.dataset.clr){S=[];sv(H,S);draw()}else if(t.classList.contains('sc-go'))send()});
+ov.addEventListener('click',function(e){var t=e.target;if(t.id==='scGps'){MZGeo.ask(document.getElementById('scGpsT'),t);return}if(t===ov||t.classList.contains('sc-x'))hide();else if(t.dataset.t){tab=t.dataset.t;draw()}else if(t.dataset.rm!==undefined){L.splice(+t.dataset.rm,1);sv(K,L);count();draw()}else if(t.dataset.clr){S=[];sv(H,S);draw()}else if(t.classList.contains('sc-go'))send()});
 window.MZSC={add:add,show:show,mark:mark};count();
 /* sticky group buttons: highlight the group in view */
 var nav=document.querySelector('.svcnav');
@@ -813,6 +813,7 @@ els.forEach(function(e){e.classList.add('rv')});
 var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var e=x.target,i=[].indexOf.call(e.closest('.grid')?e.closest('.grid').children:[e],e.closest('.card')||e);e.style.transitionDelay=(Math.max(i,0)*0.12)+'s';e.classList.add('in');io.unobserve(e)}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
 els.forEach(function(e){io.observe(e)});})();</script>
 <script src="/js/mz-api.js" defer></script>
+<script src="/js/mz-geo.js" defer></script>
 <script id="mz-shared-js">(function(){var h=document.getElementById('mzHeader');if(!h)return;var b=h.querySelector('.mz-burger');
 function set(o){h.classList.toggle('mz-open',o);b.setAttribute('aria-expanded',o?'true':'false')}
 b.addEventListener('click',function(){set(!h.classList.contains('mz-open'))});

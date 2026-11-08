@@ -481,6 +481,8 @@ body.has-list .wa-float{bottom:84px}
           <select id="bwhere"><option>At my home</option><option>At my office</option></select>
         </label>
         <label>Area<input type="text" id="barea" placeholder="e.g. East Legon"></label>
+        <label>How many people? (optional)<input type="number" id="bguests" min="1" max="500" placeholder="e.g. 20 for an office day or a party"></label>
+        <button class="btn ghost" type="button" id="bgps">Use my location</button><small id="bgpsT" style="display:block;margin:-4px 0 10px;color:#5B6B7A">Optional. Used only to send the nearest provider.</small>
         <button class="btn primary" type="submit">Book on WhatsApp</button>
       </form>
     </div>
@@ -698,13 +700,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
       document.getElementById('book').scrollIntoView({behavior:'smooth',block:'center'});
     });
   });
+  document.getElementById('bgps').addEventListener('click',function(){MZGeo.ask(document.getElementById('bgpsT'),this)});
   document.getElementById('bookForm').addEventListener('submit',function(e){
     e.preventDefault();
-    var d=document.getElementById('bdate').value,t=document.getElementById('btime').value,w=document.getElementById('bwhere').value,a=document.getElementById('barea').value.trim();
-    var m="Hello MOZLYT, I would like to book: "+sel.value+".\nDate: "+(d||"flexible")+"\nTime: "+t+"\nWhere: "+w+"\nArea: "+(a||"-")+"\n\nPlease send me the price and availability.";
+    var d=document.getElementById('bdate').value,t=document.getElementById('btime').value,w=document.getElementById('bwhere').value,a=document.getElementById('barea').value.trim(),g=parseInt(document.getElementById('bguests').value,10)||null;
+    var m="Hello MOZLYT, I would like to book: "+sel.value+".\nDate: "+(d||"flexible")+"\nTime: "+t+"\nWhere: "+w+"\nArea: "+(a||"-")+(g?"\nPeople to serve: "+g:"")+(window.MZGeo&&MZGeo.link()?"\nMy location: "+MZGeo.link():"")+"\n\nPlease send me the price and availability.";
     var u='https://wa.me/233538729743?text='+encodeURIComponent(m);
     try{if(window.MZ){MZ.track('Lead',{})}}catch(x){}
-    try{if(window.MZ)MZ.insert('bookings',{service:sel.value,preferred_date:d||null,time_slot:t,place:w,area:a||null,status:'new'}).catch(function(){})}catch(x){}
+    try{if(window.MZ)MZ.insert('bookings',Object.assign({service:sel.value,preferred_date:d||null,time_slot:t,place:w,area:a||null,guests:g,status:'new'},window.MZGeo?MZGeo.fields():{})).catch(function(){})}catch(x){}
     var win=window.open(u,'_blank');if(!win){location.href=u}
   });
 })();
@@ -756,6 +759,7 @@ els.forEach(function(e){e.classList.add('rv')});
 var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var e=x.target,i=[].indexOf.call(e.closest('.grid')?e.closest('.grid').children:[e],e.closest('.card')||e);e.style.transitionDelay=(Math.max(i,0)*0.12)+'s';e.classList.add('in');io.unobserve(e)}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
 els.forEach(function(e){io.observe(e)});})();</script>
 <script src="/js/mz-api.js" defer></script>
+<script src="/js/mz-geo.js" defer></script>
 <script id="mz-shared-js">(function(){var h=document.getElementById('mzHeader');if(!h)return;var b=h.querySelector('.mz-burger');
 function set(o){h.classList.toggle('mz-open',o);b.setAttribute('aria-expanded',o?'true':'false')}
 b.addEventListener('click',function(){set(!h.classList.contains('mz-open'))});
