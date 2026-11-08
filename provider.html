@@ -398,39 +398,80 @@ form{background:transparent!important;border:0!important;padding:0!important}
 
 <section id="dashView" hidden class="pv">
   <div class="pv-head"><div><div class="pv-eyebrow">MOZLYT Provider Portal</div><h1 id="pvHi">Welcome</h1><p class="sub" id="who"></p></div><button class="b2 ghost" type="button" id="btnOut">Log out</button></div>
-  <div class="tabs" id="dtabs" role="tablist"><button data-t="home" class="on" type="button">Overview</button><button data-t="alerts" type="button">Bookings <span class="bdg" id="nBdg" hidden>0</span></button><button data-t="svc" type="button">My services</button><button data-t="earn" type="button">Earnings</button><button data-t="prof" type="button">Profile</button><button data-t="help" type="button" class="pv-hd">Help &amp; support</button></div>
+  <div class="tabs" id="dtabs" role="tablist"><button data-t="home" class="on" type="button">Overview</button><button data-t="jobs" type="button">My jobs <span class="bdg" id="jBdg" hidden>0</span></button><button data-t="sched" type="button" class="dsk">Schedule</button><button data-t="earn" type="button">Earnings</button><button data-t="alerts" type="button">Messages <span class="bdg" id="nBdg" hidden>0</span></button><button data-t="perf" type="button" class="dsk">Performance</button><button data-t="prof" type="button" class="dsk">Profile</button><button data-t="help" type="button" class="dsk">Help &amp; safety</button><button data-t="more" type="button" class="mob">More</button></div>
   <div class="pv-act" id="actBar" hidden><div><b id="actT">Offline</b><span id="actS">You will not receive new bookings.</span></div><button type="button" id="actBtn" role="switch" aria-checked="false" aria-label="Active or offline"><i></i></button></div>
   <div id="stBanner" class="card2" hidden style="margin-bottom:12px;border-color:#14663f"></div>
 
   <div id="pane-home">
-    <p class="sub" style="margin-bottom:14px">Manage your services and stay up to date with your bookings.</p>
-    <div class="card2 pv-card" id="dsCard" hidden><div class="pv-ch"><h3>Availability</h3><span class="tag" id="dsTag">Offline</span></div><p class="sub" style="margin:0 0 10px">Switch on when you can take bookings. MOZLYT sends requests only to providers who are available and work in the booking's area.</p>
-      <label style="display:flex;gap:10px;align-items:center;margin-bottom:10px"><input type="checkbox" id="dsOn" style="width:auto"><b>I am available for bookings</b></label>
-      <label class="sub" style="display:block;margin-bottom:4px">Towns or areas where you work (separate with commas)</label><input id="dsAreas" maxlength="200" placeholder="e.g. Amasaman, Pokuase, East Legon" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:transparent;color:inherit;font:inherit"><button class="b2" id="dsSave" type="button" style="margin-top:10px">Save availability</button></div>
     <div id="offBox"></div>
-    <div class="pv-stats">
-      <div class="pv-st"><b id="stTotal">0</b><span>Total bookings</span></div>
-      <div class="pv-st"><b id="stNew">0</b><span>New requests</span></div>
-      <div class="pv-st"><b id="stSvc">0</b><span>Active services</span></div>
-      <div class="pv-st"><b id="stEarn">GH&#8373;0</b><span>Earnings</span></div>
+    <div id="curJob"></div>
+    <div class="pv-stats pv-st3">
+      <div class="pv-st"><b id="tdDone">0</b><span>Jobs completed today</span></div>
+      <div class="pv-st"><b id="tdEarn">GH&#8373;0</b><span>Earned today</span></div>
+      <div class="pv-st"><b id="tdOff">0</b><span>New requests</span></div>
     </div>
-    <div class="card2 pv-card"><div class="pv-ch"><h3>Recent bookings</h3><a href="#" id="pvAll">View all &rarr;</a></div><div class="lst" id="pvRecent"></div></div>
-    <div class="card2 pv-card"><div class="pv-ch"><h3>Your provider profile</h3><span class="tag" id="pvPct">0% complete</span></div><div class="pv-bar"><i id="pvBar"></i></div><ul class="pv-list" id="pvChecks"></ul></div>
-    <div class="card2 pv-card"><h3 style="margin:0 0 6px">Need help?</h3><p class="sub" style="margin:0 0 10px">Contact MOZLYT support for assistance with your bookings or services.</p><a class="b2" style="text-decoration:none;display:inline-block" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20need%20help." target="_blank" rel="noopener">Message MOZLYT</a></div>
+    <div class="card2 pv-card pv-loc"><div><b>Your location</b><span class="locTxt sub">Checking...</span></div><button class="b2 ghost locBtn" type="button">Update my location</button></div>
+    <p class="sub" style="margin:4px 2px 0">Need help during a job? Open the job and tap Report a problem, or go to Help &amp; safety.</p>
+  </div>
+
+  <div id="pane-jobs" hidden>
+    <div class="jtabs" id="jTabs"></div>
+    <div class="lst" id="jList"></div>
+  </div>
+
+  <div id="pane-sched" hidden>
+    <div class="card2 pv-card"><h3 style="margin:0 0 6px">Working days and hours</h3><p class="sub" style="margin:0 0 12px">MOZLYT sends you jobs only on these days and between these hours. You can still switch Offline at any time using the switch at the top.</p>
+      <div class="dchips" id="schDays"></div>
+      <div class="trow"><label>From<input type="time" id="schFrom" value="06:00"></label><label>To<input type="time" id="schTo" value="22:00"></label></div>
+      <label class="sub" style="display:block;margin:12px 0 4px">Towns or areas where you work (separate with commas)</label><input id="schAreas" maxlength="200" placeholder="e.g. Amasaman, Pokuase, East Legon" class="pvin">
+      <p class="sub" style="margin:8px 0 0">Your working area is not the same as where you are right now. Jobs are matched to where you are when you share your location, and to these areas when you do not.</p>
+      <button class="b2" id="schSave" type="button" style="margin-top:12px">Save schedule</button></div>
+    <div class="card2 pv-card pv-loc"><div><b>Your location</b><span class="locTxt sub">Checking...</span><span class="sub">Shared only while you are Online. Nothing is tracked when you are Offline.</span></div><button class="b2 ghost locBtn" type="button">Update my location</button></div>
+  </div>
+
+  <div id="pane-earn" hidden>
+    <div class="pv-stats pv-st3">
+      <div class="pv-st"><b id="erTot">GH&#8373;0</b><span>Total earned</span></div>
+      <div class="pv-st"><b id="erPend">GH&#8373;0</b><span>Pending earnings</span></div>
+      <div class="pv-st"><b id="erJobs">0</b><span>Jobs paid</span></div>
+    </div>
+    <div class="card2 pv-card"><p class="sub" id="erPct" style="margin:0 0 4px"></p><p class="sub" id="erPendNote" style="margin:0"></p></div>
+    <h3 style="margin:14px 0 8px">Paid jobs</h3><div class="lst" id="erList"></div>
+    <div class="card2 pv-card" style="margin-top:12px"><h3 style="margin:0 0 6px">Payouts</h3><p class="sub" style="margin:0 0 10px">MOZLYT pays your earnings to you directly. For a payout or a payment question, message us.</p><a class="b2" style="text-decoration:none;display:inline-block" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20have%20a%20question%20about%20my%20earnings." target="_blank" rel="noopener">Ask about earnings</a></div>
   </div>
 
   <div id="pane-alerts" hidden>
-    <div class="card2 pv-card"><h3 style="margin:0 0 10px">How a booking works</h3>
-      <ol class="pv-steps"><li><b>Booking received</b><span>A customer has requested your service.</span></li><li><b>MOZLYT confirmation</b><span>MOZLYT contacts the customer and coordinates with you.</span></li><li><b>Booking confirmed</b><span>The appointment details are agreed.</span></li><li><b>Service completed</b><span>The service is delivered and the booking is closed.</span></li></ol></div>
-    <div class="pills" style="margin:4px 0 10px"><button class="b2 ghost" type="button" id="btnAll">Mark all as read</button></div><h3 style="margin:14px 0 8px">My accepted jobs</h3><div class="lst" id="jobList"></div><h3 style="margin:18px 0 8px">Notifications</h3><div class="lst" id="nList"></div></div>
+    <div class="pills" style="margin:0 0 10px"><button class="b2 ghost" type="button" id="btnAll">Mark all as read</button></div><div class="lst" id="nList"></div></div>
 
-  <div id="pane-svc" hidden><div class="card2"><h3 style="margin:0 0 8px">Services you handle</h3><div id="mySvc" class="pills"></div><p class="sub" style="margin:12px 0 0">To add or change services, message MOZLYT on WhatsApp with your certificate for the new service.</p><a class="b2" style="text-decoration:none;display:inline-block;margin-top:10px" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20want%20to%20add%20a%20service." target="_blank" rel="noopener">Message MOZLYT</a></div></div>
+  <div id="pane-perf" hidden>
+    <div class="pv-stats" id="pfStats"></div>
+    <div class="card2 pv-card"><h3 style="margin:0 0 6px">How you are doing</h3><ul class="pv-tips" id="pfTips"></ul></div>
+  </div>
 
-  <div id="pane-earn" hidden><div class="card2"><h3 style="margin:0 0 6px">Earnings</h3><div class="pv-st" style="margin-bottom:10px"><b id="erTot">GH&#8373;0</b><span>Total earned</span></div><p class="sub" id="erPct" style="margin:0 0 10px"></p><div class="lst" id="erList"><div class="empty">Completed jobs will appear here once MOZLYT confirms the payment.</div></div><a class="b2" style="text-decoration:none;display:inline-block;margin-top:10px" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20have%20a%20question%20about%20my%20earnings." target="_blank" rel="noopener">Ask about earnings</a></div></div>
+  <div id="pane-prof" hidden>
+    <div class="card2 pv-card"><h3 style="margin:0 0 10px">Provider details</h3><dl class="pv-dl" id="pvDetails"></dl><p class="sub" style="margin:12px 0 0">To change your details, message MOZLYT and we will update them for you. Changes to your ID or certificate are checked before they take effect.</p></div>
+    <div class="card2 pv-card"><h3 style="margin:0 0 8px">Services you handle</h3><div id="mySvc" class="pills"></div><span id="stSvc" hidden>0</span><p class="sub" style="margin:12px 0 0">To add or change services, message MOZLYT on WhatsApp with your certificate for the new service.</p><a class="b2" style="text-decoration:none;display:inline-block;margin-top:10px" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20want%20to%20add%20a%20service." target="_blank" rel="noopener">Message MOZLYT</a></div>
+    <div class="card2 pv-card"><div class="pv-ch"><h3>Profile checklist</h3><span class="tag" id="pvPct">0% complete</span></div><div class="pv-bar"><i id="pvBar"></i></div><ul class="pv-list" id="pvChecks"></ul></div>
+    <p class="sub" style="margin:8px 2px"><a href="terms.html" target="_blank" rel="noopener">Terms</a> &middot; <a href="privacy.html" target="_blank" rel="noopener">Privacy</a></p>
+  </div>
 
-  <div id="pane-prof" hidden><div class="card2"><h3 style="margin:0 0 10px">Provider details</h3><dl class="pv-dl" id="pvDetails"></dl><p class="sub" style="margin:12px 0 0"><a href="terms.html" target="_blank" rel="noopener">Terms</a> &middot; <a href="privacy.html" target="_blank" rel="noopener">Privacy</a></p><p class="sub" style="margin:12px 0 0">To change your details, message MOZLYT and we will update them for you.</p></div></div>
+  <div id="pane-help" hidden>
+    <div class="card2 pv-card"><h3 style="margin:0 0 6px">Help &amp; safety</h3><p class="sub" style="margin:0 0 12px">Something went wrong on a job? Tell MOZLYT straight away. During a job you can also use Report a problem on the job itself.</p>
+      <div class="hlp">
+        <a class="b2" href="https://wa.me/233538729743?text=EMERGENCY%3A%20I%20am%20a%20MOZLYT%20provider%20and%20need%20urgent%20help." target="_blank" rel="noopener">Emergency assistance</a>
+        <a class="b2 ghost" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20provider.%20The%20customer%20location%20is%20incorrect." target="_blank" rel="noopener">Incorrect customer location</a>
+        <a class="b2 ghost" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20provider.%20The%20customer%20is%20not%20available." target="_blank" rel="noopener">Customer not available</a>
+        <a class="b2 ghost" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20provider.%20I%20have%20a%20service%20dispute." target="_blank" rel="noopener">Service dispute</a>
+        <a class="b2 ghost" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20provider.%20I%20have%20a%20payment%20problem." target="_blank" rel="noopener">Payment problem</a>
+        <a class="b2 ghost" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20provider.%20I%20need%20to%20cancel%20or%20reschedule%20a%20job." target="_blank" rel="noopener">Cancel or reschedule a job</a>
+        <a class="b2 ghost" href="https://wa.me/233538729743" target="_blank" rel="noopener">WhatsApp 053 872 9743</a>
+        <a class="b2 ghost" href="mailto:Info@mozlyt.com">Info@mozlyt.com</a>
+      </div></div>
+  </div>
 
-  <div id="pane-help" hidden><div class="card2"><h3 style="margin:0 0 6px">Help &amp; support</h3><p class="sub" style="margin:0 0 10px">Contact MOZLYT for help with your bookings, services or account.</p><a class="b2" style="text-decoration:none;display:inline-block" href="https://wa.me/233538729743" target="_blank" rel="noopener">WhatsApp 053 872 9743</a> <a class="b2 ghost" style="text-decoration:none;display:inline-block" href="mailto:Info@mozlyt.com">Info@mozlyt.com</a></div></div>
+  <div id="pane-more" hidden>
+    <div class="card2 pv-card mlist"><button type="button" class="mrow" data-go="sched">Schedule</button><button type="button" class="mrow" data-go="perf">Performance</button><button type="button" class="mrow" data-go="prof">Profile</button><button type="button" class="mrow" data-go="help">Help &amp; safety</button><button type="button" class="mrow" id="btnOutM">Log out</button></div>
+  </div>
 </section>
 
 </div></main>
@@ -466,6 +507,32 @@ form{background:transparent!important;border:0!important;padding:0!important}
  body:has(#dashView:not([hidden])) .wa-float{bottom:84px}
  #dashView .tabs button.on{color:#3ddc97}
 }
+</style>
+<style id="pv2">
+.pv-eyebrow{color:#34c78d!important}
+#dtabs .mob{display:none}
+@media(max-width:820px){#dtabs .dsk{display:none!important}#dtabs .mob{display:block}}
+.pv-st3{grid-template-columns:repeat(3,1fr)}@media(max-width:820px){.pv-st3{grid-template-columns:repeat(3,1fr)}.pv-st3 .pv-st b{font-size:22px}.pv-st3 .pv-st span{font-size:12px}}
+.pv-loc{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.pv-loc div{display:grid;gap:3px}.pv-loc b{color:#fff}
+.pvin{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #1f2a36;background:#05070a;color:#fff;font:inherit}
+.trow{display:flex;gap:12px;margin-top:12px}.trow label{flex:1;display:grid;gap:4px;color:#c4cfdb}.trow input{padding:10px 12px;border-radius:10px;border:1px solid #1f2a36;background:#05070a;color:#fff;font:inherit}
+.dchips{display:flex;gap:8px;flex-wrap:wrap}.dchips label{display:flex!important;align-items:center;gap:6px;border:1px solid #1f2a36;border-radius:99px;padding:8px 14px;color:#fff!important;cursor:pointer;background:#05070a}.dchips input{width:auto;margin:0}.dchips label:has(input:checked){border-color:#34c78d;background:#0b2a1e}
+.jtabs{display:flex;gap:6px;overflow-x:auto;margin:0 0 12px;padding-bottom:4px}.jtabs button{flex:0 0 auto;border:1px solid #1f2a36;background:#05070a;color:#c9d6e6;padding:9px 14px;border-radius:99px;font:600 14px/1 inherit;font-family:inherit;cursor:pointer}.jtabs button.on{background:linear-gradient(135deg,#1F9D6B,#14606f);color:#fff;border-color:transparent}
+.jc{background:#05070a;border:1px solid #1f2a36;border-radius:16px;padding:16px;margin-bottom:12px;color:#fff}
+.jc.new{border-color:#1F9D6B}.jc.cur{border-color:#34c78d;box-shadow:0 0 0 1px #34c78d33}
+.jc h3{margin:0;font-size:18px;color:#fff}.jc .jh{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px}.jc .jm{color:#c4cfdb;font-size:14.5px;line-height:1.55}.jc .jm a{color:#34c78d}
+.jc .jk{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#34c78d;font-weight:700;margin-bottom:6px}
+.jc .jb{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.jc .jb .b2{text-decoration:none;display:inline-block}
+.jc details{margin-top:10px;border-top:1px solid #1f2a36;padding-top:8px}.jc summary{cursor:pointer;color:#ffb4a8;font-weight:600;font-size:14px}
+.jc details select,.jc details textarea{width:100%;margin-top:8px;padding:10px 12px;border-radius:10px;border:1px solid #1f2a36;background:#0a0e13;color:#fff;font:inherit}
+.tl{list-style:none;margin:12px 0 0;padding:0;display:flex;gap:0;justify-content:space-between}.tl li{flex:1;display:grid;justify-items:center;gap:6px;position:relative;font-size:11.5px;color:#9fb0c3;text-align:center}
+.tl li i{width:16px;height:16px;border-radius:50%;border:2px solid #34414f;background:#05070a;z-index:1}.tl li:before{content:"";position:absolute;top:7px;left:-50%;width:100%;height:2px;background:#34414f}.tl li:first-child:before{display:none}
+.tl li.ok i{background:#34c78d;border-color:#34c78d}.tl li.ok:before,.tl li.cur:before{background:#34c78d}.tl li.ok{color:#fff}.tl li.cur i{border-color:#34c78d;background:#0b2a1e}.tl li.cur{color:#34c78d;font-weight:700}
+.jc .pr{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14.5px;margin-top:8px}.jc .pr span:nth-child(odd){color:#9fb0c3}.jc .pr span:nth-child(even){text-align:right;font-weight:700}
+.pv-empty{background:#05070a;border:1px dashed #1f2a36;border-radius:16px;padding:22px;text-align:center;color:#c4cfdb;margin-bottom:12px}.pv-empty b{display:block;color:#fff;font-size:17px;margin-bottom:4px}
+.hlp{display:grid;gap:8px}.hlp .b2{text-decoration:none;text-align:center;display:block}
+.mlist{padding:4px 0}.mlist .mrow{display:flex;width:100%;justify-content:space-between;align-items:center;background:none;border:0;border-bottom:1px solid #1f2a36;color:#fff;padding:16px 14px;font:600 16px/1 inherit;font-family:inherit;cursor:pointer;text-align:left}.mlist .mrow:last-child{border-bottom:0;color:#ff8f82}
+.pv-tips{margin:0;padding-left:18px;color:#c4cfdb;display:grid;gap:8px;line-height:1.5}
 </style>
 <script src="js/mz-api.js"></script>
 <script>
@@ -535,7 +602,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   /* ---- dashboard ---- */
   function greet(){var h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening'}
   function firstName(){return String(APP.name||'').trim().split(/\s+/)[0]||'there'}
-  function pane(t){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x.dataset.t===t)});['home','alerts','svc','earn','prof','help'].forEach(function(p){show('pane-'+p,p===t)});try{window.scrollTo(0,0)}catch(e){}}
+  function pane(t){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x.dataset.t===t||(x.dataset.t==='more'&&['sched','perf','prof','help'].indexOf(t)>-1))});['home','jobs','sched','earn','alerts','perf','prof','help','more'].forEach(function(p){show('pane-'+p,p===t)});try{window.scrollTo(0,0)}catch(e){}}
   function checks(){var A=APP,svc=((A.status==='approved'?A.approved_services:A.services)||[]);return[['Personal details',!!(A.name&&A.email)],['Contact information',!!(A.phone&&A.location)],['Service information',svc.length>0],['Qualifications and certificates',!!(A.cert_path||A.cert_title)],['Identity verification',!!A.id_path],['MOZLYT approval',A.status==='approved']]}
   function showDash(){views('dashView');$('#pvHi').textContent=greet()+', '+firstName();$('#who').textContent=(APP.email||'');
     var pend=APP.status!=='approved';show('stBanner',pend);if(pend)$('#stBanner').innerHTML='<b style="color:#14663f">Application received. Thank you!</b><p class="sub" style="margin:6px 0 0">MOZLYT is checking your ID and certificate and will reply within about 2 working days. Booking alerts for your services will start appearing here once you are approved.</p>';
@@ -548,31 +615,80 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $('#pvDetails').innerHTML=d.filter(function(x){return x[1]}).map(function(x){return'<dt>'+esc(x[0])+'</dt><dd>'+esc(String(x[1]))+'</dd>'}).join('');
     pane('home');loadNotes();clearInterval(timer);timer=setInterval(loadNotes,60000)}
   $$('#dtabs button').forEach(function(b){b.onclick=function(){pane(b.dataset.t)}});
-  $('#pvAll').onclick=function(e){e.preventDefault();pane('alerts')};
 
-  var DS=null,dsT=null;
-  function drawAct(){var b=$('#actBar');if(!DS||APP.status!=='approved'){b.hidden=true;return}b.hidden=false;var on=!!DS.available,wk=!!DS.working;b.classList.toggle('on',on);b.classList.toggle('wk',wk);$('#actT').textContent=wk?'Working':(on?'Active':'Offline');$('#actS').textContent=wk?'You are on a job. New bookings come to you after you tap Job done.':(on?'You are receiving new bookings.':'You will not receive new bookings. Switch on to start.');$('#actBtn').setAttribute('aria-checked',on?'true':'false')}
-  $('#actBtn').onclick=function(){if(!DS)return;var b=$('#actBtn'),to=!DS.available;b.disabled=true;MZ.rpc('provider_set_availability',{p_available:to,p_areas:DS.areas||[]}).then(function(){DS.available=to;drawAct();drawDS();b.disabled=false;flash(to?'You are active':'You are offline')},function(e){flash(e.message);b.disabled=false})};
+  var DS=null,dsT=null,locT=null,JT='active',SCHF=false,TOP=false;
+  var STG={assigned:'Accepted',travel:'On the way',arrived:'Arrived',started:'Service in progress',finished:'Completed, waiting for MOZLYT to confirm payment',done:'Paid'};
+  var NEXT={assigned:['travel','Start journey'],travel:['arrive','I have arrived'],arrived:['start','Start service'],started:['finish','Complete service']};
+  var DAYS=[['1','Mon'],['2','Tue'],['3','Wed'],['4','Thu'],['5','Fri'],['6','Sat'],['0','Sun']];
+  function today(){return new Date().toISOString().slice(0,10)}
+  function tm(x){try{return new Date(x).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}catch(e){return''}}
+  function getPos(cb){if(!navigator.geolocation){cb(null);return}navigator.geolocation.getCurrentPosition(function(p){cb({lat:p.coords.latitude,lng:p.coords.longitude})},function(){cb(null)},{enableHighAccuracy:true,timeout:10000,maximumAge:60000})}
+  function sendLoc(cb,quiet){getPos(function(p){if(!p){if(!quiet)flash('Location is off. Allow location in your browser to get nearer jobs.');cb&&cb(false);return}MZ.rpc('provider_set_location',{p_lat:p.lat,p_lng:p.lng}).then(function(){if(!quiet)flash('Location updated');cb&&cb(true)},function(){cb&&cb(false)})})}
+  function locLine(){if(!DS)return'';if(DS.has_gps){var m=Math.max(0,Math.round((Date.now()-new Date(DS.loc_at))/60000));return'Shared '+(m<1?'just now':m+' min ago')+'. Jobs near you come first.'}return DS.available?'Not shared. Jobs are matched by your towns instead. Tap Update my location for nearer jobs.':'Not shared. It is shared only while you are Online.'}
+  function drawAct(){var b=$('#actBar');if(!DS||APP.status!=='approved'){b.hidden=true;return}b.hidden=false;var on=!!DS.available,wk=!!DS.working;b.classList.toggle('on',on);b.classList.toggle('wk',wk);$('#actT').textContent=wk?'Working':(on?'Online':'Offline');$('#actS').textContent=wk?'You are on a job. New requests come to you after you complete it.':(on?'You are receiving new jobs.':'You will not receive new jobs. Switch on to start.');$('#actBtn').setAttribute('aria-checked',on?'true':'false')}
+  function setOnline(to,areas,b){if(b)b.disabled=true;MZ.rpc('provider_set_availability',{p_available:to,p_areas:areas}).then(function(){DS.available=to;drawAct();var fin=function(){loadDS();if(b)b.disabled=false;flash(to?'You are online':'You are offline')};if(to)sendLoc(fin,true);else fin()},function(e){flash(e.message);if(b)b.disabled=false})}
+  $('#actBtn').onclick=function(){if(!DS)return;setOnline(!DS.available,DS.areas||[],$('#actBtn'))};
   function loadDS(){if(APP.status!=='approved')return;MZ.rpc('provider_dispatch_state',{}).then(function(r){DS=r;drawDS()},function(){})}
-  function drawDS(){if(!DS)return;drawAct();show('dsCard',true);var on=!!DS.available;$('#dsTag').textContent=on?'Available':'Offline';$('#dsTag').className='tag'+(on?'':' warn');
-    if(document.activeElement!==$('#dsAreas')&&document.activeElement!==$('#dsOn')){$('#dsOn').checked=on;$('#dsAreas').value=(DS.areas||[]).join(', ')}
-    var off=DS.offers||[];$('#offBox').innerHTML=off.map(function(o){return'<div class="card2 pv-card" style="border-color:#14663f"><div class="pv-ch"><h3>New booking offer</h3><span class="tag warn" data-exp="'+esc(o.expires)+'"></span></div><p style="margin:0 0 4px"><b>'+esc(o.service)+'</b></p><p class="sub" style="margin:0 0 10px">'+(o.date?esc(o.date)+', ':'Date flexible, ')+esc(o.slot||'any time')+' &middot; '+esc(o.area||o.place||'')+'</p><button class="b2" data-acc="'+o.id+'" type="button">Accept</button> <button class="b2 ghost" data-dec="'+o.id+'" type="button">Decline</button></div>'}).join('');
-    $$('#offBox [data-acc],#offBox [data-dec]').forEach(function(b){b.onclick=function(){b.disabled=true;var id=Number(b.dataset.acc||b.dataset.dec),ac=!!b.dataset.acc;MZ.rpc('provider_respond',{p_booking:id,p_accept:ac}).then(function(){flash(ac?'Booking accepted':'Offer declined');loadDS()},function(e){flash(e.message||'Offer expired');loadDS()})}});
-    var jobs=DS.jobs||[];var stg={assigned:['Accepted',' warn'],started:['In progress',' warn'],finished:['Done, waiting for MOZLYT to confirm payment',''],done:['Paid','']};
-    $('#jobList').innerHTML=jobs.map(function(j){var t=stg[j.stage]||['',''];var btn=j.stage==='assigned'?'<button class="b2" data-start="'+j.id+'" type="button">Start job</button>':(j.stage==='started'?'<button class="b2" data-fin="'+j.id+'" type="button">Job done</button>':'');
-      return'<div class="it"><div class="h"><b>'+esc(j.service)+'</b><span class="tag'+t[1]+'">'+t[0]+'</span></div><div class="m">'+(j.date?esc(j.date)+', ':'')+esc(j.slot||'')+' &middot; '+esc(j.area||j.place||'')+'<br>'+esc(j.customer||'')+(j.phone?' &middot; <a href="tel:'+esc(j.phone)+'">'+esc(j.phone)+'</a>':'')+(j.notes?'<br>'+esc(j.notes):'')+'</div>'+(btn?'<div style="margin-top:8px">'+btn+'</div>':'')+'</div>'}).join('')||'<div class="empty">No accepted jobs yet.</div>';
-    $$('#jobList [data-start],#jobList [data-fin]').forEach(function(b){b.onclick=function(){b.disabled=true;var st=!!b.dataset.start;MZ.rpc(st?'provider_start_job':'provider_finish_job',{p_booking:Number(b.dataset.start||b.dataset.fin)}).then(function(){flash(st?'Job started. You are marked as working.':'Job done. You are available again.');loadDS()},function(e){flash(e.message);b.disabled=false})}});
-    $('#stEarn').textContent=MZ.money(DS.earned||0);$('#erTot').textContent=MZ.money(DS.earned||0);$('#erPct').textContent='You earn '+DS.pct+'% of each completed booking. The rest goes to the franchise.';
-    var dn=jobs.filter(function(j){return j.stage==='done'&&j.share!=null});$('#erList').innerHTML=dn.map(function(j){return'<div class="it"><div class="h"><b>'+esc(j.service)+'</b><span><b>'+MZ.money(j.share)+'</b></span></div><div class="m">Booking #'+j.id+'</div></div>'}).join('')||'<div class="empty">Completed jobs will appear here once MOZLYT confirms the payment.</div>';
+
+  function dirUrl(j){return j.lat!=null&&j.lng!=null?'https://www.google.com/maps/dir/?api=1&destination='+j.lat+','+j.lng:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(((j.area||'')+' '+(j.place||'')+' Ghana').trim())}
+  function when(j){return(j.date?esc(j.date)+', ':'Date flexible, ')+esc(j.slot||'any time')}
+  function offerCard(o){return'<div class="jc new"><div class="jk">New request</div><div class="jh"><h3>'+esc(o.service)+'</h3><span class="tag warn" data-exp="'+esc(o.expires)+'"></span></div><div class="jm">'+when(o)+'<br>'+esc(o.area||o.place||'Location shared after you accept')+(o.km!=null?' &middot; about '+esc(String(o.km))+' km from you':'')+(o.needed>1?'<br>Team job: '+o.needed+' providers needed':'')+'</div><div class="jb"><button class="b2" data-acc="'+o.id+'" type="button">Accept</button><button class="b2 ghost" data-dec="'+o.id+'" type="button">Decline</button></div></div>'}
+  function tline(st){var ix={assigned:0,travel:1,arrived:2,started:3,finished:4,done:4}[st];return'<ol class="tl">'+['Accepted','On the way','Arrived','In progress','Completed'].map(function(n,i){var c=i<ix||(i===4&&ix===4)?'ok':(i===ix?'cur':'');return'<li class="'+c+'"><i></i><span>'+n+'</span></li>'}).join('')+'</ol>'}
+  function earnTxt(j){if(j.share!=null)return'Your share '+MZ.money(j.share);if(j.price!=null&&DS)return'Expected about '+MZ.money(j.price*DS.pct/100/Math.max(1,j.team_have||1));return'MOZLYT will set the price'}
+  function jobCard(j,cur){var st=j.stage,nx=NEXT[st],h='<div class="jc'+(cur?' cur':'')+'" data-job="'+j.id+'">';
+    h+=(cur?'<div class="jk">Your current job</div>':'')+'<div class="jh"><h3>'+esc(j.service)+'</h3><span class="tag'+(st==='assigned'||st==='started'||st==='travel'||st==='arrived'?' warn':'')+'">'+esc(j.cancelled?'Cancelled':STG[st])+'</span></div>';
+    h+='<div class="jm">Booking #'+j.id+' &middot; '+when(j)+'<br>'+esc(j.area||j.place||'')+(j.km!=null?' &middot; about '+esc(String(j.km))+' km from you':'')+'<br>'+esc(j.customer||'Customer')+(j.phone?' &middot; <a href="tel:'+esc(j.phone)+'">'+esc(j.phone)+'</a>':'')+(j.notes?'<br>'+esc(j.notes):'')+(j.team>1?'<br>Team job: '+(j.team_have||0)+' of '+j.team+' providers confirmed':'')+'<br>'+esc(earnTxt(j))+'</div>';
+    if(!j.cancelled)h+=tline(st);
+    var tt=[['Accepted',j.t_accept],['On the way',j.t_travel],['Arrived',j.t_arrive],['Started',j.t_start],['Completed',j.t_finish]].filter(function(x){return x[1]}).map(function(x){return x[0]+' '+tm(x[1])}).join(' &middot; ');
+    if(tt&&!cur)h+='<div class="jm" style="margin-top:8px;font-size:13px;color:#9fb0c3">'+tt+'</div>';
+    if(!j.cancelled&&!j.done){h+='<div class="jb">'+(nx?'<button class="b2" data-step="'+nx[0]+'" data-id="'+j.id+'" type="button">'+nx[1]+'</button>':'')+'<a class="b2 ghost" href="'+dirUrl(j)+'" target="_blank" rel="noopener">Directions</a></div>';
+      if(st!=='finished')h+='<details><summary>Report a problem</summary><select data-rk><option value="wrong_location">Incorrect customer location</option><option value="customer_unavailable">Customer not available</option><option value="dispute">Service is different from the booking</option><option value="payment">Payment problem</option><option value="cannot_attend">I cannot do this job (release it)</option><option value="other">Something else</option></select><textarea data-rn rows="2" maxlength="500" placeholder="Tell MOZLYT what happened"></textarea><div class="jb"><button class="b2 ghost" data-rep="'+j.id+'" type="button">Send to MOZLYT</button></div></details>'}
+    return h+'</div>'}
+  function bindJobs(root){
+    $$('[data-acc],[data-dec]',root).forEach(function(b){b.onclick=function(){b.disabled=true;var id=Number(b.dataset.acc||b.dataset.dec),ac=!!b.dataset.acc;MZ.rpc('provider_respond',{p_booking:id,p_accept:ac}).then(function(){flash(ac?'Job accepted':'Request declined');loadDS()},function(e){flash(e.message||'Request expired');loadDS()})}});
+    $$('[data-step]',root).forEach(function(b){b.onclick=function(){b.disabled=true;var step=b.dataset.step,id=Number(b.dataset.id);getPos(function(p){MZ.rpc('provider_job_step',{p_booking:id,p_step:step,p_lat:p?p.lat:null,p_lng:p?p.lng:null}).then(function(r){flash(r==='far'?'Arrival recorded. Your phone shows you are not yet at the address.':({travel:'Journey started',arrive:'Arrival recorded',start:'Service started',finish:'Service completed. You are available for new jobs.'})[step]);loadDS()},function(e){flash(e.message);b.disabled=false})})}});
+    $$('[data-rep]',root).forEach(function(b){b.onclick=function(){var d=b.closest('details');b.disabled=true;MZ.rpc('provider_report_problem',{p_booking:Number(b.dataset.rep),p_kind:$('[data-rk]',d).value,p_note:$('[data-rn]',d).value}).then(function(){flash('Sent to MOZLYT');loadDS()},function(e){flash(e.message);b.disabled=false})}}) }
+  function cls(j){if(j.cancelled)return'cancel';if(j.stage==='finished'||j.stage==='done')return'done';if(j.stage==='assigned'&&j.date&&j.date>today())return'upcoming';return'active'}
+  function drawDS(){if(!DS)return;drawAct();var on=!!DS.available,offs=DS.offers||[],jobs=DS.jobs||[];
+    $$('.locTxt').forEach(function(e){e.textContent=locLine()});
+    $('#offBox').innerHTML=offs.map(offerCard).join('');
+    var act=jobs.filter(function(j){return cls(j)==='active'}).sort(function(a,b){var r=function(j){return j.stage==='assigned'?1:0};return r(a)-r(b)}),cur=act[0];
+    $('#curJob').innerHTML=cur?jobCard(cur,true):(offs.length?'':'<div class="pv-empty"><b>'+(on?'You are online and waiting':'You are offline')+'</b>'+(on?'Your next job will appear here the moment MOZLYT sends it.':'Switch on at the top to start receiving jobs.')+'</div>');
+    $('#tdDone').textContent=DS.today_done||0;$('#tdEarn').textContent=MZ.money(DS.today_earned||0);$('#tdOff').textContent=offs.length;
+    var by={new:offs,active:[],upcoming:[],done:[],cancel:[]};jobs.forEach(function(j){by[cls(j)].push(j)});
+    var tabs=[['new','New requests'],['active','Active'],['upcoming','Upcoming'],['done','Completed'],['cancel','Cancelled']];
+    $('#jTabs').innerHTML=tabs.map(function(t){return'<button type="button" data-jt="'+t[0]+'" class="'+(JT===t[0]?'on':'')+'">'+t[1]+' ('+by[t[0]].length+')</button>'}).join('');
+    $$('#jTabs [data-jt]').forEach(function(b){b.onclick=function(){JT=b.dataset.jt;drawDS()}});
+    $('#jList').innerHTML=(JT==='new'?offs.map(offerCard):by[JT].map(function(j){return jobCard(j,false)})).join('')||'<div class="pv-empty"><b>Nothing here yet</b>Jobs will appear in this list as they come in.</div>';
+    var jb=offs.length+by.active.length;$('#jBdg').hidden=!jb;$('#jBdg').textContent=jb;
+    bindJobs($('#pane-home'));bindJobs($('#pane-jobs'));
+    // earnings
+    var pend=0,pendN=0,unp=0,paid=jobs.filter(function(j){return j.stage==='done'&&j.share!=null});
+    jobs.forEach(function(j){if(j.stage==='finished'){pendN++;if(j.price!=null)pend+=j.price*DS.pct/100/Math.max(1,j.team_have||1);else unp++}});
+    $('#erTot').textContent=MZ.money(DS.earned||0);$('#erPend').textContent=MZ.money(pend);$('#erJobs').textContent=paid.length;
+    $('#erPct').textContent='You earn '+DS.pct+'% of each completed job. On a team job the '+DS.pct+'% is shared equally between the providers.';
+    $('#erPendNote').textContent=pendN?pendN+' completed job'+(pendN>1?'s are':' is')+' waiting for MOZLYT to confirm payment'+(unp?' ('+unp+' without a price yet).':'.'):'Nothing is waiting for payment confirmation.';
+    $('#erList').innerHTML=paid.map(function(j){var mine=j.share,all=Number(j.amount||0);return'<div class="jc"><div class="jh"><h3>'+esc(j.service)+'</h3><b>'+MZ.money(mine)+'</b></div><div class="jm">Booking #'+j.id+(j.date?' &middot; '+esc(j.date):'')+'</div><div class="pr"><span>Service amount</span><span>'+MZ.money(all)+'</span><span>Your commission ('+DS.pct+'%'+(j.team_have>1?', shared by '+j.team_have:'')+')</span><span>'+MZ.money(mine)+'</span><span>MOZLYT and franchise</span><span>'+MZ.money(Math.max(0,all-mine*Math.max(1,j.team_have||1)))+'</span></div></div>'}).join('')||'<div class="pv-empty"><b>No paid jobs yet</b>Each completed job shows how your commission was worked out.</div>';
+    // performance
+    var pf=DS.perf||{},f=function(v,u){return v==null?'-':v+u};
+    $('#pfStats').innerHTML=[[pf.completed||0,'Jobs completed'],[f(pf.accept_rate,'%'),'Acceptance rate'],[f(pf.avg_response_min,' min'),'Average response time'],[f(pf.avg_travel_min,' min'),'Average travel time'],[f(pf.avg_service_min,' min'),'Average service time'],[pf.released||0,'Jobs released']].map(function(x){return'<div class="pv-st"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>'}).join('');
+    var tips=[];if(pf.accept_rate!=null&&pf.accept_rate<70)tips.push('You accept '+pf.accept_rate+'% of requests. Accepting more requests means more work and a better chance at team jobs.');if(pf.avg_response_min!=null&&pf.avg_response_min>5)tips.push('Your average response is '+pf.avg_response_min+' minutes. Keeping the app open while Online helps you answer before the request expires.');if(pf.avg_travel_min!=null)tips.push('Your journeys average '+pf.avg_travel_min+' minutes. Sharing your location helps MOZLYT send you jobs that are close.');if(pf.released)tips.push('You released '+pf.released+' job'+(pf.released>1?'s':'')+'. Release a job only when you really cannot do it, so another provider can take it quickly.');if(!tips.length)tips.push('Complete a few jobs and your numbers will appear here. MOZLYT uses them to match reliable providers first, especially for team jobs.');
+    $('#pfTips').innerHTML=tips.map(function(t){return'<li>'+esc(t)+'</li>'}).join('');
+    // schedule form (fill once, so typing is not overwritten)
+    if(!SCHF){SCHF=true;var wd=(DS.work_days||[]).map(String);$('#schDays').innerHTML=DAYS.map(function(d){return'<label><input type="checkbox" value="'+d[0]+'"'+(wd.indexOf(d[0])>-1?' checked':'')+'>'+d[1]+'</label>'}).join('');$('#schFrom').value=String(DS.work_from||'06:00').slice(0,5);$('#schTo').value=String(DS.work_to||'22:00').slice(0,5);$('#schAreas').value=(DS.areas||[]).join(', ')}
+    if(on&&!DS.has_gps&&!TOP){TOP=true;sendLoc(function(ok){if(ok)loadDS()},true)}
+    clearInterval(locT);if(on)locT=setInterval(function(){if(!document.hidden)sendLoc(function(){loadDS()},true)},180000);
     tick()}
   function tick(){clearInterval(dsT);var f=function(){$$('[data-exp]').forEach(function(e){var ms=new Date(e.dataset.exp)-Date.now();if(ms<=0){e.textContent='Expired';loadDS();return}e.textContent=Math.floor(ms/60000)+':'+('0'+Math.floor(ms/1000)%60).slice(-2)+' left'})};f();if($$('[data-exp]').length)dsT=setInterval(f,1000)}
-  $('#dsSave').onclick=function(){var b=$('#dsSave');b.disabled=true;MZ.rpc('provider_set_availability',{p_available:$('#dsOn').checked,p_areas:$('#dsAreas').value.split(',')}).then(function(){flash('Availability saved');b.disabled=false;loadDS()},function(e){flash(e.message);b.disabled=false})};
+  $('#schSave').onclick=function(){var b=$('#schSave');b.disabled=true;var days=$$('#schDays input:checked').map(function(i){return Number(i.value)});if(!days.length){flash('Pick at least one working day');b.disabled=false;return}
+    MZ.rpc('provider_set_schedule',{p_days:days,p_from:$('#schFrom').value||'06:00',p_to:$('#schTo').value||'22:00'}).then(function(){return MZ.rpc('provider_set_availability',{p_available:!!(DS&&DS.available),p_areas:$('#schAreas').value.split(',')})}).then(function(){flash('Schedule saved');b.disabled=false;SCHF=false;loadDS()},function(e){flash(e.message);b.disabled=false})};
+  $$('.locBtn').forEach(function(b){b.onclick=function(){b.disabled=true;sendLoc(function(){b.disabled=false;loadDS()})}});
+  $$('#pane-more [data-go]').forEach(function(b){b.onclick=function(){pane(b.dataset.go)}});
+  $('#btnOutM').onclick=function(){$('#btnOut').click()};
   function loadNotes(){loadDS();MZ.q('provider_notifications','select=*&order=created_at.desc&limit=100').then(function(r){NOTES=r||[];drawNotes()},function(){})}
-  function item(n){return'<div class="it'+(n.read?'':' unread')+'" data-id="'+n.id+'"><div class="h"><b>'+esc(n.title)+'</b><span class="tag'+(n.read?'':' warn')+'">'+(n.read?'Seen':'New request')+'</span></div><div class="m">'+esc(n.body||'')+' &middot; '+MZ.when(n.created_at)+'</div></div>'}
-  function drawNotes(){var un=NOTES.filter(function(n){return!n.read}).length;$('#nBdg').hidden=!un;$('#nBdg').textContent=un;$('#stTotal').textContent=NOTES.length;$('#stNew').textContent=un;
-    var none='<div class="empty"><b style="color:#fff">No bookings yet</b><br>Your next opportunity could be just around the corner. Keep your services active and your profile up to date. New customer booking requests will appear here as they come in.</div>';
-    $('#nList').innerHTML=NOTES.map(item).join('')||none;
-    $('#pvRecent').innerHTML=NOTES.slice(0,3).map(item).join('')||'<div class="empty"><b style="color:#fff">Your bookings will appear here</b><br>When a customer requests one of your services, you will find the booking details here. MOZLYT will contact the customer and coordinate with you to confirm the appointment.</div>';
+  function item(n){return'<div class="it'+(n.read?'':' unread')+'" data-id="'+n.id+'"><div class="h"><b>'+esc(n.title)+'</b><span class="tag'+(n.read?'':' warn')+'">'+(n.read?'Seen':'New')+'</span></div><div class="m">'+esc(n.body||'')+' &middot; '+MZ.when(n.created_at)+'</div></div>'}
+  function drawNotes(){var un=NOTES.filter(function(n){return!n.read}).length;$('#nBdg').hidden=!un;$('#nBdg').textContent=un;
+    $('#nList').innerHTML=NOTES.map(item).join('')||'<div class="pv-empty"><b>No messages yet</b>Booking requests, reminders and payment updates will appear here.</div>';
     $$('.it.unread').forEach(function(el){el.onclick=function(){var id=Number(el.dataset.id);MZ.update('provider_notifications','id=eq.'+id,{read:true}).then(function(){NOTES.forEach(function(n){if(n.id===id)n.read=true});drawNotes()})}})}
   $('#btnAll').onclick=function(){if(!NOTES.some(function(n){return!n.read}))return;MZ.update('provider_notifications','read=eq.false',{read:true}).then(function(){NOTES.forEach(function(n){n.read=true});drawNotes()})};
 
