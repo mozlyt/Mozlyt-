@@ -396,11 +396,15 @@ form{background:transparent!important;border:0!important;padding:0!important}
 
   <div id="pane-home">
     <p class="sub" style="margin-bottom:14px">Manage your services and stay up to date with your bookings.</p>
+    <div class="card2 pv-card" id="dsCard" hidden><div class="pv-ch"><h3>Availability</h3><span class="tag" id="dsTag">Offline</span></div><p class="sub" style="margin:0 0 10px">Switch on when you can take bookings. MOZLYT sends requests only to providers who are available and work in the booking's area.</p>
+      <label style="display:flex;gap:10px;align-items:center;margin-bottom:10px"><input type="checkbox" id="dsOn" style="width:auto"><b>I am available for bookings</b></label>
+      <label class="sub" style="display:block;margin-bottom:4px">Towns or areas where you work (separate with commas)</label><input id="dsAreas" maxlength="200" placeholder="e.g. Amasaman, Pokuase, East Legon" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:transparent;color:inherit;font:inherit"><button class="b2" id="dsSave" type="button" style="margin-top:10px">Save availability</button></div>
+    <div id="offBox"></div>
     <div class="pv-stats">
       <div class="pv-st"><b id="stTotal">0</b><span>Total bookings</span></div>
       <div class="pv-st"><b id="stNew">0</b><span>New requests</span></div>
       <div class="pv-st"><b id="stSvc">0</b><span>Active services</span></div>
-      <div class="pv-st"><b class="pv-soon">Coming soon</b><span>Earnings</span></div>
+      <div class="pv-st"><b id="stEarn">GH&#8373;0</b><span>Earnings</span></div>
     </div>
     <div class="card2 pv-card"><div class="pv-ch"><h3>Recent bookings</h3><a href="#" id="pvAll">View all &rarr;</a></div><div class="lst" id="pvRecent"></div></div>
     <div class="card2 pv-card"><div class="pv-ch"><h3>Your provider profile</h3><span class="tag" id="pvPct">0% complete</span></div><div class="pv-bar"><i id="pvBar"></i></div><ul class="pv-list" id="pvChecks"></ul></div>
@@ -410,11 +414,11 @@ form{background:transparent!important;border:0!important;padding:0!important}
   <div id="pane-alerts" hidden>
     <div class="card2 pv-card"><h3 style="margin:0 0 10px">How a booking works</h3>
       <ol class="pv-steps"><li><b>Booking received</b><span>A customer has requested your service.</span></li><li><b>MOZLYT confirmation</b><span>MOZLYT contacts the customer and coordinates with you.</span></li><li><b>Booking confirmed</b><span>The appointment details are agreed.</span></li><li><b>Service completed</b><span>The service is delivered and the booking is closed.</span></li></ol></div>
-    <div class="pills" style="margin:4px 0 10px"><button class="b2 ghost" type="button" id="btnAll">Mark all as read</button></div><div class="lst" id="nList"></div></div>
+    <div class="pills" style="margin:4px 0 10px"><button class="b2 ghost" type="button" id="btnAll">Mark all as read</button></div><h3 style="margin:14px 0 8px">My accepted jobs</h3><div class="lst" id="jobList"></div><h3 style="margin:18px 0 8px">Notifications</h3><div class="lst" id="nList"></div></div>
 
   <div id="pane-svc" hidden><div class="card2"><h3 style="margin:0 0 8px">Services you handle</h3><div id="mySvc" class="pills"></div><p class="sub" style="margin:12px 0 0">To add or change services, message MOZLYT on WhatsApp with your certificate for the new service.</p><a class="b2" style="text-decoration:none;display:inline-block;margin-top:10px" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20want%20to%20add%20a%20service." target="_blank" rel="noopener">Message MOZLYT</a></div></div>
 
-  <div id="pane-earn" hidden><div class="card2"><h3 style="margin:0 0 6px">Earnings</h3><div class="empty" style="padding:18px 6px"><b style="color:var(--ink)">Your earnings will appear here</b><br>Income and payment history for completed bookings will be shown in this section. For questions about a payment, message MOZLYT.</div><a class="b2" style="text-decoration:none;display:inline-block" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20have%20a%20question%20about%20my%20earnings." target="_blank" rel="noopener">Ask about earnings</a></div></div>
+  <div id="pane-earn" hidden><div class="card2"><h3 style="margin:0 0 6px">Earnings</h3><div class="pv-st" style="margin-bottom:10px"><b id="erTot">GH&#8373;0</b><span>Total earned</span></div><p class="sub" id="erPct" style="margin:0 0 10px"></p><div class="lst" id="erList"><div class="empty">Completed jobs will appear here once MOZLYT confirms the payment.</div></div><a class="b2" style="text-decoration:none;display:inline-block;margin-top:10px" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20service%20provider%20and%20have%20a%20question%20about%20my%20earnings." target="_blank" rel="noopener">Ask about earnings</a></div></div>
 
   <div id="pane-prof" hidden><div class="card2"><h3 style="margin:0 0 10px">Provider details</h3><dl class="pv-dl" id="pvDetails"></dl><p class="sub" style="margin:12px 0 0">To change your details, message MOZLYT and we will update them for you.</p></div></div>
 
@@ -537,7 +541,20 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     pane('home');loadNotes();clearInterval(timer);timer=setInterval(loadNotes,60000)}
   $$('#dtabs button').forEach(function(b){b.onclick=function(){pane(b.dataset.t)}});
   $('#pvAll').onclick=function(e){e.preventDefault();pane('alerts')};
-  function loadNotes(){MZ.q('provider_notifications','select=*&order=created_at.desc&limit=100').then(function(r){NOTES=r||[];drawNotes()},function(){})}
+
+  var DS=null,dsT=null;
+  function loadDS(){if(APP.status!=='approved')return;MZ.rpc('provider_dispatch_state',{}).then(function(r){DS=r;drawDS()},function(){})}
+  function drawDS(){if(!DS)return;show('dsCard',true);var on=!!DS.available;$('#dsTag').textContent=on?'Available':'Offline';$('#dsTag').className='tag'+(on?'':' warn');
+    if(document.activeElement!==$('#dsAreas')&&document.activeElement!==$('#dsOn')){$('#dsOn').checked=on;$('#dsAreas').value=(DS.areas||[]).join(', ')}
+    var off=DS.offers||[];$('#offBox').innerHTML=off.map(function(o){return'<div class="card2 pv-card" style="border-color:#14663f"><div class="pv-ch"><h3>New booking offer</h3><span class="tag warn" data-exp="'+esc(o.expires)+'"></span></div><p style="margin:0 0 4px"><b>'+esc(o.service)+'</b></p><p class="sub" style="margin:0 0 10px">'+(o.date?esc(o.date)+', ':'Date flexible, ')+esc(o.slot||'any time')+' &middot; '+esc(o.area||o.place||'')+'</p><button class="b2" data-acc="'+o.id+'" type="button">Accept</button> <button class="b2 ghost" data-dec="'+o.id+'" type="button">Decline</button></div>'}).join('');
+    $$('#offBox [data-acc],#offBox [data-dec]').forEach(function(b){b.onclick=function(){b.disabled=true;var id=Number(b.dataset.acc||b.dataset.dec),ac=!!b.dataset.acc;MZ.rpc('provider_respond',{p_booking:id,p_accept:ac}).then(function(){flash(ac?'Booking accepted':'Offer declined');loadDS()},function(e){flash(e.message||'Offer expired');loadDS()})}});
+    var jobs=DS.jobs||[];$('#jobList').innerHTML=jobs.map(function(j){return'<div class="it"><div class="h"><b>'+esc(j.service)+'</b><span class="tag'+(j.done?'':' warn')+'">'+(j.done?'Completed':'Accepted')+'</span></div><div class="m">'+(j.date?esc(j.date)+', ':'')+esc(j.slot||'')+' &middot; '+esc(j.area||j.place||'')+'<br>'+esc(j.customer||'')+(j.phone?' &middot; <a href="tel:'+esc(j.phone)+'">'+esc(j.phone)+'</a>':'')+(j.notes?'<br>'+esc(j.notes):'')+'</div></div>'}).join('')||'<div class="empty">No accepted jobs yet.</div>';
+    $('#stEarn').textContent=MZ.money(DS.earned||0);$('#erTot').textContent=MZ.money(DS.earned||0);$('#erPct').textContent='You earn '+DS.pct+'% of each completed booking. The rest goes to the franchise.';
+    var dn=jobs.filter(function(j){return j.done&&j.share!=null});$('#erList').innerHTML=dn.map(function(j){return'<div class="it"><div class="h"><b>'+esc(j.service)+'</b><span><b>'+MZ.money(j.share)+'</b></span></div><div class="m">Booking #'+j.id+'</div></div>'}).join('')||'<div class="empty">Completed jobs will appear here once MOZLYT confirms the payment.</div>';
+    tick()}
+  function tick(){clearInterval(dsT);var f=function(){$$('[data-exp]').forEach(function(e){var ms=new Date(e.dataset.exp)-Date.now();if(ms<=0){e.textContent='Expired';loadDS();return}e.textContent=Math.floor(ms/60000)+':'+('0'+Math.floor(ms/1000)%60).slice(-2)+' left'})};f();if($$('[data-exp]').length)dsT=setInterval(f,1000)}
+  $('#dsSave').onclick=function(){var b=$('#dsSave');b.disabled=true;MZ.rpc('provider_set_availability',{p_available:$('#dsOn').checked,p_areas:$('#dsAreas').value.split(',')}).then(function(){flash('Availability saved');b.disabled=false;loadDS()},function(e){flash(e.message);b.disabled=false})};
+  function loadNotes(){loadDS();MZ.q('provider_notifications','select=*&order=created_at.desc&limit=100').then(function(r){NOTES=r||[];drawNotes()},function(){})}
   function item(n){return'<div class="it'+(n.read?'':' unread')+'" data-id="'+n.id+'"><div class="h"><b>'+esc(n.title)+'</b><span class="tag'+(n.read?'':' warn')+'">'+(n.read?'Seen':'New request')+'</span></div><div class="m">'+esc(n.body||'')+' &middot; '+MZ.when(n.created_at)+'</div></div>'}
   function drawNotes(){var un=NOTES.filter(function(n){return!n.read}).length;$('#nBdg').hidden=!un;$('#nBdg').textContent=un;$('#stTotal').textContent=NOTES.length;$('#stNew').textContent=un;
     var none='<div class="empty"><b style="color:var(--ink)">No bookings yet</b><br>Your next opportunity could be just around the corner. Keep your services active and your profile up to date. New customer booking requests will appear here as they come in.</div>';
