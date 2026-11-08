@@ -93,6 +93,8 @@
     updatePassword: function (password) {
       return freshToken().then(function (t) { if (!t) throw new Error('Your link has expired. Request a new one.'); return call('/auth/v1/user', { method: 'PUT', body: { password: password } }, t); });
     },
+    /* sign in with Google / Facebook / Apple: the provider must be switched on in Supabase Auth */
+    oauth: function (provider) { location.href = URL_ + '/auth/v1/authorize?provider=' + encodeURIComponent(provider) + '&redirect_to=' + encodeURIComponent(location.origin + location.pathname); },
     /* the confirmation / reset links bring tokens back in the address; pick them up */
     takeHash: function () {
       var h = location.hash || ''; if (h.charAt(1) === '' || h.indexOf('access_token') < 0) { if (/error_description=/.test(h)) { var m = /error_description=([^&]+)/.exec(h); history.replaceState(null, '', location.pathname + location.search); return { error: decodeURIComponent(m[1].replace(/\+/g, ' ')) }; } return null; }
