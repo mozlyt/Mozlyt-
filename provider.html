@@ -95,6 +95,9 @@ textarea{min-height:110px;resize:vertical}
 .final .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .final .btn.ghost{border-color:#fff;color:#fff}
 .note{font-size:12.5px;color:var(--mute);padding:18px 0 4px}
+.pv-act{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#000;border:1px solid #222;border-radius:16px;padding:14px 18px;margin:0 0 14px}.pv-act b{display:block;font-size:17px}.pv-act span{display:block;font-size:13px;color:#9a9a9a}
+.pv-act button{flex:0 0 auto;width:64px;height:36px;border-radius:99px;border:1px solid #444!important;background:#2a2a2a!important;padding:0!important;position:relative;cursor:pointer;transition:background .2s}.pv-act button i{position:absolute;top:3px;left:3px;width:28px;height:28px;border-radius:50%;background:#fff;transition:transform .2s}
+.pv-act.on{border-color:#1F9D6B}.pv-act.on b{color:#34c78d}.pv-act.on button{background:#1F9D6B!important;border-color:#1F9D6B!important}.pv-act.on button i{transform:translateX(28px)}
 </style>
 <style id="mz-shared">
 .mz-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
@@ -392,6 +395,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
 <section id="dashView" hidden class="pv">
   <div class="pv-head"><div><div class="pv-eyebrow">MOZLYT Provider Portal</div><h1 id="pvHi">Welcome</h1><p class="sub" id="who"></p></div><button class="b2 ghost" type="button" id="btnOut">Log out</button></div>
   <div class="tabs" id="dtabs" role="tablist"><button data-t="home" class="on" type="button">Overview</button><button data-t="alerts" type="button">Bookings <span class="bdg" id="nBdg" hidden>0</span></button><button data-t="svc" type="button">My services</button><button data-t="earn" type="button">Earnings</button><button data-t="prof" type="button">Profile</button><button data-t="help" type="button" class="pv-hd">Help &amp; support</button></div>
+  <div class="pv-act" id="actBar" hidden><div><b id="actT">Offline</b><span id="actS">You will not receive new bookings.</span></div><button type="button" id="actBtn" role="switch" aria-checked="false" aria-label="Active or offline"><i></i></button></div>
   <div id="stBanner" class="card2" hidden style="margin-bottom:12px;border-color:#14663f"></div>
 
   <div id="pane-home">
@@ -543,8 +547,10 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#pvAll').onclick=function(e){e.preventDefault();pane('alerts')};
 
   var DS=null,dsT=null;
+  function drawAct(){var b=$('#actBar');if(!DS||APP.status!=='approved'){b.hidden=true;return}b.hidden=false;var on=!!DS.available;b.classList.toggle('on',on);$('#actT').textContent=on?'Active':'Offline';$('#actS').textContent=on?'You are receiving new bookings.':'You will not receive new bookings. Switch on to start.';$('#actBtn').setAttribute('aria-checked',on?'true':'false')}
+  $('#actBtn').onclick=function(){if(!DS)return;var b=$('#actBtn'),to=!DS.available;b.disabled=true;MZ.rpc('provider_set_availability',{p_available:to,p_areas:DS.areas||[]}).then(function(){DS.available=to;drawAct();drawDS();b.disabled=false;flash(to?'You are active':'You are offline')},function(e){flash(e.message);b.disabled=false})};
   function loadDS(){if(APP.status!=='approved')return;MZ.rpc('provider_dispatch_state',{}).then(function(r){DS=r;drawDS()},function(){})}
-  function drawDS(){if(!DS)return;show('dsCard',true);var on=!!DS.available;$('#dsTag').textContent=on?'Available':'Offline';$('#dsTag').className='tag'+(on?'':' warn');
+  function drawDS(){if(!DS)return;drawAct();show('dsCard',true);var on=!!DS.available;$('#dsTag').textContent=on?'Available':'Offline';$('#dsTag').className='tag'+(on?'':' warn');
     if(document.activeElement!==$('#dsAreas')&&document.activeElement!==$('#dsOn')){$('#dsOn').checked=on;$('#dsAreas').value=(DS.areas||[]).join(', ')}
     var off=DS.offers||[];$('#offBox').innerHTML=off.map(function(o){return'<div class="card2 pv-card" style="border-color:#14663f"><div class="pv-ch"><h3>New booking offer</h3><span class="tag warn" data-exp="'+esc(o.expires)+'"></span></div><p style="margin:0 0 4px"><b>'+esc(o.service)+'</b></p><p class="sub" style="margin:0 0 10px">'+(o.date?esc(o.date)+', ':'Date flexible, ')+esc(o.slot||'any time')+' &middot; '+esc(o.area||o.place||'')+'</p><button class="b2" data-acc="'+o.id+'" type="button">Accept</button> <button class="b2 ghost" data-dec="'+o.id+'" type="button">Decline</button></div>'}).join('');
     $$('#offBox [data-acc],#offBox [data-dec]').forEach(function(b){b.onclick=function(){b.disabled=true;var id=Number(b.dataset.acc||b.dataset.dec),ac=!!b.dataset.acc;MZ.rpc('provider_respond',{p_booking:id,p_accept:ac}).then(function(){flash(ac?'Booking accepted':'Offer declined');loadDS()},function(e){flash(e.message||'Offer expired');loadDS()})}});
