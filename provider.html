@@ -423,6 +423,7 @@ form{background:transparent!important;border:0!important;padding:0!important}
     <div class="card2 pv-card"><h3 style="margin:0 0 6px">Working days and hours</h3><p class="sub" style="margin:0 0 12px">MOZLYT sends you jobs only on these days and between these hours. You can still switch Offline at any time using the switch at the top.</p>
       <div class="dchips" id="schDays"></div>
       <div class="trow"><label>From<input type="time" id="schFrom" value="06:00"></label><label>To<input type="time" id="schTo" value="22:00"></label></div>
+      <div class="pills" id="schPre" style="margin:8px 0 4px"><button class="pill2" type="button" data-f="06:00" data-t="18:00">Daytime</button><button class="pill2" type="button" data-f="18:00" data-t="22:00">Evening</button><button class="pill2" type="button" data-f="22:00" data-t="06:00">Overnight</button><button class="pill2" type="button" data-f="00:00" data-t="00:00">24/7</button></div><p class="sub" style="margin:0 0 8px">Quick picks. Overnight means 10 PM to 6 AM. Customers who book Overnight are only matched to providers who cover those hours. Only choose it if you can work safely at night.</p>
       <label class="sub" style="display:block;margin:12px 0 4px">Towns or areas where you work (separate with commas)</label><input id="schAreas" maxlength="200" placeholder="e.g. Amasaman, Pokuase, East Legon" class="pvin">
       <p class="sub" style="margin:8px 0 0">Your working area is not the same as where you are right now. Jobs are matched to where you are when you share your location, and to these areas when you do not.</p>
       <button class="b2" id="schSave" type="button" style="margin-top:12px">Save schedule</button></div>
@@ -683,6 +684,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#schSave').onclick=function(){var b=$('#schSave');b.disabled=true;var days=$$('#schDays input:checked').map(function(i){return Number(i.value)});if(!days.length){flash('Pick at least one working day');b.disabled=false;return}
     MZ.rpc('provider_set_schedule',{p_days:days,p_from:$('#schFrom').value||'06:00',p_to:$('#schTo').value||'22:00'}).then(function(){return MZ.rpc('provider_set_availability',{p_available:!!(DS&&DS.available),p_areas:$('#schAreas').value.split(',')})}).then(function(){flash('Schedule saved');b.disabled=false;SCHF=false;loadDS()},function(e){flash(e.message);b.disabled=false})};
   $$('.locBtn').forEach(function(b){b.onclick=function(){b.disabled=true;sendLoc(function(){b.disabled=false;loadDS()})}});
+  $('#schPre').onclick=function(e){var b=e.target.closest('button[data-f]');if(b){$('#schFrom').value=b.dataset.f;$('#schTo').value=b.dataset.t}};
   $$('#pane-more [data-go]').forEach(function(b){b.onclick=function(){pane(b.dataset.go)}});
   $('#btnOutM').onclick=function(){$('#btnOut').click()};
   function loadNotes(){loadDS();MZ.q('provider_notifications','select=*&order=created_at.desc&limit=100').then(function(r){NOTES=r||[];drawNotes()},function(){})}
