@@ -434,12 +434,12 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
     <div class="tools" style="margin-top:14px"><button class="btn primary" id="srAdd" type="button">+ Add a product by hand</button><button class="btn" id="srPubAll" type="button">Publish all drafts</button><select id="srFilter"><option value="draft">Drafts</option><option value="published">Published</option><option value="rejected">Rejected</option><option value="all">All</option></select></div>
     <div class="card2" id="srAllBox" hidden><h3 style="margin:0 0 6px">Publish all drafts</h3>
       <div class="sub" id="srAllSum" style="margin-bottom:8px"></div>
-      <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="srAllFx"></div>
-      <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
-        <label>Shipping per item (supplier currency)<input id="paSh" type="text" inputmode="decimal" value="0"></label>
-        <label>Other costs per item<input id="paOt" type="text" inputmode="decimal" value="0"></label>
-        <label>Franchise margin %<input id="paM1" type="text" inputmode="decimal" value="30"></label>
-        <label>Retail margin % on top<input id="paM2" type="text" inputmode="decimal" value="40"></label></div>
+      <div class="g2" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px" id="srAllFx"></div>
+      <div class="g2" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px">
+        <label>Shipping per item (supplier currency)<input style="width:100%;min-width:0" id="paSh" type="text" inputmode="decimal" value="0"></label>
+        <label>Other costs per item<input style="width:100%;min-width:0" id="paOt" type="text" inputmode="decimal" value="0"></label>
+        <label>Franchise margin %<input style="width:100%;min-width:0" id="paM1" type="text" inputmode="decimal" value="30"></label>
+        <label>Retail margin % on top<input style="width:100%;min-width:0" id="paM2" type="text" inputmode="decimal" value="40"></label></div>
       <div class="sub" style="margin:8px 0">Drafts that already have a franchise price keep it. Drafts with no category, no supplier price or no photo are skipped and stay as drafts.</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="paGo" type="button">Publish all</button><button class="btn" id="paCancel" type="button">Cancel</button></div><div class="sub" id="paProg" style="margin-top:8px"></div></div>
     <div class="card2" id="srForm" hidden><h3 id="srfT" style="margin:0 0 8px">Product draft</h3>
@@ -924,7 +924,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#srPubAll').onclick=function(){if(SD===null){srLoad().then(function(){$('#srPubAll').click()});return}
     var L=paList();if(!L.length){flash('There are no drafts to publish');return}
     var cur={};L.forEach(function(d){if(d.wholesale_price==null&&d.supplier_price!=null)cur[d.supplier_currency||'USD']=1});
-    $('#srAllFx').innerHTML=Object.keys(cur).map(function(c){var v='';try{v=localStorage.getItem('mz-fx-'+c)||(c==='USD'?localStorage.getItem('mz-fx'):'')||''}catch(e){}return'<label>Rate: GH₵ for 1 '+CURS[c]+'<input data-fx="'+c+'" type="text" inputmode="decimal" value="'+esc(v)+'"></label>'}).join('');
+    $('#srAllFx').innerHTML=Object.keys(cur).map(function(c){var v='';try{v=localStorage.getItem('mz-fx-'+c)||(c==='USD'?localStorage.getItem('mz-fx'):'')||''}catch(e){}return'<label>Rate: GH₵ for 1 '+CURS[c]+'<input style="width:100%;min-width:0" data-fx="'+c+'" type="text" inputmode="decimal" value="'+esc(v)+'"></label>'}).join('');
     $('#srAllSum').textContent=L.length+' draft'+(L.length>1?'s':'')+' found. Check the rates and margins, then publish.';$('#paProg').textContent='';$('#srAllBox').hidden=false;$('#srAllBox').scrollIntoView({behavior:'smooth',block:'start'})};
   $('#paCancel').onclick=function(){$('#srAllBox').hidden=true};
   $('#paGo').onclick=function(){var b=this,fx={},bad=false;$$('#srAllFx [data-fx]').forEach(function(i){var v=num(i.value);if(!v)bad=true;fx[i.dataset.fx]=v;try{if(v)localStorage.setItem('mz-fx-'+i.dataset.fx,String(v))}catch(e){}});
