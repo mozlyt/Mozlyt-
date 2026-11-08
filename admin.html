@@ -431,7 +431,17 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
     <p class="sub">Collect products from suppliers (AliExpress, Alibaba) as <b>drafts</b>. Nothing reaches your shops until you press <b>Publish</b>. Set your category, your prices and the description first.</p>
     <div class="card2" id="srAli"><h3 style="margin:0 0 6px">Search suppliers</h3><label style="display:block;margin-bottom:6px">Supplier<select id="srSrc"><option value="cj">CJ Dropshipping</option><option value="aliexpress">AliExpress</option><option value="alibaba">Alibaba.com (when approved)</option><option value="1688">1688 (when approved)</option></select></label><div class="sub" id="srAliNote">Checking the connection...</div>
       <div class="tools" id="srAliTools" hidden><select id="srCat" hidden style="max-width:100%"><option value="">All CJ categories</option></select><input id="srQ" type="search" placeholder="Search, for example: massage gun"><button class="btn primary" id="srGo" type="button">Search</button></div><div id="srRes" class="lst"></div></div>
-    <div class="tools" style="margin-top:14px"><button class="btn primary" id="srAdd" type="button">+ Add a product by hand</button><select id="srFilter"><option value="draft">Drafts</option><option value="published">Published</option><option value="rejected">Rejected</option><option value="all">All</option></select></div>
+    <div class="tools" style="margin-top:14px"><button class="btn primary" id="srAdd" type="button">+ Add a product by hand</button><button class="btn" id="srPubAll" type="button">Publish all drafts</button><select id="srFilter"><option value="draft">Drafts</option><option value="published">Published</option><option value="rejected">Rejected</option><option value="all">All</option></select></div>
+    <div class="card2" id="srAllBox" hidden><h3 style="margin:0 0 6px">Publish all drafts</h3>
+      <div class="sub" id="srAllSum" style="margin-bottom:8px"></div>
+      <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="srAllFx"></div>
+      <div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+        <label>Shipping per item (supplier currency)<input id="paSh" type="text" inputmode="decimal" value="0"></label>
+        <label>Other costs per item<input id="paOt" type="text" inputmode="decimal" value="0"></label>
+        <label>Franchise margin %<input id="paM1" type="text" inputmode="decimal" value="30"></label>
+        <label>Retail margin % on top<input id="paM2" type="text" inputmode="decimal" value="40"></label></div>
+      <div class="sub" style="margin:8px 0">Drafts that already have a franchise price keep it. Drafts with no category, no supplier price or no photo are skipped and stay as drafts.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="paGo" type="button">Publish all</button><button class="btn" id="paCancel" type="button">Cancel</button></div><div class="sub" id="paProg" style="margin-top:8px"></div></div>
     <div class="card2" id="srForm" hidden><h3 id="srfT" style="margin:0 0 8px">Product draft</h3>
       <form id="fSrc" class="f">
         <label>Product name<input id="sfName" maxlength="140" required></label>
@@ -903,11 +913,31 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
       if(sfSrc.source_id){row.source=sfSrc.source;row.source_id=sfSrc.source_id}
       return sfId?MZ.update('product_drafts','id=eq.'+sfId,row).then(function(r){return r[0]}):MZ.insert('product_drafts',row,true).then(function(r){return r[0]})})}
   $('#fSrc').onsubmit=function(e){e.preventDefault();var b=$('#sfSave');busy(b,true,'Saving...');sfSaveDraft().then(function(){$('#srForm').hidden=true;srLoad();flash('Draft saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
-  function srPublish(d){if(!d.category){return Promise.reject(new Error('Choose a category first'))}if(d.wholesale_price==null){return Promise.reject(new Error('Set the franchise price first'))}
-    if(!(d.images||[]).length&&!confirm('This product has no photo. Publish anyway?'))return Promise.reject(new Error('Add a photo first'));
+  function srPublish(d,quiet){if(!d.category){return Promise.reject(new Error('Choose a category first'))}if(d.wholesale_price==null){return Promise.reject(new Error('Set the franchise price first'))}
+    if(!(d.images||[]).length&&(quiet||!confirm('This product has no photo. Publish anyway?')))return Promise.reject(new Error('Add a photo first'));
     var row={name:d.title,category:d.category,description:d.description||null,suggested_price:d.suggested_price,status:'available',photo:(d.images||[])[0]||null,photos:(d.images||[]).slice(1,6),video_url:d.video_url||null};
     return MZ.insert('products',row,true).then(function(r){var p=r[0];PROD.push(p);return setWh(p.id,d.wholesale_price).then(function(){return MZ.update('product_drafts','id=eq.'+d.id,{status:'published',product_id:p.id,updated_at:new Date().toISOString()})})}).then(function(){prods()})}
   $('#sfPub').onclick=function(){var b=this;busy(b,true,'Publishing...');sfSaveDraft().then(function(d){return srPublish(d)}).then(function(){$('#srForm').hidden=true;srLoad();flash('Published. It is now in your product list.')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
+  /* publish all drafts: prices filled from the supplier price where missing */
+  var CURS={USD:'dollar',CNY:'yuan',EUR:'euro',GBP:'pound'};
+  function paList(){return(SD||[]).filter(function(d){return d.status==='draft'})}
+  $('#srPubAll').onclick=function(){if(SD===null){srLoad().then(function(){$('#srPubAll').click()});return}
+    var L=paList();if(!L.length){flash('There are no drafts to publish');return}
+    var cur={};L.forEach(function(d){if(d.wholesale_price==null&&d.supplier_price!=null)cur[d.supplier_currency||'USD']=1});
+    $('#srAllFx').innerHTML=Object.keys(cur).map(function(c){var v='';try{v=localStorage.getItem('mz-fx-'+c)||(c==='USD'?localStorage.getItem('mz-fx'):'')||''}catch(e){}return'<label>Rate: GH₵ for 1 '+CURS[c]+'<input data-fx="'+c+'" type="text" inputmode="decimal" value="'+esc(v)+'"></label>'}).join('');
+    $('#srAllSum').textContent=L.length+' draft'+(L.length>1?'s':'')+' found. Check the rates and margins, then publish.';$('#paProg').textContent='';$('#srAllBox').hidden=false;$('#srAllBox').scrollIntoView({behavior:'smooth',block:'start'})};
+  $('#paCancel').onclick=function(){$('#srAllBox').hidden=true};
+  $('#paGo').onclick=function(){var b=this,fx={},bad=false;$$('#srAllFx [data-fx]').forEach(function(i){var v=num(i.value);if(!v)bad=true;fx[i.dataset.fx]=v;try{if(v)localStorage.setItem('mz-fx-'+i.dataset.fx,String(v))}catch(e){}});
+    if(bad){flash('Enter the exchange rate for each currency');return}
+    var sh=num($('#paSh').value)||0,ot=num($('#paOt').value)||0,m1=num($('#paM1').value)||0,m2=num($('#paM2').value)||0;
+    var L=paList(),ok=0,skip=[],i=0;if(!confirm('Publish up to '+L.length+' products to your shops now?'))return;busy(b,true,'Publishing...');
+    L.reduce(function(pr,d){return pr.then(function(){i++;$('#paProg').textContent='Publishing '+i+' of '+L.length+'...';
+      var row=Object.assign({},d);
+      if(!row.category){skip.push(d.title+': no category');return}
+      if(!(row.images||[]).length){skip.push(d.title+': no photo');return}
+      if(row.wholesale_price==null){if(row.supplier_price==null){skip.push(d.title+': no supplier price');return}
+        var c=row.supplier_currency||'USD',cost=(Number(row.supplier_price)+sh+ot)*fx[c],w=cost*(1+m1/100);row.wholesale_price=Math.ceil(w);if(row.suggested_price==null)row.suggested_price=Math.ceil(w*(1+m2/100))}
+      return MZ.update('product_drafts','id=eq.'+d.id,{wholesale_price:row.wholesale_price,suggested_price:row.suggested_price,updated_at:new Date().toISOString()}).then(function(){return srPublish(row,true)}).then(function(){ok++},function(er){skip.push(d.title+': '+(er.message||'failed'))})})},Promise.resolve()).then(function(){busy(b,false);$('#paProg').innerHTML='Published <b>'+ok+'</b>.'+(skip.length?' Skipped '+skip.length+':<br>'+skip.slice(0,15).map(esc).join('<br>')+(skip.length>15?'<br>...':''):'');flash('Published '+ok+' product'+(ok===1?'':'s'));srLoad()})};
   /* AliExpress search (needs the keys saved in Supabase, see the note shown on the page) */
   var SRC_FN={cj:'cjdropshipping',aliexpress:'aliexpress'},SRC_NAME={cj:'CJ Dropshipping',aliexpress:'AliExpress'},SRC_KEYS={cj:'CJ_API_KEY',aliexpress:'ALI_APP_KEY, ALI_APP_SECRET and ALI_TRACKING_ID'};
   function srAliCheck(){var k=$('#srSrc').value,fn=SRC_FN[k];$('#srRes').innerHTML='';
