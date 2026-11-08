@@ -917,8 +917,12 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   $('#fSrc').onsubmit=function(e){e.preventDefault();var b=$('#sfSave');busy(b,true,'Saving...');sfSaveDraft().then(function(){$('#srForm').hidden=true;srLoad();flash('Draft saved')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
   function srPublish(d,quiet){if(!d.category){return Promise.reject(new Error('Choose a category first'))}if(d.wholesale_price==null){return Promise.reject(new Error('Set the franchise price first'))}
     if(!(d.images||[]).length&&(quiet||!confirm('This product has no photo. Publish anyway?')))return Promise.reject(new Error('Add a photo first'));
-    var row={name:d.title,category:d.category,description:d.description||null,suggested_price:d.suggested_price,status:'available',photo:(d.images||[])[0]||null,photos:(d.images||[]).slice(1,6),video_url:d.video_url||null};
-    return MZ.insert('products',row,true).then(function(r){var p=r[0];PROD.push(p);return setWh(p.id,d.wholesale_price).then(function(){return MZ.update('product_drafts','id=eq.'+d.id,{status:'published',product_id:p.id,updated_at:new Date().toISOString()})})}).then(function(){prods()})}
+    if(/cjdropshipping|aliexpress|alibaba|1688\.com|https?:\/\/|www\./i.test(d.description||'')){if(quiet||!confirm('The description mentions a supplier name or a web address. Publish anyway? (Cancel, then edit the draft to remove it.)'))return Promise.reject(new Error('Description mentions a supplier or web address. Edit it first'))}
+    return MZ.fn('copy-media',{images:(d.images||[]).slice(0,6),video:d.video_url||''}).then(function(m){
+      if(!m||!m.ok)throw new Error('Could not copy the photos and video to MOZLYT: '+((m&&m.error)||'try again'));
+      var im=m.images||[];
+      var row={name:d.title,category:d.category,description:d.description||null,suggested_price:d.suggested_price,status:'available',photo:im[0]||null,photos:im.slice(1,6),video_url:m.video||null};
+      return MZ.insert('products',row,true)}).then(function(r){var p=r[0];PROD.push(p);return setWh(p.id,d.wholesale_price).then(function(){return MZ.update('product_drafts','id=eq.'+d.id,{status:'published',product_id:p.id,updated_at:new Date().toISOString()})})}).then(function(){prods()})}
   $('#sfPub').onclick=function(){var b=this;busy(b,true,'Publishing...');sfSaveDraft().then(function(d){return srPublish(d)}).then(function(){$('#srForm').hidden=true;srLoad();flash('Published. It is now in your product list.')},function(er){flash(er.message)}).then(function(){busy(b,false)})};
   var FXL=null,FXP=null;
   function fxLive(){if(FXL)return Promise.resolve(FXL);if(FXP)return FXP;FXP=MZ.fn('fx-rates',{}).then(function(r){FXP=null;if(r&&r.ok&&r.per){FXL=r;setTimeout(function(){FXL=null},3600000);return r}return null},function(){FXP=null;return null});return FXP}
