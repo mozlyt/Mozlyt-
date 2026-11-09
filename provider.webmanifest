@@ -1,0 +1,25 @@
+{
+  "id": "/provider.html",
+  "name": "MOZLYT Work",
+  "short_name": "Work",
+  "description": "Accept jobs, track your work, schedule and earnings as a MOZLYT provider.",
+  "start_url": "/provider.html?app=1",
+  "scope": "/provider",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#0E2A47",
+  "icons": [
+    {
+      "src": "/img/app-work-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/img/app-work-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

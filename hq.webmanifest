@@ -1,0 +1,25 @@
+{
+  "id": "/admin.html",
+  "name": "MOZLYT HQ",
+  "short_name": "HQ",
+  "description": "MOZLYT head office: bookings, dispatch, providers, franchises, support and settings.",
+  "start_url": "/admin.html?app=1",
+  "scope": "/admin",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#0E2A47",
+  "icons": [
+    {
+      "src": "/img/app-hq-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/img/app-hq-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
