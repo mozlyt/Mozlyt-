@@ -300,6 +300,10 @@ body.has-list .wa-float{bottom:84px}
     <label>Your name<input id="oName" required maxlength="80" autocomplete="name"></label>
     <label>Phone / WhatsApp<input id="oPhone" type="tel" required maxlength="20" autocomplete="tel"></label>
     <label>Email (optional)<input id="oEmail" type="email" maxlength="120" autocomplete="email"></label>
+    <div id="dlvBox" hidden class="card2" style="padding:12px;display:grid;gap:8px"><b>How do you want your order?</b>
+      <label style="display:flex;flex-direction:row;gap:8px;align-items:center;font-weight:600"><input type="radio" name="dm" value="pickup" checked> Pickup or arrange with the seller</label>
+      <label style="display:flex;flex-direction:row;gap:8px;align-items:center;font-weight:600"><input type="radio" name="dm" value="rider"> Delivery by dispatch rider</label>
+      <div id="dlvInfo" style="font-size:14px"></div></div>
     <label>Delivery address or area<input id="oAddr" maxlength="200" autocomplete="street-address" list="savedAddr" placeholder="e.g. East Legon, near the mall"></label><datalist id="savedAddr"></datalist>
     <label>Note (optional)<textarea id="oNote" rows="2" maxlength="300"></textarea></label>
     <label class="mk"><input type="checkbox" id="oOffers"><span>Send me offers and updates from this shop. I can stop any time.</span></label>
@@ -446,9 +450,20 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   function prod(id){return STORE.products.filter(function(p){return String(p.id)===String(id)})[0]}
   function lines(){return Object.keys(CART).map(function(id){var p=prod(id);return p?{p:p,q:CART[id]}:null}).filter(Boolean)}
   function total(){return lines().reduce(function(s,l){return s+l.p.price*l.q},0)}
+  var DELIV=false,DQ=null,HASR=false;
+  function fee(){return DELIV&&DQ&&DQ.ok?Number(DQ.fee):0}
+  function grand(){return total()+fee()}
+  function dlvBad(){return DELIV&&!(DQ&&DQ.ok)}
+  function dlvDraw(){var L=lines();$('#dlvBox').hidden=!(HASR&&L.length);var inf=$('#dlvInfo');
+    if(!DELIV){inf.innerHTML='';}else if(!DQ){inf.textContent='Working out the delivery charge...'}else if(DQ.ok){inf.innerHTML='Weight: <b>'+DQ.weight+' kg</b> &middot; Delivery charge: <b>'+MZ.money(DQ.fee)+'</b>'}else{inf.innerHTML='<span style="color:#b3261e">'+esc(DQ.error||'Delivery is not available for this order.')+'</span>'}
+    $('#ctotal').textContent=L.length?(DELIV&&DQ&&DQ.ok?'Items: '+MZ.money(total())+'  |  Delivery: '+MZ.money(DQ.fee)+'  |  Total: '+MZ.money(grand()):'Total: '+MZ.money(total())):'';
+    var bad=dlvBad();$('#waBtn').disabled=bad;$('#payNow').disabled=bad}
+  function dlvQuote(){if(!DELIV){DQ=null;dlvDraw();return}var L=lines();if(!L.length){DQ=null;dlvDraw();return}DQ=null;dlvDraw();var key=JSON.stringify(L.map(function(l){return[l.p.id,l.q]}));dlvQuote.k=key;
+    MZ.rpc('delivery_quote',{p_slug:slug,p_items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(r){if(dlvQuote.k!==key)return;DQ=r;dlvDraw()},function(){if(dlvQuote.k!==key)return;DQ={ok:false,error:'Could not work out the delivery charge. Please try again or choose pickup.'};dlvDraw()})}
+  $$('input[name=dm]').forEach(function(r){r.onchange=function(){DELIV=r.value==='rider'&&r.checked;if(DELIV&&!$('#oAddr').value.trim())$('#oAddr').focus();dlvQuote()}});
   function cartDraw(){var L=lines();$('#cartN').textContent=L.reduce(function(s,l){return s+l.q},0);var lb=$('#listbar');if(lb){lb.classList.toggle('show',L.length>0);document.body.classList.toggle('has-list',L.length>0);$('#lcount').textContent=L.reduce(function(s,l){return s+l.q},0)}
     $('#clines').innerHTML=L.map(function(l){return'<div class="cl"><span>'+esc(l.p.name)+'<br><small>'+MZ.money(l.p.price)+'</small></span><span class="q"><button data-d="'+l.p.id+'" aria-label="Less">&minus;</button>'+l.q+'<button data-u="'+l.p.id+'" aria-label="More">+</button></span></div>'}).join('')||'<div class="empty">Your list is empty.</div>';
-    $('#ctotal').textContent=L.length?'Total: '+MZ.money(total()):'';$('#fOrder').hidden=!L.length;
+    $('#fOrder').hidden=!L.length;dlvQuote();
     $$('#clines [data-d]').forEach(function(b){b.onclick=function(){var id=b.dataset.d;CART[id]--;if(CART[id]<=0)delete CART[id];save()}});$$('#clines [data-u]').forEach(function(b){b.onclick=function(){CART[b.dataset.u]++;save()}})}
   $('#cartBtn').onclick=function(){show('done',false);show('drawer',true)};$('#dbg').onclick=$('#dclose').onclick=function(){show('drawer',false)};
 
@@ -458,11 +473,11 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   function payNowItem(id){if(!(CART[id]>0)){CART[id]=1;MZ.track('AddToCart',{value:(prod(id)||{}).price||0,name:(prod(id)||{}).name||''})}save();show('done',false);show('drawer',true);var f=$('#oName');if(f)setTimeout(function(){try{f.focus()}catch(e){}},50)}
   $('#lbuy').onclick=function(){show('done',false);show('drawer',true)};
   $('#lclear').onclick=function(){CART={};save();flash('List cleared')};
-  function payCheck(){MZ.rpc('store_pay_ready',{p_slug:slug}).then(function(r){PAY=r===true;draw();$('#payNow').hidden=!PAY;$('#payOr').hidden=!PAY;$('#waBtn').textContent=PAY?'Order on WhatsApp instead':'Place order'},function(){})}
+  function payCheck(){MZ.rpc('delivery_has_rates',{p_slug:slug}).then(function(r){HASR=r===true;if(!HASR){DELIV=false;var pk=document.querySelector('input[name=dm][value=pickup]');if(pk)pk.checked=true}dlvDraw()},function(){});MZ.rpc('store_pay_ready',{p_slug:slug}).then(function(r){PAY=r===true;draw();$('#payNow').hidden=!PAY;$('#payOr').hidden=!PAY;$('#waBtn').textContent=PAY?'Order on WhatsApp instead':'Place order'},function(){})}
   $('#payNow').onclick=function(){var f=$('#fOrder'),b=this,L=lines();if(!L.length)return;if(!f.reportValidity())return;
     busy(b,true,'Opening payment...');note($('#oNoteBox'),'','');
-    MZ.fn('store-pay',{action:'init',slug:slug,name:$('#oName').value.trim(),phone:$('#oPhone').value.trim(),address:$('#oAddr').value.trim(),notes:$('#oNote').value.trim(),items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(r){
-      if(r&&r.ok&&r.url){MZ.track('InitiateCheckout',{value:total()});location.href=r.url;return}
+    MZ.fn('store-pay',{action:'init',slug:slug,name:$('#oName').value.trim(),phone:$('#oPhone').value.trim(),address:$('#oAddr').value.trim(),notes:$('#oNote').value.trim(),delivery:DELIV,items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(r){
+      if(r&&r.ok&&r.url){MZ.track('InitiateCheckout',{value:grand()});location.href=r.url;return}
       note($('#oNoteBox'),'err',(r&&r.error)||'Could not open the payment page. Please order on WhatsApp.');busy(b,false)
     },function(){note($('#oNoteBox'),'err','Could not open the payment page. Please order on WhatsApp.');busy(b,false)})};
   function payOpen(){var ref=new URLSearchParams(location.search).get('pay')||'';if(!/^MS[A-Z0-9]{6,40}$/.test(ref))return false;
@@ -566,11 +581,11 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
 
   $('#fOrder').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this),L=lines();if(!L.length)return;
     busy(b,true,'Sending...');note($('#oNoteBox'),'','');
-    MZ.rpc('place_store_order',{p_slug:slug,p_name:$('#oName').value.trim(),p_phone:$('#oPhone').value.trim(),p_address:$('#oAddr').value.trim(),p_notes:$('#oNote').value.trim(),p_items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(id){
-      var txt='Hello '+STORE.store_name+', I just placed order #'+id+':\n'+L.map(function(l){return l.q+' x '+l.p.name+' ('+MZ.money(l.p.price*l.q)+')'}).join('\n')+'\nTotal: '+MZ.money(total())+'\nName: '+$('#oName').value.trim()+'\nDelivery: '+($('#oAddr').value.trim()||'to be agreed');
+    MZ.rpc('place_store_order',{p_slug:slug,p_name:$('#oName').value.trim(),p_phone:$('#oPhone').value.trim(),p_address:$('#oAddr').value.trim(),p_notes:$('#oNote').value.trim(),p_delivery:DELIV,p_items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(id){
+      var txt='Hello '+STORE.store_name+', I just placed order #'+id+':\n'+L.map(function(l){return l.q+' x '+l.p.name+' ('+MZ.money(l.p.price*l.q)+')'}).join('\n')+(DELIV&&DQ&&DQ.ok?'\nDelivery by rider ('+DQ.weight+' kg): '+MZ.money(DQ.fee):'')+'\nTotal: '+MZ.money(grand())+'\nName: '+$('#oName').value.trim()+'\nDelivery: '+($('#oAddr').value.trim()||'to be agreed');
       var url='https://wa.me/'+MZ.phoneIntl(STORE.whatsapp)+'?text='+encodeURIComponent(txt);
       var svName=$('#oName').value.trim(),svPhone=$('#oPhone').value.trim();
-      MZ.track('Purchase',{value:total()});CART={};save();show('fOrder',false);$('#clines').innerHTML='';$('#ctotal').textContent='';
+      MZ.track('Purchase',{value:grand()});CART={};DELIV=false;DQ=null;save();show('fOrder',false);$('#clines').innerHTML='';$('#ctotal').textContent='';
       $('#done').innerHTML='<div class="msg ok"><b>Order #'+id+' received.</b> The seller will confirm with you shortly.</div><a class="btn primary" style="width:100%;justify-content:center" target="_blank" rel="noopener" href="'+url+'">Send the details on WhatsApp</a>';show('done',true);saveOffer({id:id,phone:svPhone,name:svName,ref:''});
     },function(er){note($('#oNoteBox'),'err',/not available/i.test(er.message)?'One of the items is no longer available. Please remove it and try again.':er.message)}).then(function(){busy(b,false)})};
 })();
