@@ -300,9 +300,9 @@ body.has-list .wa-float{bottom:84px}
     <label>Your name<input id="oName" required maxlength="80" autocomplete="name"></label>
     <label>Phone / WhatsApp<input id="oPhone" type="tel" required maxlength="20" autocomplete="tel"></label>
     <label>Email (optional)<input id="oEmail" type="email" maxlength="120" autocomplete="email"></label>
-    <div id="dlvBox" hidden class="card2" style="padding:12px;display:grid;gap:8px"><b>How do you want your order?</b>
+    <div id="dlvBox" hidden class="card2" style="padding:12px;display:grid;gap:8px"><b>How do you want to receive your order?</b>
       <label style="display:flex;flex-direction:row;gap:8px;align-items:center;font-weight:600"><input type="radio" name="dm" value="pickup" checked> Pickup or arrange with the seller</label>
-      <label style="display:flex;flex-direction:row;gap:8px;align-items:center;font-weight:600"><input type="radio" name="dm" value="rider"> Delivery by dispatch rider</label>
+      <label style="display:flex;flex-direction:row;gap:8px;align-items:center;font-weight:600"><input type="radio" name="dm" value="rider"> Request shipping (delivery by rider)</label>
       <div id="dlvInfo" style="font-size:14px"></div></div>
     <label>Delivery address or area<input id="oAddr" maxlength="200" autocomplete="street-address" list="savedAddr" placeholder="e.g. East Legon, near the mall"></label><datalist id="savedAddr"></datalist>
     <label>Note (optional)<textarea id="oNote" rows="2" maxlength="300"></textarea></label>
@@ -457,7 +457,7 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   function dlvDraw(){var L=lines();$('#dlvBox').hidden=!(HASR&&L.length);var inf=$('#dlvInfo');
     if(!DELIV){inf.innerHTML='';}else if(!DQ){inf.textContent='Working out the delivery charge...'}else if(DQ.ok){inf.innerHTML='Weight: <b>'+DQ.weight+' kg</b> &middot; Delivery charge: <b>'+MZ.money(DQ.fee)+'</b>'}else{inf.innerHTML='<span style="color:#b3261e">'+esc(DQ.error||'Delivery is not available for this order.')+'</span>'}
     $('#ctotal').textContent=L.length?(DELIV&&DQ&&DQ.ok?'Items: '+MZ.money(total())+'  |  Delivery: '+MZ.money(DQ.fee)+'  |  Total: '+MZ.money(grand()):'Total: '+MZ.money(total())):'';
-    var bad=dlvBad();$('#waBtn').disabled=bad;$('#payNow').disabled=bad}
+    var bad=dlvBad();$('#waBtn').disabled=bad;$('#payNow').disabled=bad;var one=DELIV&&PAY;$('#waBtn').hidden=!!one;$('#payOr').hidden=!PAY||!!one;if(PAY){var pn=$('#payNow');if(!pn.dataset.l)pn.dataset.l=pn.textContent;if(!pn.disabled||pn.dataset.l)pn.textContent=(DELIV&&DQ&&DQ.ok)?'Pay '+MZ.money(grand())+' now (items + shipping)':pn.dataset.l}}
   function dlvQuote(){if(!DELIV){DQ=null;dlvDraw();return}var L=lines();if(!L.length){DQ=null;dlvDraw();return}DQ=null;dlvDraw();var key=JSON.stringify(L.map(function(l){return[l.p.id,l.q]}));dlvQuote.k=key;
     MZ.rpc('delivery_quote',{p_slug:slug,p_items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(r){if(dlvQuote.k!==key)return;DQ=r;dlvDraw()},function(){if(dlvQuote.k!==key)return;DQ={ok:false,error:'Could not work out the delivery charge. Please try again or choose pickup.'};dlvDraw()})}
   $$('input[name=dm]').forEach(function(r){r.onchange=function(){DELIV=r.value==='rider'&&r.checked;if(DELIV&&!$('#oAddr').value.trim())$('#oAddr').focus();dlvQuote()}});
@@ -473,9 +473,10 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   function payNowItem(id){if(!(CART[id]>0)){CART[id]=1;MZ.track('AddToCart',{value:(prod(id)||{}).price||0,name:(prod(id)||{}).name||''})}save();show('done',false);show('drawer',true);var f=$('#oName');if(f)setTimeout(function(){try{f.focus()}catch(e){}},50)}
   $('#lbuy').onclick=function(){show('done',false);show('drawer',true)};
   $('#lclear').onclick=function(){CART={};save();flash('List cleared')};
-  function payCheck(){MZ.rpc('delivery_has_rates',{p_slug:slug}).then(function(r){HASR=r===true;if(!HASR){DELIV=false;var pk=document.querySelector('input[name=dm][value=pickup]');if(pk)pk.checked=true}dlvDraw()},function(){});MZ.rpc('store_pay_ready',{p_slug:slug}).then(function(r){PAY=r===true;draw();$('#payNow').hidden=!PAY;$('#payOr').hidden=!PAY;$('#waBtn').textContent=PAY?'Order on WhatsApp instead':'Place order'},function(){})}
+  function payCheck(){MZ.rpc('delivery_has_rates',{p_slug:slug}).then(function(r){HASR=r===true;if(!HASR){DELIV=false;var pk=document.querySelector('input[name=dm][value=pickup]');if(pk)pk.checked=true}dlvDraw()},function(){});MZ.rpc('store_pay_ready',{p_slug:slug}).then(function(r){PAY=r===true;draw();$('#payNow').hidden=!PAY;$('#payOr').hidden=!PAY;$('#waBtn').textContent=PAY?'Order on WhatsApp instead':'Place order';dlvDraw()},function(){})}
   $('#payNow').onclick=function(){var f=$('#fOrder'),b=this,L=lines();if(!L.length)return;if(!f.reportValidity())return;
     busy(b,true,'Opening payment...');note($('#oNoteBox'),'','');
+    try{sessionStorage.setItem('mzDel',DELIV?'1':'')}catch(e){}
     MZ.fn('store-pay',{action:'init',slug:slug,name:$('#oName').value.trim(),phone:$('#oPhone').value.trim(),address:$('#oAddr').value.trim(),notes:$('#oNote').value.trim(),delivery:DELIV,items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(r){
       if(r&&r.ok&&r.url){MZ.track('InitiateCheckout',{value:grand()});location.href=r.url;return}
       note($('#oNoteBox'),'err',(r&&r.error)||'Could not open the payment page. Please order on WhatsApp.');busy(b,false)
@@ -492,7 +493,8 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
     var tries=0;(function go(){MZ.fn('store-pay',{action:'verify',reference:ref}).then(function(r){
       if(r&&r.ok&&r.status==='paid'){CART={};save();show('fOrder',false);$('#clines').innerHTML='';$('#ctotal').textContent='';
         var w=STORE&&STORE.whatsapp?'<a class="btn primary" style="width:100%;justify-content:center;margin-top:10px" target="_blank" rel="noopener" href="https://wa.me/'+MZ.phoneIntl(STORE.whatsapp)+'?text='+encodeURIComponent('Hello '+STORE.store_name+', I just paid online for order #'+r.order_id+' (ref '+ref+').')+'">Message the seller on WhatsApp</a>':'';
-        $('#done').innerHTML='<div class="msg ok"><b>Payment received. Order #'+esc(String(r.order_id))+'.</b> The seller will contact you about delivery.</div>'+w;MZ.track('Purchase',{});saveOffer({id:r.order_id,phone:'',name:'',ref:ref});return}
+        var isD=false;try{isD=sessionStorage.getItem('mzDel')==='1';sessionStorage.removeItem('mzDel')}catch(e){}
+        $('#done').innerHTML=isD?'<div class="msg ok"><b>Payment received. Order #'+esc(String(r.order_id))+'.</b> Your shipping request has been sent to the dispatch team. A rider will be assigned and will deliver to your address. Items and shipping are paid in one go, so there is nothing more to do.</div>':'<div class="msg ok"><b>Payment received. Order #'+esc(String(r.order_id))+'.</b> The seller will contact you about delivery.</div>'+w;MZ.track('Purchase',{});saveOffer({id:r.order_id,phone:'',name:'',ref:ref});return}
       if(r&&(r.status==='pending'||r.status==='ongoing'||r.status==='processing'||r.status==='abandoned'||!r.status)&&tries++<4){setTimeout(go,3000);return}
       $('#done').innerHTML='<div class="msg err">'+esc((r&&r.error)||'We could not confirm the payment yet.')+' If money left your account, message the seller with this reference: <b>'+esc(ref)+'</b></div>'}
     ,function(){$('#done').innerHTML='<div class="msg err">We could not check the payment. If money left your account, message the seller with this reference: <b>'+esc(ref)+'</b></div>'})})()}
