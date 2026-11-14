@@ -372,10 +372,13 @@ form{background:transparent!important;border:0!important;padding:0!important}
     <label>Phone number we can reach you on<input id="faPhone" type="tel" maxlength="30" placeholder="e.g. 0241234567"></label>
     <label>Country<select id="faCountry"><option value="">Select your country</option></select></label>
     <label>City or area you ride in<input id="faLoc" maxlength="120" placeholder="e.g. Accra, Madina"></label>
-    <label>Your delivery vehicle<select id="faVt"><option value="">Choose</option><option value="motorbike">Motorbike</option><option value="bicycle">Bicycle</option><option value="tricycle">Tricycle (Aboboyaa)</option><option value="car">Car</option><option value="foot">On foot</option></select></label>
+    <label>Your delivery vehicle<select id="faVt"><option value="">Choose</option><option value="motorbike">Motorcycle</option><option value="car">Car</option><option value="tricycle">Tricycle (Aboboyaa)</option><option value="bicycle">Bicycle</option><option value="foot">On foot</option></select></label>
     <div id="vehFields" class="f">
-      <label>Vehicle make and colour<input id="faMake" maxlength="80" placeholder="e.g. Haojue, red"></label>
-      <label>Machine number (plate or registration number of your delivery machine)<input id="faMach" maxlength="30" placeholder="e.g. GR 1234-24" style="text-transform:uppercase"></label>
+      <label>Make<input id="faMake" maxlength="80" placeholder="e.g. Honda"></label>
+      <label>Model<input id="faModel" maxlength="80" placeholder="e.g. Fit"></label>
+      <label>Colour<input id="faColor" maxlength="30" placeholder="e.g. Yellow"></label>
+      <label>Manufacture year<input id="faYear" type="number" inputmode="numeric" min="1980" max="2100" placeholder="e.g. 2012"></label>
+      <label>Vehicle plate number (your machine number)<input id="faMach" maxlength="30" placeholder="e.g. GR 3137-17" style="text-transform:uppercase"></label>
     </div>
     <label>Your ID card (Ghana Card, passport or driver's licence) - photo or PDF<input id="faId" type="file" accept="image/*,application/pdf"></label>
     <label>A clear selfie of your face<input id="faSelfie" type="file" accept="image/*" capture="user"></label>
@@ -495,12 +498,12 @@ function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.
 
   /* ---- application ---- */
   function faCheck(){var miss=[],first=null;function m(t,id){miss.push(t);if(!first)first=id}
-    var vt=$('#faVt').value,veh=vt&&vt!=='foot';
+    var vt=$('#faVt').value,veh=vt&&vt!=='foot'&&vt!=='bicycle';
     if(JOIN){if(($('#jName').value||'').trim().length<2)m('your full name','jName');if(!/^\S+@\S+\.\S+$/.test($('#jEmail').value.trim()))m('your email','jEmail');if(($('#jPass').value||'').length<8)m('a password of 8 or more characters','jPass')}
     if($('#faPhone').value.replace(/\D/g,'').length<9)m('your phone number','faPhone');if(!$('#faCountry').value)m('your country','faCountry');if(!vt)m('your vehicle','faVt');
-    if(veh&&($('#faMach').value||'').trim().length<3)m('your machine number','faMach');if(!$('#faId').files[0])m('your ID card','faId');if(!$('#faSelfie').files[0])m('your selfie','faSelfie');
-    if(veh&&vt!=='bicycle'&&!$('#faLic').files[0])m('your licence','faLic');if(!$('#faAgree').checked)m('agreeing to the terms','faAgree');
-    show('vehFields',!!veh);show('licRow',!!veh&&vt!=='bicycle');show('regRow',!!veh&&vt!=='bicycle');
+    if(veh){if(($('#faMake').value||'').trim().length<2)m('the vehicle make','faMake');if(!($('#faModel').value||'').trim())m('the vehicle model','faModel');if(($('#faColor').value||'').trim().length<3)m('the vehicle colour','faColor');var yr=Number($('#faYear').value);if(!(yr>=1980&&yr<=new Date().getFullYear()+1))m('the manufacture year','faYear');if(($('#faMach').value||'').trim().length<3)m('your vehicle plate number','faMach')}if(!$('#faId').files[0])m('your ID card','faId');if(!$('#faSelfie').files[0])m('your selfie','faSelfie');
+    if(veh&&!$('#faLic').files[0])m('your licence','faLic');if(!$('#faAgree').checked)m('agreeing to the terms','faAgree');
+    show('vehFields',!!veh);show('licRow',!!veh);show('regRow',!!veh);
     $('#faBtn').disabled=miss.length>0;$('#faBtn').dataset.first=first||'';$('#faNeed').textContent=miss.length?'To send, please still add: '+miss.join(', ')+'. (Tap here to go to it.)':'Everything is ready. You can send now.';$('#faNeed').style.color=miss.length?'':'#14663f'}
   $('#faNeed').onclick=$('#faWrap').onclick=function(){if(!$('#faBtn').disabled)return;var e=$('#'+$('#faBtn').dataset.first);if(e){(e.closest('label')||e).scrollIntoView({behavior:'smooth',block:'center'});try{e.focus({preventScroll:true})}catch(x){}}};
   function showApply(join){JOIN=!!join;views('applyView');show('joinFields',JOIN);show('faEmailRow',!JOIN);$('#apTitle').textContent=JOIN?'Create your account and apply':'Apply to be a dispatch rider';$('#btnOut2').textContent=JOIN?'I already have an account':'Log out';$('#faEmail').value=ME.email||'';$('#faPhone').value=ME.phone||'';
@@ -511,11 +514,11 @@ function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.
     var fs=[$('#faId').files[0],$('#faSelfie').files[0],$('#faLic').files[0],$('#faReg').files[0]];
     for(var i=0;i<fs.length;i++)if(fs[i]&&fs[i].size>8388608){note(n,'err','Each file must be under 8 MB.');return}
     busy(b,true,'Sending...');var t=Date.now(),ext=function(f){var m=(f.name.match(/\.([a-z0-9]{2,5})$/i)||[])[1];return m?m.toLowerCase():'jpg'};
-    var ph=$('#faPhone').value.replace(/[^\d+]/g,''),vt=$('#faVt').value,veh=vt!=='foot';
+    var ph=$('#faPhone').value.replace(/[^\d+]/g,''),vt=$('#faVt').value,veh=vt!=='foot'&&vt!=='bicycle';
     var acct=JOIN?MZ.signUp($('#jEmail').value.trim(),$('#jPass').value,{full_name:$('#jName').value.trim(),phone:ph,kind:'rider'},'rider.html').then(function(r){if(!r.confirmed){var e=new Error('NOCONFIRM');e.nc=1;throw e}ME={full_name:$('#jName').value.trim(),phone:ph,email:$('#jEmail').value.trim()}}):Promise.resolve();
     acct.then(function(){var u=MZ.user().id;function up(f,k){return f?MZ.upload('franchise-docs',u+'/rider-'+k+'-'+t+'.'+ext(f),f):Promise.resolve(null)}
       return Promise.all([up(fs[0],'id'),up(fs[1],'selfie'),veh?up(fs[2],'lic'):null,veh?up(fs[3],'reg'):null])}).then(function(p){
-      return MZ.rpc('submit_rider_application',{p_name:ME.full_name||'',p_phone:ph,p_country:$('#faCountry').value,p_location:$('#faLoc').value.trim(),p_message:$('#faMsg').value.trim(),p_vehicle_type:vt,p_vehicle_make:veh?$('#faMake').value.trim():'',p_machine:veh?$('#faMach').value.trim():'',p_id_path:p[0],p_licence_path:p[2],p_vehicle_path:p[3],p_selfie_path:p[1],p_code:(MZ.frCode&&MZ.frCode())||'',p_terms:true})}).then(function(){window.__reapply=false;JOIN=false;return boot()},function(er){
+      return MZ.rpc('submit_rider_application',{p_name:ME.full_name||'',p_phone:ph,p_country:$('#faCountry').value,p_location:$('#faLoc').value.trim(),p_message:$('#faMsg').value.trim(),p_vehicle_type:vt,p_vehicle_make:veh?$('#faMake').value.trim():'',p_vehicle_model:veh?$('#faModel').value.trim():'',p_vehicle_color:veh?$('#faColor').value.trim():'',p_vehicle_year:veh?Number($('#faYear').value):null,p_machine:veh?$('#faMach').value.trim():'',p_id_path:p[0],p_licence_path:p[2],p_vehicle_path:p[3],p_selfie_path:p[1],p_code:(MZ.frCode&&MZ.frCode())||'',p_terms:true})}).then(function(){window.__reapply=false;JOIN=false;return boot()},function(er){
       if(er&&er.nc){JOIN=false;views('authView');$$('#atabs button')[0].click();$('#lEmail').value=$('#jEmail').value;note(aNote,'ok','Account created. Check your email for a confirmation link, then log in here and send your documents to finish.');return}
       note(n,'err',er.message)}).then(function(){busy(b,false)})};
   function showWait(){views('waitView');var s=RD.status,h;
@@ -538,7 +541,7 @@ function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.
   /* ---- dashboard ---- */
   function greet(){var h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening'}
   function showDash(){views('dashView');$('#pvHi').textContent=greet()+', '+String(RD.name||'').trim().split(/\s+/)[0];$('#who').textContent=(RD.email||'')+(RD.machine_number?' | Machine '+RD.machine_number:'');ON=!!RD.online;drawOn();pane('jobs');load();clearInterval(timer);timer=setInterval(load,30000);
-    var d=[['Name',RD.name],['Phone',RD.phone],['Email',RD.email],['Area',RD.location],['Vehicle',[RD.vehicle_type,RD.vehicle_make].filter(Boolean).join(', ')],['Machine number',RD.machine_number],['Total earned',MZ.money(RD.earned)]];
+    var d=[['Name',RD.name],['Phone',RD.phone],['Email',RD.email],['Area',RD.location],['Vehicle',[RD.vehicle_type,RD.vehicle_make,RD.vehicle_model,RD.vehicle_color,RD.vehicle_year].filter(Boolean).join(', ')],['Plate number',RD.machine_number],['Total earned',MZ.money(RD.earned)]];
     $('#meDl').innerHTML=d.filter(function(x){return x[1]}).map(function(x){return'<dt class="sub">'+esc(x[0])+'</dt><dd><b>'+esc(String(x[1]))+'</b></dd>'}).join('')}
   function pane(t){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x.dataset.t===t)});['jobs','hist','me'].forEach(function(p){show('pane-'+p,p===t)})}
   $$('#dtabs button').forEach(function(b){b.onclick=function(){pane(b.dataset.t)}});

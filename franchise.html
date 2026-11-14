@@ -1179,7 +1179,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
   var RD=[],DL=[],OR=[];
   function ago(t){if(!t)return'no GPS yet';var m=Math.max(0,Math.round((Date.now()-new Date(t))/60000));return m<1?'just now':m<60?m+' min ago':Math.round(m/60)+' h ago'}
   function gmap(r){return r.lat!=null?'<a target="_blank" rel="noopener" href="https://www.google.com/maps?q='+r.lat+','+r.lng+'">See on map</a>':''}
-  function vlab(r){return[r.vehicle_type,r.vehicle_make].filter(Boolean).join(', ')+(r.machine_number?' &middot; Machine <b>'+esc(r.machine_number)+'</b>':'')}
+  function vlab(r){return[r.vehicle_type,r.vehicle_make,r.vehicle_model,r.vehicle_color,r.vehicle_year].filter(Boolean).join(', ')+(r.machine_number?' &middot; Machine <b>'+esc(r.machine_number)+'</b>':'')}
   window.frRiderLoad=function(){return MZ.q('riders','select=*&franchise_id=eq.'+me()+'&order=created_at.desc').then(function(r){RD=r||[];drawApp()},function(e){flash(e.message)})};
   window.frDelLoad=function(){return Promise.all([MZ.q('riders','select=*&franchise_id=eq.'+me()+'&status=eq.approved'),MZ.q('deliveries','select=*&franchise_id=eq.'+me()+'&order=created_at.desc&limit=100'),MZ.q('orders','select=id,customer_name,total,status,address&franchise_id=eq.'+me()+'&order=created_at.desc&limit=60')]).then(function(r){RD=r[0]||[];DL=r[1]||[];OR=r[2]||[];drawDel()},function(e){flash(e.message)})};
   function drawApp(){var root=$('#fpRid');if(!root)return;
