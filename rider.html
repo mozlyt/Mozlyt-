@@ -404,13 +404,26 @@ form{background:transparent!important;border:0!important;padding:0!important}
 </section>
 
 <section id="dashView" hidden class="pv">
-  <div class="pv-head"><div><div class="pv-eyebrow">MOZLYT Dispatch Rider</div><h1 id="pvHi">Welcome</h1><p class="sub" id="who"></p></div><button class="b2 ghost" type="button" id="btnOut">Log out</button></div>
-  <div class="card2" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><b id="onTxt">You are offline</b><div class="sub" id="gpsTxt" style="margin:2px 0 0"></div></div><button class="btn primary" type="button" id="btnOn">Go online</button></div></div>
-  <div class="tabs" id="dtabs"><button data-t="jobs" class="on" type="button">Deliveries <span id="jobN"></span></button><button data-t="hist" type="button">History</button><button data-t="me" type="button">My details</button></div>
+  <div class="pv-head"><div><div class="pv-eyebrow">MOZLYT Dispatch Portal</div><h1 id="pvHi">Welcome</h1><p class="sub" id="who"></p></div><button class="b2 ghost" type="button" id="btnOut">Log out</button></div>
+  <div class="rgrid">
+    <div class="card2 rst"><div class="rl">Your availability</div><div class="rv" id="avV">OFFLINE</div><p class="sub" id="avT">You are not receiving delivery assignments.</p><button class="btn primary" type="button" id="btnOn">Go online</button></div>
+    <div class="card2 rst"><div class="rl">GPS location</div><div class="rv" id="gpV">INACTIVE</div><p class="sub" id="gpsTxt">Your franchise can view your location while you are on duty.</p></div>
+  </div>
+  <div class="rstats"><div class="card2"><b id="sAct">0</b><span>Active assignments</span></div><div class="card2"><b id="sDone">0</b><span>Completed today</span></div><div class="card2"><b id="sEarn">GH₵0</b><span>Today's earnings</span></div><div class="card2"><b id="sPend">0</b><span>Pending payment</span></div></div>
   <div id="pane-jobs"><div class="lst" id="jobList"></div></div>
-  <div id="pane-hist" hidden><div class="lst" id="histList"></div></div>
-  <div id="pane-me" hidden><div class="card2"><dl id="meDl" style="display:grid;grid-template-columns:auto 1fr;gap:6px 16px"></dl></div></div>
+  <div id="pane-earn" hidden><div class="rstats" id="earnStats"></div><h3 style="margin:14px 0 8px">Delivery payments</h3><div class="lst" id="earnList"></div></div>
+  <div id="pane-hist" hidden><input id="hSearch" type="search" placeholder="Search history: customer, address or delivery number" style="width:100%;margin-bottom:10px"><div class="lst" id="histList"></div></div>
+  <div id="pane-me" hidden><div class="card2"><dl id="meDl" style="display:grid;grid-template-columns:auto 1fr;gap:6px 16px"></dl></div><div class="card2" style="margin-top:12px"><b>Help and support</b><p class="sub" style="margin:6px 0 10px">Problem with the app, a payment or your account? Message MOZLYT support. For a delivery problem, use Report a problem on the delivery.</p><a class="b2" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20dispatch%20rider%20and%20need%20help.">Message support</a></div></div>
+  <div class="tabs" id="dtabs"><button data-t="jobs" class="on" type="button">Deliveries <span id="jobN"></span></button><button data-t="earn" type="button">Earnings</button><button data-t="hist" type="button">History</button><button data-t="me" type="button">My details</button></div>
 </section>
+<style>.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.rst .rl{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#b9c6d4;font-weight:700}.rst .rv{font:800 24px Georgia,serif;margin:4px 0}.rst .rv.on{color:#34c78d}.rst .rv.off{color:#ffb4a8}.rst .sub{color:#c4cfdb;margin:0 0 10px;font-size:13.5px}
+.rstats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.rstats .card2{padding:12px;text-align:center}.rstats b{display:block;font-size:20px;font-weight:800}.rstats span{font-size:12px;color:#c4cfdb}
+.stg{list-style:none;display:flex;justify-content:space-between;gap:4px;margin:10px 0 4px;padding:0;font-size:10.5px;color:#9fb0c3;text-align:center}.stg li{flex:1;border-top:3px solid #34414f;padding-top:5px}.stg li.ok{border-color:#34c78d;color:#fff}.stg li.cur{border-color:#34c78d;color:#34c78d;font-weight:800}
+.ts{font-size:12.5px;color:#b9c6d4}
+@media(max-width:560px){.rgrid{grid-template-columns:1fr}.rstats{grid-template-columns:repeat(2,1fr)}}
+body{padding-bottom:96px}.wa-float{bottom:92px!important;transform:scale(.8);transform-origin:bottom right}.m,.sub{color:#c4cfdb}
+#dtabs{padding-bottom:max(8px,env(safe-area-inset-bottom))}</style>
+
 
 </div></main>
 
@@ -529,39 +542,60 @@ function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.
 
   /* ---- GPS ---- */
   function getPos(cb){if(!navigator.geolocation){cb(null);return}navigator.geolocation.getCurrentPosition(function(p){cb({lat:p.coords.latitude,lng:p.coords.longitude})},function(){cb(null)},{enableHighAccuracy:true,timeout:15000,maximumAge:10000})}
-  function sendLoc(p){if(!p)return;lastSent=Date.now();MZ.rpc('rider_set_location',{p_lat:p.lat,p_lng:p.lng}).then(function(){$('#gpsTxt').textContent='GPS shared just now. Your franchise can see where you are.'},function(){})}
-  function startGps(){stopGps();if(!navigator.geolocation)return;watch=navigator.geolocation.watchPosition(function(p){if(Date.now()-lastSent>20000)sendLoc({lat:p.coords.latitude,lng:p.coords.longitude})},function(){$('#gpsTxt').textContent='GPS is off. Allow location in your browser so your franchise can find you.'},{enableHighAccuracy:true,maximumAge:5000})}
-  function active(){return JOBS.some(function(j){return j.status==='accepted'||j.status==='picked_up'})}
-  function syncGps(){if(ON||active())startGps();else{stopGps();$('#gpsTxt').textContent='GPS is only shared while you are online or carrying a delivery.'}}
-  function drawOn(){$('#onTxt').textContent=ON?'You are online':'You are offline';$('#btnOn').textContent=ON?'Go offline':'Go online'}
-  $('#btnOn').onclick=function(){var b=this;if(ON){busy(b,true);MZ.rpc('rider_set_online',{p_online:false}).then(function(){ON=false;drawOn();syncGps()},function(e){flash(e.message)}).then(function(){busy(b,false)});return}
+  function gpsDraw(on,msg){var v=$('#gpV');v.textContent=on?'ACTIVE':'INACTIVE';v.className='rv '+(on?'on':'off');if(msg)$('#gpsTxt').textContent=msg}
+  function sendLoc(p){if(!p)return;lastSent=Date.now();MZ.rpc('rider_set_location',{p_lat:p.lat,p_lng:p.lng}).then(function(){gpsDraw(true,'Your franchise can view your location while you are on duty. Last shared just now.')},function(){})}
+  function startGps(){stopGps();if(!navigator.geolocation)return;watch=navigator.geolocation.watchPosition(function(p){if(Date.now()-lastSent>20000)sendLoc({lat:p.coords.latitude,lng:p.coords.longitude})},function(){gpsDraw(false,'GPS is blocked. Allow location in your browser so your franchise can find you.')},{enableHighAccuracy:true,maximumAge:5000});gpsDraw(true)}
+  var LIVE=['accepted','to_pickup','picked_up','out'];
+  function active(){return JOBS.some(function(j){return LIVE.indexOf(j.status)>-1})}
+  function syncGps(){if(ON||active())startGps();else{stopGps();gpsDraw(false,'Your location is only shared while you are online or carrying a delivery.')}}
+  function drawOn(){var v=$('#avV');v.textContent=ON?'ONLINE':'OFFLINE';v.className='rv '+(ON?'on':'off');$('#avT').textContent=ON?'You are available to receive delivery assignments.':'You are not receiving delivery assignments.';$('#btnOn').textContent=ON?'Go offline':'Go online'}
+  $('#btnOn').onclick=function(){var b=this;if(ON){busy(b,true);MZ.rpc('rider_set_online',{p_online:false}).then(function(){ON=false;drawOn();syncGps()},function(e){flash(e.message)}).then(function(){busy(b,false);drawOn()});return}
     busy(b,true,'Finding you...');getPos(function(p){if(!p){busy(b,false);flash('Allow location (GPS) first. You cannot go online without it.',4000);return}
-      Promise.all([MZ.rpc('rider_set_location',{p_lat:p.lat,p_lng:p.lng}),MZ.rpc('rider_set_online',{p_online:true})]).then(function(){ON=true;lastSent=Date.now();drawOn();syncGps()},function(e){flash(e.message)}).then(function(){busy(b,false)})})};
+      Promise.all([MZ.rpc('rider_set_location',{p_lat:p.lat,p_lng:p.lng}),MZ.rpc('rider_set_online',{p_online:true})]).then(function(){ON=true;lastSent=Date.now();drawOn();syncGps()},function(e){flash(e.message)}).then(function(){busy(b,false);drawOn()})})};
 
   /* ---- dashboard ---- */
   function greet(){var h=new Date().getHours();return h<12?'Good morning':h<17?'Good afternoon':'Good evening'}
-  function showDash(){views('dashView');$('#pvHi').textContent=greet()+', '+String(RD.name||'').trim().split(/\s+/)[0];$('#who').textContent=(RD.email||'')+(RD.machine_number?' | Machine '+RD.machine_number:'');ON=!!RD.online;drawOn();pane('jobs');load();clearInterval(timer);timer=setInterval(load,30000);
+  function showDash(){views('dashView');$('#pvHi').textContent=greet()+', '+String(RD.name||'').trim().split(/\s+/)[0];$('#who').textContent=(RD.email||'')+(RD.machine_number?' | Plate '+RD.machine_number:'');ON=!!RD.online;drawOn();pane('jobs');load();clearInterval(timer);timer=setInterval(load,30000);
     var d=[['Name',RD.name],['Phone',RD.phone],['Email',RD.email],['Area',RD.location],['Vehicle',[RD.vehicle_type,RD.vehicle_make,RD.vehicle_model,RD.vehicle_color,RD.vehicle_year].filter(Boolean).join(', ')],['Plate number',RD.machine_number],['Total earned',MZ.money(RD.earned)]];
     $('#meDl').innerHTML=d.filter(function(x){return x[1]}).map(function(x){return'<dt class="sub">'+esc(x[0])+'</dt><dd><b>'+esc(String(x[1]))+'</b></dd>'}).join('')}
-  function pane(t){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x.dataset.t===t)});['jobs','hist','me'].forEach(function(p){show('pane-'+p,p===t)})}
+  function pane(t){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x.dataset.t===t)});['jobs','earn','hist','me'].forEach(function(p){show('pane-'+p,p===t)})}
   $$('#dtabs button').forEach(function(b){b.onclick=function(){pane(b.dataset.t)}});
-  function load(){MZ.q('deliveries','select=*&rider_id=eq.'+MZ.user().id+'&order=created_at.desc&limit=100').then(function(r){JOBS=r||[];draw();syncGps()},function(){})}
+  $('#hSearch').oninput=draw;
+  function load(){MZ.rpc('rider_deliveries',{}).then(function(r){JOBS=r||[];draw();syncGps()},function(){})}
   function map(a){return'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a||'')}
-  function card(j){var st={offered:['New delivery for you','warn'],accepted:['Go pick it up',''],picked_up:['On the way to the customer',''],delivered:['Delivered',''],cancelled:['Cancelled','bad']}[j.status]||[j.status,''];
-    var btns='';if(j.status==='offered')btns='<button class="b2" data-a="acc" data-id="'+j.id+'" type="button">Accept</button><button class="b2 ghost" data-a="dec" data-id="'+j.id+'" type="button">Decline</button>';
-    if(j.status==='accepted')btns='<button class="b2" data-a="pick" data-id="'+j.id+'" type="button">I have picked it up</button>';
-    if(j.status==='picked_up')btns='<button class="b2" data-a="drop" data-id="'+j.id+'" type="button">I have delivered it</button>';
-    return'<div class="it"><div class="h"><b>Delivery #'+j.id+'</b><span class="tag '+st[1]+'">'+st[0]+'</span></div><div class="m">'+esc(j.customer_name||'Customer')+(j.customer_phone?' &middot; <a href="tel:'+esc(j.customer_phone)+'">'+esc(j.customer_phone)+'</a>':'')+'<br>'+esc(j.address||'')+' &middot; <a target="_blank" rel="noopener" href="'+map(j.address)+'">Open in maps</a>'+(j.items?'<br>Items: '+esc(j.items):'')+(j.note?'<br>Note: '+esc(j.note):'')+'<br>Fee: <b>'+(j.fee!=null?MZ.money(j.fee):'to be agreed')+'</b> &middot; '+MZ.when(j.created_at)+'</div>'+(btns?'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">'+btns+'</div>':'')+'</div>'}
-  function draw(){var cur=JOBS.filter(function(j){return['offered','accepted','picked_up'].indexOf(j.status)>-1}),his=JOBS.filter(function(j){return j.status==='delivered'||j.status==='cancelled'});
-    $('#jobN').textContent=cur.length?'('+cur.length+')':'';
+  function hm(t){return t?new Date(t).toLocaleString([], {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}
+  var STG=[['accepted','Accepted','accepted_at'],['to_pickup','Going to pickup','going_at'],['picked_up','Picked up','picked_at'],['out','Out for delivery','out_at'],['delivered','Delivered','delivered_at']];
+  function stages(j){var idx=-1;STG.forEach(function(s,i){if(s[0]===j.status)idx=i});return'<ul class="stg">'+STG.map(function(s,i){return'<li class="'+(i<idx||j.status==='delivered'?'ok':i===idx?'cur':'')+'">'+s[1]+(j[s[2]]?'<br>'+hm(j[s[2]]):'')+'</li>'}).join('')+'</ul>'}
+  var LAB={offered:['NEW ASSIGNMENT','warn'],accepted:['ACCEPTED',''],to_pickup:['GOING TO PICKUP',''],picked_up:['PICKED UP',''],out:['OUT FOR DELIVERY',''],delivered:['DELIVERED',''],cancelled:['CANCELLED','bad']};
+  function card(j){var st=LAB[j.status]||[j.status,''],btns='',live=LIVE.indexOf(j.status)>-1;
+    if(j.status==='offered')btns='<button class="b2" data-a="acc" data-id="'+j.id+'" type="button">Accept delivery</button><button class="b2 ghost" data-a="dec" data-id="'+j.id+'" type="button">Decline</button>';
+    if(j.status==='accepted')btns='<button class="b2" data-a="going" data-id="'+j.id+'" type="button">Start: going to pickup</button>';
+    if(j.status==='to_pickup')btns='<button class="b2" data-a="pick" data-id="'+j.id+'" type="button">I have picked it up</button>';
+    if(j.status==='picked_up')btns='<button class="b2" data-a="out" data-id="'+j.id+'" type="button">Start: out for delivery</button>';
+    if(j.status==='out')btns='<button class="b2" data-a="drop" data-id="'+j.id+'" type="button">I have delivered it</button>';
+    if(live)btns+='<button class="b2 ghost" data-a="issue" data-id="'+j.id+'" type="button">Report a problem</button>';
+    var h='<div class="it"><div class="h"><b>Delivery #'+j.id+'</b><span class="tag '+st[1]+'">'+st[0]+'</span></div><div class="m"><b>Customer</b><br>'+esc(j.customer_name||'Customer')+'<br>'+(j.customer_phone?'<a href="tel:'+esc(j.customer_phone)+'">'+esc(j.customer_phone)+'</a>':'<span class="ts">Contact shown after you accept</span>')+'<br><b>Delivery destination</b><br>'+esc(j.address||'')+' &middot; <a target="_blank" rel="noopener" href="'+map(j.address)+'">Open in maps</a>'+(j.items?'<br>Items: '+esc(j.items):'')+(j.note?'<br>Note: '+esc(j.note):'')+'<br><b>Delivery fee</b><br><span style="font-size:20px;font-weight:800">'+(j.fee!=null?MZ.money(j.fee):'Not confirmed')+'</span><br><span class="ts">'+(j.status==='offered'?'Assignment received: '+hm(j.offered_at||j.created_at):'Created '+hm(j.created_at))+'</span>'+(j.issue?'<br><span class="tag warn">Problem reported: '+esc(j.issue)+'</span>':'')+'</div>'+((live||j.status==='delivered')?stages(j):'')+(btns?'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">'+btns+'</div>':'')+'</div>';return h}
+  function inRange(t,days){return t&&(Date.now()-new Date(t))<days*86400000}
+  function sameDay(t){return t&&new Date(t).toDateString()===new Date().toDateString()}
+  function draw(){var cur=JOBS.filter(function(j){return j.status==='offered'||LIVE.indexOf(j.status)>-1}),del=JOBS.filter(function(j){return j.status==='delivered'}),q=($('#hSearch').value||'').toLowerCase(),
+      his=JOBS.filter(function(j){return(j.status==='delivered'||j.status==='cancelled')&&(!q||(('#'+j.id+' '+(j.customer_name||'')+' '+(j.address||'')).toLowerCase().indexOf(q)>-1))});
+    var sum=function(a){return a.reduce(function(s,j){return s+Number(j.fee||0)},0)},today=del.filter(function(j){return sameDay(j.delivered_at)}),pend=del.filter(function(j){return!j.paid_at}),paid=del.filter(function(j){return j.paid_at});
+    $('#jobN').textContent=cur.length?'('+cur.length+')':'';$('#sAct').textContent=cur.filter(function(j){return j.status!=='offered'}).length;$('#sDone').textContent=today.length;$('#sEarn').textContent=MZ.money(sum(today));$('#sPend').textContent=pend.length;
     $('#jobList').innerHTML=cur.map(card).join('')||'<div class="empty">No deliveries right now. Go online so your franchise can send you one.</div>';
-    $('#histList').innerHTML=his.map(card).join('')||'<div class="empty">No finished deliveries yet.</div>';
+    $('#histList').innerHTML=his.map(card).join('')||'<div class="empty">No finished deliveries'+(q?' match your search':' yet')+'.</div>';
+    $('#earnStats').innerHTML=[['Today',MZ.money(sum(today))],['Last 7 days',MZ.money(sum(del.filter(function(j){return inRange(j.delivered_at,7)})))],['Last 30 days',MZ.money(sum(del.filter(function(j){return inRange(j.delivered_at,30)})))],['Pending payment',MZ.money(sum(pend))],['Paid',MZ.money(sum(paid))],['Completed',del.length]].map(function(x){return'<div class="card2"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>'}).join('');
+    $('#earnList').innerHTML=del.map(function(j){return'<div class="it"><div class="h"><b>Delivery #'+j.id+'</b><span class="tag'+(j.paid_at?'':' warn')+'">'+(j.paid_at?'PAID':'PENDING')+'</span></div><div class="m">'+MZ.money(j.fee)+' &middot; delivered '+hm(j.delivered_at)+(j.paid_at?' &middot; paid '+hm(j.paid_at):'')+'</div></div>'}).join('')||'<div class="empty">No completed deliveries yet.</div>';
     $$('[data-a]').forEach(function(b){b.onclick=function(){var id=Number(b.dataset.id),a=b.dataset.a;busy(b,true);
-      function done(m){return function(){flash(m);load();MZ.q('riders','select=earned,online&user_id=eq.'+MZ.user().id).then(function(r){if(r&&r[0]){RD.earned=r[0].earned}})}}
+      function done(m){return function(){flash(m);load()}}
       function fail(e){flash(e.message);busy(b,false)}
+      function step(s,m){getPos(function(p){MZ.rpc('rider_delivery_step',{p_delivery:id,p_step:s,p_lat:p?p.lat:null,p_lng:p?p.lng:null}).then(done(m),fail)})}
       if(a==='acc')MZ.rpc('rider_respond',{p_delivery:id,p_accept:true}).then(done('Accepted'),fail);
       else if(a==='dec'){if(!confirm('Decline this delivery?')){busy(b,false);return}MZ.rpc('rider_respond',{p_delivery:id,p_accept:false}).then(done('Declined'),fail)}
-      else getPos(function(p){MZ.rpc('rider_delivery_step',{p_delivery:id,p_step:a==='pick'?'picked_up':'delivered',p_lat:p?p.lat:null,p_lng:p?p.lng:null}).then(done(a==='pick'?'Marked picked up':'Delivered. Well done!'),fail)})}})}
+      else if(a==='going')step('going','Going to pickup');
+      else if(a==='pick')step('picked_up','Marked picked up');
+      else if(a==='out')step('out','Out for delivery');
+      else if(a==='drop'){if(!confirm('Confirm you have delivered this order to the customer?')){busy(b,false);return}step('delivered','Delivered. Well done!')}
+      else if(a==='issue'){var k=prompt('What is the problem?\n1 Customer not available\n2 Wrong address\n3 Damaged package\n4 Other\n\nType 1, 2, 3 or 4');if(!k){busy(b,false);return}var kind={1:'Customer not available',2:'Wrong address',3:'Damaged package'}[String(k).trim()]||'Other',nt=prompt('Add a short note (optional)')||'';MZ.rpc('rider_report_issue',{p_delivery:id,p_kind:kind,p_note:nt}).then(done('Problem sent to your franchise'),fail)}}})}
   (MZ.user&&MZ.user()?boot():Promise.resolve(views('authView'))).catch(function(){views('authView')});
 })();
 </script>
