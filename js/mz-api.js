@@ -110,7 +110,8 @@
       opts = opts || {};
       return freshToken().then(function (t) { return call('/rest/v1/' + table + (query ? '?' + query : ''), { method: opts.method || 'GET', body: opts.body, prefer: opts.prefer }, t); });
     },
-    insert: function (table, row, returning) { return MZ.q(table, '', { method: 'POST', body: row, prefer: returning ? 'return=representation' : 'return=minimal' }); },
+    frCode: function () { try { var u = new URLSearchParams(location.search).get('f'); if (u) { u = String(u).trim().slice(0, 20); localStorage.setItem('mz-fr', u); return u; } return localStorage.getItem('mz-fr') || ''; } catch (e) { return ''; } },
+    insert: function (table, row, returning) { if ((table === 'bookings' || table === 'provider_applications') && row && typeof row === 'object' && !Array.isArray(row)) { row = Object.assign({}, row); if (!row.country) row.country = String(MZ.cc || 'gh').toUpperCase(); if (!row.franchise_code) { var fc = MZ.frCode(); if (fc) row.franchise_code = fc; } } return MZ.q(table, '', { method: 'POST', body: row, prefer: returning ? 'return=representation' : 'return=minimal' }); },
     update: function (table, match, patch) { return MZ.q(table, match, { method: 'PATCH', body: patch, prefer: 'return=representation' }); },
     upsert: function (table, rows, conflict) { return MZ.q(table, 'on_conflict=' + conflict, { method: 'POST', body: rows, prefer: 'resolution=merge-duplicates,return=minimal' }); },
     remove: function (table, match) { return MZ.q(table, match, { method: 'DELETE', prefer: 'return=minimal' }); },

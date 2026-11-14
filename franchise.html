@@ -913,7 +913,7 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
   function newsCard(){var e=$('#frNewsCard');if(!e)return;var put=function(a){a=(a||[]).filter(function(x){return!x.country||x.country===ME.franchise_country})[0];e.innerHTML=a?'<b>'+esc(a.title)+'</b><br>'+esc((a.body||'').slice(0,140))+'<br><small>'+ago(a.created_at)+'</small>':'No news yet. New products and updates from MOZLYT show here.'};
     if(NEWS1){put(NEWS1);return}MZ.q('announcements','select=*&order=pinned.desc,created_at.desc&limit=6').then(function(a){NEWS1=a||[];put(NEWS1)},function(){put([])})}
   var BK=[];
-  function loadBook(){MZ.q('bookings','select=*&country=eq.'+encodeURIComponent(ME.franchise_country||'')+'&order=created_at.desc&limit=200').then(function(b){BK=b||[]},function(){BK=[]}).then(function(){
+  function loadBook(){MZ.q('bookings','select=*&franchise_id=eq.'+encodeURIComponent(ME.id||(MZ.user()||{}).id||'')+'&order=created_at.desc&limit=200').then(function(b){BK=b||[]},function(){BK=[]}).then(function(){
     try{cash()}catch(e){}$('#bkStats').innerHTML='<div class="stat"><b>'+BK.length+'</b><span>People who booked</span></div>';
     $('#bkList').innerHTML=BK.map(function(x){return'<div class="it"><div class="h"><b>'+esc(x.name||x.customer_name||'Customer')+'</b><span class="tag">'+esc(x.status||'new')+'</span></div><div class="m">'+esc(x.service||x.item||'')+' &middot; '+esc(x.phone||'')+' &middot; '+dt(x.created_at)+'</div></div>'}).join('')||'<div class="empty">No bookings yet.</div>'})}
   function dt(d){if(!d)return'';var x=new Date(d);return x.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+', '+x.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}
