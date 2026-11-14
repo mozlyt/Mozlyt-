@@ -114,6 +114,7 @@
     update: function (table, match, patch) { return MZ.q(table, match, { method: 'PATCH', body: patch, prefer: 'return=representation' }); },
     upsert: function (table, rows, conflict) { return MZ.q(table, 'on_conflict=' + conflict, { method: 'POST', body: rows, prefer: 'resolution=merge-duplicates,return=minimal' }); },
     remove: function (table, match) { return MZ.q(table, match, { method: 'DELETE', prefer: 'return=minimal' }); },
+    key: KEY,
     upload: function (bucket, path, file) {
       return freshToken().then(function (t) {
         if (!t) throw new Error('Please log in again.');

@@ -431,8 +431,8 @@ body.has-list .wa-float{bottom:84px}
 <div class="hero" id="top">
   <div class="wrap">
     <div>
-      <h1>Wellness, fitness and beauty, brought to your door.</h1>
-      <p class="lead">One place in Accra to book trusted professionals for massage, fitness, nutrition, skincare and more. Pick a service, message us on WhatsApp, and we send someone to you.</p>
+      <h1 data-mz="gh.h1" data-mz-label="Main headline">Wellness, fitness and beauty, brought to your door.</h1>
+      <p class="lead" data-mz="gh.lead" data-mz-label="Introduction under the headline">One place in Accra to book trusted professionals for massage, fitness, nutrition, skincare and more. Pick a service, message us on WhatsApp, and we send someone to you.</p>
       <div class="cta">
         <a class="btn primary" href="#services">Book a service</a>
         <a class="btn ghost" href="/gh/shop.html">Shop products</a>
@@ -502,8 +502,8 @@ body.has-list .wa-float{bottom:84px}
 <!-- SERVICES -->
 <section id="services">
   <div class="wrap">
-    <h2>Everything you can book</h2>
-    <p class="sub">All services are booked and paid for through MOZLYT. Choose one and we handle the rest.</p>
+    <h2 data-mz="gh.book" data-mz-label="Heading: everything you can book">Everything you can book</h2>
+    <p class="sub" data-mz="gh.booksub" data-mz-label="Text under: everything you can book">All services are booked and paid for through MOZLYT. Choose one and we handle the rest.</p>
 
     <div class="cat">
       <div class="cat-h"><span class="ic c1"><svg class="i"><use href="#leaf"/></svg></span><h3>Massage and therapy</h3><a href="/gh/massage-in-accra.html" style="margin-left:auto;font-size:14px;font-weight:700;color:#157650;text-decoration:underline">Massage in Accra &rarr;</a><a class="vm" href="/gh/services.html#svc-massage">View more &rsaquo;</a></div>
@@ -581,8 +581,8 @@ body.has-list .wa-float{bottom:84px}
 <!-- HOW SERVICES WORK -->
 <section id="how" class="white">
   <div class="wrap">
-    <h2>How a booking works</h2>
-    <p class="sub">You only deal with MOZLYT. We choose the right professional and make sure the job is done well.</p>
+    <h2 data-mz="gh.how" data-mz-label="Heading: how a booking works">How a booking works</h2>
+    <p class="sub" data-mz="gh.howsub" data-mz-label="Text under: how a booking works">You only deal with MOZLYT. We choose the right professional and make sure the job is done well.</p>
     <div class="steps">
       <div class="step"><em>Step 1</em><h3>Choose and book</h3><p>Pick a service, a date and a time, and tell us where you are.</p></div>
       <div class="step"><em>Step 2</em><h3>Get your price</h3><p>We reply on WhatsApp with the price, availability and details. Nothing is paid until you agree.</p></div>
@@ -598,8 +598,8 @@ body.has-list .wa-float{bottom:84px}
 <!-- DELIVERY -->
 <section id="delivery">
   <div class="wrap">
-    <h2>Where we serve and deliver</h2>
-    <p class="sub">The delivery fee depends on where you are and what you order. We confirm it with you on WhatsApp before you pay.</p>
+    <h2 data-mz="gh.where" data-mz-label="Heading: where we serve">Where we serve and deliver</h2>
+    <p class="sub" data-mz="gh.wheresub" data-mz-label="Text under: where we serve">The delivery fee depends on where you are and what you order. We confirm it with you on WhatsApp before you pay.</p>
     <div class="zones">
       <div class="zone"><h3>Accra</h3><p>Home and office services. Product delivery.</p><span>Fee confirmed on WhatsApp</span></div>
       <div class="zone"><h3>Tema</h3><p>Home and office services. Product delivery.</p><span>Fee confirmed on WhatsApp</span></div>
@@ -614,7 +614,7 @@ body.has-list .wa-float{bottom:84px}
 <!-- PROOF -->
 <section id="proof" class="white" hidden>
   <div class="wrap">
-    <h2>MOZLYT in numbers</h2>
+    <h2 data-mz="gh.nums" data-mz-label="Heading: MOZLYT in numbers">MOZLYT in numbers</h2>
     <p class="sub">Real figures from our platform, updated live.</p>
     <div class="steps" id="proofStats"></div>
     <div class="steps" id="proofStories" style="margin-top:14px"></div>
@@ -759,6 +759,7 @@ els.forEach(function(e){e.classList.add('rv')});
 var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var e=x.target,i=[].indexOf.call(e.closest('.grid')?e.closest('.grid').children:[e],e.closest('.card')||e);e.style.transitionDelay=(Math.max(i,0)*0.12)+'s';e.classList.add('in');io.unobserve(e)}})},{threshold:.15,rootMargin:'0px 0px -6% 0px'});
 els.forEach(function(e){io.observe(e)});})();</script>
 <script src="/js/mz-api.js" defer></script>
+<script src="/js/mz-cms.js" defer></script>
 <script src="/js/mz-geo.js" defer></script>
 <script id="mz-shared-js">(function(){var h=document.getElementById('mzHeader');if(!h)return;var b=h.querySelector('.mz-burger');
 function set(o){h.classList.toggle('mz-open',o);b.setAttribute('aria-expanded',o?'true':'false')}

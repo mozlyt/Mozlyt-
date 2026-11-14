@@ -145,14 +145,14 @@ header{background:#05070a;border-bottom:1px solid #18202a}
 <main>
 <div class="hero"><div class="wrap">
 <div class="orb"><img src="/img/logo.png" alt="" width="96" height="96"></div>
-<div class="eyb">WELLNESS, FITNESS AND BEAUTY</div>
-<h1>One brand. A MOZLYT in every city.</h1>
-<p>MOZLYT is a network of locally owned franchises. Each one gives its community services, products and the chance to start a business of their own. Find the MOZLYT near you, or own one.</p>
-<div class="bt"><a class="btn g" href="#countries">Find a MOZLYT near you</a><a class="btn o" href="#own">Own a MOZLYT</a></div>
+<div class="eyb" data-mz="home.eyebrow" data-mz-label="Small label above the headline">WELLNESS, FITNESS AND BEAUTY</div>
+<h1 data-mz="home.h1" data-mz-label="Main headline">One brand. A MOZLYT in every city.</h1>
+<p data-mz="home.lead" data-mz-label="Introduction under the headline">MOZLYT is a network of locally owned franchises. Each one gives its community services, products and the chance to start a business of their own. Find the MOZLYT near you, or own one.</p>
+<div class="bt"><a class="btn g" href="#countries" data-mz="home.btn1" data-mz-label="First button">Find a MOZLYT near you</a><a class="btn o" href="#own" data-mz="home.btn2" data-mz-label="Second button">Own a MOZLYT</a></div>
 </div></div>
 
 <section id="countries" style="background:var(--paper)"><div class="wrap">
-<h2>Choose your country</h2>
+<h2 data-mz="home.countries" data-mz-label="Heading: choose your country">Choose your country</h2>
 <p class="sub">Every country has its own MOZLYT platform, in its own currency, run by franchises from that country.</p>
 <div class="grid3">
 <a class="cc live" href="/gh/"><div class="t"><b>MOZLYT GH</b><span class="tag l">LIVE</span></div><span class="d">Ghana. Services, shop and training from your local MOZLYT.</span><em>Enter MOZLYT Ghana &rarr;</em></a>
@@ -163,7 +163,7 @@ header{background:#05070a;border-bottom:1px solid #18202a}
 </div></section>
 
 <section id="network"><div class="wrap">
-<h2>One network. Many owners. Each one local.</h2>
+<h2 data-mz="home.network" data-mz-label="Heading: the network">One network. Many owners. Each one local.</h2>
 <p class="sub">Every MOZLYT is owned and run in its own city, on one shared platform and one trusted brand.</p>
 <div class="grid3">
 <div class="net"><small>MOZLYT SUPPLIES</small><b>Products, training and support</b><span>MOZLYT supplies franchises with quality products and the training and marketing they need to run well.</span></div>
@@ -173,7 +173,7 @@ header{background:#05070a;border-bottom:1px solid #18202a}
 
 <section id="own" class="dark"><div class="wrap own">
 <div><div class="eyb">FOR INVESTORS</div>
-<h2>Own a MOZLYT. Build a business that grows with a brand people trust.</h2>
+<h2 data-mz="home.own" data-mz-label="Heading: own a MOZLYT">Own a MOZLYT. Build a business that grows with a brand people trust.</h2>
 <p>Step into a ready-made wellness, fitness and beauty business with a continent-wide brand behind you. You run MOZLYT in your city, on a complete platform built to sell, train and grow, while we supply, support and promote you.</p>
 <div class="ask">Ready to invest? Let&rsquo;s talk today.</div>
 <div class="bt"><a class="btn g" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20would%20like%20to%20own%20a%20MOZLYT%20in%20my%20country.%20Please%20tell%20me%20how%20to%20start." target="_blank" rel="noopener">Start on WhatsApp</a><a class="btn w" href="mailto:info@mozlyt.com">info@mozlyt.com</a></div></div>
@@ -188,7 +188,7 @@ header{background:#05070a;border-bottom:1px solid #18202a}
 
 <section id="inside" class="buy"><div class="wrap">
 <div class="eyb">WHAT YOU ARE BUYING</div>
-<h2>Every page your franchise gets, ready on day one.</h2>
+<h2 data-mz="home.pages" data-mz-label="Heading: franchise pages">Every page your franchise gets, ready on day one.</h2>
 <p class="sub">A complete, branded platform for your city. Swipe to see every page your customers, your team and you will use.</p>
 <div class="hint">Swipe to see every page <span style="font-size:20px">&rarr;</span></div>
 </div>
@@ -198,7 +198,7 @@ header{background:#05070a;border-bottom:1px solid #18202a}
 
 <section id="owners" class="proof" hidden><div class="wrap">
 <div class="eyb" style="color:var(--green)">THE NETWORK IS GROWING</div>
-<h2>People who have already taken a MOZLYT</h2>
+<h2 data-mz="home.people" data-mz-label="Heading: people who took a MOZLYT">People who have already taken a MOZLYT</h2>
 <div class="cnt"><div class="n" id="ownN">0</div><b>MOZLYT owners</b><small id="ownS">Updated live from the platform.</small></div>
 <div class="sts" id="ownStories"></div>
 </div></section>
@@ -207,6 +207,7 @@ header{background:#05070a;border-bottom:1px solid #18202a}
 <footer><div class="wrap"><div>MOZLYT. Wellness, fitness and beauty for Africa.</div><div class="fl"><a href="franchise.html">Franchise login</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:info@mozlyt.com">info@mozlyt.com</a></div></div></footer>
 
 <script src="js/mz-api.js" defer></script>
+<script src="js/mz-cms.js" defer></script>
 <script>
 (function(){
   /* old links such as index.html#services belong to the Ghana site */
