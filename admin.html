@@ -731,7 +731,22 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     $$('#hqTop .tgb').forEach(function(b){b.onclick=function(e){e.stopPropagation();var g=b.parentNode,o=g.classList.contains('open');closeAll();if(!o)g.classList.add('open')}});
     $$('#hqTop [data-tt]').forEach(function(b){b.onclick=function(){closeAll();var s=document.querySelector('#dtabs [data-t='+b.dataset.tt+']');if(s)s.click();$$('#hqTop .tg').forEach(function(x,i){x.classList.toggle('on',G[i][1].indexOf(b.dataset.tt)>-1)})}});
     $$('#dtabs button').forEach(function(b){b.addEventListener('click',function(){var t=b.dataset.t;$$('#hqTop .tg').forEach(function(x,i){x.classList.toggle('on',G[i][1].indexOf(t)>-1)})})});
-    document.addEventListener('click',closeAll)})();
+    document.addEventListener('click',closeAll);
+    var pill=document.createElement('button');pill.type='button';pill.className='tgp on';pill.dataset.tt='over';pill.textContent='Dashboard';bar.insertBefore(pill,bar.firstChild);
+    pill.onclick=function(){var s=document.querySelector('#dtabs [data-t=over]');if(s)s.click()};
+    $$('#dtabs button').forEach(function(b){b.addEventListener('click',function(){pill.classList.toggle('on',b.dataset.t==='over')})});
+    $$('#hqTop .tgb').forEach(function(b){var o=b.onclick;b.onclick=function(e){o(e);var m=b.parentNode.querySelector('.tgm');if(innerWidth<=900&&m){var r=b.getBoundingClientRect();m.style.top=(r.bottom+6)+'px';m.style.left=Math.max(12,Math.min(r.left,innerWidth-250))+'px'}}});
+    var em=(MZ.user&&MZ.user()&&MZ.user().email)||'',ini=(em.replace(/[^a-z]/gi,'').slice(0,2)||'MA').toUpperCase();
+    var tb=document.createElement('div');tb.id='hqBar';tb.innerHTML='<button type="button" id="hqMenu" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h11M4 17h16"/></svg></button><span class="sp"></span><button type="button" id="hqBell" aria-label="Alerts"><svg viewBox="0 0 24 24"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17z"/><path d="M10 21h4"/></svg></button><button type="button" id="hqAv"><b>'+ini+'</b><svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg></button><div id="hqAm"><div class="em">'+em+'</div><button type="button" id="hqOut">Log out</button></div>';
+    dv.insertBefore(tb,bar);var bd=document.createElement('div');bd.id='hqBd';dv.appendChild(bd);
+    function drawer(o){$('#dtabs').classList.toggle('open',o);document.body.classList.toggle('hq-drawer',o)}
+    $('#hqMenu').onclick=function(e){e.stopPropagation();drawer(!$('#dtabs').classList.contains('open'))};
+    bd.onclick=function(){drawer(false)};
+    $$('#dtabs button').forEach(function(b){b.addEventListener('click',function(){document.body.classList.remove('hq-drawer')})});
+    $('#hqBell').onclick=function(){var s=document.querySelector('#dtabs [data-t=alerts]');if(s)s.click()};
+    $('#hqAv').onclick=function(e){e.stopPropagation();$('#hqAm').classList.toggle('open')};
+    $('#hqOut').onclick=function(){$('#btnOut').click()};
+    document.addEventListener('click',function(){$('#hqAm').classList.remove('open')})})();
   $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});var nc=$('#navCur');if(nc)nc.textContent=b.textContent;$('#dtabs').classList.remove('open');var nt=$('#navTgl');if(nt)nt.setAttribute('aria-expanded','false');['over','alerts','cfg','book','ord','sell','ana','fr','fapp','papp','disp','chat','subs','ledger','prod','src','svc','train','mkt','news','cty','set','org'].forEach(function(t){show('pane-'+t,t===b.dataset.t)});if(b.dataset.t==='ledger'&&window.MZLedger)MZLedger.mount('#pane-ledger',{rpc:'admin_ledger',title:'Payment records',note:'Every payment that came in and every payment that went out, with a running balance. Only completed payments are counted in the totals.'});if(b.dataset.t==='org')orgLoad();if(b.dataset.t==='src')srLoadAll();if(b.dataset.t==='svc')svLoad();if(b.dataset.t==='train')loadTrain();if(b.dataset.t==='fr')stkLoad();if(b.dataset.t==='mkt')loadMk();if(b.dataset.t==='disp')loadDisp();if(b.dataset.t==='chat')loadChat();if(b.dataset.t==='news'){loadNews();loadSubs();loadStories()}if(b.dataset.t==='cty')loadCP();try{window.scrollTo(0,0)}catch(e){}}});
 
 
@@ -1320,6 +1335,50 @@ html body.hq-on #dtabs .ngrp:not(:has(button:not(.hqtop))){display:none}
 #hqTop .tgm button:hover{background:#1a2333}
 #hqTop .tgm svg{width:20px;height:20px;stroke:#8e9bb3;fill:none;stroke-width:1.6;flex:none}
 html body.hq-on #dashView>#hqTop{padding:6px 34px 0}
+}
+
+#hqBar,#hqBd,.tgp{display:none}
+html body.hq-on #dtabs .hqtop{display:none!important}
+html body.hq-on #dtabs .ngrp:not(:has(button:not(.hqtop))){display:none}
+html body.hq-on .stat:nth-child(4n+1){background:linear-gradient(160deg,#18213a,#10141f)!important;border-color:#2b3a66!important}
+html body.hq-on .stat:nth-child(4n+2){background:linear-gradient(160deg,#14281f,#0e1712)!important;border-color:#235a40!important}
+html body.hq-on .stat:nth-child(4n+3){background:linear-gradient(160deg,#241d3a,#15111f)!important;border-color:#43357a!important}
+html body.hq-on .stat:nth-child(4n+4){background:linear-gradient(160deg,#2b2412,#1a150b)!important;border-color:#6b5420!important}
+@media(max-width:900px){
+body.hq-on .mz-header,body.hq-on .mz-footer{display:none!important}
+html body.hq-on #dashView>.top2,html body.hq-on #navTgl{display:none!important}
+html body.hq-on #dashView{background:#0a0a0c!important;padding:0 0 90px!important}
+#hqBar{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:60;background:#0a0a0c;padding:12px 16px;border-bottom:1px solid #1c1c20;margin:0 -2px}
+#hqBar .sp{flex:1}
+#hqBar>button{background:transparent;border:0;color:#e9e4dc;display:flex;align-items:center;gap:6px;padding:8px;border-radius:12px;cursor:pointer}
+#hqBar svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#hqAv b{width:44px;height:44px;border-radius:50%;background:#2a2118;border:2px solid #4a3a2b;color:#e9a27a;display:grid;place-items:center;font-size:15px}
+#hqAv svg{width:16px;height:16px}
+#hqAm{display:none;position:absolute;right:12px;top:68px;background:#14141a;border:1px solid #2a2a33;border-radius:14px;padding:10px;min-width:210px;box-shadow:0 18px 40px rgba(0,0,0,.6)}
+#hqAm.open{display:block}#hqAm .em{font-size:12.5px;color:#9a9aa6;padding:4px 8px 8px;word-break:break-all}
+#hqAm button{width:100%;text-align:left;background:transparent;border:0;color:#f1b0a6;padding:10px 8px;font:600 14.5px inherit;font-family:inherit;border-radius:10px;cursor:pointer}
+#hqTop{display:flex;gap:8px;grid-column:auto;overflow-x:auto;white-space:nowrap;position:sticky;top:68px;z-index:55;background:#0a0a0c;padding:10px 16px!important;border-bottom:1px solid #1c1c20;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#hqTop::-webkit-scrollbar{display:none}
+#hqTop .tgb,#hqTop .tgp{display:flex;align-items:center;gap:6px;flex:none;background:transparent;border:1px solid transparent;color:#cfc8bd;font:500 15.5px inherit;font-family:inherit;padding:11px 16px;border-radius:14px;cursor:pointer}
+#hqTop .tgp{display:flex}
+#hqTop .tgb svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+#hqTop .tgp.on,#hqTop .tg.on .tgb,#hqTop .tg.open .tgb{background:#2a2118;border-color:#4a3a2b;color:#fff}
+#hqTop .tg{position:static;flex:none}
+#hqTop .tgm{display:none;position:fixed;min-width:230px;max-width:calc(100vw - 24px);background:#14141a;border:1px solid #2a2a33;border-radius:16px;padding:8px;box-shadow:0 18px 40px rgba(0,0,0,.6);z-index:90}
+#hqTop .tg.open .tgm{display:block}
+#hqTop .tgm button{display:flex;align-items:center;gap:12px;width:100%;background:transparent;border:0;color:#e6e1d8;padding:12px;border-radius:10px;font:500 15px inherit;font-family:inherit;text-align:left}
+#hqTop .tgm svg{width:20px;height:20px;stroke:#c98b66;fill:none;stroke-width:1.6;flex:none}
+html body.hq-on #dashView>#dtabs{display:flex!important;position:fixed!important;left:0;top:0;bottom:0;width:82%;max-width:330px;margin:0!important;border-radius:0 24px 24px 0!important;z-index:120;overflow:auto!important;transform:translateX(-105%);transition:transform .25s;padding:22px 18px!important;background:#0e0e12!important;border:0!important;border-right:1px solid #24242c!important}
+html body.hq-on #dashView>#dtabs.open{transform:none}
+html body.hq-on #dashView>#dtabs::before{content:"MOZLYT  \00b7  Admin HQ";display:block;font:700 18px Georgia,serif;color:#fff;margin:0 4px 10px}
+#hqBd{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:110}
+body.hq-drawer #hqBd{display:block}
+html body.hq-on #dashView>*:not(.top2):not(#dNote):not(#dtabs):not(style):not(#hqBar):not(#hqTop):not(#hqBd){padding-left:16px;padding-right:16px}
+body.hq-on .wa-float{display:none!important}
+html body.hq-on #dashView>[id^="pane-"]{padding-top:16px}
+html body.hq-on .stats{grid-template-columns:1fr;gap:14px}
+html body.hq-on .stat{border-radius:24px!important;padding:22px!important;border-width:1px!important}
+html body.hq-on .stat b{font-size:34px}
 }
 </style>
 <script>(function(){function f(){var d=document.getElementById('dashView');document.body.classList.toggle('hq-on',!!d&&!d.hidden)}f();var d=document.getElementById('dashView');if(d)new MutationObserver(f).observe(d,{attributes:true,attributeFilter:['hidden']})})();</script>
