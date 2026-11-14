@@ -568,7 +568,7 @@ body>#feedWrap{max-width:1120px;margin:0 auto;padding:0 20px}@media(max-width:60
 .pbody .pbtn{display:block;text-align:center;border:0;border-radius:10px;background:#14663f;color:#fff;font-weight:700;padding:12px;font-size:15px;cursor:pointer;text-decoration:none}
 .pbody .pbtn.alt{background:#fff;color:#14663f;border:1.5px solid #14663f}
 .px{position:absolute;top:8px;right:8px;z-index:2;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.92);font-size:24px;line-height:1;cursor:pointer}</style>
-<div class="pmod" id="pmod" hidden role="dialog" aria-modal="true"><div class="pbg" id="pbg"></div><div class="pbox"><button type="button" class="px" id="px" aria-label="Close">&times;</button><div class="pimg" id="pimg"></div><div class="pbody"><h3 id="pname"></h3><div class="pr" id="pprice"></div><p id="pdesc"></p><div id="pact" style="display:grid;gap:8px"></div></div></div></div>
+<div class="pmod" id="pmod" hidden role="dialog" aria-modal="true"><div class="pbg" id="pbg"></div><div class="pbox"><button type="button" class="px" id="px" aria-label="Close">&times;</button><div class="pimg" id="pimg"></div><div class="pbody"><h3 id="pname"></h3><div class="pr" id="pprice"></div><div id="prate" style="margin:4px 0 8px"></div><p id="pdesc"></p><div id="pact" style="display:grid;gap:8px"></div></div></div></div>
 <script>
 /* PRODUCT LIST FROM GOOGLE SHEETS
    Paste the link of your published Google Sheet (CSV) between the quotes below.
@@ -675,7 +675,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
         if(p.photo){var im=el('img'),wu=/^\/?img\/p\/[^?]+\.jpg$/.test(p.photo)?p.photo.slice(0,-4)+'.webp':p.photo,tried=wu===p.photo;im.src=wu;im.alt=p.name;im.loading='lazy';im.decoding='async';im.width=360;im.height=360;im.onerror=function(){if(!tried){tried=true;im.src=p.photo;return}pic.removeChild(im);pic.appendChild(icon(c.icon))};pic.appendChild(im)}else pic.appendChild(icon(c.icon));
         b.type='button';
         if(p.status.indexOf('sold')===0||p.status==='out'){b.textContent='Sold out';b.disabled=true;card.className='card soldout'}else setBtn(b,list.indexOf(p.name)>-1);
-        card.appendChild(pic);card.appendChild(el('h3',null,p.name));card.appendChild(el('div','price',priceText(p.price)));if(p.weight>0){var wl=el('div','wt',fmtKg(p.weight));wl.style.cssText='font-size:12px;color:#5b6b62;margin:-2px 0 6px';card.appendChild(wl)}card.appendChild(b);
+        card.appendChild(pic);card.appendChild(el('h3',null,p.name));card.appendChild(el('div','price',priceText(p.price)));if(p.weight>0){var wl=el('div','wt',fmtKg(p.weight));wl.style.cssText='font-size:12px;color:#5b6b62;margin:-2px 0 2px';card.appendChild(wl)}if(p.rn>0){var rl=el('div','rt',starsTxt(p.ra)+'  '+p.ra+' ('+p.rn+')');rl.style.cssText='font-size:12.5px;color:#b7791f;margin:0 0 6px;letter-spacing:.5px';rl.dataset.pid=p.pid;card.appendChild(rl)}card.appendChild(b);
         var amt=/^[\d.,\s]+$/.test(p.price||'')?parseFloat(p.price.replace(/[,\s]/g,'')):0;
         if(amt>0&&!card.classList.contains('soldout')){var pn=el('a','paynow','Pay now');pn.href='/pay.html?amount='+encodeURIComponent(amt)+'&item='+encodeURIComponent(p.name);card.appendChild(pn)}
         g.appendChild(card)});
@@ -688,13 +688,25 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
     if(location.hash==='#cart'&&list.length&&!window.__ck){window.__ck=1;try{history.replaceState(null,'',location.pathname)}catch(x){}var mc2=document.getElementById('mzCart');if(mc2)setTimeout(function(){mc2.click()},300)}
   }
   var pm=document.getElementById('pmod');
+  function starsTxt(a){var n=Math.round(Number(a)||0),s='';for(var i=1;i<=5;i++)s+=i<=n?'★':'☆';return s}
+  var MYR={};
+  function syncCard(p){shelves.querySelectorAll('.card').forEach(function(c){if(c.querySelector('h3').textContent!==p.name)return;var r=c.querySelector('.rt');if(!r&&p.rn>0){r=el('div','rt','');r.style.cssText='font-size:12.5px;color:#b7791f;margin:0 0 6px;letter-spacing:.5px';var b=c.querySelector('.add');c.insertBefore(r,b)}if(r)r.textContent=starsTxt(p.ra)+'  '+p.ra+' ('+p.rn+')'})}
+  function drawRate(p){var box=document.getElementById('prate');box.textContent='';if(!p.pid)return;
+    var sum=el('div','',p.rn>0?starsTxt(p.ra)+'  '+p.ra+' out of 5  ('+p.rn+(p.rn===1?' rating)':' ratings)'):'No ratings yet');sum.style.cssText='color:#b7791f;font-size:14px;font-weight:700';box.appendChild(sum);
+    var q=el('div','','How accurate was it to the description and photos? Tap to rate:');q.style.cssText='font-size:12.5px;color:#5b6b62;margin:6px 0 2px';box.appendChild(q);
+    var row=el('div','');row.style.cssText='display:flex;gap:2px';var mine=MYR[p.pid]||0;
+    for(var i=1;i<=5;i++)(function(n){var b=el('button','',n<=mine?'★':'☆');b.type='button';b.setAttribute('aria-label',n+' star'+(n>1?'s':''));b.style.cssText='background:none;border:0;font-size:30px;line-height:1;padding:4px 5px;cursor:pointer;color:#e0a100;min-width:44px;min-height:44px';
+      b.onclick=function(){if(!window.MZ||!MZ.user()){pm.hidden=true;try{MZAccount.openAuth('in')}catch(x){}return}
+        MZ.rpc('rate_product',{p_product:p.pid,p_stars:n}).then(function(r){if(r&&r.ok){MYR[p.pid]=n;p.ra=Number(r.avg);p.rn=Number(r.n);drawRate(p);syncCard(p);say('Thanks for rating')}else say('Could not save your rating')},function(e){say('Could not save your rating. Please sign in and try again.')})};row.appendChild(b)})(i);
+    box.appendChild(row);var msg=el('div','',mine?'Your rating: '+mine+' of 5. Tap a star to change it.':(window.MZ&&MZ.user()?'':'Sign in to rate this product.'));msg.style.cssText='font-size:12.5px;color:#5b6b62';box.appendChild(msg)}
+  function loadMine(p){if(!p.pid||!window.MZ||!MZ.user()||MYR[p.pid]!==undefined)return;MZ.rpc('my_product_ratings',{p_ids:[p.pid]}).then(function(r){var v=r&&r[String(p.pid)];MYR[p.pid]=v||0;if(v&&!pm.hidden)drawRate(p)},function(){})}
   function openP(name){var o=ALL[name];if(!o)return;var p=o.p,sold=p.status.indexOf('sold')===0||p.status==='out';
     var pi=document.getElementById('pimg');pi.textContent='';if((p.photo||(p.photos&&p.photos.length)||p.video)&&window.MZGallery){MZGallery.render(pi,{photos:[p.photo].concat(p.photos||[]).filter(Boolean),video:p.video,alt:p.name})}else if(p.photo){var im=el('img');im.src=p.photo;im.alt=p.name;pi.appendChild(im)}else pi.appendChild(icon(o.c.icon));
     document.getElementById('pname').textContent=p.name;document.getElementById('pprice').textContent=priceText(p.price)+(p.weight>0?'  ·  '+fmtKg(p.weight):'');document.getElementById('pdesc').textContent=p.desc||'Message us on WhatsApp for details, sizes and availability.';
     var a=document.getElementById('pact');a.textContent='';
     if(sold){a.appendChild(el('div','price','Sold out'))}else{var ab=el('button','pbtn',list.indexOf(p.name)>-1?'Remove from list':'Add to list');ab.type='button';ab.onclick=function(){var i=list.indexOf(p.name);if(i>-1){list.splice(i,1);say(p.name+' removed')}else{list.push(p.name);say(p.name+' added to your list')}shelves.querySelectorAll('.card').forEach(function(c){if(c.querySelector('h3').textContent===p.name){var bb=c.querySelector('.add');if(bb&&!bb.disabled)setBtn(bb,list.indexOf(p.name)>-1)}});refresh();pm.hidden=true};a.appendChild(ab);
       var w=el('a','pbtn alt','Ask about this on WhatsApp');w.href='https://wa.me/'+WA+'?text='+encodeURIComponent('Hello MOZLYT, I am interested in: '+p.name+'. Please share the price and availability.');w.target='_blank';w.rel='noopener';a.appendChild(w)}
-    pm.hidden=false}
+    drawRate(p);loadMine(p);pm.hidden=false}
   shelves.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.pic,h3');if(!t||e.target.closest('.add'))return;var card=t.closest('.card');if(card)openP(card.querySelector('h3').textContent)});
   document.getElementById('px').onclick=document.getElementById('pbg').onclick=function(){pm.hidden=true};document.addEventListener('keydown',function(e){if(e.key==='Escape')pm.hidden=true});
   shelves.addEventListener('click',function(e){
@@ -768,7 +780,7 @@ var INLINE_CSV="category,name,price,status,photo\nMassage tools and recovery,Ful
   q.addEventListener('input',function(){if(PHOTO&&q.value){PHOTO=null;pn.hidden=true}},true);
   /* keep the built-in list as a backup, then swap in the sheet when it loads */
   /* the admin product list is the source of truth once it loads */
-  function mapRows(rows){return(rows||[]).filter(function(r){return r.status!=='hidden'}).map(function(r){return{pid:r.id,weight:r.weight==null?null:Number(r.weight),cat:r.category||'',name:r.name,price:r.suggested_price==null?'':String(r.suggested_price),status:(r.status||'available')==='available'?'in stock':String(r.status).toLowerCase(),photo:r.photo?(/^(https?:|\/)/.test(r.photo)?r.photo:'/'+r.photo):'',desc:r.description||'',photos:(r.photos||[]).map(function(u){return/^(https?:|\/)/.test(u)?u:'/'+u}),video:r.video_url||''}})}
+  function mapRows(rows){return(rows||[]).filter(function(r){return r.status!=='hidden'}).map(function(r){return{pid:r.id,ra:r.rating_avg==null?null:Number(r.rating_avg),rn:Number(r.rating_n||0),weight:r.weight==null?null:Number(r.weight),cat:r.category||'',name:r.name,price:r.suggested_price==null?'':String(r.suggested_price),status:(r.status||'available')==='available'?'in stock':String(r.status).toLowerCase(),photo:r.photo?(/^(https?:|\/)/.test(r.photo)?r.photo:'/'+r.photo):'',desc:r.description||'',photos:(r.photos||[]).map(function(u){return/^(https?:|\/)/.test(u)?u:'/'+u}),video:r.video_url||''}})}
   function paint(rows){var items=mapRows(rows||[]);ALL={};render(items);shelves.hidden=false;REV=2;lzFill();var cr=document.getElementById('chipsRow');if(cr)cr.style.display=items.length?'':'none';
     if(!items.length){empty.innerHTML='Coming soon. Products are being added to this shop. Please check back soon.';empty.style.display='block'}else{empty.style.display='none'}}
   function loadLive(){if(!window.MZ||!MZ.rpc)return;var K='mz-cat-'+MZ.cc,cached=null,tries=0;try{cached=JSON.parse(localStorage.getItem(K)||'null')}catch(e){}
