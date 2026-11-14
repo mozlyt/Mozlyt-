@@ -809,6 +809,13 @@ function copy(t){return(navigator.clipboard&&navigator.clipboard.writeText?navig
     var bar=$('#hqBar');if(bar){var mb=sb.cloneNode(true);mb.id='hqSbtn2';mb.onclick=open;bar.insertBefore(mb,$('#hqBell'))}
     window.hqSearch=open})();
 
+  /* ---- icons on the top menu ---- */
+  (function(){function ic(t){var s=document.querySelector('#dtabs [data-t='+t+'] svg');return s?s.outerHTML:''}
+    var GI={Franchise:'fr',Services:'svc',Billing:'subs','Public setup':'pub'};
+    $$('#hqTop .tgs,#hqTop .tgp').forEach(function(b){var s=ic(b.dataset.tt);if(s&&!b.querySelector('svg'))b.insertAdjacentHTML('afterbegin',s)});
+    $$('#hqTop .tgb').forEach(function(b){var n=b.firstChild&&b.firstChild.nodeType===3?b.firstChild.nodeValue:'',s=ic(GI[n]||'');if(s&&!b.dataset.ic){b.dataset.ic=1;b.insertAdjacentHTML('afterbegin',s)}})})();
+
+
   $$('#dtabs button').forEach(function(b){b.onclick=function(){$$('#dtabs button').forEach(function(x){x.classList.toggle('on',x===b)});var nc=$('#navCur');if(nc)nc.textContent=b.textContent;$('#dtabs').classList.remove('open');var nt=$('#navTgl');if(nt)nt.setAttribute('aria-expanded','false');var dt=b.dataset.t,pt=dt.indexOf('o-')===0?'org':dt.indexOf('x-')===0?'soon':dt;['over','alerts','cfg','book','ord','sell','ana','fr','fapp','papp','disp','chat','subs','ledger','prod','src','svc','train','mkt','news','cty','set','org','soon','pub'].forEach(function(t){show('pane-'+t,t===pt)});if(pt==='org')orgView(dt);if(pt==='soon')soonShow(dt);if(pt==='pub')pubShow();if(b.dataset.t==='ledger'&&window.MZLedger)MZLedger.mount('#pane-ledger',{rpc:'admin_ledger',title:'Payment records',note:'Every payment that came in and every payment that went out, with a running balance. Only completed payments are counted in the totals.'});if(b.dataset.t==='src')srLoadAll();if(b.dataset.t==='svc')svLoad();if(b.dataset.t==='train')loadTrain();if(b.dataset.t==='fr')stkLoad();if(b.dataset.t==='mkt')loadMk();if(b.dataset.t==='disp')loadDisp();if(b.dataset.t==='chat')loadChat();if(b.dataset.t==='news'){loadNews();loadSubs();loadStories()}if(b.dataset.t==='cty')loadCP();try{window.scrollTo(0,0)}catch(e){}}});
 
 
@@ -1412,7 +1419,7 @@ html body.hq-on #dashView>#dtabs .cg.collapsed button{display:none!important}
 .mrowp:first-of-type{border-top:0}.mrowp small{color:#8e9bb3}
 #hqSbtn{display:flex;align-items:center;gap:8px;background:#0f1520;border:1px solid #232d3f;color:#aab6cb;border-radius:12px;padding:0 14px;height:44px;cursor:pointer;font:500 14px inherit;font-family:inherit}
 #hqSbtn svg,#hqSbtn2 svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
-#hqSbtn2{display:none}
+#hqSbtn2{display:none}#hqSbtn2 span{display:none}
 #hqS{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;display:flex;justify-content:center;align-items:flex-start;padding:7vh 12px}
 #hqS[hidden]{display:none}
 #hqS .sb{width:100%;max-width:680px;background:#0f1520;border:1px solid #232d3f;border-radius:18px;overflow:hidden;color:#e8eef8;box-shadow:0 24px 60px rgba(0,0,0,.6)}
@@ -1424,6 +1431,10 @@ html body.hq-on #dashView>#dtabs .cg.collapsed button{display:none!important}
 .srh{display:grid;grid-template-columns:96px 1fr;gap:2px 10px;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid #1a2230;padding:11px 14px;color:inherit;cursor:pointer;font:inherit}
 .srh:hover{background:#151c2a}.srh i{grid-row:1/span 2;font-style:normal;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#4cd3a0;align-self:center}.srh b{font-weight:600}.srh small{color:#8e9bb3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:900px){#hqSbtn{display:none}#hqSbtn2{display:flex;background:transparent;border:0;color:#e9e4dc;padding:8px;border-radius:12px;cursor:pointer}.srh{grid-template-columns:1fr}.srh i{grid-row:auto}}
+#hqTop .tgs>svg:first-child,#hqTop .tgp>svg:first-child,#hqTop .tgb>svg:first-child{width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;opacity:.9}
+#hqTop .tgs{display:inline-flex;align-items:center;gap:8px}
+@media(min-width:901px){#hqTop .tgp{display:none!important}}
+@media(max-width:900px){#hqTop .tgp{display:inline-flex;align-items:center;gap:8px}#hqTop .tgs>svg:first-child,#hqTop .tgp>svg:first-child,#hqTop .tgb>svg:first-child{width:22px;height:22px;stroke:#d99a73}}
 #hqBar,#hqBd,.tgp{display:none}
 html body.hq-on #dashView>#dtabs button.hqtop{display:none!important}
 html body.hq-on #dtabs .ngrp:not(:has(button:not(.hqtop))){display:none}
