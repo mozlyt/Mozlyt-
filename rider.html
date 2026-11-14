@@ -406,15 +406,15 @@ form{background:transparent!important;border:0!important;padding:0!important}
 <section id="dashView" hidden class="pv">
   <div class="pv-head"><div><div class="pv-eyebrow">MOZLYT Dispatch Portal</div><h1 id="pvHi">Welcome</h1><p class="sub" id="who"></p></div><button class="b2 ghost" type="button" id="btnOut">Log out</button></div>
   <div class="rgrid">
-    <div class="card2 rst"><div class="rl">Your availability</div><div class="rv" id="avV">OFFLINE</div><p class="sub" id="avT">You are not receiving delivery assignments.</p><button class="btn primary" type="button" id="btnOn">Go online</button></div>
-    <div class="card2 rst"><div class="rl">GPS location</div><div class="rv" id="gpV">INACTIVE</div><p class="sub" id="gpsTxt">Your franchise can view your location while you are on duty.</p></div>
+    <div class="card2 rst"><div class="rl">Your availability</div><div class="rv" id="avV">OFFLINE</div><p class="sub" id="avT">Not receiving deliveries</p><button class="btn primary" type="button" id="btnOn">Go online</button></div>
+    <div class="card2 rst"><div class="rl">GPS location</div><div class="rv" id="gpV">INACTIVE</div><p class="sub" id="gpsTxt">Shared only while on duty</p></div>
   </div>
   <div class="rstats"><div class="card2"><b id="sAct">0</b><span>Active assignments</span></div><div class="card2"><b id="sDone">0</b><span>Completed today</span></div><div class="card2"><b id="sEarn">GH₵0</b><span>Today's earnings</span></div><div class="card2"><b id="sPend">0</b><span>Pending payment</span></div></div>
   <div id="pane-jobs"><div class="lst" id="jobList"></div></div>
   <div id="pane-earn" hidden><div class="rstats" id="earnStats"></div><h3 style="margin:14px 0 8px">Delivery payments</h3><div class="lst" id="earnList"></div></div>
   <div id="pane-hist" hidden><input id="hSearch" type="search" placeholder="Search history: customer, address or delivery number" style="width:100%;margin-bottom:10px"><div class="lst" id="histList"></div></div>
   <div id="pane-me" hidden><div class="card2"><dl id="meDl" style="display:grid;grid-template-columns:auto 1fr;gap:6px 16px"></dl></div><div class="card2" style="margin-top:12px"><b>Help and support</b><p class="sub" style="margin:6px 0 10px">Problem with the app, a payment or your account? Message MOZLYT support. For a delivery problem, use Report a problem on the delivery.</p><a class="b2" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="https://wa.me/233538729743?text=Hello%20MOZLYT%2C%20I%20am%20a%20dispatch%20rider%20and%20need%20help.">Message support</a></div></div>
-  <div class="tabs" id="dtabs"><button data-t="jobs" class="on" type="button">Deliveries <span id="jobN"></span></button><button data-t="earn" type="button">Earnings</button><button data-t="hist" type="button">History</button><button data-t="me" type="button">My details</button></div>
+  <div class="tabs" id="dtabs"><button data-t="jobs" class="on" type="button">Deliveries<span id="jobN"></span></button><button data-t="earn" type="button">Earnings</button><button data-t="hist" type="button">History</button><button data-t="me" type="button">My details</button></div>
 </section>
 <style>.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.rst .rl{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#b9c6d4;font-weight:700}.rst .rv{font:800 24px Georgia,serif;margin:4px 0}.rst .rv.on{color:#34c78d}.rst .rv.off{color:#ffb4a8}.rst .sub{color:#c4cfdb;margin:0 0 10px;font-size:13.5px}
 .rstats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}.rstats .card2{padding:12px;text-align:center}.rstats b{display:block;font-size:20px;font-weight:800}.rstats span{font-size:12px;color:#c4cfdb}
@@ -543,12 +543,12 @@ function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.
   /* ---- GPS ---- */
   function getPos(cb){if(!navigator.geolocation){cb(null);return}navigator.geolocation.getCurrentPosition(function(p){cb({lat:p.coords.latitude,lng:p.coords.longitude})},function(){cb(null)},{enableHighAccuracy:true,timeout:15000,maximumAge:10000})}
   function gpsDraw(on,msg){var v=$('#gpV');v.textContent=on?'ACTIVE':'INACTIVE';v.className='rv '+(on?'on':'off');if(msg)$('#gpsTxt').textContent=msg}
-  function sendLoc(p){if(!p)return;lastSent=Date.now();MZ.rpc('rider_set_location',{p_lat:p.lat,p_lng:p.lng}).then(function(){gpsDraw(true,'Your franchise can view your location while you are on duty. Last shared just now.')},function(){})}
+  function sendLoc(p){if(!p)return;lastSent=Date.now();MZ.rpc('rider_set_location',{p_lat:p.lat,p_lng:p.lng}).then(function(){gpsDraw(true,'Location shared just now')},function(){})}
   function startGps(){stopGps();if(!navigator.geolocation)return;watch=navigator.geolocation.watchPosition(function(p){if(Date.now()-lastSent>20000)sendLoc({lat:p.coords.latitude,lng:p.coords.longitude})},function(){gpsDraw(false,'GPS is blocked. Allow location in your browser so your franchise can find you.')},{enableHighAccuracy:true,maximumAge:5000});gpsDraw(true)}
   var LIVE=['accepted','to_pickup','picked_up','out'];
   function active(){return JOBS.some(function(j){return LIVE.indexOf(j.status)>-1})}
-  function syncGps(){if(ON||active())startGps();else{stopGps();gpsDraw(false,'Your location is only shared while you are online or carrying a delivery.')}}
-  function drawOn(){var v=$('#avV');v.textContent=ON?'ONLINE':'OFFLINE';v.className='rv '+(ON?'on':'off');$('#avT').textContent=ON?'You are available to receive delivery assignments.':'You are not receiving delivery assignments.';$('#btnOn').textContent=ON?'Go offline':'Go online'}
+  function syncGps(){if(ON||active())startGps();else{stopGps();gpsDraw(false,'Shared only while online or on a delivery')}}
+  function drawOn(){var v=$('#avV');v.textContent=ON?'ONLINE':'OFFLINE';v.className='rv '+(ON?'on':'off');$('#avT').textContent=ON?'Ready for deliveries':'Not receiving deliveries';$('#btnOn').textContent=ON?'Go offline':'Go online'}
   $('#btnOn').onclick=function(){var b=this;if(ON){busy(b,true);MZ.rpc('rider_set_online',{p_online:false}).then(function(){ON=false;drawOn();syncGps()},function(e){flash(e.message)}).then(function(){busy(b,false);drawOn()});return}
     busy(b,true,'Finding you...');getPos(function(p){if(!p){busy(b,false);flash('Allow location (GPS) first. You cannot go online without it.',4000);return}
       Promise.all([MZ.rpc('rider_set_location',{p_lat:p.lat,p_lng:p.lng}),MZ.rpc('rider_set_online',{p_online:true})]).then(function(){ON=true;lastSent=Date.now();drawOn();syncGps()},function(e){flash(e.message)}).then(function(){busy(b,false);drawOn()})})};
@@ -580,7 +580,7 @@ function busy(btn,on,label){if(!btn)return;btn.disabled=on;if(on){if(label){btn.
   function draw(){var cur=JOBS.filter(function(j){return j.status==='offered'||LIVE.indexOf(j.status)>-1}),del=JOBS.filter(function(j){return j.status==='delivered'}),q=($('#hSearch').value||'').toLowerCase(),
       his=JOBS.filter(function(j){return(j.status==='delivered'||j.status==='cancelled')&&(!q||(('#'+j.id+' '+(j.customer_name||'')+' '+(j.address||'')).toLowerCase().indexOf(q)>-1))});
     var sum=function(a){return a.reduce(function(s,j){return s+Number(j.fee||0)},0)},today=del.filter(function(j){return sameDay(j.delivered_at)}),pend=del.filter(function(j){return!j.paid_at}),paid=del.filter(function(j){return j.paid_at});
-    $('#jobN').textContent=cur.length?'('+cur.length+')':'';$('#sAct').textContent=cur.filter(function(j){return j.status!=='offered'}).length;$('#sDone').textContent=today.length;$('#sEarn').textContent=MZ.money(sum(today));$('#sPend').textContent=pend.length;
+    $('#jobN').textContent=cur.length?String(cur.length):'';$('#sAct').textContent=cur.filter(function(j){return j.status!=='offered'}).length;$('#sDone').textContent=today.length;$('#sEarn').textContent=MZ.money(sum(today));$('#sPend').textContent=pend.length;
     $('#jobList').innerHTML=cur.map(card).join('')||'<div class="empty">No deliveries right now. Go online so your franchise can send you one.</div>';
     $('#histList').innerHTML=his.map(card).join('')||'<div class="empty">No finished deliveries'+(q?' match your search':' yet')+'.</div>';
     $('#earnStats').innerHTML=[['Today',MZ.money(sum(today))],['Last 7 days',MZ.money(sum(del.filter(function(j){return inRange(j.delivered_at,7)})))],['Last 30 days',MZ.money(sum(del.filter(function(j){return inRange(j.delivered_at,30)})))],['Pending payment',MZ.money(sum(pend))],['Paid',MZ.money(sum(paid))],['Completed',del.length]].map(function(x){return'<div class="card2"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>'}).join('');
@@ -621,7 +621,38 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
   window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
 })();
 </script>
-<style id="pvic">#dtabs button .tic{width:20px;height:20px;flex:none}#dtabs button{display:inline-flex;align-items:center;gap:7px}#dashView #dtabs button{flex-direction:column;justify-content:center;gap:3px}@media(min-width:900px){#dashView #dtabs button{flex-direction:row}}</style><script>(function(){var I={home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',jobs:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 13h18"/>',sched:'<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M4 10h16"/>',earn:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/>',alerts:'<path d="M4 5h16v11H9l-5 4z"/>',perf:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',prof:'<circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c.8-3.8 3.8-5.8 7.5-5.8s6.7 2 7.5 5.8"/>',help:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',more:'<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>'};
+<style id="rdx">
+.mz-nav a,.mz-header nav a{white-space:nowrap}
+#dashView{max-width:760px;margin:0 auto;padding-top:6px}
+#dashView.pv{padding-top:6px}
+.pv-head{margin-bottom:12px;align-items:center}
+.pv-head h1{font-size:clamp(22px,5vw,28px)}
+.rgrid{gap:10px;margin-bottom:10px}
+.rgrid .rst{padding:12px 14px;display:flex;flex-direction:column;gap:2px;border-radius:16px}
+.rst .rl{font-size:11px}.rst .rv{font-size:20px;margin:2px 0}
+.rst .sub{font-size:12px;line-height:1.35;margin:0 0 8px;min-height:32px}
+.rst .btn{width:100%;padding:10px 12px;border-radius:12px;font-weight:800}
+.rgrid .rst:nth-child(2){justify-content:flex-start}
+@media(max-width:560px){.rgrid{grid-template-columns:1fr 1fr}.rstats{grid-template-columns:repeat(4,1fr);gap:6px}.rstats .card2{padding:10px 4px}.rstats b{font-size:16px}.rstats span{font-size:10.5px;line-height:1.2;display:block}}
+.rstats .card2{border-radius:14px;background:linear-gradient(160deg,#101a22,#0a1016)}
+.rstats b{color:#fff}
+#earnStats{grid-template-columns:repeat(3,1fr)}
+@media(max-width:560px){#earnStats{grid-template-columns:repeat(2,1fr)}#earnStats b{font-size:17px}}
+#jobList .it,#histList .it{border-radius:16px;border-left:4px solid #34414f;padding:14px}
+#jobList .it:has(.tag.ok),#jobList .it{border-left-color:#1F9D6B}
+#jobList .it .h{margin-bottom:8px}
+#jobList .it .btn,#jobList .it .b2,.it .b2[data-a]{width:100%;min-height:46px;border-radius:12px;font-weight:800;margin-top:8px}
+.it .b2.ghost[data-a]{min-height:40px;font-weight:600}
+.it .m b:not([style]){display:inline-block;margin-top:8px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#9fb0c3;font-weight:700}
+.it .m span[style*="20px"]{color:#34c78d!important;font-size:24px!important}
+#dashView #dtabs{display:grid!important;grid-template-columns:repeat(4,1fr);gap:2px;padding:6px 6px max(8px,env(safe-area-inset-bottom))}
+#dashView #dtabs button{min-width:0;padding:6px 2px;font-size:11.5px;position:relative;border-radius:12px}
+#dashView #dtabs .tic{width:22px;height:22px}
+#jobN{position:absolute;top:2px;left:calc(50% + 6px);background:#e5484d;color:#fff;border-radius:99px;font-size:10px;line-height:1;padding:3px 5px;font-weight:800}
+#jobN:empty{display:none}
+@media(min-width:901px){#dashView #dtabs{position:static!important;grid-template-columns:repeat(4,auto);justify-content:start;gap:6px;margin-bottom:12px}#dashView #dtabs button{flex-direction:row!important;font-size:14px;padding:9px 16px}#jobN{position:static;margin-left:4px}}
+</style>
+<style id="pvic">#dtabs button .tic{width:20px;height:20px;flex:none}#dtabs button{display:inline-flex;align-items:center;gap:7px}#dashView #dtabs button{flex-direction:column;justify-content:center;gap:3px}@media(min-width:900px){#dashView #dtabs button{flex-direction:row}}</style><script>(function(){var I={home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',jobs:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 13h18"/>',sched:'<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M4 10h16"/>',earn:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/>',alerts:'<path d="M4 5h16v11H9l-5 4z"/>',perf:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',prof:'<circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c.8-3.8 3.8-5.8 7.5-5.8s6.7 2 7.5 5.8"/>',help:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',hist:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',me:'<circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c.8-3.8 3.8-5.8 7.5-5.8s6.7 2 7.5 5.8"/>',more:'<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>'};
 [].forEach.call(document.querySelectorAll('#dtabs button[data-t]'),function(b){var k=b.getAttribute('data-t');if(!I[k]||b.querySelector('.tic'))return;b.insertAdjacentHTML('afterbegin','<svg class="tic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+I[k]+'</svg>')})})();</script>
 <style id="pvmore">.mlist2{padding:18px 22px!important;background:#000!important;border:2px solid #1c1c1c!important;border-radius:28px!important;box-shadow:none!important}.mh2{font-size:12px;font-weight:700;text-transform:uppercase;color:#fff;margin:6px 0 6px;letter-spacing:.02em}.mrow2{display:flex;align-items:center;gap:16px;width:100%;background:none;border:0;padding:14px 0;font-size:18px;font-weight:500;font-family:inherit;color:#f1f5f9;text-align:left;cursor:pointer;min-height:52px}.mrow2 svg{width:24px;height:24px;flex:none}.mhr2{border:0;border-top:2px solid #1c1c1c;margin:16px 0}.mrow2{color:#fff!important}</style>
 </body>
