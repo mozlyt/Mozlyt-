@@ -302,7 +302,7 @@ body.has-list .wa-float{bottom:84px}
     <label>Email (optional)<input id="oEmail" type="email" maxlength="120" autocomplete="email"></label>
     <style>#dlvBox label{display:flex!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center;gap:10px;text-align:left}#dlvBox input[type=radio]{width:auto!important;min-width:0;margin:0;flex:none}</style><div id="dlvBox" hidden class="card2" style="padding:12px;display:grid;gap:8px"><b>How do you want to receive your order?</b>
       <label style="display:flex;flex-direction:row;gap:8px;align-items:center;font-weight:600"><input type="radio" name="dm" value="pickup" checked> Pickup or arrange with the seller</label>
-      <label style="display:flex;flex-direction:row;gap:8px;align-items:center;font-weight:600"><input type="radio" name="dm" value="rider"> Request shipping (delivery by rider)</label>
+      <label style="display:flex;flex-direction:row;gap:8px;align-items:center;font-weight:600"><input type="radio" name="dm" value="rider"> Request shipping (delivery by motorbike, car or truck)</label>
       <div id="dlvInfo" style="font-size:14px"></div></div>
     <label>Delivery address or area<input id="oAddr" maxlength="200" autocomplete="street-address" list="savedAddr" placeholder="e.g. East Legon, near the mall"></label><datalist id="savedAddr"></datalist>
     <label>Note (optional)<textarea id="oNote" rows="2" maxlength="300"></textarea></label>
@@ -455,11 +455,16 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   function grand(){return total()+fee()}
   function dlvBad(){return DELIV&&!(DQ&&DQ.ok)}
   function dlvDraw(){var L=lines();$('#dlvBox').hidden=!(HASR&&L.length);var inf=$('#dlvInfo');
-    if(!DELIV){inf.innerHTML='';}else if(!DQ){inf.textContent='Working out the delivery charge...'}else if(DQ.ok){inf.innerHTML='Weight: <b>'+DQ.weight+' kg</b> &middot; Delivery charge: <b>'+MZ.money(DQ.fee)+'</b>'}else{inf.innerHTML='<span style="color:#b3261e">'+esc(DQ.error||'Delivery is not available for this order.')+'</span>'}
+    if(!DELIV){inf.innerHTML='';}else if(!DQ){inf.textContent='Working out the delivery charge...'}else{var vl={bike:'Motorbike rider',car:'Car',pickup:'Pickup truck',truck:'Truck'};var wt=(OPTS[0]&&OPTS[0].weight)||DQ.weight;
+      var vh=OPTS.length?'<div style="display:grid;gap:6px;margin-top:6px">'+OPTS.map(function(o){var on=o.ok;return'<label style="'+(on?'':'opacity:.55')+'"><input type="radio" name="dv" value="'+o.vehicle+'"'+(on?'':' disabled')+(VSEL===o.vehicle&&on?' checked':'')+'> <span><b>'+vl[o.vehicle]+'</b> &middot; '+(on?MZ.money(o.fee):'too heavy for this vehicle')+'</span></label>'}).join('')+'</div>':'';
+      if(DQ.ok){inf.innerHTML='Weight of your order: <b>'+DQ.weight+' kg</b>'+vh+'<div style="margin-top:6px">Delivery charge: <b>'+MZ.money(DQ.fee)+'</b></div>'}else{inf.innerHTML='Weight of your order: <b>'+(wt||'?')+' kg</b>'+vh+'<div style="color:#b3261e;margin-top:6px">'+esc(DQ.error||'Delivery is not available for this order.')+'</div>'}
+      $$('input[name=dv]').forEach(function(r){r.onchange=function(){VSEL=r.value;pickOpt();dlvDraw()}})}
     $('#ctotal').textContent=L.length?(DELIV&&DQ&&DQ.ok?'Items: '+MZ.money(total())+'  |  Delivery: '+MZ.money(DQ.fee)+'  |  Total: '+MZ.money(grand()):'Total: '+MZ.money(total())):'';
     var bad=dlvBad();$('#waBtn').disabled=bad;$('#payNow').disabled=bad;var one=DELIV&&PAY;$('#waBtn').hidden=!!one;$('#payOr').hidden=!PAY||!!one;if(PAY){var pn=$('#payNow');if(!pn.dataset.l)pn.dataset.l=pn.textContent;if(!pn.disabled||pn.dataset.l)pn.textContent=(DELIV&&DQ&&DQ.ok)?'Pay '+MZ.money(grand())+' now (items + shipping)':pn.dataset.l}}
+  var OPTS=[],VSEL='';
+  function pickOpt(){var o=OPTS.filter(function(x){return x.vehicle===VSEL&&x.ok})[0];DQ=o||{ok:false,error:OPTS.length?'This order is too heavy for the delivery options available. Please choose pickup or message the shop.':'Delivery is not available for this shop yet.',weight:OPTS[0]&&OPTS[0].weight}}
   function dlvQuote(){if(!DELIV){DQ=null;dlvDraw();return}var L=lines();if(!L.length){DQ=null;dlvDraw();return}DQ=null;dlvDraw();var key=JSON.stringify(L.map(function(l){return[l.p.id,l.q]}));dlvQuote.k=key;
-    MZ.rpc('delivery_quote',{p_slug:slug,p_items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(r){if(dlvQuote.k!==key)return;DQ=r;dlvDraw()},function(){if(dlvQuote.k!==key)return;DQ={ok:false,error:'Could not work out the delivery charge. Please try again or choose pickup.'};dlvDraw()})}
+    MZ.rpc('delivery_options',{p_slug:slug,p_items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(r){if(dlvQuote.k!==key)return;OPTS=r||[];var okv=OPTS.filter(function(o){return o.ok});if(!okv.some(function(o){return o.vehicle===VSEL}))VSEL=okv.length?okv.slice().sort(function(a,b){return a.fee-b.fee})[0].vehicle:'';pickOpt();dlvDraw()},function(){if(dlvQuote.k!==key)return;DQ={ok:false,error:'Could not work out the delivery charge. Please try again or choose pickup.'};dlvDraw()})}
   $$('input[name=dm]').forEach(function(r){r.onchange=function(){DELIV=r.value==='rider'&&r.checked;if(DELIV&&!$('#oAddr').value.trim())$('#oAddr').focus();dlvQuote()}});
   function cartDraw(){var L=lines();$('#cartN').textContent=L.reduce(function(s,l){return s+l.q},0);var lb=$('#listbar');if(lb){lb.classList.toggle('show',L.length>0);document.body.classList.toggle('has-list',L.length>0);$('#lcount').textContent=L.reduce(function(s,l){return s+l.q},0)}
     $('#clines').innerHTML=L.map(function(l){return'<div class="cl"><span>'+esc(l.p.name)+'<br><small>'+MZ.money(l.p.price)+'</small></span><span class="q"><button data-d="'+l.p.id+'" aria-label="Less">&minus;</button>'+l.q+'<button data-u="'+l.p.id+'" aria-label="More">+</button></span></div>'}).join('')||'<div class="empty">Your list is empty.</div>';
@@ -477,7 +482,7 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   $('#payNow').onclick=function(){var f=$('#fOrder'),b=this,L=lines();if(!L.length)return;if(!f.reportValidity())return;
     busy(b,true,'Opening payment...');note($('#oNoteBox'),'','');
     try{sessionStorage.setItem('mzDel',DELIV?'1':'')}catch(e){}
-    MZ.fn('store-pay',{action:'init',slug:slug,name:$('#oName').value.trim(),phone:$('#oPhone').value.trim(),address:$('#oAddr').value.trim(),notes:$('#oNote').value.trim(),delivery:DELIV,items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(r){
+    MZ.fn('store-pay',{action:'init',slug:slug,name:$('#oName').value.trim(),phone:$('#oPhone').value.trim(),address:$('#oAddr').value.trim(),notes:$('#oNote').value.trim(),delivery:DELIV,vehicle:VSEL||'bike',items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(r){
       if(r&&r.ok&&r.url){MZ.track('InitiateCheckout',{value:grand()});location.href=r.url;return}
       note($('#oNoteBox'),'err',(r&&r.error)||'Could not open the payment page. Please order on WhatsApp.');busy(b,false)
     },function(){note($('#oNoteBox'),'err','Could not open the payment page. Please order on WhatsApp.');busy(b,false)})};
@@ -583,7 +588,7 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
 
   $('#fOrder').onsubmit=function(e){e.preventDefault();var b=$('button[type=submit]',this),L=lines();if(!L.length)return;
     busy(b,true,'Sending...');note($('#oNoteBox'),'','');
-    MZ.rpc('place_store_order',{p_slug:slug,p_name:$('#oName').value.trim(),p_phone:$('#oPhone').value.trim(),p_address:$('#oAddr').value.trim(),p_notes:$('#oNote').value.trim(),p_delivery:DELIV,p_items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(id){
+    MZ.rpc('place_store_order',{p_slug:slug,p_name:$('#oName').value.trim(),p_phone:$('#oPhone').value.trim(),p_address:$('#oAddr').value.trim(),p_notes:$('#oNote').value.trim(),p_delivery:DELIV,p_vehicle:VSEL||'bike',p_items:L.map(function(l){return{product_id:l.p.id,qty:l.q}})}).then(function(id){
       var txt='Hello '+STORE.store_name+', I just placed order #'+id+':\n'+L.map(function(l){return l.q+' x '+l.p.name+' ('+MZ.money(l.p.price*l.q)+')'}).join('\n')+(DELIV&&DQ&&DQ.ok?'\nDelivery by rider ('+DQ.weight+' kg): '+MZ.money(DQ.fee):'')+'\nTotal: '+MZ.money(grand())+'\nName: '+$('#oName').value.trim()+'\nDelivery: '+($('#oAddr').value.trim()||'to be agreed');
       var url='https://wa.me/'+MZ.phoneIntl(STORE.whatsapp)+'?text='+encodeURIComponent(txt);
       var svName=$('#oName').value.trim(),svPhone=$('#oPhone').value.trim();
