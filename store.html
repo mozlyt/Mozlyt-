@@ -455,7 +455,7 @@ function applyShopTheme(t){var old=document.getElementById('shop-theme');if(old)
   function grand(){return total()+fee()}
   function dlvBad(){return DELIV&&!(DQ&&DQ.ok)}
   function dlvDraw(){var L=lines();$('#dlvBox').hidden=!(HASR&&L.length);var inf=$('#dlvInfo');
-    if(!DELIV){inf.innerHTML='';}else if(!DQ){inf.textContent='Working out the delivery charge...'}else{var vl={bike:'Motorbike rider',car:'Car',pickup:'Pickup truck',truck:'Truck'};var wt=(OPTS[0]&&OPTS[0].weight)||DQ.weight;
+    if(!DELIV){inf.innerHTML='';}else if(!DQ){inf.textContent='Working out the delivery charge...'}else{var vl={bike:'Motorbike rider',bicycle:'Bicycle',walk:'On foot (walking)',car:'Car',pickup:'Pickup truck',truck:'Truck',personal:'Personal delivery'};var wt=(OPTS[0]&&OPTS[0].weight)||DQ.weight;
       var vh=OPTS.length?'<div style="display:grid;gap:6px;margin-top:6px">'+OPTS.map(function(o){var on=o.ok;return'<label style="'+(on?'':'opacity:.55')+'"><input type="radio" name="dv" value="'+o.vehicle+'"'+(on?'':' disabled')+(VSEL===o.vehicle&&on?' checked':'')+'> <span><b>'+vl[o.vehicle]+'</b> &middot; '+(on?MZ.money(o.fee):'too heavy for this vehicle')+'</span></label>'}).join('')+'</div>':'';
       if(DQ.ok){inf.innerHTML='Weight of your order: <b>'+DQ.weight+' kg</b>'+vh+'<div style="margin-top:6px">Delivery charge: <b>'+MZ.money(DQ.fee)+'</b></div>'}else{inf.innerHTML='Weight of your order: <b>'+(wt||'?')+' kg</b>'+vh+'<div style="color:#b3261e;margin-top:6px">'+esc(DQ.error||'Delivery is not available for this order.')+'</div>'}
       $$('input[name=dv]').forEach(function(r){r.onchange=function(){VSEL=r.value;pickOpt();dlvDraw()}})}
