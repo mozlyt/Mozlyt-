@@ -1236,5 +1236,41 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)})
   window.addEventListener('appinstalled',function(){if(btn)btn.style.display='none'});
 })();
 </script>
+<style id="hqx">
+@media(min-width:901px){
+body.hq-on .mz-header,body.hq-on .mz-footer,body.hq-on .wa-float,body.hq-on #bnav{display:none!important}
+body.hq-on,body.hq-on html{background:#0b0f17!important}
+html body.hq-on,html body.hq-on main,html body.hq-on #dashView,html body.hq-on .dash{background:#0b0f17!important}
+body.hq-on main,body.hq-on .dash,body.hq-on .dash>.wrap{max-width:none!important;padding:0!important;margin:0!important}
+html body.hq-on .top2{background:transparent!important}
+html body.hq-on .ovhead{margin-top:4px}
+html body.hq-on .ovhead h2{margin:14px 0 6px}
+body.hq-on #dashView{display:grid!important;grid-template-columns:272px 1fr;column-gap:0;min-height:100vh;padding:0!important}
+body.hq-on #dashView>.top2{grid-column:2;grid-row:1;padding:20px 34px 0;margin:0;align-items:center}
+body.hq-on #dashView>.top2 h1{font:600 30px/1.1 Georgia,serif;margin:0}
+body.hq-on #dashView>#dNote{grid-column:2;padding:0 34px}
+html body.hq-on #dashView>#dtabs{grid-column:1;grid-row:1/span 60;position:sticky;top:0;height:100vh;overflow:auto!important;border-radius:0!important;border:0!important;border-right:1px solid #1b2230!important;background:linear-gradient(180deg,#0f1520,#0a0e15)!important;padding:78px 16px 20px!important;margin:0!important}
+html body.hq-on #dashView>#dtabs::before{content:"MOZLYT";position:absolute;left:22px;top:22px;font:700 22px/1 Georgia,serif;color:#fff;letter-spacing:.04em}
+html body.hq-on #dashView>#dtabs::after{content:"Admin HQ";position:absolute;left:22px;top:48px;font-size:12px;color:#7d8aa0}
+html body.hq-on #dtabs .ngrp{border-top:0!important;padding:8px 0 4px}
+html body.hq-on #dtabs .ngl{color:#5f6d84!important;font-size:11px!important;margin:12px 6px 4px}
+html body.hq-on #dashView>#dtabs button{min-height:44px;font-size:14.5px!important;gap:12px;padding:0 10px!important;border-radius:12px;color:#dbe3f0!important}
+html body.hq-on #dashView>#dtabs button:hover{background:#151c2a!important}
+html body.hq-on #dashView>#dtabs button.on{background:linear-gradient(135deg,#1b2a3f,#16222f)!important;box-shadow:inset 0 0 0 1px #2a3a52!important}
+html body.hq-on #dashView>#dtabs button.on svg{stroke:#4cd3a0}
+html body.hq-on #dashView>*:not(.top2):not(#dNote):not(#dtabs):not(style):not(.ntgl){grid-column:2;padding:0 34px;min-width:0}
+html body.hq-on #dashView>[id^="pane-"]{padding-top:6px;padding-bottom:40px}
+html body.hq-on .ovhead h2{font:600 34px/1.15 Georgia,serif}
+html body.hq-on .card2,html body.hq-on .stat,html body.hq-on .it,html body.hq-on .lvrow{background:linear-gradient(160deg,#121926,#0e141f)!important;border:1px solid #1d2635!important;border-radius:18px!important;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+html body.hq-on .stats{grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+html body.hq-on .stat{padding:20px 22px;position:relative;overflow:hidden}
+html body.hq-on .stat::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#2f6fe0}
+html body.hq-on .stat:nth-child(4n+2)::before{background:#1fae78}html body.hq-on .stat:nth-child(4n+3)::before{background:#7b5de0}html body.hq-on .stat:nth-child(4n+4)::before{background:#e0a02f}
+html body.hq-on .stat b{font-size:30px}
+html body.hq-on select,html body.hq-on input,html body.hq-on textarea{background:#0f1520!important;border-color:#232d3f!important;color:#e8eef8!important;border-radius:12px}
+html body.hq-on .tag{border-radius:99px}
+}
+</style>
+<script>(function(){function f(){var d=document.getElementById('dashView');document.body.classList.toggle('hq-on',!!d&&!d.hidden)}f();var d=document.getElementById('dashView');if(d)new MutationObserver(f).observe(d,{attributes:true,attributeFilter:['hidden']})})();</script>
 </body>
 </html>
