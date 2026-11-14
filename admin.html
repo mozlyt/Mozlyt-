@@ -430,7 +430,7 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
       <a href="blog.html">Blog</a>
       <a href="about.html">About us</a>
       <a href="/seller.html" class="mz-login">Seller login</a>
-      <span class="mz-ctas"><a class="mz-btn mz-primary" href="index.html#services">Book a service</a><a class="mz-btn mz-gold" href="career.html">Take a career with us</a><a class="mz-btn mz-primary" href="provider.html">Work with us</a></span>
+      <span class="mz-ctas"><a class="mz-btn mz-primary" href="/rider.html">Become a dispatch rider</a><a class="mz-btn mz-gold" href="career.html">Take a career with us</a><a class="mz-btn mz-primary" href="provider.html">Work with us</a></span>
     </nav>
     <button class="mz-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mzNav"><span></span><span></span><span></span></button>
   </div>
@@ -481,7 +481,7 @@ table.pt .edg input,table.pt .edg select,table.pt .edg textarea{width:100%;box-s
  <h3 style="margin:18px 0 8px">Problems reported by providers <span class="sub" id="dsRpN"></span></h3><div class="lst" id="dsRp"></div>
  <h3 style="margin:18px 0 8px">Team size rules</h3><div class="card2"><p class="sub" style="margin:0 0 10px">When a booking comes in, MOZLYT checks the service name against these words. <b>Minimum team</b> is how many providers the job always gets. <b>Guests per provider</b> adds more providers when the customer says how many people to serve (for example 40 guests at 8 per provider = 5 providers). You can still change the team size on any booking.</p><div class="lst" id="dsRules"></div>
  <form id="ruForm" class="f" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:10px"><label>Service name contains<input id="ruK" maxlength="60" required placeholder="e.g. office wellness"></label><label>Minimum team<input id="ruM" type="number" min="1" max="50" value="1"></label><label>Guests per provider<input id="ruG" type="number" min="1" max="500" placeholder="optional"></label><button class="btn primary" type="submit">Add rule</button></form></div>
- <h3 style="margin:18px 0 8px">Providers</h3><div class="lst" id="dsProv"></div></div>
+ <h3 style="margin:18px 0 8px">Providers</h3><div class="lst" id="dsProv"></div><div id="hqRid"></div></div>
   <div id="pane-chat" hidden><div class="card2"><h3 style="margin:0 0 6px">Support chat</h3><p class="sub" style="margin:0 0 10px">Messages from customers who signed in and tapped Live chat. Replies appear in their account. For urgent matters customers are told to use WhatsApp.</p>
     <div class="chwrap"><div class="chlist" id="chList"></div><div class="chmain"><div class="chhead" id="chHead">Choose a conversation</div><div class="chmsgs" id="chMsgs"></div><form id="chForm" class="f" style="display:flex;gap:8px" hidden><input id="chIn" maxlength="1000" placeholder="Write a reply" required style="flex:1"><button class="btn primary" type="submit">Send</button></form></div></div></div></div>
   <div id="pane-arch" hidden><div class="ovhead"><h2>Archive</h2><p class="sub">Franchises that are no longer operating. Their records stay here for safety. Nothing can be changed, only viewed, exported and noted.</p></div><div id="archBody"></div></div>
@@ -1615,5 +1615,23 @@ html body.hq-on .stat b{font-size:34px}
 }
 </style>
 <script>(function(){function f(){var d=document.getElementById('dashView');document.body.classList.toggle('hq-on',!!d&&!d.hidden)}f();var d=document.getElementById('dashView');if(d)new MutationObserver(f).observe(d,{attributes:true,attributeFilter:['hidden']})})();</script>
+<script>
+/* ---- HQ record view: riders and deliveries (read only) ---- */
+(function(){
+  var $=function(s,r){return(r||document).querySelector(s)};
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function csv(rows,cols,name){var q=function(v){v=v==null?'':String(v);return'"'+v.replace(/"/g,'""')+'"'};var t=[cols.map(function(c){return q(c[0])}).join(',')].concat(rows.map(function(r){return cols.map(function(c){return q(r[c[1]])}).join(',')})).join('\n');var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/csv'}));a.download=name;a.click()}
+  var RDX=[],DLX=[];
+  function load(){var box=$('#hqRid');if(!box)return;Promise.all([MZ.q('profiles','select=id,store_name,franchise_code,franchise_country&franchise=is.true'),MZ.q('riders','select=*&order=created_at.desc&limit=500'),MZ.q('deliveries','select=*&order=created_at.desc&limit=500')]).then(function(r){
+    var fn={};(r[0]||[]).forEach(function(f){fn[f.id]=(f.store_name||'Franchise')+' ('+(f.franchise_country||'')+(f.franchise_code?' '+f.franchise_code:'')+')'});
+    RDX=(r[1]||[]).map(function(x){x.fr=fn[x.franchise_id]||'Unlinked';return x});DLX=(r[2]||[]).map(function(x){x.fr=fn[x.franchise_id]||'Unlinked';return x});
+    var rn={};RDX.forEach(function(x){rn[x.user_id]=x});
+    box.innerHTML='<h2 style="margin:26px 0 4px">Dispatch riders (record view)</h2><p class="sub">Every rider and delivery, with the franchise it belongs to. Franchises run their own riders. This is a record only.</p><div style="display:flex;gap:8px;margin:8px 0"><button class="b2 ghost" id="hqRdCsv" type="button">Export riders</button><button class="b2 ghost" id="hqDlCsv" type="button">Export deliveries</button></div><h3 style="margin:12px 0 8px">Riders ('+RDX.length+')</h3><div class="lst">'+(RDX.map(function(x){return'<div class="it"><div class="h"><b>'+esc(x.name)+'</b><span class="tag">'+esc(x.fr)+'</span><span class="tag'+(x.status==='approved'?'':' warn')+'">'+esc(x.status)+'</span></div><div class="m">'+esc(x.phone||'')+' &middot; '+esc(x.vehicle_type||'')+' &middot; Machine '+esc(x.machine_number||'-')+' &middot; Earned '+MZ.money(x.earned)+' &middot; '+MZ.when(x.created_at)+'</div></div>'}).join('')||'<div class="empty">No riders yet.</div>')+'</div><h3 style="margin:18px 0 8px">Deliveries ('+DLX.length+')</h3><div class="lst">'+(DLX.map(function(d){var rr=rn[d.rider_id];return'<div class="it"><div class="h"><b>Delivery #'+d.id+'</b><span class="tag">'+esc(d.fr)+'</span><span class="tag">'+esc(d.status)+'</span></div><div class="m">'+esc(d.customer_name||'')+' &middot; '+esc(d.address||'')+' &middot; Fee '+(d.fee!=null?MZ.money(d.fee):'-')+(rr?' &middot; Rider '+esc(rr.name)+' (Machine '+esc(rr.machine_number||'-')+')':'')+' &middot; '+MZ.when(d.created_at)+'</div></div>'}).join('')||'<div class="empty">No deliveries yet.</div>')+'</div>';
+    $('#hqRdCsv').onclick=function(){csv(RDX,[['Franchise','fr'],['Name','name'],['Phone','phone'],['Email','email'],['Status','status'],['Vehicle','vehicle_type'],['Machine number','machine_number'],['Earned','earned'],['Applied','created_at']],'riders.csv')};
+    $('#hqDlCsv').onclick=function(){csv(DLX.map(function(d){var rr=rn[d.rider_id]||{};d.rider=rr.name||'';d.machine=rr.machine_number||'';return d}),[['Franchise','fr'],['Delivery','id'],['Order','order_id'],['Customer','customer_name'],['Address','address'],['Fee','fee'],['Status','status'],['Rider','rider'],['Machine number','machine'],['Created','created_at'],['Delivered','delivered_at']],'deliveries.csv')};
+  },function(){})}
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-t="disp"]');if(b)setTimeout(load,300)});
+})();
+</script>
 </body>
 </html>
