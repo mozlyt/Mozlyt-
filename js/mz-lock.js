@@ -5,6 +5,7 @@
   var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppYW9vcG53aG1tcnRubWVvdGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MTA0MDAsImV4cCI6MjEwNzQ4NjQwMH0.YVeqd4OzvIRnQQN3zPrbh4K_46RWKXQTULz41uAR0Ms';
   fetch('https://ziaoopnwhmmrtnmeotia.supabase.co/rest/v1/rpc/public_stats',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+K,'Content-Type':'application/json'},body:'{}'})
   .then(function(r){return r.json()}).then(function(d){
+    if(d&&d.paused_countries&&d.paused_countries.indexOf(cc)>-1){lock();return}
     if(!d||!d.live_countries||d.live_countries.indexOf(cc)<0)return;
     if(!d.open_countries||d.open_countries.indexOf(cc)>-1)return;
     lock();
