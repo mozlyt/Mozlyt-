@@ -5,11 +5,20 @@
   var K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppYW9vcG53aG1tcnRubWVvdGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MTA0MDAsImV4cCI6MjEwNzQ4NjQwMH0.YVeqd4OzvIRnQQN3zPrbh4K_46RWKXQTULz41uAR0Ms';
   fetch('https://ziaoopnwhmmrtnmeotia.supabase.co/rest/v1/rpc/public_stats',{method:'POST',headers:{apikey:K,Authorization:'Bearer '+K,'Content-Type':'application/json'},body:'{}'})
   .then(function(r){return r.json()}).then(function(d){
-    if(d&&d.paused_countries&&d.paused_countries.indexOf(cc)>-1){lock();return}
+    if(d&&d.paused_countries&&d.paused_countries.indexOf(cc)>-1){soon();return}
     if(!d||!d.live_countries||d.live_countries.indexOf(cc)<0)return;
     if(!d.open_countries||d.open_countries.indexOf(cc)>-1)return;
     lock();
   }).catch(function(){});
+  // a switched-off country: the whole site becomes the same Coming soon page the unopened countries show
+  function soon(){
+    var nm=cc.toUpperCase();try{nm=new Intl.DisplayNames(['en'],{type:'region'}).of(cc.toUpperCase())||nm}catch(x){}
+    var keep=function(e){var t=e.tagName;return t==='SCRIPT'||t==='STYLE'||t==='LINK'||t==='META'||t==='TEMPLATE'||e.id==='mzHeader'||e.classList.contains('mz-header')||e.classList.contains('mz-footer')||e.classList.contains('wa-float')};
+    [].slice.call(document.body.children).forEach(function(e){if(!keep(e))e.style.display='none'});
+    var b=document.createElement('div');b.id='mz-soon';b.style.cssText='max-width:560px;margin:0 auto;padding:90px 20px;text-align:center';
+    b.innerHTML='<div style="font-size:13px;letter-spacing:2px;font-weight:700;color:#C98E14">COMING SOON</div><h1 style="font-family:Georgia,serif;font-size:38px;margin:12px 0">MOZLYT '+nm.replace(/[<>&]/g,'')+'</h1><p style="color:#9fb0c3;font-size:18px;line-height:1.55">We are not open in '+nm.replace(/[<>&]/g,'')+' yet. Check back soon.</p><p><a href="/" style="display:inline-block;margin-top:10px;padding:13px 22px;background:linear-gradient(135deg,#1F9D6B,#14606f);color:#fff;border-radius:10px;font-weight:700;text-decoration:none">Back to MOZLYT</a></p>';
+    var h=document.getElementById('mzHeader')||document.querySelector('header');if(h&&h.parentNode)h.parentNode.insertBefore(b,h.nextSibling);else document.body.insertBefore(b,document.body.firstChild);
+  }
   var MSG='This MOZLYT branch opens soon. You can look around now. Prices, bookings, orders and sign-ups start as soon as the branch is ready.';
   function toast(){var t=document.getElementById('mzLockT');if(!t){t=document.createElement('div');t.id='mzLockT';document.body.appendChild(t)}t.textContent=MSG;t.className='show';clearTimeout(t._h);t._h=setTimeout(function(){t.className=''},4500)}
   function lock(){
