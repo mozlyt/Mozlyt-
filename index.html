@@ -233,5 +233,8 @@ header{background:#05070a;border-bottom:1px solid #18202a}
   });
 })();
 </script>
+<script>/* a country switched off in Admin shows as Opening soon here */
+(function(){fetch('https://ziaoopnwhmmrtnmeotia.supabase.co/rest/v1/rpc/public_stats',{method:'POST',headers:{apikey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppYW9vcG53aG1tcnRubWVvdGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MTA0MDAsImV4cCI6MjEwNzQ4NjQwMH0.YVeqd4OzvIRnQQN3zPrbh4K_46RWKXQTULz41uAR0Ms',Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppYW9vcG53aG1tcnRubWVvdGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5MTA0MDAsImV4cCI6MjEwNzQ4NjQwMH0.YVeqd4OzvIRnQQN3zPrbh4K_46RWKXQTULz41uAR0Ms','Content-Type':'application/json'},body:'{}'}).then(function(r){return r.json()}).then(function(d){
+var off=(d&&d.paused_countries)||[];off.forEach(function(c){var a=document.querySelector('a.cc[href="/'+c+'/"]');if(!a)return;a.classList.remove('live');var t=a.querySelector('.tag');if(t){t.classList.remove('l');t.textContent='OPENING SOON'}var e=a.querySelector('em');if(e)e.remove();var dd=a.querySelector('.d');if(dd)dd.textContent=dd.textContent.split('.')[0]+'. Franchise places open soon.'})}).catch(function(){})})();</script>
 </body>
 </html>
